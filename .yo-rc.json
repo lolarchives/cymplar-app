@@ -1,0 +1,18 @@
+{
+  "generator-nova": {
+    "version": "0.0.2",
+    "filters": {
+      "backend": "json",
+      "reload": "livereload",
+      "ngStorage": true,
+      "ngResource": true,
+      "ngSanitize": true,
+      "ngAnimate": true,
+      "control": true,
+      "karma": true,
+      "mocha": true,
+      "e2e": true,
+      "hasTests": true
+    }
+  }
+}
