@@ -1,68 +1,62 @@
-'use strict';
+// Karma configuration
+// Generated on Wed Jul 15 2015 09:44:02 GMT+0200 (Romance Daylight Time)
 
-var bowerFilesToExclude = require('./tasks/config/bowerFilesToExclude.js');
+module.exports = function(config) {
+  config.set({
 
-module.exports = function (config) {
-    config.set({
+    // frameworks to use
+    // available frameworks: https://npmjs.org/browse/keyword/karma-adapter
+    frameworks: ['jasmine'],
 
-        basePath: 'client',
+    // list of files / patterns to load in the browser
+    files: [
+      'node_modules/es6-shim/es6-shim.js',
+      
+      // zone-microtask must be included first as it contains a Promise monkey patch
+      'node_modules/zone.js/dist/zone-microtask.js',
+      'node_modules/zone.js/dist/long-stack-trace-zone.js',
+      'node_modules/zone.js/dist/jasmine-patch.js',
+      
+      'node_modules/systemjs/dist/system.src.js',
+      { pattern: 'node_modules/@reactivex/rxjs/dist/**/*.js', included: false, watched: false },
+      'node_modules/reflect-metadata/Reflect.js',
+      { pattern: 'node_modules/systemjs/dist/system-polyfills.js', included: false, watched: false }, // PhantomJS2 (and possibly others) might require it
+      { pattern: 'node_modules/angular2/**/*.js', included: false, watched: false },
+            
+      { pattern: 'test/**/*.js', included: false, watched: false },      
+      'tools/build/file2modulename.js',
+      'test-main.js'
+    ],
 
-        frameworks: ['jasmine'],
+    // list of files to exclude
+    exclude: [
+    ],
 
-        preprocessors: {
-            '**/*.html': ['ng-html2js']
-        },
+    // test results reporter to use
+    // possible values: 'dots', 'progress'
+    // available reporters: https://npmjs.org/browse/keyword/karma-reporter
+    reporters: ['mocha'],
 
-        ngHtml2JsPreprocessor: {
-            stripPrefix: 'client/',
-            moduleName: 'templates'
-        },
+    // web server port
+    port: 9876,
 
-        plugins: [
-            'karma-phantomjs-launcher',
-            'karma-jasmine',
-            'karma-ng-html2js-preprocessor'
-        ],
+    // start these browsers
+    // available browser launchers: https://npmjs.org/browse/keyword/karma-launcher
+    browsers: [
+      // 'Chrome',
+      'PhantomJS2'
+    ],
 
-        files: require('main-bower-files')({
-            filter: function (path) {
-                for (var i = 0; i < bowerFilesToExclude.length; i++) {
-                    if (!/\.js$/.test(path) || new RegExp(bowerFilesToExclude[i]).test(path)) { return false; }
-                }
-                return true;
-            }
-        }).concat([
-            'bower_components/angular-mocks/angular-mocks.js',
-            'app.js',
-            'views/**/*.js',
-            'services/**/*.js',
-            'directives/**/*.js',
-            'directives/**/*.html',
-            'filters/**/*.js'
-        ]),
+    customLaunchers: {
+      Chrome_travis_ci: {
+        base: 'Chrome',
+        flags: ['--no-sandbox']
+      }
+    }
+  });
 
-        exclude: [
-            'views/**/*.e2e.js'
-        ],
-
-        reporters: ['progress'],
-
-        port: 9876,
-
-        colors: true,
-
-        // possible values:
-        // config.LOG_DISABLE
-        // config.LOG_ERROR
-        // config.LOG_WARN
-        // config.LOG_INFO
-        // config.LOG_DEBUG
-        logLevel: config.LOG_INFO,
-
-        autoWatch: false,
-
-        browsers: ['PhantomJS'],
-
-        singleRun: true
-    });
+  if (process.env.TRAVIS) {
+    config.browsers = ['Chrome_travis_ci'];
+    config.singleRun = true;
+  }
 };

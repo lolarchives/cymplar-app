@@ -1,55 +1,29 @@
 <!DOCTYPE html>
-<html ng-app="cymplar2">
-  <head>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>My Angular 2 App</title>
+  <base href="<%= APP_BASE %>">
+  <meta name="description" content="">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- inject:css -->
+  <!-- endinject -->
+</head>
+<body data-app-version="<%= APP_VERSION %>">
 
-    <script type="text/javascript">
-      var isDesktopApp = (typeof process === 'object');
-      if (!isDesktopApp)
-        document.write('<base href="/">');
-    </script>
+  <app>Loading...</app>
 
-    <title>cymplar2</title>
+  <!-- inject:js -->
+  <!-- endinject -->
 
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width">
+  <script>
+    System.import('bootstrap')
+      .catch(function (e) {
+        console.error(e,
+          'Report this error at https://github.com/rogerpadilla/angular2-minimalist-starter/issues');
+      });
+  </script>
 
-    <link rel="icon" href="assets/favicon.ico" type="image/x-icon">
-
-    <!-- build:css app.css -->
-
-    <!-- bower:css -->
-    <!-- endinject -->
-
-    <link rel="stylesheet" href="styles/css/app.css">
-
-    <!-- endbuild -->
-
-  </head>
-  <body>
-
-    <strong>cymplar2</strong>
-
-    <div ui-view="app"></div>
-
-    <!-- build:js app.js -->
-
-    <!-- bower:js -->
-    <script src="bower_components/angular/angular.js"></script>
-    <script src="bower_components/angular-ui-router/release/angular-ui-router.js"></script>
-    <script src="bower_components/angular-cookies/angular-cookies.js"></script>
-    <script src="bower_components/angular-resource/angular-resource.js"></script>
-    <script src="bower_components/angular-sanitize/angular-sanitize.js"></script>
-    <script src="bower_components/angular-animate/angular-animate.js"></script>
-    <script src="bower_components/ngstorage/ngStorage.js"></script>
-    <!-- endinject -->
-
-    <!-- inject:js -->
-    <script src="app.js"></script>
-    <!-- endinject -->
-
-    <!-- endbuild -->
-
-    <script src="http://localhost:35729/livereload.js?snipver=1"></script>
-
-  </body>
+</body>
 </html>

@@ -1,0 +1,35 @@
+<h2>Todos!</h2>
+
+<form [ng-form-model]="todoForm" (submit)="todoForm.valid && createOne()" novalidate class="form-inline">
+  <div [class.has-error]="todoForm.controls.title.value !== '' && todoForm.controls.title.dirty
+    && todoForm.controls.title.errors" class="form-group has-feedback">
+    <input ng-control="title" autofocus class="form-control" placeholder="Title...">
+    <span *ng-if="todoForm.controls.title.value !== '' && todoForm.controls.title.dirty
+      && todoForm.controls.title.errors" class="glyphicon glyphicon-remove form-control-feedback"
+      aria-hidden="true"></span>
+  </div>
+  <button [disabled]="todoForm.errors" type="submit" class="btn btn-primary">
+    <span class="glyphicon glyphicon-ok">Add</span>
+  </button>
+</form>
+
+<table class="table table-striped table-hover">
+  <thead>
+    <tr>
+      <th>Title</th>
+      <th>Status</th>
+      <th>Created At</th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ng-for="#todo of todos | customOrderBy: ['status', '-id']">
+      <td>{{ todo.title }}</td>
+      <td>{{ todo.status }}</td>
+      <td>{{ todo.createdAt | date}}</td>
+      <td>
+        <button (click)="removeOne(todo)" class="btn btn-default">Remove</button>
+      </td>
+    </tr>
+  </tbody>
+</table>
