@@ -3,6 +3,8 @@
 
 module.exports = function(config) {
   config.set({
+    
+    basePath: './',
 
     // frameworks to use
     // available frameworks: https://npmjs.org/browse/keyword/karma-adapter
@@ -15,12 +17,13 @@ module.exports = function(config) {
       // zone-microtask must be included first as it contains a Promise monkey patch
       'node_modules/zone.js/dist/zone-microtask.js',
       'node_modules/zone.js/dist/long-stack-trace-zone.js',
-      'node_modules/zone.js/dist/jasmine-patch.js',
+      'node_modules/zone.js/dist/jasmine-patch.js',      
       
       'node_modules/systemjs/dist/system.src.js',
       { pattern: 'node_modules/@reactivex/rxjs/dist/**/*.js', included: false, watched: false },
       'node_modules/reflect-metadata/Reflect.js',
       { pattern: 'node_modules/systemjs/dist/system-polyfills.js', included: false, watched: false }, // PhantomJS2 (and possibly others) might require it
+      
       { pattern: 'node_modules/angular2/**/*.js', included: false, watched: false },
             
       { pattern: 'test/**/*.js', included: false, watched: false },      

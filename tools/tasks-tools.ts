@@ -7,9 +7,18 @@ import * as plumber from 'gulp-plumber';
 import * as inject from 'gulp-inject';
 import * as template from 'gulp-template';
 import * as typescript from 'gulp-typescript';
+import * as tinylrFn from 'tiny-lr';
 
-import {PATH, APP_BASE, APP_VERSION} from './config';
+import {PATH, APP_BASE, APP_VERSION, LIVE_RELOAD_PORT} from './config';
 
+const tinylr = tinylrFn();
+tinylr.listen(LIVE_RELOAD_PORT);
+
+export function notifyLiveReload(changedFiles: string[]) {
+  tinylr.changed({
+    body: { files: changedFiles }
+  });
+}
 
 export function injectableAssetsRef(): string[] {
 

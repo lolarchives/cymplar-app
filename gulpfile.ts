@@ -10,9 +10,11 @@ import * as tslint from 'gulp-tslint';
 import * as inlineNg2Template from 'gulp-inline-ng2-template';
 import * as tslintStylish from 'gulp-tslint-stylish';
 import * as shell from 'gulp-shell';
+import * as nodemon from 'gulp-nodemon';
 import {Server} from 'karma';
 
 import {ENV, PATH} from './tools/config';
+import {notifyLiveReload} from './tools/tasks-tools';
 
 import {
 compileTs,
@@ -22,7 +24,6 @@ templateLocals,
 tsProject
 } from './tools/tasks-tools';
 
-import {serveSPA, notifyLiveReload} from './server/bootstrap';
 
 // --------------
 // Client.
@@ -118,9 +119,18 @@ gulp.task('js.client.watch', () =>
   })
 );
 
-gulp.task('server.start', (done: gulp.TaskCallback) => {
-  serveSPA();
-  done();
+gulp.task('server.start', () => {
+  nodemon({
+    script: 'server/bootstrap.ts',
+    watch: 'server',
+    ext: 'ts',    
+    env: { 'env': ENV },
+    execMap: {
+     ts: 'ts-node'
+    }
+  }).on('restart', () => {
+    process.env.RESTART = true;
+  });  
 });
 
 gulp.task('serve.watch', [
