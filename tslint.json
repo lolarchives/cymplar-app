@@ -5,7 +5,7 @@
 		"forin": false,
 		"eofline": true,
 		"indent": "spaces",
-		"max-line-length": [true, 120],
+		"max-line-length": [true, 140],
 		"jsdoc-format": true,
 		"member-ordering": [
 			true,
