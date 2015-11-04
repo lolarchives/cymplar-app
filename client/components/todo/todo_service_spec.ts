@@ -9,14 +9,17 @@ MockBackend
 } from 'angular2/http';
 
 import {TodoService} from './todo_service';
+import {Todo} from '../../../shared/dto';
 
 
 export function main() {
   
   describe('Todo Service', () => {
 
-    var injector: Injector;
-
+    let injector: Injector;
+    let backend: MockBackend;
+    let connection: any;
+    
     let todoService: TodoService;
     
     beforeEach(() => {
@@ -30,10 +33,21 @@ export function main() {
           return new TodoService(http);
         }, deps: [Http]})
       ]);
+      backend = injector.get(MockBackend);
+      backend.connections.subscribe((c: any) => connection = c);      
       todoService = injector.get(TodoService);
     });   
     
-    it('forgets to return a promise', injectAsync([], () => {
+    afterEach(() => backend.verifyNoPendingRequests());
+    
+    it('forgets to return a promise', injectAsync([], () => {      
+      expect(todoService instanceof TodoService).toBe(true);
+      const prom = todoService.search().subscribe((resp: any) => {
+        console.log('todos', resp);
+        return resp;
+      });
+      // .subscribe((res: any) => this.todos = res.todos);
+      console.log('connection', connection, typeof connection);      
       return Promise.resolve(true);
     }));
 
