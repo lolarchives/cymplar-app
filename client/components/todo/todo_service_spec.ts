@@ -1,16 +1,3 @@
-import {
-    AsyncTestCompleter,
-    TestComponentBuilder,
-    beforeEach,
-    ddescribe,
-    describe,
-    expect,
-    iit,
-    inject,
-    it,
-    xit
-} from 'angular2/testing';
-
 import {Injector, provide} from 'angular2/angular2';
 
 import {
@@ -49,11 +36,6 @@ export function main() {
       expect(todoService instanceof TodoService).toBe(true);
     });
   
-    // it('should get some data', inject([AsyncTestCompleter], (async: any) => {
-    //   expect(todoService instanceof TodoService).toBe(true);
-    //   async.done();
-    // }));
-    
   });
     
 }
