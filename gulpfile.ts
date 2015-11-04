@@ -163,12 +163,13 @@ gulp.task('test.watch', ['test.build'], () =>
   gulp.watch(PATH.src.ts, () => gulp.start('test.build'))
 );
 
-gulp.task('karma.start', (done: gulp.TaskCallback) =>
+gulp.task('karma.start', (done: gulp.TaskCallback) => {
   new Server({
     configFile: `${PATH.cwd}/karma.conf.js`,
     singleRun: true
-  }, done).start()
-);
+  }).start();
+  done();
+});
 
 gulp.task('test', (done: gulp.TaskCallback) =>
   runSequence('test.clean', 'test.build', 'karma.start', done)
