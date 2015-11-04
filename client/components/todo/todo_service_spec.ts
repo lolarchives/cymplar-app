@@ -1,4 +1,5 @@
 import {Injector, provide} from 'angular2/angular2';
+import {it, inject, injectAsync} from 'angular2/testing';
 
 import {
 BaseRequestOptions,
@@ -31,10 +32,14 @@ export function main() {
       ]);
       todoService = injector.get(TodoService);
     });   
+    
+    it('forgets to return a promise', injectAsync([], () => {
+      return Promise.resolve(true);
+    }));
 
-    it('todoService should be injectable', () => {         
-      expect(todoService instanceof TodoService).toBe(true);
-    });
+    // it('todoService should be injectable', injectAsync(done: Function) => {         
+    //   expect(todoService instanceof TodoService).toBe(true);
+    // });
   
   });
     
