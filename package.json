@@ -1,13 +1,13 @@
 {
-  "name": "angular2-minimalist-starter",
-  "version": "0.0.2",
-  "description": "A Minimalist Starter kit for Angular2",
+  "name": "Cymplar 2",
+  "version": "0.0.0",
+  "description": "Cymplar version 2",
   "repository": {
     "type": "git",
     "url": "https://github.com/rogerpadilla/angular2-minimalist-starter.git"
   },
   "bugs": {
-    "url": "https://github.com/rogerpadilla/angular2-minimalist-starter/issues"
+    "url": "https://github.com/Neulinet/cymplar-app/issues"
   },
   "scripts": {
     "lint": "gulp tslint",
