@@ -4,7 +4,7 @@
   "description": "Cymplar version 2",
   "repository": {
     "type": "git",
-    "url": "https://github.com/rogerpadilla/angular2-minimalist-starter.git"
+    "url": "https://github.com/Neulinet/cymplar-app.git"
   },
   "bugs": {
     "url": "https://github.com/Neulinet/cymplar-app/issues"
@@ -19,7 +19,7 @@
     "test.watch": "gulp test.watch"
   },
   "author": "Roger Padilla <rogerpadilla>",
-  "license": "MIT",
+  "license": "private",
   "devDependencies": {
     
     "reflect-metadata": "0.1.1",
