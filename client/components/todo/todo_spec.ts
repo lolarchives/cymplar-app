@@ -9,7 +9,7 @@ import {Component, View} from 'angular2/angular2';
 import {TodoCmp} from './todo';
 import {TodoService} from './todo_service';
 
-// export function main() {
+export function main() {
 //   describe('Todo component', () => {
 //     it('should work',
 //       injectAsync([TestComponentBuilder], (tcb: TestComponentBuilder) => {
@@ -38,7 +38,7 @@ import {TodoService} from './todo_service';
 //           });
 //       }));
 //   });
-// }
+}
 
 @Component({ selector: 'test-cmp', bindings: [TodoService] })
 @View({ directives: [TodoCmp] })

@@ -1,71 +1,59 @@
 import {
-AsyncTestCompleter,
-afterEach,
-beforeEach,
-ddescribe,
-describe,
-expect,
-iit,
-inject,
-it,
-xit,
-SpyObject
-} from 'angular2/testing_internal';
+    AsyncTestCompleter,
+    TestComponentBuilder,
+    beforeEach,
+    ddescribe,
+    describe,
+    expect,
+    iit,
+    inject,
+    it,
+    xit
+} from 'angular2/testing';
 
-import {Injector, provide} from 'angular2/core';
-import {MockBackend, MockConnection} from 'angular2/src/http/backends/mock_backend';
+import {Injector, provide} from 'angular2/angular2';
 
 import {
 BaseRequestOptions,
 ConnectionBackend,
-Request,
-RequestMethods,
-RequestOptions,
-Response,
-ResponseOptions,
-URLSearchParams,
-JSONP_PROVIDERS,
-HTTP_PROVIDERS,
-XHRBackend,
-JSONPBackend,
 Http,
-Jsonp
+MockBackend
 } from 'angular2/http';
 
 import {TodoService} from './todo_service';
+
 
 export function main() {
   
   describe('Todo Service', () => {
 
-    var http: Http;
     var injector: Injector;
-    var jsonpBackend: MockBackend;
-    var xhrBackend: MockBackend;
-    var jsonp: Jsonp;
 
     let todoService: TodoService;
+    
+    beforeEach(() => {
+      injector = Injector.resolveAndCreate([
+        BaseRequestOptions,
+        MockBackend,
+        provide(Http, {useFactory: (backend: ConnectionBackend, defaultOptions: BaseRequestOptions) => {
+          return new Http(backend, defaultOptions);
+        }, deps: [MockBackend, BaseRequestOptions]}),
+        provide(TodoService, {useFactory: (http: Http) => {
+          return new TodoService(http);
+        }, deps: [Http]})
+      ]);
+      todoService = injector.get(TodoService);
+    });   
 
-    it('should return the list of todos', () => {
-      inject([AsyncTestCompleter], (async: any) => {
-              
-          injector = Injector.resolveAndCreate([
-            Http,
-            provide(TodoService, {useFactory: (http: Http) => {
-              return new TodoService(http);
-            }, deps: [Http]})
-          ]);
-        
-          todoService = injector.get(TodoService);
-          
-          expect(todoService instanceof TodoService).toBe(true);
-          
-          const todos = todoService.search();
-          
-          expect(todos).toEqual(jasmine.any(Promise));         
-        
-        });
-        
-      });
+    it('todoService should be injectable', () => {         
+      expect(todoService instanceof TodoService).toBe(true);
     });
+  
+    // it('should get some data', inject([AsyncTestCompleter], (async: any) => {
+    //   expect(todoService instanceof TodoService).toBe(true);
+    //   async.done();
+    // }));
+    
+  });
+    
 }
