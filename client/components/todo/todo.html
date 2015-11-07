@@ -1,15 +1,17 @@
 <h2>Todos!</h2>
 
-<form [ng-form-model]="todoForm" (submit)="todoForm.valid && createOne()" novalidate class="form-inline">
-  <div [class.has-error]="todoForm.controls.title.value !== '' && todoForm.controls.title.dirty
-    && todoForm.controls.title.errors" class="form-group has-feedback">
+<form [ng-form-model]="form" (submit)="form.valid && saveOne(form.value)" novalidate class="form-inline">
+  <input ng-control="id" type="hidden">
+  <div class="form-group has-feedback" [class.has-error]="form.touched && !form.controls.title.valid">
     <input ng-control="title" autofocus class="form-control" placeholder="Title...">
-    <span *ng-if="todoForm.controls.title.value !== '' && todoForm.controls.title.dirty
-      && todoForm.controls.title.errors" class="glyphicon glyphicon-remove form-control-feedback"
-      aria-hidden="true"></span>
   </div>
-  <button [disabled]="todoForm.errors" type="submit" class="btn btn-primary">
-    <span class="glyphicon glyphicon-ok">Add</span>
+  <button (click)="resetForm()" type="button" class="btn btn-default">
+    <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+    Clear
+  </button>
+  <button [disabled]="!form.valid" class="btn btn-primary">
+    <span class="glyphicon glyphicon-ok" aria-hidden="true"></span>
+    {{form.controls.id.value ? 'Update' : 'Create' }}
   </button>
 </form>
 
@@ -23,12 +25,14 @@
     </tr>
   </thead>
   <tbody>
-    <tr *ng-for="#todo of todos | customOrderBy: ['status', '-id']">
+    <tr *ng-for="#todo of todos | customOrderBy: ['status', '-id']" (click)="selectOne(todo)">
       <td>{{ todo.title }}</td>
       <td>{{ todo.status }}</td>
       <td>{{ todo.createdAt | date}}</td>
       <td>
-        <button (click)="removeOne(todo)" class="btn btn-default">Remove</button>
+        <button (click)="removeOne($event, todo)" class="btn btn-default">
+          <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
+        </button>
       </td>
     </tr>
   </tbody>

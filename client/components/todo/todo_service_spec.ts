@@ -2,19 +2,18 @@ import {
   Injector,
   provide
 } from 'angular2/angular2';
-// import {PromiseWrapper} from 'angular2/src/core/facade/promise';
 import {
   it,
   injectAsync
 } from 'angular2/testing';
-// import * as Rx from '@reactivex/rxjs';
 import {
   BaseRequestOptions,
   ConnectionBackend,
   Http,
   MockBackend,
   Response,
-  ResponseOptions  
+  ResponseOptions,
+  RequestMethods
 } from 'angular2/http';
 
 import {TodoService} from './todo_service';
@@ -27,7 +26,6 @@ export function main() {
 
     let injector: Injector;
     let backend: MockBackend;
-    let connection: any;
     
     let todoService: TodoService;
     
@@ -60,33 +58,74 @@ export function main() {
         }, deps: [Http]})
       ]);
       backend = injector.get(MockBackend);           
-      todoService = injector.get(TodoService);
-      backend.connections.subscribe((conn: any) => connection = conn);       
+      todoService = injector.get(TodoService);  
     });   
     
     afterEach(() => backend.verifyNoPendingRequests());    
     
-    it('be injectable', () => {         
-      expect(todoService instanceof TodoService).toBe(true);
-    });
     
     it('perform find', injectAsync([], () => {     
       return new Promise((resolve, reject) => {
+        backend.connections.subscribe((c: any) => {
+          expect(c.request.method).toBe(RequestMethods.Get);
+          c.mockRespond(new Response(new ResponseOptions({body: someTodos})));
+        });
         todoService.find().subscribe((resp: Todo[]) => {
           expect(resp).toBe(someTodos);
           resolve(resp);
-        });
-        connection.mockRespond(new Response(new ResponseOptions({body: someTodos})));                
+        });         
       });      
     }));
       
-    it('perform findOne', injectAsync([], () => {     
+    it('perform findOneById', injectAsync([], () => {     
       return new Promise((resolve, reject) => {
-        todoService.findOne(someTodo.id).subscribe((resp: Todo) => {
+        backend.connections.subscribe((c: any) => {
+          expect(c.request.method).toBe(RequestMethods.Get);
+          c.mockRespond(new Response(new ResponseOptions({body: someTodo})));
+        });
+        todoService.findOneById(someTodo.id).subscribe((resp: Todo) => {
           expect(resp).toBe(someTodo);
           resolve(resp);
+        });  
+      });      
+    }));
+    
+    it('perform createOne', injectAsync([], () => {     
+      return new Promise((resolve, reject) => {
+        backend.connections.subscribe((c: any) => {
+          expect(c.request.method).toBe(RequestMethods.Post);
+          c.mockRespond(new Response(new ResponseOptions({body: someTodo})));
         });
-        connection.mockRespond(new Response(new ResponseOptions({body: someTodo})));                
+        todoService.createOne(someTodo).subscribe((resp: Todo) => {
+          expect(resp).toBe(someTodo);
+          resolve(resp);
+        }); 
+      });      
+    }));
+    
+    it('perform updateOne', injectAsync([], () => {     
+      return new Promise((resolve, reject) => {
+        backend.connections.subscribe((c: any) => {
+          expect(c.request.method).toBe(RequestMethods.Put);
+          c.mockRespond(new Response(new ResponseOptions({body: someTodo})));
+        });
+        todoService.updateOne(someTodo).subscribe((resp: Todo) => {
+          expect(resp).toBe(someTodo);
+          resolve(resp);
+        });   
+      });      
+    }));
+    
+    it('perform removeOneById', injectAsync([], () => {     
+      return new Promise((resolve, reject) => {
+        backend.connections.subscribe((c: any) => {
+          expect(c.request.method).toBe(RequestMethods.Delete);
+          c.mockRespond(new Response(new ResponseOptions({body: someTodo})));
+        });
+        todoService.removeOneById(someTodo.id).subscribe((resp: Todo) => {
+          expect(resp).toBe(someTodo);
+          resolve(resp);
+        });         
       });      
     }));
   

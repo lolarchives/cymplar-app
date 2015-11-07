@@ -22,7 +22,7 @@ let todos: Todo[] = [
 
 export class TodoService {
 
-	create(data: Todo): Promise<Todo> {
+	createOne(data: Todo): Promise<Todo> {
 		const todo = data;
 		todo.id = ++seq;
 		todo.status = 'pending';
@@ -31,36 +31,32 @@ export class TodoService {
 		return Promise.resolve(todo);
 	}
 
-	update(data: Todo): Promise<Todo> {
-		let todo: Todo;
-		for (let i = 0, n = todos.length; i < n; i++) {
-			if (todos[i].id === data.id) {
-				todo = todos[i];
-				break;
+	updateOne(data: Todo): Promise<Todo> {
+		return this.findOneById(data.id).then(todo => {
+			for (const prop in data) {
+				todo[prop] = data[prop];
 			}
-		}
-		for (const prop in data) {
-			todo[prop] = data[prop];
-		}
-		return Promise.resolve(todo);
+			return todo;	
+		});
 	}
 
-	delete(id: number): Promise<number> {
-		const originalLength = todos.length;
-		todos = todos.filter(it => it.id !== id);
-		const affected = originalLength - todos.length;
-		return Promise.resolve(affected);
+	removeOneById(id: number): Promise<Todo> {
+		return this.findOneById(id).then(todo => {
+			todos = todos.filter(it => it !== todo);
+			return todo;	
+		});
 	}
 
 	find(): Promise<Todo[]> {
 		return Promise.resolve(todos);
 	}
 	
-	findOne(id: number): Promise<Todo> {
+	findOneById(id: number): Promise<Todo> {
 		let todo: Todo;
 		for (let i = 0; i < todos.length; i++) {
 			if (todos[i].id === id) {
 				todo = todos[i];
+				break;
 			}
 		}
 		return Promise.resolve(todo);

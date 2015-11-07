@@ -1,5 +1,6 @@
-import {Component, Validators, CORE_DIRECTIVES,
+import {Component, Validators, CORE_DIRECTIVES, ViewEncapsulation,
 FORM_DIRECTIVES, ControlGroup, Control} from 'angular2/angular2';
+import * as Rx from '@reactivex/rxjs';
 
 import {TodoService} from './todo_service';
 import {Todo} from '../../../shared/dto';
@@ -15,38 +16,57 @@ import {CustomOrderByPipe} from '../../pipes/CustomOrderByPipe';
 })
 export class TodoCmp {
 
-  todoForm: ControlGroup;
+  form: ControlGroup;
   todos: Todo[];
-  todo: Todo;
 
   constructor(private todoService: TodoService) {
 
-    this.todoForm = new ControlGroup({
-      title: new Control('', Validators.required)
+    this.form = new ControlGroup({
+      id: new Control(null),
+      title: new Control(null, Validators.required)
     });
 
     this.find();
   }
 
-  createOne() {
-    const todo: Todo = this.todoForm.value;
-    this.todoService.createOne(todo).subscribe((res: any) => {
-      (<Control>this.todoForm.controls['title']).updateValue('');
+  saveOne(data: Todo) {
+    let obs: Rx.Observable<Todo>;
+    if (data.id) {
+      obs = this.todoService.updateOne(data);
+    } else {
+      obs = this.todoService.createOne(data);  
+    }
+    obs.subscribe((res: Todo) => {
+      this.resetForm();
+      this.find();
+    });
+  }
+
+  removeOne(event: Event, data: Todo) {
+    
+    event.stopPropagation();
+        
+    this.todoService.removeOneById(data.id).subscribe((res: Todo) => {
+      this.resetForm();
       this.find();
     });    
   }
 
-  removeOne(todo: Todo) {
-    this.todoService.removeOne(todo.id).subscribe(() => this.find());
+  selectOne(data: Todo) {
+    this.todoService.findOneById(data.id).subscribe((res: Todo) => {
+      this.resetForm(res);
+    });
   }
 
   find() {
-    this.todoService.find()
-      .subscribe((res: any) => this.todos = res.todos);
+    this.todoService.find().subscribe((res: Todo[]) => {
+      this.todos = res;
+    });
   }
-  
-  findOne(todo: Todo) {
-    this.todoService.findOne(todo.id)
-      .subscribe((res: any) => this.todo = res.todo);
+
+  resetForm(data: Todo = {}) {
+    for (let prop in this.form.controls) {
+      (<Control> this.form.controls[prop]).updateValue(data[prop]);
+    }
   }
 }

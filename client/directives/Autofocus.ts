@@ -4,7 +4,7 @@ import {Directive, ElementRef} from 'angular2/angular2';
   selector: '[autofocus]' // using [ ] means selecting attributes
 })
 export class Autofocus {
-  constructor(public el: ElementRef) {
+  constructor(private el: ElementRef) {
     // autofocus fix for multiple views
     this.el.nativeElement.focus();
   }

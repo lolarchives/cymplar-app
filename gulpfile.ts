@@ -12,17 +12,19 @@ import * as tslintStylish from 'gulp-tslint-stylish';
 import * as shell from 'gulp-shell';
 import * as nodemon from 'gulp-nodemon';
 import {Server} from 'karma';
+import * as ts from 'gulp-typescript';
+import * as sourcemaps from 'gulp-sourcemaps';
 
 import {ENV, PATH} from './tools/config';
 import {notifyLiveReload} from './tools/tasks-tools';
 
 import {
-compileTs,
 injectableAssetsRef,
 transformPath,
-templateLocals,
-tsProject
+templateLocals
 } from './tools/tasks-tools';
+
+export const tsProject = ts.createProject('tsconfig.json');
 
 
 // --------------
@@ -56,9 +58,23 @@ gulp.task('jslib.build.dev', () => {
 });
 
 gulp.task('js.client.build.dev', () => {
-  const filesToCompile = PATH.src.ts;
-  return compileTs(filesToCompile);
+  
+  const result = gulp.src(PATH.src.ts)
+    .pipe(plumber())
+    .pipe(sourcemaps.init())
+    .pipe(typescript(tsProject));
+
+  return result.js
+    .pipe(sourcemaps.write())
+    .pipe(template(templateLocals))
+    .pipe(gulp.dest(PATH.dest.dev.base));
 });
+
+gulp.task('js.client.watch', () =>
+  gulp.watch(PATH.src.ts, (evt) => {
+    runSequence('js.client.build.dev', () => notifyLiveReload([evt.path]));
+  })
+);
 
 gulp.task('tpl.build.dev', () =>
   gulp.src(PATH.src.tpl)
@@ -111,14 +127,6 @@ gulp.task('watch.dev', ['build.dev'], () =>
 
 // --------------
 // Serve.
-gulp.task('js.client.watch', () =>
-  gulp.watch(PATH.src.ts, (evt) => {
-    const filesToCompile = PATH.src.ts;
-    compileTs(filesToCompile);
-    notifyLiveReload([evt.path]);
-  })
-);
-
 gulp.task('server.start', () => {
   nodemon({
     script: 'server/bootstrap.ts',
@@ -133,16 +141,16 @@ gulp.task('server.start', () => {
   });  
 });
 
+gulp.task('serve', (done: gulp.TaskCallback) =>
+  runSequence(`build.${ENV}`, 'server.start', 'serve.watch', done)
+);
+
 gulp.task('serve.watch', [
   'js.client.watch',
   'index.build.watch',
   'tpl.build.watch',
   'sass.build.dev'
 ]);
-
-gulp.task('serve', (done: gulp.TaskCallback) =>
-  runSequence(`build.${ENV}`, 'server.start', 'serve.watch', done)
-);
 
 // --------------
 // Test.
