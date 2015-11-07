@@ -1,4 +1,5 @@
 import {Todo} from '../../shared/dto';
+import * as model from '../persistence/model';
 
 let seq = 0;
 
@@ -13,6 +14,8 @@ let todos: Todo[] = [
 	{ id: ++seq, title: 'Include Production environment', status: 'pending', createdAt: Date.now() },
 	{ id: ++seq, title: 'Unit tests', status: 'done', createdAt: Date.now() }
 ];
+
+model['user'].find();
 
 
 export class TodoService {

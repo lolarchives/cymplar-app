@@ -21,11 +21,7 @@
   "author": "Roger Padilla <rogerpadilla>",
   "license": "private",
   "devDependencies": {
-    
-    "reflect-metadata": "0.1.1",
-    "@reactivex/rxjs": "5.0.0-alpha.4",
-    "zone.js": "0.5.8",
-    
+    "@reactivex/rxjs": "^5.0.0-alpha.8",
     "async": "^1.5.0",
     "body-parser": "^1.14.1",
     "connect-livereload": "^0.5.3",
@@ -50,6 +46,7 @@
     "gulp-typescript": "^2.9.2",
     "gulp-uglify": "^1.4.2",
     "gulp-watch": "^4.3.5",
+    "jasmine": "^2.3.2",
     "jasmine-core": "^2.3.4",
     "karma": "^0.13.14",
     "karma-chrome-launcher": "^0.2.1",
@@ -57,6 +54,7 @@
     "karma-mocha-reporter": "^1.1.1",
     "karma-phantomjs2-launcher": "^0.3.2",
     "open": "^0.0.5",
+    "reflect-metadata": "^0.1.2",
     "run-sequence": "^1.1.4",
     "serve-static": "^1.10.0",
     "slash": "^1.0.0",
@@ -67,13 +65,15 @@
     "tsd": "^0.6.5",
     "typescript": "^1.6.2",
     "typescript-register": "^1.1.0",
-    "yargs": "^3.29.0"
+    "yargs": "^3.29.0",
+    "zone.js": "^0.5.8"
   },
   "dependencies": {
-    "angular2": "2.0.0-alpha.44",
+    "angular2": "^2.0.0-alpha.45",
     "bootstrap": "^3.3.5",
     "es6-module-loader": "^0.17.8",
     "es6-shim": "^0.33.10",
+    "mongoose": "^4.2.4",
     "systemjs": "^0.19.5"
   },
   "engines": {

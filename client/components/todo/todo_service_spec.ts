@@ -1,11 +1,20 @@
-import {Injector, provide} from 'angular2/angular2';
-import {it, inject, injectAsync} from 'angular2/testing';
-
 import {
-BaseRequestOptions,
-ConnectionBackend,
-Http,
-MockBackend
+  Injector,
+  provide
+} from 'angular2/angular2';
+// import {PromiseWrapper} from 'angular2/src/core/facade/promise';
+import {
+  it,
+  injectAsync
+} from 'angular2/testing';
+// import * as Rx from '@reactivex/rxjs';
+import {
+  BaseRequestOptions,
+  ConnectionBackend,
+  Http,
+  MockBackend,
+  Response,
+  ResponseOptions  
 } from 'angular2/http';
 
 import {TodoService} from './todo_service';
@@ -14,13 +23,29 @@ import {Todo} from '../../../shared/dto';
 
 export function main() {
   
-  describe('Todo Service', () => {
+  describe('TodoService', () => {
 
     let injector: Injector;
     let backend: MockBackend;
     let connection: any;
     
     let todoService: TodoService;
+    
+    let seq = 0;
+
+const todos: Todo[] = [
+	{ id: ++seq, title: 'Angular2 Router', status: 'done', createdAt: Date.now() },
+	{ id: ++seq, title: 'Angular2 Component', status: 'done', createdAt: Date.now() },
+	{ id: ++seq, title: 'Angular2 Core Directives', status: 'done', createdAt: Date.now() },
+	{ id: ++seq, title: 'Angular2 Custom Directives', status: 'done', createdAt: Date.now() },
+	{ id: ++seq, title: 'Angular2 Dependence Injection', status: 'done', createdAt: Date.now() },
+	{ id: ++seq, title: 'Angular2 Form', status: 'done', createdAt: Date.now() },
+	{ id: ++seq, title: 'Include Development environment', status: 'done', createdAt: Date.now() },
+	{ id: ++seq, title: 'Include Production environment', status: 'pending', createdAt: Date.now() },
+	{ id: ++seq, title: 'Unit tests', status: 'done', createdAt: Date.now() }
+];
+
+const someTodo = todos[0];
     
     beforeEach(() => {
       injector = Injector.resolveAndCreate([
@@ -33,27 +58,26 @@ export function main() {
           return new TodoService(http);
         }, deps: [Http]})
       ]);
-      backend = injector.get(MockBackend);
-      backend.connections.subscribe((c: any) => connection = c);      
+      backend = injector.get(MockBackend);           
       todoService = injector.get(TodoService);
+      backend.connections.subscribe((conn: any) => connection = conn);       
     });   
     
-    afterEach(() => backend.verifyNoPendingRequests());
+    afterEach(() => backend.verifyNoPendingRequests());    
     
-    it('forgets to return a promise', injectAsync([], () => {      
+    it('be injectable', () => {         
       expect(todoService instanceof TodoService).toBe(true);
-      const prom = todoService.search().subscribe((resp: any) => {
-        console.log('todos', resp);
-        return resp;
-      });
-      // .subscribe((res: any) => this.todos = res.todos);
-      console.log('connection', connection, typeof connection);      
-      return Promise.resolve(true);
+    });
+    
+    it('perform search', injectAsync([], () => {     
+      return new Promise((resolve, reject) => {
+        todoService.search().subscribe((resp: Todo[]) => {
+          expect(resp).toBe(someTodo);
+          resolve(resp);
+        });
+        connection.mockRespond(new Response(new ResponseOptions({body: someTodo})));                
+      });      
     }));
-
-    // it('todoService should be injectable', injectAsync(done: Function) => {         
-    //   expect(todoService instanceof TodoService).toBe(true);
-    // });
   
   });
     

@@ -1,10 +1,10 @@
-import {
-TestComponentBuilder,
-describe,
-expect,
-injectAsync,
-it
-} from 'angular2/testing';
+// import {
+// TestComponentBuilder,
+// describe,
+// expect,
+// injectAsync,
+// it
+// } from 'angular2/testing';
 import {Component, View} from 'angular2/angular2';
 import {TodoCmp} from './todo';
 import {TodoService} from './todo_service';

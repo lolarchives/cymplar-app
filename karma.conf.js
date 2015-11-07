@@ -11,28 +11,33 @@ module.exports = function(config) {
     frameworks: ['jasmine'],
 
     // list of files / patterns to load in the browser
-    files: [
+    files: [     
       'node_modules/es6-shim/es6-shim.js',
+      { pattern: 'node_modules/systemjs/dist/system-polyfills.js', included: false, watched: false }, // PhantomJS2 (and possibly others) might require it
       
       // zone-microtask must be included first as it contains a Promise monkey patch
       'node_modules/zone.js/dist/zone-microtask.js',
       'node_modules/zone.js/dist/long-stack-trace-zone.js',
       'node_modules/zone.js/dist/jasmine-patch.js',      
-      
-      'node_modules/systemjs/dist/system.src.js',
+      'node_modules/systemjs/dist/system.src.js',      
       { pattern: 'node_modules/@reactivex/rxjs/dist/**/*.js', included: false, watched: false },
-      'node_modules/reflect-metadata/Reflect.js',
-      { pattern: 'node_modules/systemjs/dist/system-polyfills.js', included: false, watched: false }, // PhantomJS2 (and possibly others) might require it
+      'node_modules/reflect-metadata/Reflect.js',      
+
+      { pattern: 'node_modules/angular2/**/*.js', included: false, watched: false },      
       
-      { pattern: 'node_modules/angular2/**/*.js', included: false, watched: false },
-            
-      { pattern: 'test/**/*.js', included: false, watched: false },      
+      { pattern: 'test/**/*.js', included: false, watched: true },      
       'tools/build/file2modulename.js',
       'test-main.js'
     ],
 
-    // list of files to exclude
+
+    // list of files / patterns to exclude
     exclude: [
+      'node_modules/angular2/bundles/**',
+      'node_modules/angular2/es6/**',
+      'node_modules/angular2/examples/**',
+      'node_modules/angular2/**/*_spec.js',
+      'node_modules/angular2/**/*.min.js'      
     ],
 
     // test results reporter to use

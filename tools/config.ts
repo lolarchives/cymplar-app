@@ -8,7 +8,7 @@ const pkg = JSON.parse(fs.readFileSync(`${CWD}/package.json`, 'utf8'));
 
 // --------------
 // Configuration.
-export const ENV: string = argv['env'] || 'dev';
+export const ENV: string = argv['env'] || process.env.profile || 'dev';
 export const DEBUG: boolean = argv['debug'] || false;
 export const PORT: number = argv['port'] || 5555;
 export const LIVE_RELOAD_PORT: number = argv['reload-port'] || 4002;

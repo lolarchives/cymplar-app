@@ -78,7 +78,7 @@ gulp.task('index.build.dev', () => {
 
   return gulp.src(PATH.src.index)
     .pipe(inject(INDEX_INJECTABLES_TARGET, {
-      transform: transformPath('dev')
+      transform: transformPath(ENV)
     }))
     .pipe(template(templateLocals))
     .pipe(gulp.dest(PATH.dest.dev.base));
@@ -124,7 +124,7 @@ gulp.task('server.start', () => {
     script: 'server/bootstrap.ts',
     watch: 'server',
     ext: 'ts',    
-    env: { 'env': ENV },
+    env: { 'profile': ENV },
     execMap: {
      ts: 'ts-node'
     }
@@ -172,7 +172,7 @@ gulp.task('karma.start', (done: gulp.TaskCallback) => {
 });
 
 gulp.task('test', (done: gulp.TaskCallback) =>
-  runSequence('test.clean', 'test.build', 'karma.start', done)
+  runSequence(['test.clean', 'tslint'], 'test.build', 'karma.start', done)
 );
 
 // --------------
