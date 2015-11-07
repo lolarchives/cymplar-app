@@ -22,8 +22,13 @@ router.delete('/:id', (req, res) => {
   todoService.delete(id).then((affected: number) => res.send({ affected }));
 });
 
-router.get('/_search', (req, res) => {
-  todoService.search().then((todos: Todo[]) => res.send({ todos }));
+router.get('/_find', (req, res) => {
+  todoService.find().then((todos: Todo[]) => res.send({ todos }));
+});
+
+router.get('/:id', (req, res) => {
+  const id = parseInt(req.params.id);
+  todoService.findOne(id).then((todo: Todo) => res.send({ todo }));
 });
 
 

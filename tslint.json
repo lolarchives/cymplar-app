@@ -3,7 +3,7 @@
 		"class-name": true,
 		"curly": true,
 		"forin": false,
-		"eofline": true,
+		"eofline": false,
 		"indent": "spaces",
 		"max-line-length": [true, 140],
 		"jsdoc-format": true,

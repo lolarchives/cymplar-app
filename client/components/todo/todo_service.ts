@@ -26,8 +26,12 @@ export class TodoService {
     return this.http.delete(`${TodoService.API}/${id}`).map((res: Response) => res.json());
   }
 
-  search() {
-    return this.http.get(`${TodoService.API}/_search`).map((res: Response) => res.json());
+  find() {
+    return this.http.get(`${TodoService.API}/_find`).map((res: Response) => res.json());
+  }  
+  
+  findOne(id: number) {
+    return this.http.get(`${TodoService.API}/${id}`).map((res: Response) => res.json());
   }
 }
 

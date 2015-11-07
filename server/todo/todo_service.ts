@@ -1,5 +1,5 @@
 import {Todo} from '../../shared/dto';
-import * as model from '../persistence/model';
+// import * as model from '../persistence/model';
 
 let seq = 0;
 
@@ -15,7 +15,9 @@ let todos: Todo[] = [
 	{ id: ++seq, title: 'Unit tests', status: 'done', createdAt: Date.now() }
 ];
 
-model['user'].find();
+// model['user'].find().then((resp: any) => {
+// 	console.log('resp', resp);
+// });
 
 
 export class TodoService {
@@ -50,8 +52,18 @@ export class TodoService {
 		return Promise.resolve(affected);
 	}
 
-	search(): Promise<Todo[]> {
+	find(): Promise<Todo[]> {
 		return Promise.resolve(todos);
+	}
+	
+	findOne(id: number): Promise<Todo> {
+		let todo: Todo;
+		for (let i = 0; i < todos.length; i++) {
+			if (todos[i].id === id) {
+				todo = todos[i];
+			}
+		}
+		return Promise.resolve(todo);
 	}
 
 }

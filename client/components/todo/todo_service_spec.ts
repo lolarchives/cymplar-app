@@ -33,19 +33,20 @@ export function main() {
     
     let seq = 0;
 
-const todos: Todo[] = [
-	{ id: ++seq, title: 'Angular2 Router', status: 'done', createdAt: Date.now() },
-	{ id: ++seq, title: 'Angular2 Component', status: 'done', createdAt: Date.now() },
-	{ id: ++seq, title: 'Angular2 Core Directives', status: 'done', createdAt: Date.now() },
-	{ id: ++seq, title: 'Angular2 Custom Directives', status: 'done', createdAt: Date.now() },
-	{ id: ++seq, title: 'Angular2 Dependence Injection', status: 'done', createdAt: Date.now() },
-	{ id: ++seq, title: 'Angular2 Form', status: 'done', createdAt: Date.now() },
-	{ id: ++seq, title: 'Include Development environment', status: 'done', createdAt: Date.now() },
-	{ id: ++seq, title: 'Include Production environment', status: 'pending', createdAt: Date.now() },
-	{ id: ++seq, title: 'Unit tests', status: 'done', createdAt: Date.now() }
-];
-
-const someTodo = todos[0];
+    const someTodos: Todo[] = [
+      { id: ++seq, title: 'Angular2 Router', status: 'done', createdAt: Date.now() },
+      { id: ++seq, title: 'Angular2 Component', status: 'done', createdAt: Date.now() },
+      { id: ++seq, title: 'Angular2 Core Directives', status: 'done', createdAt: Date.now() },
+      { id: ++seq, title: 'Angular2 Custom Directives', status: 'done', createdAt: Date.now() },
+      { id: ++seq, title: 'Angular2 Dependence Injection', status: 'done', createdAt: Date.now() },
+      { id: ++seq, title: 'Angular2 Form', status: 'done', createdAt: Date.now() },
+      { id: ++seq, title: 'Include Development environment', status: 'done', createdAt: Date.now() },
+      { id: ++seq, title: 'Include Production environment', status: 'pending', createdAt: Date.now() },
+      { id: ++seq, title: 'Unit tests', status: 'done', createdAt: Date.now() }
+    ];
+    
+    const someTodo = someTodos[0];
+    
     
     beforeEach(() => {
       injector = Injector.resolveAndCreate([
@@ -69,9 +70,19 @@ const someTodo = todos[0];
       expect(todoService instanceof TodoService).toBe(true);
     });
     
-    it('perform search', injectAsync([], () => {     
+    it('perform find', injectAsync([], () => {     
       return new Promise((resolve, reject) => {
-        todoService.search().subscribe((resp: Todo[]) => {
+        todoService.find().subscribe((resp: Todo[]) => {
+          expect(resp).toBe(someTodos);
+          resolve(resp);
+        });
+        connection.mockRespond(new Response(new ResponseOptions({body: someTodos})));                
+      });      
+    }));
+      
+    it('perform findOne', injectAsync([], () => {     
+      return new Promise((resolve, reject) => {
+        todoService.findOne(someTodo.id).subscribe((resp: Todo) => {
           expect(resp).toBe(someTodo);
           resolve(resp);
         });

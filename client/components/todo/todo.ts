@@ -17,6 +17,7 @@ export class TodoCmp {
 
   todoForm: ControlGroup;
   todos: Todo[];
+  todo: Todo;
 
   constructor(private todoService: TodoService) {
 
@@ -24,23 +25,28 @@ export class TodoCmp {
       title: new Control('', Validators.required)
     });
 
-    this.search();
+    this.find();
   }
 
   createOne() {
     const todo: Todo = this.todoForm.value;
     this.todoService.createOne(todo).subscribe((res: any) => {
       (<Control>this.todoForm.controls['title']).updateValue('');
-      this.search();
+      this.find();
     });    
   }
 
   removeOne(todo: Todo) {
-    this.todoService.removeOne(todo.id).subscribe(() => this.search());
+    this.todoService.removeOne(todo.id).subscribe(() => this.find());
   }
 
-  search() {
-    this.todoService.search()
+  find() {
+    this.todoService.find()
       .subscribe((res: any) => this.todos = res.todos);
+  }
+  
+  findOne(todo: Todo) {
+    this.todoService.findOne(todo.id)
+      .subscribe((res: any) => this.todo = res.todo);
   }
 }
