@@ -5,7 +5,7 @@
   <div class="form-group has-feedback" [class.has-error]="form.touched && !form.controls.title.valid">
     <input ng-control="title" autofocus class="form-control" placeholder="Title...">
   </div>
-  <button (click)="resetForm()" type="button" class="btn btn-default">
+  <button (click)="formValue = {}" type="button" class="btn btn-default">
     <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
     Clear
   </button>
