@@ -35,18 +35,18 @@ export function main() {
     
     beforeEachProviders(() => [RequestOptions, ConnectionBackend, Http, TodoService]);
     
-    beforeEach(() => {
-      injector = Injector.resolveAndCreate([
-        BaseRequestOptions,
-        MockBackend,
-        provide(Http, {useFactory: (backend: ConnectionBackend, defaultOptions: BaseRequestOptions) => {
-          return new Http(backend, defaultOptions);
-        }, deps: [MockBackend, BaseRequestOptions]}),
-        provide(TodoService, {useFactory: (http: Http) => {
-          return new TodoService(http);
-        }, deps: [Http]})
-      ]);
-    }); 
+    // beforeEach(() => {
+    //   injector = Injector.resolveAndCreate([
+    //     BaseRequestOptions,
+    //     MockBackend,
+    //     provide(Http, {useFactory: (backend: ConnectionBackend, defaultOptions: BaseRequestOptions) => {
+    //       return new Http(backend, defaultOptions);
+    //     }, deps: [MockBackend, BaseRequestOptions]}),
+    //     provide(TodoService, {useFactory: (http: Http) => {
+    //       return new TodoService(http);
+    //     }, deps: [Http]})
+    //   ]);
+    // }); 
    
 		
 		// afterEach(verifyNoBrowserErrors);
@@ -57,13 +57,13 @@ export function main() {
 		// 	verifyNoBrowserErrors();
   	// });
 		
-    it('should work',
-      injectAsync([TestComponentBuilder], (tcb: TestComponentBuilder) => {
-        return tcb.overrideTemplate(TestComponent, '<div><todo></todo></div>')
-          .createAsync(TestComponent)
-          .then((fixture) => {
+    // it('should work',
+      // injectAsync([TestComponentBuilder], (tcb: TestComponentBuilder) => {
+      //   return tcb.overrideTemplate(TestComponent, '<div><todo></todo></div>')
+      //     .createAsync(TestComponent)
+      //     .then((fixture) => {
 						
-						fixture.detectChanges();
+						// fixture.detectChanges();
 
 //             const todoInstance = rootTC.debugElement.componentViewChildren[0].componentInstance;
 //             //const todoDomEl = rootTC.debugElement.componentViewChildren[0].nativeElement;
@@ -83,8 +83,8 @@ export function main() {
 //             // expect(DOM.querySelectorAll(todoDomEl, itemsSelector).length).toEqual(todoListLength());
 
 //             // expect(DOM.querySelectorAll(todoDomEl, itemsSelector + ' td:first-child')[10].textContent).toEqual('Some new task');
-          });
-      }));
+      //     });
+      // }));
   });
 }
 
