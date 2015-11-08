@@ -1,16 +1,7 @@
 import {
-  Injector,
-  provide
+  provide,
+  Type
 } from 'angular2/angular2';
-import {
-  BaseRequestOptions,
-  ConnectionBackend,
-  Http,
-  MockBackend,
-  Response,
-  ResponseOptions,
-  RequestMethods
-} from 'angular2/http';
 import {
   TestComponentBuilder,
   describe,
@@ -82,25 +73,6 @@ class MockTodoService {
 
 export function main() {
   describe('Todo component', () => {
-    
-    let injector: Injector;
-    let backend: MockBackend;    
-    let todoService: TodoService;
-    
-    beforeEach(() => {
-      injector = Injector.resolveAndCreate([
-        BaseRequestOptions,
-        MockBackend,
-        provide(Http, {useFactory: (backend: ConnectionBackend, defaultOptions: BaseRequestOptions) => {
-          return new Http(backend, defaultOptions);
-        }, deps: [MockBackend, BaseRequestOptions]}),
-        provide(TodoService, {useFactory: (http: Http) => {
-          return new TodoService(http);
-        }, deps: [Http]})
-      ]);
-      backend = injector.get(MockBackend);           
-      todoService = injector.get(TodoService);  
-    });
 
     it('should work', injectAsync([TestComponentBuilder], (tcb: TestComponentBuilder) => {
       return tcb.overrideViewProviders(TodoCmp, [provide(TodoService, {useClass: MockTodoService})])
