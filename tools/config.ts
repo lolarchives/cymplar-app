@@ -66,7 +66,7 @@ export const PATH = {
     tpl: [
       `${CLIENT_SRC_BASE}/components/**/*.html`,
     ],
-    ts: [`${CLIENT_SRC_BASE}/**/*.ts`, `!${CLIENT_SRC_BASE}/**/*_spec.ts`]
+    ts: [`${CLIENT_SRC_BASE}/**/*.ts`, `shared/**/*.ts`, `!${CLIENT_SRC_BASE}/**/*_spec.ts`]
   }
 };
 

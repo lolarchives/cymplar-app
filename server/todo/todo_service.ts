@@ -1,33 +1,33 @@
 import {Todo} from '../../shared/dto';
 // import * as model from '../persistence/model';
 
-let seq = 0;
-
-let todos: Todo[] = [
-	{ id: ++seq, title: 'Angular2 Router', status: 'done', createdAt: Date.now() },
-	{ id: ++seq, title: 'Angular2 Component', status: 'done', createdAt: Date.now() },
-	{ id: ++seq, title: 'Angular2 Core Directives', status: 'done', createdAt: Date.now() },
-	{ id: ++seq, title: 'Angular2 Custom Directives', status: 'done', createdAt: Date.now() },
-	{ id: ++seq, title: 'Angular2 Dependence Injection', status: 'done', createdAt: Date.now() },
-	{ id: ++seq, title: 'Angular2 Form', status: 'done', createdAt: Date.now() },
-	{ id: ++seq, title: 'Include Development environment', status: 'done', createdAt: Date.now() },
-	{ id: ++seq, title: 'Include Production environment', status: 'pending', createdAt: Date.now() },
-	{ id: ++seq, title: 'Unit tests', status: 'done', createdAt: Date.now() }
-];
-
 // model['user'].find().then((resp: any) => {
 // 	console.log('resp', resp);
 // });
 
 
 export class TodoService {
+	
+	private seq = 0;
+  
+  private todos: Todo[] = [
+    { id: this.nextId(), title: 'Angular2 Router', status: 'done', createdAt: Date.now() },
+    { id: this.nextId(), title: 'Angular2 Component', status: 'done', createdAt: Date.now() },
+    { id: this.nextId(), title: 'Angular2 Core Directives', status: 'done', createdAt: Date.now() },
+    { id: this.nextId(), title: 'Angular2 Custom Directives', status: 'done', createdAt: Date.now() },
+    { id: this.nextId(), title: 'Angular2 Dependence Injection', status: 'done', createdAt: Date.now() },
+    { id: this.nextId(), title: 'Angular2 Form', status: 'done', createdAt: Date.now() },
+    { id: this.nextId(), title: 'Include Development environment', status: 'done', createdAt: Date.now() },
+    { id: this.nextId(), title: 'Include Production environment', status: 'pending', createdAt: Date.now() },
+    { id: this.nextId(), title: 'Unit tests', status: 'done', createdAt: Date.now() }
+  ];
 
 	createOne(data: Todo): Promise<Todo> {
 		const todo = data;
-		todo.id = ++seq;
+		todo.id = this.nextId();
 		todo.status = 'pending';
 		todo.createdAt = Date.now();
-		todos.push(todo);
+		this.todos.push(todo);
 		return Promise.resolve(todo);
 	}
 
@@ -40,27 +40,31 @@ export class TodoService {
 		});
 	}
 
-	removeOneById(id: number): Promise<Todo> {
+	removeOneById(id: string): Promise<Todo> {
 		return this.findOneById(id).then(todo => {
-			todos = todos.filter(it => it !== todo);
+			this.todos = this.todos.filter(it => it.id !== todo.id);
 			return todo;	
 		});
 	}
 
 	find(): Promise<Todo[]> {
-		return Promise.resolve(todos);
+		return Promise.resolve(this.todos);
 	}
 	
-	findOneById(id: number): Promise<Todo> {
+	findOneById(id: string): Promise<Todo> {
 		let todo: Todo;
-		for (let i = 0; i < todos.length; i++) {
-			if (todos[i].id === id) {
-				todo = todos[i];
+		for (let i = 0; i < this.todos.length; i++) {
+			if (this.todos[i].id === id) {
+				todo = this.todos[i];
 				break;
 			}
 		}
 		return Promise.resolve(todo);
 	}
+
+  private nextId() {
+    return `${++this.seq}`;
+  }
 
 }
 

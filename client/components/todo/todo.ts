@@ -1,6 +1,6 @@
 import {Component, Validators, CORE_DIRECTIVES, ViewEncapsulation,
 FORM_DIRECTIVES, ControlGroup, Control} from 'angular2/angular2';
-import * as Rx from '@reactivex/rxjs';
+import * as Rx from '@reactivex/rxjs/dist/cjs/Rx';
 
 import {TodoService} from './todo_service';
 import {Todo} from '../../../shared/dto';

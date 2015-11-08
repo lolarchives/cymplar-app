@@ -2,9 +2,7 @@
 // Generated on Wed Jul 15 2015 09:44:02 GMT+0200 (Romance Daylight Time)
 
 module.exports = function(config) {
-  config.set({
-    
-    basePath: './',
+  config.set({    
 
     // frameworks to use
     // available frameworks: https://npmjs.org/browse/keyword/karma-adapter
@@ -12,24 +10,24 @@ module.exports = function(config) {
 
     // list of files / patterns to load in the browser
     files: [     
+      
+      {pattern: 'node_modules/angular2/**/*.js', included: false, watched: false},    
+                
       'node_modules/es6-shim/es6-shim.js',
-      { pattern: 'node_modules/systemjs/dist/system-polyfills.js', included: false, watched: false }, // PhantomJS2 (and possibly others) might require it
       
       // zone-microtask must be included first as it contains a Promise monkey patch
       'node_modules/zone.js/dist/zone-microtask.js',
       'node_modules/zone.js/dist/long-stack-trace-zone.js',
-      'node_modules/zone.js/dist/jasmine-patch.js',      
-      'node_modules/systemjs/dist/system.src.js',      
-      { pattern: 'node_modules/@reactivex/rxjs/dist/**/*.js', included: false, watched: false },
-      'node_modules/reflect-metadata/Reflect.js',      
+      'node_modules/zone.js/dist/jasmine-patch.js',
 
-      { pattern: 'node_modules/angular2/**/*.js', included: false, watched: false },      
+      'node_modules/systemjs/dist/system.src.js',
+      {pattern: 'node_modules/@reactivex/rxjs/dist/cjs/**', included: false, watched: false, served: true},
+      'node_modules/reflect-metadata/Reflect.js',    
       
-      { pattern: 'test/**/*.js', included: false, watched: true },      
+      {pattern: 'test/**', included: false, watched: true},      
       'tools/build/file2modulename.js',
       'test-main.js'
     ],
-
 
     // list of files / patterns to exclude
     exclude: [
@@ -38,7 +36,7 @@ module.exports = function(config) {
       'node_modules/angular2/examples/**',
       'node_modules/angular2/**/*_spec.js',
       'node_modules/angular2/**/*.min.js'      
-    ],
+    ],    
 
     // test results reporter to use
     // possible values: 'dots', 'progress'
@@ -51,8 +49,8 @@ module.exports = function(config) {
     // start these browsers
     // available browser launchers: https://npmjs.org/browse/keyword/karma-launcher
     browsers: [
-      // 'Chrome',
-      'PhantomJS2'
+      'Chrome',
+      // 'PhantomJS2'
     ],
 
     customLaunchers: {

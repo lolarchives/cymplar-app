@@ -21,7 +21,7 @@
   "author": "Roger Padilla <rogerpadilla>",
   "license": "private",
   "devDependencies": {
-    "@reactivex/rxjs": "^5.0.0-alpha.8",
+    "@reactivex/rxjs": "5.0.0-alpha.7",
     "async": "^1.5.0",
     "body-parser": "^1.14.1",
     "connect-livereload": "^0.5.3",
@@ -54,7 +54,7 @@
     "karma-mocha-reporter": "^1.1.1",
     "karma-phantomjs2-launcher": "^0.3.2",
     "open": "^0.0.5",
-    "reflect-metadata": "^0.1.2",
+    "reflect-metadata": "0.1.2",
     "run-sequence": "^1.1.4",
     "serve-static": "^1.10.0",
     "slash": "^1.0.0",
@@ -66,7 +66,7 @@
     "typescript": "^1.6.2",
     "typescript-register": "^1.1.0",
     "yargs": "^3.29.0",
-    "zone.js": "^0.5.8"
+    "zone.js": "0.5.8"
   },
   "dependencies": {
     "angular2": "^2.0.0-alpha.45",

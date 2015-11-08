@@ -156,7 +156,7 @@ gulp.task('serve.watch', [
 // Test.
 gulp.task('test.build', () => {
 
-  const src = [`${PATH.src.base}/**/*.ts`, `!${PATH.src.base}/bootstrap.ts`];
+  const src = [`${PATH.src.base}/**/*.ts`, `shared/**/*.ts`, `!${PATH.src.base}/bootstrap.ts`];
 
   const result = gulp.src(src)
     .pipe(plumber())

@@ -3,9 +3,6 @@ import {
   provide
 } from 'angular2/angular2';
 import {
-  it
-} from 'angular2/testing';
-import {
   BaseRequestOptions,
   ConnectionBackend,
   Http,
@@ -14,6 +11,11 @@ import {
   ResponseOptions,
   RequestMethods
 } from 'angular2/http';
+import {
+  it,
+  inject,
+  beforeEachProviders
+} from 'angular2/testing';
 
 import {TodoService} from './todo_service';
 import {Todo} from '../../../shared/dto';
@@ -24,17 +26,21 @@ export function main() {
   describe('TodoService', () => {    
     
     let seq = 0;
+    
+    function nextId() {
+      return `${++seq}`;
+    }
 
     const someTodos: Todo[] = [
-      { id: ++seq, title: 'Angular2 Router', status: 'done', createdAt: Date.now() },
-      { id: ++seq, title: 'Angular2 Component', status: 'done', createdAt: Date.now() },
-      { id: ++seq, title: 'Angular2 Core Directives', status: 'done', createdAt: Date.now() },
-      { id: ++seq, title: 'Angular2 Custom Directives', status: 'done', createdAt: Date.now() },
-      { id: ++seq, title: 'Angular2 Dependence Injection', status: 'done', createdAt: Date.now() },
-      { id: ++seq, title: 'Angular2 Form', status: 'done', createdAt: Date.now() },
-      { id: ++seq, title: 'Include Development environment', status: 'done', createdAt: Date.now() },
-      { id: ++seq, title: 'Include Production environment', status: 'pending', createdAt: Date.now() },
-      { id: ++seq, title: 'Unit tests', status: 'done', createdAt: Date.now() }
+      { id: nextId(), title: 'Angular2 Router', status: 'done', createdAt: Date.now() },
+      { id: nextId(), title: 'Angular2 Component', status: 'done', createdAt: Date.now() },
+      { id: nextId(), title: 'Angular2 Core Directives', status: 'done', createdAt: Date.now() },
+      { id: nextId(), title: 'Angular2 Custom Directives', status: 'done', createdAt: Date.now() },
+      { id: nextId(), title: 'Angular2 Dependence Injection', status: 'done', createdAt: Date.now() },
+      { id: nextId(), title: 'Angular2 Form', status: 'done', createdAt: Date.now() },
+      { id: nextId(), title: 'Include Development environment', status: 'done', createdAt: Date.now() },
+      { id: nextId(), title: 'Include Production environment', status: 'pending', createdAt: Date.now() },
+      { id: nextId(), title: 'Unit tests', status: 'done', createdAt: Date.now() }
     ];
     
     const someTodo = someTodos[0];
@@ -56,10 +62,9 @@ export function main() {
       ]);
       backend = injector.get(MockBackend);           
       todoService = injector.get(TodoService);  
-    });   
+    });           
     
-    afterEach(() => backend.verifyNoPendingRequests());    
-    
+    afterEach(() => backend.verifyNoPendingRequests());        
     
     it('perform find', (done: Function) => {     
       ensureCommunication(RequestMethods.Get, someTodos);

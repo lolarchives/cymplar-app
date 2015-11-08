@@ -7,19 +7,15 @@ import {Todo} from '../../shared/dto';
 const router = express.Router();
 
 router.post('/', (req, res) => {
-  const data: Todo = req.body;
-  todoService.createOne(data).then((todo: Todo) => res.send(todo));
+  todoService.createOne(req.body).then((todo: Todo) => res.send(todo));
 });
 
 router.put('/:id', (req, res) => {
-  const data: Todo = req.body;
-  data.id = parseInt(req.body.id);
-  todoService.updateOne(data).then((todo: Todo) => res.send(todo));
+  todoService.updateOne(req.body).then((todo: Todo) => res.send(todo));
 });
 
 router.delete('/:id', (req, res) => {
-  const id = parseInt(req.params.id);
-  todoService.removeOneById(id).then((todo: Todo) => res.send(todo));
+  todoService.removeOneById(req.params.id).then((todo: Todo) => res.send(todo));
 });
 
 router.get('/_find', (req, res) => {
@@ -27,8 +23,7 @@ router.get('/_find', (req, res) => {
 });
 
 router.get('/:id', (req, res) => {
-  const id = parseInt(req.params.id);
-  todoService.findOneById(id).then((todo: Todo) => res.send(todo));
+  todoService.findOneById(req.params.id).then((todo: Todo) => res.send(todo));
 });
 
 

@@ -25,7 +25,7 @@
     </tr>
   </thead>
   <tbody>
-    <tr *ng-for="#todo of todos | customOrderBy: ['status', '-id']" (click)="selectOne(todo)">
+    <tr *ng-for="#todo of todos | customOrderBy: ['status', '-createdAt']" (click)="selectOne(todo)">
       <td>{{ todo.title }}</td>
       <td>{{ todo.status }}</td>
       <td>{{ todo.createdAt | date}}</td>
