@@ -27,7 +27,6 @@ export function main() {
 
           const todoInstance: TodoCmp = fixture.debugElement.componentInstance;
           const compiled = fixture.debugElement.nativeElement;
-
           const itemsSelector = 'tbody tr';
 
           function obtainTodosLenght() {
@@ -35,38 +34,43 @@ export function main() {
           }
 
           const originalLength = obtainTodosLenght();
-
-          expect(originalLength).toBe(todoInstance.todos.length);
-
-          const newTodo = buildTodo({ title: `Some new task #: ${originalLength + 1}` }, false);
-          todoInstance.saveOne(newTodo);
+          expect(originalLength).toBe(todos.length);
+          const newTodo = { title: `Some new task #: ${originalLength + 1}` };
+          let createdTodo: Todo;
+          todoInstance.saveOne(newTodo).subscribe((todo: Todo) => createdTodo = todo);
 
           fixture.detectChanges();
 
+          expect(createdTodo.id).toBeGreaterThan(0);          
+          expect(createdTodo.createdAt).toBeGreaterThan(0);          
+          expect(createdTodo.title).toBe(newTodo.title);
           expect(obtainTodosLenght()).toBe(originalLength + 1);
-
-          const existingTodo = ObjectUtil.clone(todoInstance.todos[0]);
+          const existingTodo = ObjectUtil.clone(todos[0]);
           existingTodo.title = `Changed title ${Date.now() }`;
-
           todoInstance.saveOne(existingTodo);
 
           fixture.detectChanges();
+          
+          let selectedTodo: Todo;
+          todoInstance.selectOne(existingTodo).subscribe((todo: Todo) => selectedTodo = todo);
+          
+          fixture.detectChanges();
 
-          expect(existingTodo).toEqual(todoInstance.todos.find((it: Todo) => it.id === existingTodo.id));
-
+          expect(selectedTodo).toEqual(existingTodo);
           expect(obtainTodosLenght()).toBe(originalLength + 1);
-
-          const event = new Event('build');
-
-          todoInstance.removeOne(event, existingTodo);
+          todoInstance.removeOne(new Event('mock'), existingTodo);
 
           fixture.detectChanges();
 
           expect(obtainTodosLenght()).toBe(originalLength);
-
-          const removedTodo = todoInstance.todos.find((it: Todo) => it.id === existingTodo.id);
-
-          expect(removedTodo).not.toBeDefined(removedTodo);
+          
+          let removedTodo: Todo;
+          
+          todoInstance.selectOne(existingTodo).subscribe((todo: Todo) => removedTodo = todo);
+          
+          fixture.detectChanges();
+                    
+          expect(removedTodo).not.toBeDefined();
         });
     }));      
 
@@ -98,7 +102,7 @@ export function main() {
     afterEach(() => backend.verifyNoPendingRequests());        
     
     it('perform find', (done: Function) => {     
-      ensureCommunication(RequestMethods.Get, todos);
+      ensureCommunication(backend, RequestMethods.Get, todos);
       todoService.find().subscribe((resp: Todo[]) => {
         expect(resp).toBe(todos);
         done();
@@ -106,7 +110,7 @@ export function main() {
     });  
       
     it('perform findOneById', (done: Function) => {     
-      ensureCommunication(RequestMethods.Get, todo);
+      ensureCommunication(backend, RequestMethods.Get, todo);
       todoService.findOneById(todo.id).subscribe((resp: Todo) => {
         expect(resp).toBe(todo);
         done();
@@ -114,7 +118,7 @@ export function main() {
     });
     
     it('perform createOne', (done: Function) => {     
-      ensureCommunication(RequestMethods.Post, todo);
+      ensureCommunication(backend, RequestMethods.Post, todo);
       todoService.createOne(todo).subscribe((resp: Todo) => {
         expect(resp).toBe(todo);
         done();
@@ -122,7 +126,7 @@ export function main() {
     });
     
     it('perform updateOne', (done: Function) => {     
-      ensureCommunication(RequestMethods.Put, todo);
+      ensureCommunication(backend, RequestMethods.Put, todo);
       todoService.updateOne(todo).subscribe((resp: Todo) => {
         expect(resp).toBe(todo);
         done();
@@ -130,19 +134,12 @@ export function main() {
     });
     
     it('perform removeOneById', (done: Function) => {     
-      ensureCommunication(RequestMethods.Delete, todo);
+      ensureCommunication(backend, RequestMethods.Delete, todo);
       todoService.removeOneById(todo.id).subscribe((resp: Todo) => {
         expect(resp).toBe(todo);
         done();
       });               
-    });
-  
-    function ensureCommunication (reqMethod: RequestMethods, expectedBody: string | Object) {
-      backend.connections.subscribe((c: any) => {
-        expect(c.request.method).toBe(reqMethod);
-        c.mockRespond(new Response(new ResponseOptions({body: expectedBody})));
-      });
-    }
+    });    
   
   });
 
@@ -191,6 +188,14 @@ export function main() {
       return -1;
     }
 
+  }
+  
+  
+  function ensureCommunication (backend: MockBackend, reqMethod: RequestMethods, expectedBody: string | Object) {
+    backend.connections.subscribe((c: any) => {
+      expect(c.request.method).toBe(reqMethod);
+      c.mockRespond(new Response(new ResponseOptions({body: expectedBody})));
+    });
   }
 
 }

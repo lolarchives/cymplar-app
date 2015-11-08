@@ -20,12 +20,12 @@ function nextId() {
 }
 
 export function buildTodo(data?: Todo, generateId = true): Todo {
-  const todo: Todo = {};
-  if (generateId) {
-    todo.id = nextId();
-  }
+  const todo: Todo = {};  
   todo.status = 'done';
   todo.createdAt = Date.now();
   ObjectUtil.merge(todo, data);
+  if (generateId) {
+    todo.id = nextId();
+  }
   return todo;
 } 
