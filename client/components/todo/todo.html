@@ -1,6 +1,6 @@
 <h2>Todos!</h2>
 
-<form [ng-form-model]="form" (submit)="form.valid && saveOne(form.value)" novalidate class="form-inline">
+<form [ng-form-model]="form" (submit)="form.valid && saveOne()" novalidate class="form-inline">
   <input ng-control="id" type="hidden">
   <div class="form-group has-feedback" [class.has-error]="form.touched && !form.controls.title.valid">
     <input ng-control="title" autofocus class="form-control" placeholder="Title...">

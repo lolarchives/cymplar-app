@@ -29,57 +29,57 @@ export class TodoCmp {
     this.find();
   }
 
-  saveOne(data: Todo): Rx.Observable<Todo> {
-    
+  saveOne() {
+
+    const data: Todo = this.form.value;
+
     let obs: Rx.Observable<Todo>;
-    
+
     if (data.id) {
       obs = this.todoService.updateOne(data);
     } else {
-      obs = this.todoService.createOne(data);  
+      obs = this.todoService.createOne(data);
     }
-    
+
     obs.subscribe((res: Todo) => {
-      this.resetForm();
+      this.formValue = {};
       this.find();
     });
-    
-    return obs;
   }
 
-  removeOne(event: Event, data: Todo): Rx.Observable<Todo> {
-    
+  removeOne(event: Event, data: Todo) {
+
     event.stopPropagation();
-        
-    const obs = this.todoService.removeOneById(data.id);
-    
-    obs.subscribe((res: Todo) => {
-      this.resetForm();
-      this.find();
-    });
-    
-    return obs;    
+
+    this.todoService.removeOneById(data.id)
+      .subscribe((res: Todo) => {
+        this.formValue = {};
+        this.find();
+      });
   }
 
-  selectOne(data: Todo): Rx.Observable<Todo> {
-    const obs = this.todoService.findOneById(data.id);
-    obs.subscribe((res: Todo) => {
-      this.resetForm(res);
-    });
-    return obs;
+  selectOne(data: Todo) {
+    this.todoService.findOneById(data.id)
+      .subscribe((res: Todo) => {
+        this.formValue = res;
+      });
   }
 
-  find(): Rx.Observable<Todo[]> {
-    const obs = this.todoService.find();
-    obs.subscribe((res: Todo[]) => {
-      this.todos = res;
-    });
-    return obs;
+  find() {
+    this.todoService.find()
+      .subscribe((res: Todo[]) => {
+        this.todos = res;
+      });
   }
 
-  resetForm(data: Todo = {}): void {
+  get formValue(): Object {
+    return this.form.value;
+  }
+
+  set formValue(data: Object) {
     for (let prop in this.form.controls) {
-      (<Control> this.form.controls[prop]).updateValue(data[prop]);
+      (<Control>this.form.controls[prop]).updateValue(data[prop]);
     }
   }
+
 }

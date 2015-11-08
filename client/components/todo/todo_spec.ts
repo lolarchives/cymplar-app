@@ -25,7 +25,7 @@ export function main() {
 
           fixture.detectChanges();
 
-          const todoInstance: TodoCmp = fixture.debugElement.componentInstance;
+          const todoCmp: TodoCmp = fixture.debugElement.componentInstance;
           const compiled = fixture.debugElement.nativeElement;
           const itemsSelector = 'tbody tr';
 
@@ -34,43 +34,41 @@ export function main() {
           }
 
           const originalLength = obtainTodosLenght();
-          expect(originalLength).toBe(todos.length);
-          const newTodo = { title: `Some new task #: ${originalLength + 1}` };
-          let createdTodo: Todo;
-          todoInstance.saveOne(newTodo).subscribe((todo: Todo) => createdTodo = todo);
+          let newLength = originalLength;
+          expect(originalLength).toBe(todos.length);          
+          todoCmp.formValue = { title: `Some new task #: ${originalLength + 1}` };
+          todoCmp.saveOne();
 
           fixture.detectChanges();
+          
+          newLength++;
 
-          expect(createdTodo.id).toBeGreaterThan(0);          
-          expect(createdTodo.createdAt).toBeGreaterThan(0);          
-          expect(createdTodo.title).toBe(newTodo.title);
-          expect(obtainTodosLenght()).toBe(originalLength + 1);
+          expect(obtainTodosLenght()).toBe(newLength);
           const existingTodo = ObjectUtil.clone(todos[0]);
           existingTodo.title = `Changed title ${Date.now() }`;
-          todoInstance.saveOne(existingTodo);
+          todoCmp.formValue = existingTodo;
+          todoCmp.saveOne();
+
+          fixture.detectChanges();                         
+               
+          expect(obtainTodosLenght()).toBe(newLength);
+          
+          todoCmp.selectOne(existingTodo);
+          
+          fixture.detectChanges();
+          
+          const selectedTodo = todoCmp.formValue;
+          
+          expect(selectedTodo['id']).toBe(existingTodo.id);               
+          expect(selectedTodo['title']).toBe(existingTodo.title);               
+          
+          todoCmp.removeOne(new Event('mock'), existingTodo);
 
           fixture.detectChanges();
           
-          let selectedTodo: Todo;
-          todoInstance.selectOne(existingTodo).subscribe((todo: Todo) => selectedTodo = todo);
-          
-          fixture.detectChanges();
+          newLength--;
 
-          expect(selectedTodo).toEqual(existingTodo);
-          expect(obtainTodosLenght()).toBe(originalLength + 1);
-          todoInstance.removeOne(new Event('mock'), existingTodo);
-
-          fixture.detectChanges();
-
-          expect(obtainTodosLenght()).toBe(originalLength);
-          
-          let removedTodo: Todo;
-          
-          todoInstance.selectOne(existingTodo).subscribe((todo: Todo) => removedTodo = todo);
-          
-          fixture.detectChanges();
-                    
-          expect(removedTodo).not.toBeDefined();
+          expect(obtainTodosLenght()).toBe(newLength);          
         });
     }));      
 
