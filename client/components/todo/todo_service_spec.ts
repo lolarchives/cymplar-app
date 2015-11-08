@@ -19,15 +19,14 @@ import {
 
 import {TodoService} from './todo_service';
 import {Todo} from '../core/dto';
-import {TodoServiceMock} from './todo_service_mock';
+import {todos} from './todo_mock';
 
 
 export function main() {
   
-  describe('TodoService', () => {    
-
-    const someTodos: Todo[] = TodoServiceMock.todos;    
-    const someTodo = someTodos[0];
+  describe('todoService', () => {    
+    
+    const todo = todos[0];
     
     let injector: Injector;
     let backend: MockBackend;    
@@ -51,41 +50,41 @@ export function main() {
     afterEach(() => backend.verifyNoPendingRequests());        
     
     it('perform find', (done: Function) => {     
-      ensureCommunication(RequestMethods.Get, someTodos);
+      ensureCommunication(RequestMethods.Get, todos);
       todoService.find().subscribe((resp: Todo[]) => {
-        expect(resp).toBe(someTodos);
+        expect(resp).toBe(todos);
         done();
       });               
     });  
       
     it('perform findOneById', (done: Function) => {     
-      ensureCommunication(RequestMethods.Get, someTodo);
-      todoService.findOneById(someTodo.id).subscribe((resp: Todo) => {
-        expect(resp).toBe(someTodo);
+      ensureCommunication(RequestMethods.Get, todo);
+      todoService.findOneById(todo.id).subscribe((resp: Todo) => {
+        expect(resp).toBe(todo);
         done();
       });  
     });
     
     it('perform createOne', (done: Function) => {     
-      ensureCommunication(RequestMethods.Post, someTodo);
-      todoService.createOne(someTodo).subscribe((resp: Todo) => {
-        expect(resp).toBe(someTodo);
+      ensureCommunication(RequestMethods.Post, todo);
+      todoService.createOne(todo).subscribe((resp: Todo) => {
+        expect(resp).toBe(todo);
         done();
       }); 
     });
     
     it('perform updateOne', (done: Function) => {     
-      ensureCommunication(RequestMethods.Put, someTodo);
-      todoService.updateOne(someTodo).subscribe((resp: Todo) => {
-        expect(resp).toBe(someTodo);
+      ensureCommunication(RequestMethods.Put, todo);
+      todoService.updateOne(todo).subscribe((resp: Todo) => {
+        expect(resp).toBe(todo);
         done();
       });         
     });
     
     it('perform removeOneById', (done: Function) => {     
-      ensureCommunication(RequestMethods.Delete, someTodo);
-      todoService.removeOneById(someTodo.id).subscribe((resp: Todo) => {
-        expect(resp).toBe(someTodo);
+      ensureCommunication(RequestMethods.Delete, todo);
+      todoService.removeOneById(todo.id).subscribe((resp: Todo) => {
+        expect(resp).toBe(todo);
         done();
       });               
     });

@@ -26,6 +26,20 @@ templateLocals
 
 export const tsProject = ts.createProject('tsconfig.json');
 
+function compileTs(src: string | string[], dest: string, inlineTpl?: boolean): NodeJS.ReadWriteStream {
+
+  let result = gulp.src(src)
+    .pipe(plumber())
+    .pipe(sourcemaps.init());
+
+  if (inlineTpl) {
+    result = result.pipe(inlineNg2Template({ base: PATH.src.base }));
+  }
+
+  return result.pipe(typescript(tsProject))
+    .js.pipe(sourcemaps.write())
+    .pipe(gulp.dest(dest));
+}
 
 // --------------
 // Client.
@@ -58,16 +72,7 @@ gulp.task('jslib.build.dev', () => {
 });
 
 gulp.task('js.client.build.dev', () => {
-  
-  const result = gulp.src(PATH.src.ts)
-    .pipe(plumber())
-    .pipe(sourcemaps.init())
-    .pipe(typescript(tsProject));
-
-  return result.js
-    .pipe(sourcemaps.write())
-    .pipe(template(templateLocals))
-    .pipe(gulp.dest(PATH.dest.dev.base));
+  return compileTs(PATH.src.ts, PATH.dest.dev.base);
 });
 
 gulp.task('js.client.watch', () =>
@@ -131,14 +136,14 @@ gulp.task('server.start', () => {
   nodemon({
     script: 'server/bootstrap.ts',
     watch: 'server',
-    ext: 'ts',    
+    ext: 'ts',
     env: { 'profile': ENV },
     execMap: {
-     ts: 'ts-node'
+      ts: 'ts-node'
     }
   }).on('restart', () => {
     process.env.RESTART = true;
-  });  
+  });
 });
 
 gulp.task('serve', (done: gulp.TaskCallback) =>
@@ -155,16 +160,8 @@ gulp.task('serve.watch', [
 // --------------
 // Test.
 gulp.task('test.build', () => {
-
   const src = [`${PATH.src.base}/**/*.ts`, `shared/**/*.ts`, `!${PATH.src.base}/bootstrap.ts`];
-
-  const result = gulp.src(src)
-    .pipe(plumber())
-    .pipe(inlineNg2Template({ base: PATH.src.base }))
-    .pipe(typescript(tsProject));
-
-  return result.js
-    .pipe(gulp.dest(PATH.dest.test));
+  return compileTs(src, PATH.dest.test, true);
 });
 
 gulp.task('test.watch', ['test.build'], () =>
@@ -190,12 +187,10 @@ gulp.task('tslint', () => {
   const src = [
     `${PATH.src.base}/**/*.ts`,
     `${PATH.cwd}/server/**/*.ts`,
-    `${PATH.cwd}/shared/**/*.ts`,
-    `${PATH.tools}/**/*.ts`,    
+    `${PATH.tools}/**/*.ts`,
     `${PATH.cwd}/gulpfile.ts`,
     `!${PATH.src.base}/**/*.d.ts`,
     `!${PATH.cwd}/server/**/*.d.ts`,
-    `!${PATH.cwd}/shared/**/*.d.ts`,
     `!${PATH.tools}/**/*.d.ts`
   ];
 

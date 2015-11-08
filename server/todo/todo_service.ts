@@ -1,5 +1,6 @@
 import {Todo} from '../../client/components/core/dto';
-import {TodoServiceMock} from '../../client/components/todo/todo_service_mock';
+import {ObjectUtil} from '../../client/components/core/util';
+import {todos, buildTodo} from '../../client/components/todo/todo_mock';
 
 // import * as model from '../persistence/model';
 
@@ -10,44 +11,48 @@ import {TodoServiceMock} from '../../client/components/todo/todo_service_mock';
 
 export class TodoService {
 
-  private todos: Todo[] = TodoServiceMock.todos;
-
 	createOne(data: Todo): Promise<Todo> {
-		const todo = TodoServiceMock.buildTodo(data);
-		this.todos.push(todo);
+		const todo = buildTodo(data);
+		todos.push(todo);
 		return Promise.resolve(todo);
 	}
 
 	updateOne(data: Todo): Promise<Todo> {
 		return this.findOneById(data.id).then(todo => {
-			for (let prop in data) {
-				todo[prop] = data[prop];
-			}
+			ObjectUtil.merge(todo, data);
 			return todo;
 		});
 	}
 
 	removeOneById(id: string): Promise<Todo> {
 		return this.findOneById(id).then(todo => {
-			this.todos = this.todos.filter(it => it.id !== todo.id);
+			const index = this._findIndex(id);
+			todos.splice(index, 1);
 			return todo;
 		});
 	}
 
 	find(): Promise<Todo[]> {
-		return Promise.resolve(this.todos);
+		return Promise.resolve(todos);
 	}
 
 	findOneById(id: string): Promise<Todo> {
-		let todo: Todo;
-		for (let i = 0; i < this.todos.length; i++) {
-			if (this.todos[i].id === id) {
-				todo = this.todos[i];
-				break;
-			}
-		}
+		const index = this._findIndex(id);
+		const todo = todos[index];		
 		return Promise.resolve(todo);
 	}
+	
+	private _findIndex(id: string): number {
+    let todo: Todo;
+    const n = todos.length;
+    for (let i = 0; i < n; i++) {
+      const it = todos[i];
+      if (it.id === id) {
+        return i;
+      }
+    }
+    return -1;
+  }
 
 }
 

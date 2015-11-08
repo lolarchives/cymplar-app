@@ -35,7 +35,8 @@ module.exports = function(config) {
       'node_modules/angular2/es6/**',
       'node_modules/angular2/examples/**',
       'node_modules/angular2/**/*_spec.js',
-      'node_modules/angular2/**/*.min.js'      
+      'node_modules/angular2/**/*.min.js',
+      'node_modules/@reactivex/rxjs/dist/cjs/**/*.ts'
     ],    
 
     // test results reporter to use
