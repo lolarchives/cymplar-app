@@ -13,7 +13,7 @@
 * Launch static analysis linter: gulp tslint 
 ```
 
-**Tested on:** Node.js 4.2.1
+**Tested on:** Node.js 4.2.x
 
 ##### Use a TypeScript-aware editor to view/edit the code.
 * [Visual Studio Code](https://code.visualstudio.com/)
