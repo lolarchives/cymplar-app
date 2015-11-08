@@ -18,31 +18,15 @@ import {
 } from 'angular2/testing';
 
 import {TodoService} from './todo_service';
-import {Todo} from '../../../shared/dto';
+import {Todo} from '../core/dto';
+import {TodoServiceMock} from './todo_service_mock';
 
 
 export function main() {
   
   describe('TodoService', () => {    
-    
-    let seq = 0;
-    
-    function nextId() {
-      return `${++seq}`;
-    }
 
-    const someTodos: Todo[] = [
-      { id: nextId(), title: 'Angular2 Router', status: 'done', createdAt: Date.now() },
-      { id: nextId(), title: 'Angular2 Component', status: 'done', createdAt: Date.now() },
-      { id: nextId(), title: 'Angular2 Core Directives', status: 'done', createdAt: Date.now() },
-      { id: nextId(), title: 'Angular2 Custom Directives', status: 'done', createdAt: Date.now() },
-      { id: nextId(), title: 'Angular2 Dependence Injection', status: 'done', createdAt: Date.now() },
-      { id: nextId(), title: 'Angular2 Form', status: 'done', createdAt: Date.now() },
-      { id: nextId(), title: 'Include Development environment', status: 'done', createdAt: Date.now() },
-      { id: nextId(), title: 'Include Production environment', status: 'pending', createdAt: Date.now() },
-      { id: nextId(), title: 'Unit tests', status: 'done', createdAt: Date.now() }
-    ];
-    
+    const someTodos: Todo[] = TodoServiceMock.todos;    
     const someTodo = someTodos[0];
     
     let injector: Injector;

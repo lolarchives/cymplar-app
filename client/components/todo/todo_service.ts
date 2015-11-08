@@ -3,7 +3,7 @@ import {Http, Response} from 'angular2/http';
 import * as Rx from '@reactivex/rxjs/dist/cjs/Rx';
 
 import {OPTS_REQ_JSON} from '../core/web_constant';
-import {Todo} from '../../../shared/dto';
+import {Todo} from '../core/dto';
 
 @Injectable()
 export class TodoService {

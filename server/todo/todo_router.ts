@@ -2,7 +2,7 @@ import * as express from 'express';
 
 
 import {todoService} from './todo_service';
-import {Todo} from '../../shared/dto';
+import {Todo} from '../../client/components/core/dto';
 
 const router = express.Router();
 

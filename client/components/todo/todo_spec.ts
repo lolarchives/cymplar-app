@@ -12,70 +12,18 @@ import {
 } from 'angular2/testing';
 import * as Rx from '@reactivex/rxjs/dist/cjs/Rx';
 
+import {ObjectUtil} from '../core/object_util';
 import {TodoCmp} from './todo';
 import {TodoService} from './todo_service';
-import {Todo} from '../../../shared/dto';
-
-
-class MockTodoService {
-  
-  private seq = 0;
-  
-  private todos: Todo[] = [
-    { id: this.nextId(), title: 'Angular2 Router', status: 'done', createdAt: Date.now() },
-    { id: this.nextId(), title: 'Angular2 Component', status: 'done', createdAt: Date.now() },
-    { id: this.nextId(), title: 'Angular2 Core Directives', status: 'done', createdAt: Date.now() },
-    { id: this.nextId(), title: 'Angular2 Custom Directives', status: 'done', createdAt: Date.now() },
-    { id: this.nextId(), title: 'Angular2 Dependence Injection', status: 'done', createdAt: Date.now() },
-    { id: this.nextId(), title: 'Angular2 Form', status: 'done', createdAt: Date.now() },
-    { id: this.nextId(), title: 'Include Development environment', status: 'done', createdAt: Date.now() },
-    { id: this.nextId(), title: 'Include Production environment', status: 'pending', createdAt: Date.now() },
-    { id: this.nextId(), title: 'Unit tests', status: 'done', createdAt: Date.now() }
-  ];
-
-  createOne(data: Todo): Rx.Observable<Todo> {
-    data.id = this.nextId();
-    data.status = 'pending';
-    data.createdAt = Date.now();
-    this.todos.push(data);
-    return Rx.Observable.from([data]);
-  }
-
-  updateOne(data: Todo): Rx.Observable<Todo> {
-    return this.findOneById(data.id).map((todo: Todo) => {
-      for (let prop in data) {
-        todo[prop] = data[prop];
-      }
-      return todo;
-    });
-  }
-  
-  removeOneById(id: string): Rx.Observable<Todo> {
-    return this.findOneById(id).do((todo: Todo) => {
-      this.todos = this.todos.filter((it: Todo) => it.id !== todo.id);
-    });
-  }
-
-  find(): Rx.Observable<Todo[]> {
-    return Rx.Observable.from([this.todos]);
-  }
-  
-  findOneById(id: string): Rx.Observable<Todo> {
-    const todo = this.todos.find((it: Todo) => it.id === id);
-		return Rx.Observable.from([todo]);
-	}  
-   
-  private nextId() {
-    return `${++this.seq}`;
-  }
-}
+import {Todo} from '../core/dto';
+import {TodoServiceMock} from './todo_service_mock';
 
 
 export function main() {
   describe('Todo component', () => {
 
     it('should work', injectAsync([TestComponentBuilder], (tcb: TestComponentBuilder) => {
-      return tcb.overrideViewProviders(TodoCmp, [provide(TodoService, {useClass: MockTodoService})])
+      return tcb.overrideViewProviders(TodoCmp, [provide(TodoService, {useClass: TodoServiceMock})])
               .createAsync(TodoCmp).then((fixture) => {
 
         fixture.detectChanges();        
@@ -93,15 +41,14 @@ export function main() {
 
         expect(originalLength).toBe(todoInstance.todos.length);
 
-        const newTodo = { title: `Some new task #: ${originalLength + 1}` };
-
+        const newTodo = TodoServiceMock.buildTodo({ title: `Some new task #: ${originalLength + 1}` }, false);
         todoInstance.saveOne(newTodo);
 
         fixture.detectChanges();
         
         expect(obtainTodosLenght()).toBe(originalLength + 1);
         
-        const existingTodo = JSON.parse(JSON.stringify(todoInstance.todos[0]));
+        const existingTodo = ObjectUtil.clone(todoInstance.todos[0]);
         existingTodo.title = `Changed title ${Date.now()}`;
         
         todoInstance.saveOne(existingTodo);
