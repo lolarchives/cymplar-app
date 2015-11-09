@@ -58,7 +58,6 @@ export class ContactService {
 	}
 
 	find(): Promise<Contact[]> {
-		console.log('find');
 		return new Promise<Contact>((resolve: Function, reject: Function) => {
 			ContactModel.find({}, null, { lean: true }, (err, res) => {
 				if (err) {

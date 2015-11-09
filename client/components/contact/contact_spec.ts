@@ -59,7 +59,7 @@ export function main() {
           
           const selectedContact = contactCmp.form.value;
           
-          expect(selectedContact.id).toBe(existingContact._id);               
+          expect(selectedContact._id).toBe(existingContact._id);               
           expect(selectedContact.name).toBe(existingContact.name);               
           
           contactCmp.removeOne(new Event('mock'), existingContact);
