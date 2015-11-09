@@ -50,6 +50,7 @@ export class ContactService {
 	}
 
 	find(): mongoose.Promise<Contact[]> {		
+		console.log('find');
 		return ContactModel.find({}, null, {lean: true}).exec();
 	}
 

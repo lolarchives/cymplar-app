@@ -5,7 +5,7 @@ import {
 } from 'angular2/router';
 
 import {HomeCmp} from '../home/home';
-import {TodoCmp} from '../todo/todo';
+import {ContactCmp} from '../contact/contact';
 
 @Component({
   selector: 'app',
@@ -16,6 +16,6 @@ import {TodoCmp} from '../todo/todo';
 })
 @RouteConfig([
   { path: '/', component: HomeCmp, as: 'Home' },
-  { path: '/todo', component: TodoCmp, as: 'Todo' }
+  { path: '/contact', component: ContactCmp, as: 'Contact' }
 ])
 export class AppCmp {}

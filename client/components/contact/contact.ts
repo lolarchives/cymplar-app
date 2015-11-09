@@ -2,28 +2,29 @@ import {Component, Validators, CORE_DIRECTIVES, ViewEncapsulation,
 FORM_DIRECTIVES, ControlGroup, Control} from 'angular2/angular2';
 import * as Rx from '@reactivex/rxjs/dist/cjs/Rx';
 
-import {TodoService} from './todo_service';
-import {Todo} from '../core/dto';
+import {ContactService} from './contact_service';
+import {Contact} from '../core/dto';
 import {Autofocus} from '../../directives/Autofocus';
 import {CustomOrderByPipe} from '../../pipes/CustomOrderByPipe';
 
 @Component({
-  selector: 'todo',
-  templateUrl: './components/todo/todo.html',
+  selector: 'contact',
+  templateUrl: './components/contact/contact.html',
   directives: [CORE_DIRECTIVES, FORM_DIRECTIVES, Autofocus],
   pipes: [CustomOrderByPipe],
-  viewProviders: [TodoService]
+  viewProviders: [ContactService]
 })
-export class TodoCmp {
+export class ContactCmp {
 
   private form: ControlGroup;
-  private todos: Todo[];
+  private contacts: Contact[];
 
-  constructor(private todoService: TodoService) {
+  constructor(private contactService: ContactService) {
 
     this.form = new ControlGroup({
       id: new Control(null),
-      title: new Control(null, Validators.required)
+      name: new Control(null, Validators.required),
+      email: new Control(null, Validators.required)
     });
 
     this.find();
@@ -31,44 +32,44 @@ export class TodoCmp {
 
   saveOne() {
 
-    const data: Todo = this.form.value;
+    const data: Contact = this.form.value;
 
-    let obs: Rx.Observable<Todo>;
+    let obs: Rx.Observable<Contact>;
 
     if (data.id) {
-      obs = this.todoService.updateOne(data);
+      obs = this.contactService.updateOne(data);
     } else {
-      obs = this.todoService.createOne(data);
+      obs = this.contactService.createOne(data);
     }
 
-    obs.subscribe((res: Todo) => {
+    obs.subscribe((res: Contact) => {
       this.formValue = {};
       this.find();
     });
   }
 
-  removeOne(event: Event, data: Todo) {
+  removeOne(event: Event, data: Contact) {
 
     event.stopPropagation();
 
-    this.todoService.removeOneById(data.id)
-      .subscribe((res: Todo) => {
+    this.contactService.removeOneById(data.id)
+      .subscribe((res: Contact) => {
         this.formValue = {};
         this.find();
       });
   }
 
-  selectOne(data: Todo) {
-    this.todoService.findOneById(data.id)
-      .subscribe((res: Todo) => {
+  selectOne(data: Contact) {
+    this.contactService.findOneById(data.id)
+      .subscribe((res: Contact) => {
         this.formValue = res;
       });
   }
 
   find() {
-    this.todoService.find()
-      .subscribe((res: Todo[]) => {
-        this.todos = res;
+    this.contactService.find()
+      .subscribe((res: Contact[]) => {
+        this.contacts = res;
       });
   }
 

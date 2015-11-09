@@ -1,9 +1,12 @@
-<h2>Todos!</h2>
+<h2>Contacts!</h2>
 
 <form [ng-form-model]="form" (submit)="form.valid && saveOne()" novalidate class="form-inline">
   <input ng-control="id" type="hidden">
-  <div class="form-group has-feedback" [class.has-error]="form.touched && !form.controls.title.valid">
-    <input ng-control="title" autofocus class="form-control" placeholder="Title...">
+  <div class="form-group has-feedback" [class.has-error]="form.touched && !form.controls.name.valid">
+    <input ng-control="name" autofocus class="form-control" placeholder="Name">
+  </div>
+  <div class="form-group has-feedback" [class.has-error]="form.touched && !form.controls.email.valid">
+    <input ng-control="email" autofocus class="form-control" placeholder="EMail">
   </div>
   <button (click)="formValue = {}" type="button" class="btn btn-default">
     <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
@@ -18,19 +21,19 @@
 <table class="table table-striped table-hover">
   <thead>
     <tr>
-      <th>Title</th>
-      <th>Status</th>
+      <th>Name</th>
+      <th>Email</th>
       <th>Created At</th>
       <th></th>
     </tr>
   </thead>
   <tbody>
-    <tr *ng-for="#todo of todos | customOrderBy: ['status', '-createdAt']" (click)="selectOne(todo)">
-      <td>{{ todo.title }}</td>
-      <td>{{ todo.status }}</td>
-      <td>{{ todo.createdAt | date}}</td>
+    <tr *ng-for="#contact of contacts | customOrderBy: ['-createdAt']" (click)="selectOne(contact)">
+      <td>{{ contact.name }}</td>
+      <td>{{ contact.email }}</td>
+      <td>{{ contact.createdAt | date}}</td>
       <td>
-        <button (click)="removeOne($event, todo)" class="btn btn-default">
+        <button (click)="removeOne($event, contact)" class="btn btn-default">
           <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
         </button>
       </td>
