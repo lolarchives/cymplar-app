@@ -2,7 +2,7 @@ import {Injectable} from 'angular2/angular2';
 import {Http, Response} from 'angular2/http';
 import * as Rx from '@reactivex/rxjs/dist/cjs/Rx';
 
-import {OPTS_REQ_JSON} from '../core/web_constant';
+import {OPTS_REQ_JSON} from '../core/util';
 import {Contact} from '../core/dto';
 
 @Injectable()
@@ -20,7 +20,7 @@ export class ContactService {
   
   updateOne(data: Contact): Rx.Observable<Contact> {
     const body = JSON.stringify(data);
-    return this.http.put(`${ContactService.API}/${data.id}`, body, OPTS_REQ_JSON).map((res: Response) => res.json());
+    return this.http.put(`${ContactService.API}/${data._id}`, body, OPTS_REQ_JSON).map((res: Response) => res.json());
   }
   
   removeOneById(id: string): Rx.Observable<Contact> {

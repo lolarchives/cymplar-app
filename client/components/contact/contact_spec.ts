@@ -59,7 +59,7 @@ export function main() {
           
           const selectedContact = contactCmp.form.value;
           
-          expect(selectedContact.id).toBe(existingContact.id);               
+          expect(selectedContact.id).toBe(existingContact._id);               
           expect(selectedContact.name).toBe(existingContact.name);               
           
           contactCmp.removeOne(new Event('mock'), existingContact);
@@ -109,7 +109,7 @@ export function main() {
       
     it('perform findOneById', (done: Function) => {     
       ensureCommunication(backend, RequestMethods.Get, contact);
-      contactService.findOneById(contact.id).subscribe((resp: Contact) => {
+      contactService.findOneById(contact._id).subscribe((resp: Contact) => {
         expect(resp).toBe(contact);
         done();
       });  
@@ -133,7 +133,7 @@ export function main() {
     
     it('perform removeOneById', (done: Function) => {     
       ensureCommunication(backend, RequestMethods.Delete, contact);
-      contactService.removeOneById(contact.id).subscribe((resp: Contact) => {
+      contactService.removeOneById(contact._id).subscribe((resp: Contact) => {
         expect(resp).toBe(contact);
         done();
       });               
@@ -151,7 +151,7 @@ export function main() {
     }
 
     updateOne(data: Contact): Rx.Observable<Contact> {
-      return this.findOneById(data.id).map((contact: Contact) => {
+      return this.findOneById(data._id).map((contact: Contact) => {
         ObjectUtil.merge(contact, data);
         return contact;
       });
@@ -179,7 +179,7 @@ export function main() {
       const n = contacts.length;
       for (let i = 0; i < n; i++) {
         const it = contacts[i];
-        if (it.id === id) {
+        if (it._id === id) {
           return i;
         }
       }

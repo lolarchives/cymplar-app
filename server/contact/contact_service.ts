@@ -1,6 +1,3 @@
-import * as mongoose from 'mongoose';
-
-import {ObjectUtil} from '../../client/components/core/util';
 import {Contact} from '../../client/components/core/dto';
 import {ContactModel} from '../core/model';
 
@@ -8,8 +5,9 @@ import {ContactModel} from '../core/model';
 export class ContactService {
 
 	createOne(data: Contact): Promise<Contact> {
+		delete data._id;
 		const contact = new ContactModel(data);
-		return new Promise<Contact>((resolve, reject) => {
+		return new Promise<Contact>((resolve: Function, reject: Function) => {
 			contact.save((err: Error, savedContact: any) => {
 				if (err) {
 					reject(err);
@@ -20,42 +18,68 @@ export class ContactService {
 		});		
 	}
 
-	updateOne(data: Contact): mongoose.Promise<Contact> {
-		return ContactModel.findById(data.id).exec().then(foundContact => {
-			ObjectUtil.merge(foundContact, data);
-			return new Promise<Contact>((resolve, reject) => {
+	updateOne(data: Contact): Promise<Contact> {
+		return new Promise<Contact>((resolve: Function, reject: Function) => {
+			ContactModel.findById(data._id, (err: Error, foundContact: any) => {
+				if (err) {
+					reject(err);
+					return;
+				}
+				for (let prop in data) {
+					foundContact[prop] = data[prop];
+				}
 				foundContact.save((err: Error, savedContact: any) => {
 					if (err) {
 						reject(err);
 						return;
 					}
-					resolve(<Contact> savedContact.toObject());
+					resolve(<Contact>savedContact.toObject());
 				});
-			});			
+			});
 		});
 	}
 
-	removeOneById(id: string): mongoose.Promise<Contact> {
-		return ContactModel.findById(id).exec().then((foundContact: any) => {
-			return new Promise<Contact>((resolve, reject) => {
+	removeOneById(id: string): Promise<Contact> {
+		return new Promise<Contact>((resolve: Function, reject: Function) => {
+			ContactModel.findById(id, (err, foundContact) => {
+				if (err) {
+					reject(err);
+					return;
+				}
 				foundContact.remove((err: Error) => {
 					if (err) {
 						reject(err);
 						return;
 					}
-					resolve(<Contact> foundContact.toObject());
+					resolve(foundContact.toObject());
 				});
-			});	
+			});
 		});
 	}
 
-	find(): mongoose.Promise<Contact[]> {		
+	find(): Promise<Contact[]> {
 		console.log('find');
-		return ContactModel.find({}, null, {lean: true}).exec();
+		return new Promise<Contact>((resolve: Function, reject: Function) => {
+			ContactModel.find({}, null, { lean: true }, (err, res) => {
+				if (err) {
+					reject(err);
+					return;
+				}
+				resolve(res);
+			});
+		});
 	}
 
-	findOneById(id: string): mongoose.Promise<Contact> {
-		return ContactModel.findById(id, null, {lean: true}).exec();
+	findOneById(id: string): Promise<Contact> {
+		return new Promise<Contact>((resolve: Function, reject: Function) => {
+			ContactModel.findById(id, null, { lean: true }, (err, res) => {
+				if (err) {
+					reject(err);
+					return;
+				}
+				resolve(res);
+			});
+		});
 	}
 
 }

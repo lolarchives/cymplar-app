@@ -21,14 +21,14 @@ router.delete('/:id', (req, res) => {
     .then((contact: Contact) => res.send(contact), (err) => sendError(res, err));
 });
 
-router.get('/_find', (req, res) => {
+router.get('/_find', (req: express.Request, res: express.Response) => {
   contactService.find()
-    .then((contacts: Contact[]) => res.send(contacts), (err) => sendError(res, err));
+    .then((contacts: Contact[]) => res.send(contacts), (err: any) => sendError(res, err));
 });
 
-router.get('/:id', (req, res) => {
+router.get('/:id', (req: express.Request, res: express.Response) => {
   contactService.findOneById(req.params.id)
-    .then((contact: Contact) => res.send(contact), (err) => sendError(res, err));
+    .then((contact: Contact) => res.send(contact), (err: any) => sendError(res, err));
 });
 
 

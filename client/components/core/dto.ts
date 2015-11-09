@@ -1,12 +1,5 @@
-export interface Todo {
-  id?: string;
-  title?: string;
-  status?: string;
-  createdAt?: number;
-}
-
 export interface Contact {
-  id?: string;
+  _id?: any;
   email?: string;
   name?: string;
   website?: string;

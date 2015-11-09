@@ -19,7 +19,7 @@ export function buildContact(data?: Contact, generateId = true): Contact {
   contact.createdAt = new Date();
   ObjectUtil.merge(contact, data);
   if (generateId) {
-    contact.id = nextId();
+    contact._id = nextId();
   }
   return contact;
 } 

@@ -1,11 +1,13 @@
 <h2>Contacts!</h2>
 
 <form [ng-form-model]="form" (submit)="form.valid && saveOne()" novalidate class="form-inline">
-  <input ng-control="id" type="hidden">
-  <div class="form-group has-feedback" [class.has-error]="form.touched && !form.controls.name.valid">
+  <input ng-control="_id" type="hidden">
+  <div class="form-group has-feedback" [class.has-error]="form.controls.name.dirty && !form.controls.name.valid
+      && form.controls.name.value !== ''">
     <input ng-control="name" autofocus class="form-control" placeholder="Name">
   </div>
-  <div class="form-group has-feedback" [class.has-error]="form.touched && !form.controls.email.valid">
+  <div class="form-group has-feedback" [class.has-error]="form.controls.email.dirty && !form.controls.email.valid
+      && form.controls.email.value !== ''">
     <input ng-control="email" class="form-control" placeholder="EMail">
   </div>
   <button (click)="resetForm()" type="button" class="btn btn-default">
@@ -14,7 +16,7 @@
   </button>
   <button [disabled]="!form.valid" class="btn btn-primary">
     <span class="glyphicon glyphicon-ok" aria-hidden="true"></span>
-    {{form.controls.id.value ? 'Update' : 'Create' }}
+    {{form.controls._id.value ? 'Update' : 'Create' }}
   </button>
 </form>
 
@@ -31,7 +33,7 @@
     <tr *ng-for="#contact of contacts | customOrderBy: ['-createdAt']" (click)="selectOne(contact)">
       <td>{{ contact.name }}</td>
       <td>{{ contact.email }}</td>
-      <td>{{ contact.createdAt | date}}</td>
+      <td>{{ contact.createdAt}}</td>
       <td>
         <button (click)="removeOne($event, contact)" class="btn btn-default">
           <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>

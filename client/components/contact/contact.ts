@@ -3,6 +3,7 @@ FORM_DIRECTIVES, ControlGroup, Control} from 'angular2/angular2';
 import * as Rx from '@reactivex/rxjs/dist/cjs/Rx';
 
 import {ContactService} from './contact_service';
+import {validateEmail} from '../core/util';
 import {Contact} from '../core/dto';
 import {Autofocus} from '../../directives/Autofocus';
 import {CustomOrderByPipe} from '../../pipes/CustomOrderByPipe';
@@ -22,9 +23,9 @@ export class ContactCmp {
   constructor(private contactService: ContactService) {
 
     this.form = new ControlGroup({
-      id: new Control(null),
+      _id: new Control(null),
       name: new Control(null, Validators.required),
-      email: new Control(null, Validators.required)
+      email: new Control(null, validateEmail)
     });
 
     this.find();
@@ -36,7 +37,7 @@ export class ContactCmp {
 
     let obs: Rx.Observable<Contact>;
 
-    if (data.id) {
+    if (data._id) {
       obs = this.contactService.updateOne(data);
     } else {
       obs = this.contactService.createOne(data);
@@ -52,7 +53,7 @@ export class ContactCmp {
 
     event.stopPropagation();
 
-    this.contactService.removeOneById(data.id)
+    this.contactService.removeOneById(data._id)
       .subscribe((res: Contact) => {
         this.resetForm();
         this.find();
@@ -60,7 +61,7 @@ export class ContactCmp {
   }
 
   selectOne(data: Contact) {
-    this.contactService.findOneById(data.id)
+    this.contactService.findOneById(data._id)
       .subscribe((res: Contact) => {
         this.resetForm(res);
       });
