@@ -8,10 +8,10 @@ import {TestComponentBuilder, describe, expect, inject, injectAsync, it,
 
 import * as Rx from '@reactivex/rxjs/dist/cjs/Rx';
 
-import {ObjectUtil} from '../core/util';
+import {ObjectUtil} from '../../core/util';
+import {Contact} from '../../core/dto';
 import {ContactCmp} from './contact';
 import {ContactService} from './contact_service';
-import {Contact} from '../core/dto';
 import {contacts, buildContact} from './contact_mock';
 
 

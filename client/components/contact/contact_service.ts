@@ -2,8 +2,8 @@ import {Injectable} from 'angular2/angular2';
 import {Http, Response} from 'angular2/http';
 import * as Rx from '@reactivex/rxjs/dist/cjs/Rx';
 
-import {OPTS_REQ_JSON} from '../core/util';
-import {Contact} from '../core/dto';
+import {OPTS_REQ_JSON} from '../../core/util';
+import {Contact} from '../../core/dto';
 
 @Injectable()
 export class ContactService {

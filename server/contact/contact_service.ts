@@ -1,4 +1,4 @@
-import {Contact} from '../../client/components/core/dto';
+import {Contact} from '../../client/core/dto';
 import {ContactModel} from '../core/model';
 
 

@@ -1,5 +1,5 @@
-import {ObjectUtil} from '../../components/core/util';
-import {Contact} from '../../components/core/dto';
+import {ObjectUtil} from '../../core/util';
+import {Contact} from '../../core/dto';
 
 let seq = 0;
 

@@ -2,7 +2,7 @@ import * as express from 'express';
 
 import {sendError} from '../core/web_util';
 import {contactService} from './contact_service';
-import {Contact} from '../../client/components/core/dto';
+import {Contact} from '../../client/core/dto';
 
 const router = express.Router();
 
