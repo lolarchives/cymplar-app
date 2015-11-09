@@ -1,4 +1,4 @@
-import {argv} from 'yargs';
+import * as argv from 'yargs';
 import * as fs from 'fs';
 
 const resolve = require.resolve;

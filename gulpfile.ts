@@ -66,7 +66,7 @@ gulp.task('sass.build.watch', () =>
 );
 
 gulp.task('jslib.build.dev', () => {
-  const src = PATH.src.jslib_inject.concat(PATH.src.jslib_copy_only);
+  const src: string[] = PATH.src.jslib_inject.concat(PATH.src.jslib_copy_only);
   return gulp.src(src)
     .pipe(gulp.dest(PATH.dest.dev.lib));
 });

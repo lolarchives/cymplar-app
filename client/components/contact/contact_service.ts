@@ -17,12 +17,12 @@ export class ContactService {
     const body = JSON.stringify(data);
     return this.http.post(ContactService.API, body, OPTS_REQ_JSON).map((res: Response) => res.json());
   }
-  
+
   updateOne(data: Contact): Rx.Observable<Contact> {
     const body = JSON.stringify(data);
     return this.http.put(`${ContactService.API}/${data._id}`, body, OPTS_REQ_JSON).map((res: Response) => res.json());
   }
-  
+
   removeOneById(id: string): Rx.Observable<Contact> {
     return this.http.delete(`${ContactService.API}/${id}`).map((res: Response) => res.json());
   }
@@ -33,7 +33,7 @@ export class ContactService {
 
   find(): Rx.Observable<Contact[]> {
     return this.http.get(`${ContactService.API}/_find`).map((res: Response) => res.json());
-  }  
-  
+  }
+
 }
 

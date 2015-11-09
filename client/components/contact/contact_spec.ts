@@ -16,7 +16,7 @@ import {contacts, buildContact} from './contact_mock';
 
 
 export function main() {
-  
+
   describe('ContactCmp', () => {
 
     it('crud should work', injectAsync([TestComponentBuilder], (tcb: TestComponentBuilder) => {
@@ -35,12 +35,12 @@ export function main() {
 
           const originalLength = obtainContactsLenght();
           let newLength = originalLength;
-          expect(originalLength).toBe(contacts.length);          
+          expect(originalLength).toBe(contacts.length);
           contactCmp.resetForm({ name: `Some new task #: ${originalLength + 1}` });
           contactCmp.saveOne();
 
           fixture.detectChanges();
-          
+
           newLength++;
 
           expect(obtainContactsLenght()).toBe(newLength);
@@ -49,39 +49,39 @@ export function main() {
           contactCmp.resetForm(existingContact);
           contactCmp.saveOne();
 
-          fixture.detectChanges();                         
-               
-          expect(obtainContactsLenght()).toBe(newLength);
-          
-          contactCmp.selectOne(existingContact);
-          
           fixture.detectChanges();
-          
+
+          expect(obtainContactsLenght()).toBe(newLength);
+
+          contactCmp.selectOne(existingContact);
+
+          fixture.detectChanges();
+
           const selectedContact = contactCmp.form.value;
-          
-          expect(selectedContact._id).toBe(existingContact._id);               
-          expect(selectedContact.name).toBe(existingContact.name);               
-          
+
+          expect(selectedContact._id).toBe(existingContact._id);
+          expect(selectedContact.name).toBe(existingContact.name);
+
           contactCmp.removeOne(new Event('mock'), existingContact);
 
           fixture.detectChanges();
-          
+
           newLength--;
 
-          expect(obtainContactsLenght()).toBe(newLength);          
+          expect(obtainContactsLenght()).toBe(newLength);
         });
-    }));      
+    }));
 
   });
-  
-  describe('ContactService', () => {    
-    
+
+  describe('ContactService', () => {
+
     const contact = contacts[0];
-    
+
     let injector: Injector;
-    let backend: MockBackend;    
+    let backend: MockBackend;
     let contactService: ContactService;
-    
+
     beforeEach(() => {
       injector = Injector.resolveAndCreate([
         BaseRequestOptions,
@@ -93,52 +93,52 @@ export function main() {
           return new ContactService(http);
         }, deps: [Http]})
       ]);
-      backend = injector.get(MockBackend);           
-      contactService = injector.get(ContactService);  
-    });           
-    
-    afterEach(() => backend.verifyNoPendingRequests());        
-    
-    it('perform find', (done: Function) => {     
+      backend = injector.get(MockBackend);
+      contactService = injector.get(ContactService);
+    });
+
+    afterEach(() => backend.verifyNoPendingRequests());
+
+    it('perform find', (done: Function) => {
       ensureCommunication(backend, RequestMethods.Get, contacts);
       contactService.find().subscribe((resp: Contact[]) => {
         expect(resp).toBe(contacts);
         done();
-      });               
-    });  
-      
-    it('perform findOneById', (done: Function) => {     
+      });
+    });
+
+    it('perform findOneById', (done: Function) => {
       ensureCommunication(backend, RequestMethods.Get, contact);
       contactService.findOneById(contact._id).subscribe((resp: Contact) => {
         expect(resp).toBe(contact);
         done();
-      });  
+      });
     });
-    
-    it('perform createOne', (done: Function) => {     
+
+    it('perform createOne', (done: Function) => {
       ensureCommunication(backend, RequestMethods.Post, contact);
       contactService.createOne(contact).subscribe((resp: Contact) => {
         expect(resp).toBe(contact);
         done();
-      }); 
+      });
     });
-    
-    it('perform updateOne', (done: Function) => {     
+
+    it('perform updateOne', (done: Function) => {
       ensureCommunication(backend, RequestMethods.Put, contact);
       contactService.updateOne(contact).subscribe((resp: Contact) => {
         expect(resp).toBe(contact);
         done();
-      });         
+      });
     });
-    
-    it('perform removeOneById', (done: Function) => {     
+
+    it('perform removeOneById', (done: Function) => {
       ensureCommunication(backend, RequestMethods.Delete, contact);
       contactService.removeOneById(contact._id).subscribe((resp: Contact) => {
         expect(resp).toBe(contact);
         done();
-      });               
-    });    
-  
+      });
+    });
+
   });
 
 
@@ -158,10 +158,9 @@ export function main() {
     }
 
     removeOneById(id: string): Rx.Observable<Contact> {
-      return this.findOneById(id).do((contact: Contact) => {
-        const index = this._findIndex(id);
-        contacts.splice(index, 1);
-      });
+      const index = this._findIndex(id);
+      const removed = contacts.splice(index, 1);
+      return Rx.Observable.from(removed);
     }
 
     find(): Rx.Observable<Contact[]> {
@@ -175,7 +174,6 @@ export function main() {
     }
 
     private _findIndex(id: string): number {
-      let contact: Contact;
       const n = contacts.length;
       for (let i = 0; i < n; i++) {
         const it = contacts[i];
@@ -187,8 +185,8 @@ export function main() {
     }
 
   }
-  
-  
+
+
   function ensureCommunication (backend: MockBackend, reqMethod: RequestMethods, expectedBody: string | Object) {
     backend.connections.subscribe((c: any) => {
       expect(c.request.method).toBe(reqMethod);
