@@ -6,7 +6,7 @@ import * as serveStatic from 'serve-static';
 import {resolve} from 'path';
 
 import {APP_BASE, LIVE_RELOAD_PORT, PATH, PORT, ENV} from '../tools/config';
-import * as todoRouter from './todo/todo_router';
+import * as contactRouter from './contact/contact_router';
 
 const INDEX_DEST_PATH = resolve(PATH.cwd, PATH.dest[ENV].base, 'index.html');
 
@@ -21,7 +21,7 @@ server.use(
 server.use(bodyParser.json());
 server.use(bodyParser.urlencoded({ extended: false }));
 
-server.use('/api/todo', todoRouter);
+server.use('/api/contact', contactRouter);
 
 server.all(APP_BASE + '*', (req, res) =>
   res.sendFile(INDEX_DEST_PATH)

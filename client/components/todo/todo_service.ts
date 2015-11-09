@@ -8,7 +8,7 @@ import {Todo} from '../core/dto';
 @Injectable()
 export class TodoService {
 
-  static API = '/api/todo';
+  static API = '/api/contact';
 
   constructor(private http: Http) {
   }
