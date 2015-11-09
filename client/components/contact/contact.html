@@ -6,9 +6,9 @@
     <input ng-control="name" autofocus class="form-control" placeholder="Name">
   </div>
   <div class="form-group has-feedback" [class.has-error]="form.touched && !form.controls.email.valid">
-    <input ng-control="email" autofocus class="form-control" placeholder="EMail">
+    <input ng-control="email" class="form-control" placeholder="EMail">
   </div>
-  <button (click)="formValue = {}" type="button" class="btn btn-default">
+  <button (click)="resetForm()" type="button" class="btn btn-default">
     <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
     Clear
   </button>

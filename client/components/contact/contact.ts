@@ -16,8 +16,8 @@ import {CustomOrderByPipe} from '../../pipes/CustomOrderByPipe';
 })
 export class ContactCmp {
 
-  private form: ControlGroup;
-  private contacts: Contact[];
+  form: ControlGroup;
+  contacts: Contact[];
 
   constructor(private contactService: ContactService) {
 
@@ -43,7 +43,7 @@ export class ContactCmp {
     }
 
     obs.subscribe((res: Contact) => {
-      this.formValue = {};
+      this.resetForm();
       this.find();
     });
   }
@@ -54,7 +54,7 @@ export class ContactCmp {
 
     this.contactService.removeOneById(data.id)
       .subscribe((res: Contact) => {
-        this.formValue = {};
+        this.resetForm();
         this.find();
       });
   }
@@ -62,7 +62,7 @@ export class ContactCmp {
   selectOne(data: Contact) {
     this.contactService.findOneById(data.id)
       .subscribe((res: Contact) => {
-        this.formValue = res;
+        this.resetForm(res);
       });
   }
 
@@ -73,11 +73,7 @@ export class ContactCmp {
       });
   }
 
-  get formValue(): Object {
-    return this.form.value;
-  }
-
-  set formValue(data: Object) {
+  resetForm(data: Contact = {}) {
     for (let prop in this.form.controls) {
       (<Control>this.form.controls[prop]).updateValue(data[prop]);
     }

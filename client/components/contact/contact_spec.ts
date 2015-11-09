@@ -36,7 +36,7 @@ export function main() {
           const originalLength = obtainContactsLenght();
           let newLength = originalLength;
           expect(originalLength).toBe(contacts.length);          
-          contactCmp.formValue = { title: `Some new task #: ${originalLength + 1}` };
+          contactCmp.resetForm({ name: `Some new task #: ${originalLength + 1}` });
           contactCmp.saveOne();
 
           fixture.detectChanges();
@@ -45,8 +45,8 @@ export function main() {
 
           expect(obtainContactsLenght()).toBe(newLength);
           const existingContact = ObjectUtil.clone(contacts[0]);
-          existingContact.title = `Changed title ${Date.now() }`;
-          contactCmp.formValue = existingContact;
+          existingContact.name = `Changed attr ${Date.now() }`;
+          contactCmp.resetForm(existingContact);
           contactCmp.saveOne();
 
           fixture.detectChanges();                         
@@ -57,10 +57,10 @@ export function main() {
           
           fixture.detectChanges();
           
-          const selectedContact = contactCmp.formValue;
+          const selectedContact = contactCmp.form.value;
           
-          expect(selectedContact['id']).toBe(existingContact.id);               
-          expect(selectedContact['title']).toBe(existingContact.title);               
+          expect(selectedContact.id).toBe(existingContact.id);               
+          expect(selectedContact.name).toBe(existingContact.name);               
           
           contactCmp.removeOne(new Event('mock'), existingContact);
 
