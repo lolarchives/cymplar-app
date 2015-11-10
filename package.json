@@ -19,7 +19,7 @@
     "test.watch": "gulp test.watch"
   },
   "author": "Roger Padilla <rogerpadilla>",
-  "license": "private",
+  "private": true,
   "devDependencies": {
     "@reactivex/rxjs": "5.0.0-alpha.7",
     "async": "^1.5.0",
