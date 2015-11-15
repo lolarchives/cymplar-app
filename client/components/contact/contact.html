@@ -31,7 +31,7 @@
     </tr>
   </thead>
   <tbody>
-    <tr *ng-for="#contact of contacts | async | customOrderBy: ['-createdAt']" (click)="selectOne(contact)">
+    <tr *ng-for="#contact of contacts | async" (click)="selectOne(contact)">
       <td>{{ contact.name }}</td>
       <td>{{ contact.email }}</td>
       <td>{{ contact.createdAt | date: 'medium'}}</td>

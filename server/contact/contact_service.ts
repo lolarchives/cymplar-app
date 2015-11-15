@@ -59,7 +59,7 @@ export class ContactService {
 
 	find(): Promise<Contact[]> {
 		return new Promise<Contact>((resolve: Function, reject: Function) => {
-			ContactModel.find({}, null, { lean: true }, (err, res) => {
+			ContactModel.find({}, null, { sort: '-createdAt', lean: true }, (err, res) => {
 				if (err) {
 					reject(err);
 					return;
