@@ -1,5 +1,5 @@
 import {COMMON_DIRECTIVES, COMMON_PIPES, Component, Validators,
-ControlGroup, Control} from 'angular2/angular2';
+ControlGroup, Control, Observable} from 'angular2/angular2';
 import * as Rx from '@reactivex/rxjs/dist/cjs/Rx';
 
 import {validateEmail} from '../../core/util';
@@ -18,7 +18,7 @@ import {CustomOrderByPipe} from '../../pipes/CustomOrderByPipe';
 export class ContactCmp {
 
   form: ControlGroup;
-  contacts: Contact[];
+  contacts: Observable<Contact[]>;
 
   constructor(private contactService: ContactService) {
 
@@ -35,7 +35,7 @@ export class ContactCmp {
 
     const data: Contact = this.form.value;
 
-    let obs: Rx.Observable<Contact>;
+    let obs: Observable<Contact>;
 
     if (data._id) {
       obs = this.contactService.updateOne(data);
@@ -68,10 +68,7 @@ export class ContactCmp {
   }
 
   find() {
-    this.contactService.find()
-      .subscribe((res: Contact[]) => {
-        this.contacts = res;
-      });
+    this.contacts = this.contactService.find();
   }
 
   resetForm(data: Contact = {}) {
