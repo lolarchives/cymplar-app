@@ -4,10 +4,10 @@ import {Contact} from '../../core/dto';
 let seq = 0;
 
 export const contacts: Contact[] = [
-  buildContact({ name: 'Michael Jackson' }),
-  buildContact({ name: 'Madonna' }),
-  buildContact({ name: 'The Beatles' }),
-  buildContact({ name: 'Adelle' })
+  buildContact({ name: 'Michael Jackson', email: 'michael_jackson@example.com' }),
+  buildContact({ name: 'Madonna', email: 'madonna@example.com' }),
+  buildContact({ name: 'The Beatles', email: 'the_beatles@example.com' }),
+  buildContact({ name: 'Adelle', email: 'adelle@example.com' })
 ]; 
 
 function nextId() {
@@ -16,7 +16,7 @@ function nextId() {
 
 export function buildContact(data?: Contact, generateId = true): Contact {
   const contact: Contact = {};  
-  contact.createdAt = new Date();
+  contact.createdAt = Date.now();
   ObjectUtil.merge(contact, data);
   if (generateId) {
     contact._id = nextId();

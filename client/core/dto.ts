@@ -6,6 +6,6 @@ export interface Contact {
   industry?: any;
   city?: any;
   createdBy?: any;
-  createdAt?: Date;
-  updatedAt?: Date;
+  createdAt?: number;
+  updatedAt?: number;
 }

@@ -26,6 +26,7 @@
       <th>Name</th>
       <th>Email</th>
       <th>Created At</th>
+      <th>Updated At</th>
       <th></th>
     </tr>
   </thead>
@@ -33,7 +34,8 @@
     <tr *ng-for="#contact of contacts | customOrderBy: ['-createdAt']" (click)="selectOne(contact)">
       <td>{{ contact.name }}</td>
       <td>{{ contact.email }}</td>
-      <td>{{ contact.createdAt}}</td>
+      <td>{{ contact.createdAt | date: 'medium'}}</td>
+      <td>{{ contact.updatedAt | date: 'medium'}}</td>
       <td>
         <button (click)="removeOne($event, contact)" class="btn btn-default">
           <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>

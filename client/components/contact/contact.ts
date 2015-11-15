@@ -1,5 +1,5 @@
-import {Component, Validators, CORE_DIRECTIVES, ViewEncapsulation,
-FORM_DIRECTIVES, ControlGroup, Control} from 'angular2/angular2';
+import {COMMON_DIRECTIVES, COMMON_PIPES, Component, Validators,
+ControlGroup, Control} from 'angular2/angular2';
 import * as Rx from '@reactivex/rxjs/dist/cjs/Rx';
 
 import {validateEmail} from '../../core/util';
@@ -11,8 +11,8 @@ import {CustomOrderByPipe} from '../../pipes/CustomOrderByPipe';
 @Component({
   selector: 'contact',
   templateUrl: './components/contact/contact.html',
-  directives: [CORE_DIRECTIVES, FORM_DIRECTIVES, Autofocus],
-  pipes: [CustomOrderByPipe],
+  directives: [COMMON_DIRECTIVES, Autofocus],
+  pipes: [COMMON_PIPES, CustomOrderByPipe],
   viewProviders: [ContactService]
 })
 export class ContactCmp {
