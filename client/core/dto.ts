@@ -1,11 +1,14 @@
-export interface Contact {
+export interface BaseDto {
   _id?: any;
+  createdBy?: any;
+  createdAt?: number;
+  updatedAt?: number;
+}
+
+export interface Contact extends BaseDto {
   email?: string;
   name?: string;
   website?: string;
   industry?: any;
   city?: any;
-  createdBy?: any;
-  createdAt?: number;
-  updatedAt?: number;
 }

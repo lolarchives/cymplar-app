@@ -1,14 +1,13 @@
-import * as mongoose from 'mongoose';
+import {Schema, createConnection} from 'mongoose';
 
 /* tslint:disable */
-const Schema = mongoose.Schema;
 const ObjectId = Schema.Types.ObjectId;
 /* tslint:enable */
 
 // TODO obtain this config according to the profile (prod, dev, etc.).
 const connUri = 'mongodb://admin:Leo2006!@ds049754.mongolab.com:49754/cymplar';
 
-const db = mongoose.createConnection(connUri);
+const db = createConnection(connUri);
 db.on('error', () => console.error('Error connecting to Database:', connUri));
 db.once('open', () => console.log('%s: Connected to MongoDb on %s', new Date(), connUri));
 
@@ -75,7 +74,7 @@ const schemas = {
 
 
 for (let prop in schemas) {
-  const schem: mongoose.Schema = schemas[prop];
+  const schem: Schema = schemas[prop];
   schem.pre('save', function(next: Function) {
     const obj: any = this;
     console.log('pre save', obj.isNew);
