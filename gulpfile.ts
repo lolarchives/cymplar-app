@@ -223,13 +223,15 @@ gulp.task('tmp.clean', () =>
 
 // --------------
 // Postinstall.
-gulp.task('npm', () =>
-  shell.task(['npm prune'])
-);
+gulp.task('npm', (done: gulp.TaskCallback) => {
+  shell.task(['npm prune']);
+  done();
+});
 
-gulp.task('tsd', () =>
-  shell.task(['tsd reinstall --clean', 'tsd link', 'tsd rebundle'])
-);
+gulp.task('tsd', (done: gulp.TaskCallback) => {
+  shell.task(['tsd reinstall --clean', 'tsd link', 'tsd rebundle']);
+  done();
+});
 
 gulp.task('postinstall', (done: gulp.TaskCallback) =>
   runSequence('clean', 'npm', done)
