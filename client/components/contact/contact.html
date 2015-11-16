@@ -1,14 +1,14 @@
 <h2>Contacts!</h2>
 
 <form [ng-form-model]="form" (submit)="form.valid && saveOne()" novalidate class="form-inline">
-  <input ng-control="_id" type="hidden">
+  <input ng-control="_id" [(ng-model)]="contact._id" type="text">
   <div class="form-group has-feedback" [class.has-error]="form.controls.name.dirty && !form.controls.name.valid
       && form.controls.name.value !== ''">
-    <input ng-control="name" autofocus class="form-control" placeholder="Name">
+    <input ng-control="name" [(ng-model)]="contact.name" autofocus class="form-control" placeholder="Name">
   </div>
   <div class="form-group has-feedback" [class.has-error]="form.controls.email.dirty && !form.controls.email.valid
       && form.controls.email.value !== ''">
-    <input ng-control="email" class="form-control" placeholder="EMail">
+    <input ng-control="email" [(ng-model)]="contact.email" class="form-control" placeholder="Email">
   </div>
   <button (click)="resetForm()" type="button" class="btn btn-default">
     <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
@@ -31,7 +31,7 @@
     </tr>
   </thead>
   <tbody>
-    <tr *ng-for="#contact of contacts" (click)="selectOne(contact)">
+    <tr *ng-for="#contact of contacts" (click)="selectOne(contact._id)">
       <td>{{ contact.name }}</td>
       <td>{{ contact.email }}</td>
       <td>{{ contact.createdAt | date: 'medium'}}</td>

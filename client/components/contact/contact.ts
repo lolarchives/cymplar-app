@@ -18,13 +18,14 @@ export class ContactCmp {
 
   form: ControlGroup;
   contacts: Contact[];
+  contact: Contact = {};
 
   constructor(private contactService: ContactService) {
 
     this.form = new ControlGroup({
-      _id: new Control(null),
-      name: new Control(null, Validators.required),
-      email: new Control(null, validateEmail)
+      _id: new Control(''),
+      name: new Control('', Validators.required),
+      email: new Control('', validateEmail)
     });
 
     this.find();
@@ -32,14 +33,12 @@ export class ContactCmp {
 
   saveOne() {
 
-    const data: Contact = this.form.value;
-
     let obs: Observable<Contact>;
 
-    if (data._id) {
-      obs = this.contactService.updateOne(data);
+    if (this.contact._id) {
+      obs = this.contactService.updateOne(this.contact);
     } else {
-      obs = this.contactService.createOne(data);
+      obs = this.contactService.createOne(this.contact);
     }
 
     obs.subscribe((res: Contact) => {
@@ -59,8 +58,8 @@ export class ContactCmp {
       });
   }
 
-  selectOne(data: Contact) {
-    this.contactService.findOneById(data._id)
+  selectOne(id: string) {
+    this.contactService.findOneById(id)
       .subscribe((res: Contact) => {
         this.resetForm(res);
       });
@@ -73,9 +72,7 @@ export class ContactCmp {
   }
 
   resetForm(data: Contact = {}) {
-    for (let prop in this.form.controls) {
-      (<Control>this.form.controls[prop]).updateValue(data[prop]);
-    }
+    this.contact = data;
   }
 
 }
