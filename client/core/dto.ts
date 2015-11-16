@@ -12,3 +12,8 @@ export interface Contact extends BaseDto {
   industry?: any;
   city?: any;
 }
+
+export interface Notification {
+  type: string;
+  data?: any;
+}

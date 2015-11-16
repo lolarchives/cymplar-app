@@ -17,7 +17,7 @@ import {Autofocus} from '../../directives/Autofocus';
 export class ContactCmp {
 
   form: ControlGroup;
-  contacts: Observable<Contact[]>;
+  contacts: Contact[];
 
   constructor(private contactService: ContactService) {
 
@@ -67,7 +67,9 @@ export class ContactCmp {
   }
 
   find() {
-    this.contacts = this.contactService.find();
+    this.contactService.find().subscribe((res: Contact[]) => {
+      this.contacts = res;
+    });
   }
 
   resetForm(data: Contact = {}) {

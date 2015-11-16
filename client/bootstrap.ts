@@ -3,7 +3,10 @@ import {ROUTER_PROVIDERS} from 'angular2/router';
 import {HTTP_PROVIDERS} from 'angular2/http';
 
 import {AppCmp} from './components/app/app';
+import {HttpClient} from './core/http_client';
 
 bootstrap(AppCmp, [
-  ROUTER_PROVIDERS, HTTP_PROVIDERS
+  ROUTER_PROVIDERS,
+  HTTP_PROVIDERS,
+  HttpClient
 ]);

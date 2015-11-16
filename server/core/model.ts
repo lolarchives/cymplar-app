@@ -1,4 +1,4 @@
-import {Schema, createConnection} from 'mongoose';
+import {Schema, Document, createConnection} from 'mongoose';
 
 /* tslint:disable */
 const ObjectId = Schema.Types.ObjectId;
@@ -76,13 +76,12 @@ const schemas = {
 for (let prop in schemas) {
   const schem: Schema = schemas[prop];
   schem.pre('save', function(next: Function) {
-    const obj: any = this;
-    console.log('pre save', obj.isNew);
+    const obj: Document = this;
     const now = Date.now();
     if (obj.isNew) {
-      obj.createdAt = now;
+      obj['createdAt'] = now;
     }
-    obj.updatedAt = now;
+    obj['updatedAt'] = now;
     next();
   });
 }

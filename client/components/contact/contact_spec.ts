@@ -7,6 +7,7 @@ import {TestComponentBuilder, describe, expect, inject, injectAsync, it,
 } from 'angular2/testing';
 
 import {ObjectUtil} from '../../core/util';
+import {HttpClient} from '../../core/http_client';
 import {Contact} from '../../core/dto';
 import {ContactCmp} from './contact';
 import {ContactService} from './contact_service';
@@ -15,9 +16,9 @@ import {contacts, buildContact} from './contact_mock';
 
 export function main() {
 
-  describe('ContactCmp', () => {
+  describe('Contact component', () => {
 
-    it('crud should work', injectAsync([TestComponentBuilder], (tcb: TestComponentBuilder) => {
+    it('should work', injectAsync([TestComponentBuilder], (tcb: TestComponentBuilder) => {
       return tcb.overrideViewProviders(ContactCmp, [provide(ContactService, { useClass: ContactServiceMock })])
         .createAsync(ContactCmp).then((fixture) => {
 
@@ -69,73 +70,6 @@ export function main() {
           expect(obtainContactsLenght()).toBe(newLength);
         });
     }));
-
-  });
-
-  describe('ContactService', () => {
-
-    const contact = contacts[0];
-
-    let injector: Injector;
-    let backend: MockBackend;
-    let contactService: ContactService;
-
-    beforeEach(() => {
-      injector = Injector.resolveAndCreate([
-        BaseRequestOptions,
-        MockBackend,
-        provide(Http, {useFactory: (backend: ConnectionBackend, defaultOptions: BaseRequestOptions) => {
-          return new Http(backend, defaultOptions);
-        }, deps: [MockBackend, BaseRequestOptions]}),
-        provide(ContactService, {useFactory: (http: Http) => {
-          return new ContactService(http);
-        }, deps: [Http]})
-      ]);
-      backend = injector.get(MockBackend);
-      contactService = injector.get(ContactService);
-    });
-
-    afterEach(() => backend.verifyNoPendingRequests());
-
-    it('perform find', (done: Function) => {
-      ensureCommunication(backend, RequestMethods.Get, contacts);
-      contactService.find().subscribe((resp: Contact[]) => {
-        expect(resp).toBe(contacts);
-        done();
-      });
-    });
-
-    it('perform findOneById', (done: Function) => {
-      ensureCommunication(backend, RequestMethods.Get, contact);
-      contactService.findOneById(contact._id).subscribe((resp: Contact) => {
-        expect(resp).toBe(contact);
-        done();
-      });
-    });
-
-    it('perform createOne', (done: Function) => {
-      ensureCommunication(backend, RequestMethods.Post, contact);
-      contactService.createOne(contact).subscribe((resp: Contact) => {
-        expect(resp).toBe(contact);
-        done();
-      });
-    });
-
-    it('perform updateOne', (done: Function) => {
-      ensureCommunication(backend, RequestMethods.Put, contact);
-      contactService.updateOne(contact).subscribe((resp: Contact) => {
-        expect(resp).toBe(contact);
-        done();
-      });
-    });
-
-    it('perform removeOneById', (done: Function) => {
-      ensureCommunication(backend, RequestMethods.Delete, contact);
-      contactService.removeOneById(contact._id).subscribe((resp: Contact) => {
-        expect(resp).toBe(contact);
-        done();
-      });
-    });
 
   });
 
