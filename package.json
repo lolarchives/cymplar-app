@@ -60,9 +60,9 @@
     "serve-static": "^1.10.0",
     "slash": "^1.0.0",
     "stream-series": "^0.1.1",
-    "systemjs-builder": "^0.14.10",
+    "systemjs-builder": "^0.14.11",
     "tiny-lr": "^0.2.1",
-    "ts-node": "^0.5.1",
+    "ts-node": "^0.5.2",
     "tsd": "^0.6.5",
     "typescript": "^1.6.2",
     "typescript-register": "^1.1.0",
@@ -74,8 +74,8 @@
     "bootstrap": "^3.3.5",
     "es6-module-loader": "^0.17.8",
     "es6-shim": "^0.33.13",
-    "mongoose": "^4.2.5",
-    "systemjs": "^0.19.5"
+    "mongoose": "^4.2.6",
+    "systemjs": "^0.19.6"
   },
   "engines": {
     "node": "^4.2.1",
