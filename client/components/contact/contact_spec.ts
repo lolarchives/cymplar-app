@@ -79,7 +79,7 @@ export function main() {
     createOne(data: Contact): Observable<Contact> {
       const contact = buildContact(data);
       contacts.push(contact);
-      return Observable.from([contact]);
+      return Observable.of(contact);
     }
 
     updateOne(data: Contact): Observable<Contact> {
@@ -92,17 +92,17 @@ export function main() {
     removeOneById(id: string): Observable<Contact> {
       const index = this._findIndex(id);
       const removed = contacts.splice(index, 1);
-      return Observable.from(removed);
+      return Observable.of(removed);
     }
 
     find(): Observable<Contact[]> {
-      return Observable.from([contacts]);
+      return Observable.of(contacts);
     }
 
     findOneById(id: string): Observable<Contact> {
       const index = this._findIndex(id);
       const contact = contacts[index];
-      return Observable.from([contact]);
+      return Observable.of(contact);
     }
 
     private _findIndex(id: string): number {

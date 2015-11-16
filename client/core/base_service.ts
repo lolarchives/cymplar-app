@@ -1,14 +1,14 @@
 import {Observable} from 'angular2/angular2';
 import {Http, Response} from 'angular2/http';
 
-import {OPTS_REQ_JSON} from './util';
+import {OPTS_REQ_JSON} from './web_util';
 import {BaseDto} from './dto';
 import {HttpClient} from './http_client';
 
 
 export abstract class BaseResourceService<T extends BaseDto> {
 
-  url: string;
+  protected url: string;
 
   constructor(protected http: HttpClient, resourceName: string) {
     this.url = `/api/${resourceName}`;

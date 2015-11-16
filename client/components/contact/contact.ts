@@ -2,7 +2,7 @@ import {COMMON_DIRECTIVES, COMMON_PIPES, Component, Validators,
 ControlGroup, Control, Observable} from 'angular2/angular2';
 import * as Rx from '@reactivex/rxjs/dist/cjs/Rx';
 
-import {validateEmail} from '../../core/util';
+import {validateEmail} from '../../core/web_util';
 import {Contact} from '../../core/dto';
 import {ContactService} from './contact_service';
 import {Autofocus} from '../../directives/Autofocus';
