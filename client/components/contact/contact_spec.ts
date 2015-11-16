@@ -118,13 +118,5 @@ export function main() {
 
   }
 
-
-  function ensureCommunication (backend: MockBackend, reqMethod: RequestMethods, expectedBody: string | Object) {
-    backend.connections.subscribe((c: any) => {
-      expect(c.request.method).toBe(reqMethod);
-      c.mockRespond(new Response(new ResponseOptions({body: expectedBody})));
-    });
-  }
-
 }
 
