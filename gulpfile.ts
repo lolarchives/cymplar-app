@@ -127,7 +127,7 @@ gulp.task('build.dev', (done: gulp.TaskCallback) =>
 );
 
 gulp.task('watch.dev', ['build.dev'], () =>
-  gulp.watch(`${PATH.src.base}/**/*`, () => gulp.start('build.dev'))
+  gulp.watch(`${PATH.src.base}/**/*`, 'build.dev')
 );
 
 // --------------
@@ -165,7 +165,7 @@ gulp.task('test.build', () => {
 });
 
 gulp.task('test.watch', ['test.build'], () =>
-  gulp.watch(PATH.src.ts, () => gulp.start('test.build'))
+  gulp.watch(PATH.src.ts, 'test.build')
 );
 
 gulp.task('karma.start', (done: gulp.TaskCallback) => {
