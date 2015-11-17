@@ -127,12 +127,12 @@ gulp.task('index.watch', ['index.build'], () =>
 gulp.task('build', ['dist.clean'], (done: gulp.TaskCallback) =>
   runSequence(
     [
-      'jslint',
       'csslib.build',
       'font.build',
       'jslib.build',
       'css.build',
       'tpl.build',
+      'jslint',
       'js.build'
     ],
     'index.build',
@@ -142,12 +142,12 @@ gulp.task('build', ['dist.clean'], (done: gulp.TaskCallback) =>
 gulp.task('build.watch', ['dist.clean'], (done: gulp.TaskCallback) =>
   runSequence(
     [
-      'jslint',
       'csslib.build',
       'font.build',
       'jslib.build',
       'css.watch',
       'tpl.watch',
+      'jslint.watch',
       'js.watch',
     ],
     'index.watch',
@@ -199,15 +199,15 @@ gulp.task('test', ['test.clean'], (done: gulp.TaskCallback) =>
 
 // --------------
 // Lint.
-gulp.task('jslint', () => {
-  return lintJs(PATH.jslint);
-});
+gulp.task('jslint', () =>
+  lintJs(PATH.jslint)
+);
 
-gulp.task('jslint.watch', ['jslint'], () => {
-  gulp.watch(PATH.jslint, (evt) => {
-    lintJs(evt.path);
-  });
-});
+gulp.task('jslint.watch', ['jslint'], () =>
+  gulp.watch(PATH.jslint, (evt) =>
+    lintJs(evt.path)
+  )
+);
 
 // --------------
 // Clean.

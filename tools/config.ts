@@ -27,8 +27,8 @@ export const PATH = {
     `${CLIENT_SRC_BASE}/**/*.ts`,
     `${CWD}/server/**/*.ts`,
     `tools/**/*.ts`,
-    `${CWD}/gulpfile.ts`,
-    `!**/*.d.ts`
+    `!tools/typings/**`,
+    `${CWD}/gulpfile.ts`
   ],  
   src: {
     base: CLIENT_SRC_BASE,
