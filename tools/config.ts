@@ -14,11 +14,11 @@ process.env.profile = ENV;
 export const PORT: number = argv['port'] || 5555;
 export const LIVE_RELOAD_PORT: number = argv['reload-port'] || 4002;
 export const APP_BASE: string = argv['base'] || '/';
+export const APP_VERSION: string = pkg.version;
 
 const CLIENT_SRC_BASE = 'client';
 const CLIENT_DEST_BASE = 'dist';
-export const ANGULAR_BUNDLES = './node_modules/angular2/bundles';
-export const APP_VERSION: string = pkg.version;
+const ANGULAR_BUNDLES = './node_modules/angular2/bundles';
 
 
 export const PATH = {
