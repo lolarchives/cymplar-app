@@ -1,7 +1,7 @@
 <h2>Contacts!</h2>
 
 <form [ng-form-model]="form" (submit)="form.valid && saveOne()" novalidate class="form-inline">
-  <input ng-control="_id" [(ng-model)]="contact._id" type="text">
+  <input ng-control="_id" [(ng-model)]="contact._id" type="hidden">
   <div class="form-group has-feedback" [class.has-error]="form.controls.name.dirty && !form.controls.name.valid
       && form.controls.name.value !== ''">
     <input ng-control="name" [(ng-model)]="contact.name" autofocus class="form-control" placeholder="Name">

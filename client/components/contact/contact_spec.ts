@@ -52,11 +52,11 @@ export function main() {
 
           expect(obtainContactsLenght()).toBe(newLength);
 
-          contactCmp.selectOne(existingContact);
+          contactCmp.selectOne(existingContact._id);
 
           fixture.detectChanges();
 
-          const selectedContact = contactCmp.form.value;
+          const selectedContact = contactCmp.contact;
 
           expect(selectedContact._id).toBe(existingContact._id);
           expect(selectedContact.name).toBe(existingContact.name);
