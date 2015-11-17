@@ -10,13 +10,9 @@
     "url": "https://github.com/Neulinet/cymplar-app/issues"
   },
   "scripts": {
-    "lint": "gulp tslint",
     "postinstall": "tsd reinstall --clean && tsd link && tsd rebundle && gulp postinstall",
     "start": "gulp serve --env dev",
-    "tasks.list": "gulp --tasks-simple",
-    "karma.start": "karma start",
-    "test": "gulp test",
-    "test.watch": "gulp test.watch"
+    "test": "gulp test"
   },
   "author": "Roger Padilla <rogerpadilla>",
   "private": true,
@@ -71,6 +67,7 @@
   },
   "dependencies": {
     "angular2": "^2.0.0-alpha.46",
+    "auth0-js": "^6.7.6",
     "bootstrap": "^3.3.5",
     "es6-module-loader": "^0.17.8",
     "es6-shim": "^0.33.13",

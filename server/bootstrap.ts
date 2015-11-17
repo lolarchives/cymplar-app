@@ -5,17 +5,17 @@ import * as openResource from 'open';
 import * as serveStatic from 'serve-static';
 import {resolve} from 'path';
 
-import {APP_BASE, LIVE_RELOAD_PORT, PATH, PORT, ENV} from '../tools/config';
+import {APP_BASE, LIVE_RELOAD_PORT, PATH, PORT} from '../tools/config';
 import * as contactRouter from './contact/contact_router';
 
-const INDEX_DEST_PATH = resolve(PATH.cwd, PATH.dest[ENV].base, 'index.html');
+const INDEX_DEST_PATH = resolve(PATH.cwd, PATH.dest.app.base, 'index.html');
 
 const server = express();
 
 server.use(
   APP_BASE,
   connectLivereload({ port: LIVE_RELOAD_PORT }),
-  serveStatic(resolve(PATH.cwd, PATH.dest[ENV].base))
+  serveStatic(resolve(PATH.cwd, PATH.dest.app.base))
 );
 
 server.use(bodyParser.json());

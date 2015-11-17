@@ -18,8 +18,8 @@ export function notifyLiveReload(changedFiles: string[]) {
 
 export function injectableAssetsRef(): string[] {
 
-  const aux1 = obtainInjectableAssetsRef(PATH.src.jslib_inject, PATH.dest.dev.lib);
-  const aux2 = obtainInjectableAssetsRef(PATH.src.csslib, PATH.dest.dev.css);
+  const aux1 = obtainInjectableAssetsRef(PATH.src.jslib_inject, PATH.dest.app.lib);
+  const aux2 = obtainInjectableAssetsRef(PATH.src.csslib, PATH.dest.app.css);
 
   const injectables = aux1.concat(aux2);
 
@@ -32,10 +32,10 @@ function obtainInjectableAssetsRef(paths: string[], target = ''): string[] {
     .map(path => join(target, slash(path).split('/').pop()));
 }
 
-export function transformPath(env: string) {
+export function transformPath() {
   const v = '?v=' + APP_VERSION;
   return function(filepath: string) {
-    const filename = filepath.replace('/' + PATH.dest[env].base, '') + v;
+    const filename = filepath.replace('/' + PATH.dest.app.base, '') + v;
     arguments[0] = join(APP_BASE, filename);
     return inject.transform.apply(inject.transform, arguments);
   };
