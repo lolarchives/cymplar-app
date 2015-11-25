@@ -29,7 +29,7 @@ export const PATH = {
     `tools/**/*.ts`,
     `!tools/typings/**`,
     `${CWD}/gulpfile.ts`
-  ],  
+  ],
   src: {
     base: CLIENT_SRC_BASE,
     jslib_inject: [
@@ -44,7 +44,8 @@ export const PATH = {
     ],
     jslib_copy_only: [
       resolve('systemjs/dist/system-polyfills.js'),
-      resolve('systemjs/dist/system-polyfills.js.map')
+      resolve('systemjs/dist/system-polyfills.js.map'),
+      `./bower_components/auth0-lock/build/auth0-lock.js`
     ],
     csslib: [
       resolve('bootstrap/dist/css/bootstrap.min.css'),
@@ -76,7 +77,5 @@ export const PATH = {
     },
     test: 'test',
     tmp: '.tmp'
-  } 
+  }
 };
-
-
