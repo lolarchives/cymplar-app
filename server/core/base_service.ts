@@ -1,7 +1,7 @@
 import {Model, Document} from 'mongoose';
 
 import {BaseDto} from '../../client/core/dto';
-
+import {ObjectUtilServer} from './util';
 
 export abstract class BaseService<T extends BaseDto> {
 	
@@ -61,6 +61,7 @@ export abstract class BaseService<T extends BaseDto> {
 		});
 	}
 
+
 	find(): Promise<T[]> {
 		return new Promise<T[]>((resolve: Function, reject: Function) => {
 			this.Model.find({}, null, { sort: '-createdAt', lean: true }, (err, foundObjs) => {
@@ -73,6 +74,7 @@ export abstract class BaseService<T extends BaseDto> {
 		});
 	}
 
+	
 	findOneById(id: string): Promise<T> {
 		return new Promise<T>((resolve: Function, reject: Function) => {
 			this.Model.findById(id, null, { lean: true }, (err, foundObj) => {
@@ -81,6 +83,33 @@ export abstract class BaseService<T extends BaseDto> {
 					return;
 				}
 				resolve(foundObj);
+			});
+		});
+	}
+
+
+	findByFilter(data: T): Promise<T[]> { 
+
+		return new Promise<T[]>((resolve: Function, reject: Function) => {
+			this.Model.find(ObjectUtilServer.createFilter(data), null, { sort: '-createdAt', lean: true }, (err, foundObjs) => {
+				if (err) {
+					reject(err);
+					return;
+				}
+				resolve(foundObjs);
+			});
+		});
+	}
+
+	removeByFilter(data: T): Promise<T> {
+
+		return new Promise<T>((resolve: Function, reject: Function) => {
+			this.Model.find(ObjectUtilServer.createFilter(data)).remove((err, removedObjs) => {
+				if (err) {
+					reject(err);
+					return;
+				}
+				resolve(removedObjs);
 			});
 		});
 	}

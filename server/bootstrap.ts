@@ -6,7 +6,17 @@ import * as serveStatic from 'serve-static';
 import {resolve} from 'path';
 
 import {APP_BASE, LIVE_RELOAD_PORT, PATH, PORT} from '../tools/config';
-import * as contactRouter from './contact/contact_router';
+
+import * as countryRouter from './shared/country_router';
+import * as stateRouter from './shared/state_router';
+import * as cityRouter from './shared/city_router';
+import * as industryRouter from './shared/industry_router';
+import * as contactStateRouter from './shared/contactState_router';
+
+import * as groupRouter from './address_book/group/group_router';
+import * as contactRouter from './address_book/contact/contact_router';
+import * as addressBookRouter from './address_book/address_book_router';
+
 
 const INDEX_DEST_PATH = resolve(PATH.cwd, PATH.dest.app.base, 'index.html');
 
@@ -21,7 +31,15 @@ server.use(
 server.use(bodyParser.json());
 server.use(bodyParser.urlencoded({ extended: false }));
 
+server.use('/api/country', countryRouter);
+server.use('/api/state', stateRouter);
+server.use('/api/city', cityRouter);
+server.use('/api/industry', industryRouter);
+server.use('/api/contactState', contactStateRouter);
+
+server.use('/api/group', groupRouter);
 server.use('/api/contact', contactRouter);
+server.use('/api/address-book', addressBookRouter);
 
 server.all(APP_BASE + '*', (req, res) =>
   res.sendFile(INDEX_DEST_PATH)
