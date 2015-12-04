@@ -10,7 +10,6 @@
         "noLib": false,
         "emitDecoratorMetadata": true,
         "experimentalDecorators": true,
-        "experimentalAsyncFunctions": false,
         "sourceMap": false
     },
     "compileOnSave": false,

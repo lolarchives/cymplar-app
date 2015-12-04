@@ -63,7 +63,7 @@ export const PATH = {
       `${CLIENT_SRC_BASE}/components/**/*.html`,
     ],
     css: [
-      `${CLIENT_SRC_BASE}/components/**/*.sccs`,
+      `${CLIENT_SRC_BASE}/components/**/*.scss`,
     ],
     ts: [`${CLIENT_SRC_BASE}/**/*.ts`, `!${CLIENT_SRC_BASE}/**/*_spec.ts`]
   },
