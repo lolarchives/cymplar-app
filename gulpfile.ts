@@ -7,13 +7,13 @@ import * as sass from 'gulp-sass';
 import * as inject from 'gulp-inject';
 import * as template from 'gulp-template';
 import * as jslint from 'gulp-tslint';
-import * as inlineNg2Template from 'gulp-inline-ng2-template';
 import * as jslintStylish from 'gulp-tslint-stylish';
 import * as shell from 'gulp-shell';
 import * as nodemon from 'gulp-nodemon';
 import {Server} from 'karma';
 import * as ts from 'gulp-typescript';
 import * as sourcemaps from 'gulp-sourcemaps';
+import * as ngAnnotate from 'gulp-ng-annotate';
 
 import {PATH} from './tools/config';
 import {notifyLiveReload} from './tools/tasks-tools';
@@ -29,16 +29,13 @@ const tsProject = ts.createProject('tsconfig.json');
 
 function compileJs(src: string | string[], dest: string, inlineTpl?: boolean): NodeJS.ReadWriteStream {
 
-  let result = gulp.src(src)
+  let result = gulp.src(src)    
     .pipe(plumber())
     .pipe(sourcemaps.init());
 
-  if (inlineTpl) {
-    result = result.pipe(inlineNg2Template({ base: PATH.src.base }));
-  }
-
   return result.pipe(typescript(tsProject))
-    .js.pipe(sourcemaps.write())
+    .pipe(ngAnnotate())
+    .js.pipe(sourcemaps.write())    
     .pipe(gulp.dest(dest));
 }
 
@@ -46,11 +43,7 @@ function lintJs(src: string | string[]) {
   return gulp.src(src)
     .pipe(jslint())
     .pipe(jslint.report(jslintStylish, {
-      emitError: false,
-      configuration: {
-        sort: true,
-        bell: true
-      }
+      emitError: false
     }));
 }
 

@@ -36,8 +36,6 @@ export const PATH = {
       // Order is quite important here for the HTML tag injection.
       resolve('es6-shim/es6-shim.min.js'),
       resolve('es6-shim/es6-shim.map'),
-      resolve('systemjs/dist/system.src.js'),
-      `${CLIENT_SRC_BASE}/system.config.js`,
       `${ANGULAR_BUNDLES}/angular2.dev.js`,
       `${ANGULAR_BUNDLES}/router.dev.js`,
       `${ANGULAR_BUNDLES}/http.dev.js`
@@ -45,7 +43,6 @@ export const PATH = {
     jslib_copy_only: [
       resolve('systemjs/dist/system-polyfills.js'),
       resolve('systemjs/dist/system-polyfills.js.map'),
-      `./bower_components/auth0-lock/build/auth0-lock.js`
     ],
     csslib: [
       resolve('bootstrap/dist/css/bootstrap.min.css'),

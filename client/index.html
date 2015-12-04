@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" ng-app="app" ng-strict-di>
 <head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -12,17 +12,10 @@
 </head>
 <body data-app-version="<%= APP_VERSION %>">
 
-  <app>Loading...</app>
+  <div ui-view></div>
 
   <!-- inject:js -->
   <!-- endinject -->
-
-  <script>    
-    System.import('bootstrap')
-      .catch(function (e) {
-        console.error(e);
-      });
-  </script>
 
 </body>
 </html>

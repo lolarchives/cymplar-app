@@ -13,6 +13,6 @@
     "test"
   ],
   "dependencies": {
-    "auth0-lock": "~7.12.2"
+    
   }
 }
