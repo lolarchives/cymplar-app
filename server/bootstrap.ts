@@ -7,15 +7,15 @@ import {resolve} from 'path';
 
 import {APP_BASE, LIVE_RELOAD_PORT, PATH, PORT} from '../tools/config';
 
-import * as countryRouter from './shared/country_router';
-import * as stateRouter from './shared/state_router';
-import * as cityRouter from './shared/city_router';
-import * as industryRouter from './shared/industry_router';
-import * as contactStateRouter from './shared/contactState_router';
+import * as countryRouter from './shared/country/router';
+import * as stateRouter from './shared/state/router';
+import * as cityRouter from './shared/city/router';
+import * as industryRouter from './shared/industry/router';
+import * as contactStateRouter from './shared/contactStatus/router';
 
-import * as groupRouter from './address_book/group/group_router';
-import * as contactRouter from './address_book/contact/contact_router';
-import * as addressBookRouter from './address_book/address_book_router';
+import * as groupRouter from './address_book/group/router';
+import * as contactRouter from './address_book/contact/router';
+import * as addressBookRouter from './address_book/router';
 
 
 const INDEX_DEST_PATH = resolve(PATH.cwd, PATH.dest.app.base, 'index.html');

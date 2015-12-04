@@ -1,8 +1,8 @@
 import * as express from 'express';
 
-import {sendError} from '../core/web_util';
-import {countryService} from './country_service';
-import {Country} from '../../client/core/shared/dto';
+import {sendError} from '../../core/web_util';
+import {countryService} from './service';
+import {Country} from '../../../client/core/shared/dto';
 
 const router = express.Router();
 

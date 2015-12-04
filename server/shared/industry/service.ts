@@ -1,6 +1,6 @@
-﻿import {Industry} from '../../client/core/shared/dto';
-import {IndustryModel} from '../core/shared/industry';
-import {BaseService} from '../core/base_service';
+﻿import {Industry} from '../../../client/core/shared/dto';
+import {IndustryModel} from '../../core/shared/industry';
+import {BaseService} from '../../core/base_service';
 
 export class IndustryService extends BaseService<Industry> {
 

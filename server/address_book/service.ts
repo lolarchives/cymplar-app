@@ -1,16 +1,16 @@
 ﻿import {Contact, Group} from '../../client/core/address_book/dto';
-import {contactService} from './contact/contact_service';
-import {groupService} from './group/group_service';
+import {contactService} from './contact/service';
+import {groupService} from './group/service';
 import {City, State, Country, Industry, ContactState} from '../../client/core/shared/dto';
-import {cityService} from '../shared/city_service'; 
-import {stateService} from '../shared/state_service';
-import {countryService} from '../shared/country_service'; 
-import {industryService} from '../shared/industry_service';
-import {contactStateService} from '../shared/contactState_service';
+import {cityService} from '../shared/city/service'; 
+import {stateService} from '../shared/state/service';
+import {countryService} from '../shared/country/service'; 
+import {industryService} from '../shared/industry/service';
+import {contactStateService} from '../shared/contactStatus/service';
 
 export class AddressBookService {
 
-	findGroup(data: Group): Promise<any> {
+	findGroup(data: Group): Promise<Group[]> {
 
 		return new Promise<Group[]>((fulfill: Function, reject: Function) => {
 
@@ -32,6 +32,7 @@ export class AddressBookService {
 				.catch((err) => {
 					reject(err);
 				});
+
 		});
 	}
 
@@ -39,13 +40,39 @@ export class AddressBookService {
 
 		return new Promise<Group[]>((fulfill: Function, reject: Function) => {
 
-			groupService.findByFilter(data)
+			groupService.removeByFilter(data)
 				.then((groups: Group[]) => {
 
 				let promises: Promise<Group>[] = [];
 
 					for (let i = 0; i < groups.length; i++) {
 						promises.push(this.loadGroup(groups[i]));
+					}
+
+					return Promise.all(promises);
+
+				})
+				.then((results: any) => {
+					fulfill(results);
+				})
+				.catch((err) => {
+					reject(err);
+				});
+		});
+	}
+
+
+	findContact(data: Contact): Promise<Contact[]> {
+
+		return new Promise<Contact[]>((fulfill: Function, reject: Function) => {
+
+			contactService.findByFilter(data)
+				.then((contacts: Contact[]) => {
+
+				let promises: Promise<Contact>[] = [];
+
+					for (let i = 0; i < contacts.length; i++) {
+						promises.push(this.loadContact(contacts[i]));
 					}
 
 					return Promise.all(promises);
@@ -88,6 +115,27 @@ export class AddressBookService {
 		});
 	}
 
+	private loadContact(data: Contact): Promise<Contact> {
+
+		let contactToSend: Contact = data;
+
+		return new Promise<Contact>((fulfill: Function, reject: Function) => {
+
+			let toLoad: any = [contactStateService.findOneById(contactToSend.state)];
+
+			Promise.all(toLoad)
+			.then((results: any) => {
+
+				contactToSend.state = results[0];
+
+				fulfill(contactToSend);
+			})
+			.catch((err: any) => {
+				reject(err);
+			});
+		});
+	}
+
 	private loadGroup(data: Group): Promise<Group> {
 
 		let groupToSend: Group = data;
@@ -96,7 +144,7 @@ export class AddressBookService {
 
 			let toLoad: any = [industryService.findOneById(groupToSend.industry), 
 							this.findCity(groupToSend.city), 
-							contactService.findByFilter({ group: groupToSend._id })];
+							this.findContact({ group: groupToSend._id })];
 
 			Promise.all(toLoad)
 			.then((results: any) => {

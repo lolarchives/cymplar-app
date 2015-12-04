@@ -1,7 +1,7 @@
 import * as express from 'express';
 
 import {sendError} from '../core/web_util';
-import {addressBookService} from './address_book_service';
+import {addressBookService} from './service';
 import {Group} from '../../client/core/address_book/dto';
 
 const router = express.Router();
