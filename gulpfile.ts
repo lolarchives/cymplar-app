@@ -33,9 +33,10 @@ function compileJs(src: string | string[], dest: string, inlineTpl?: boolean): N
     .pipe(plumber())
     .pipe(sourcemaps.init());
 
-  return result.pipe(typescript(tsProject))
-    .pipe(ngAnnotate())
-    .js.pipe(sourcemaps.write())    
+  return result
+    .pipe(typescript(tsProject)).js
+    // .pipe(ngAnnotate())
+    .pipe(sourcemaps.write())    
     .pipe(gulp.dest(dest));
 }
 

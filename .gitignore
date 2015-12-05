@@ -33,3 +33,4 @@ build/Release
 /.npmrc
 /.vscode/settings.json
 /bower_components
+/.vscode

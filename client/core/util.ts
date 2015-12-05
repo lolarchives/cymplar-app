@@ -1,10 +1,10 @@
 export class ObjectUtil {
 
-  private static _seq = 0;
+	private static _seq = 0;
 
-  static nextId() {
-    return `${++ObjectUtil._seq}`;
-  }
+	static nextId() {
+		return `${++ObjectUtil._seq}`;
+	}
 
 	static clone(data: any): any {
 		return JSON.parse(JSON.stringify(data));
@@ -18,8 +18,8 @@ export class ObjectUtil {
 			return src;
 		}
 		for (let prop in src) {
-      dest[prop] = src[prop];
-    }
+			dest[prop] = src[prop];
+		}
 	}
 
 	static isPresent(data: any): boolean {

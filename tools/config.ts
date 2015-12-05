@@ -36,17 +36,21 @@ export const PATH = {
       // Order is quite important here for the HTML tag injection.
       resolve('es6-shim/es6-shim.min.js'),
       resolve('es6-shim/es6-shim.map'),
-      `${ANGULAR_BUNDLES}/angular2.dev.js`,
-      `${ANGULAR_BUNDLES}/router.dev.js`,
-      `${ANGULAR_BUNDLES}/http.dev.js`
+      resolve(`angular/angular.js`),
+      `${CWD}/bower_components/angular-bootstrap/ui-bootstrap.js`,
+      `${CWD}/bower_components/angular-bootstrap/ui-bootstrap-tpls.js`,
+      resolve(`angular-ui-router/build/angular-ui-router.js`),
+      resolve('angular-sanitize/angular-sanitize.js'),    
+      resolve('angular-messages/angular-messages.js'),    
+      resolve('angular-toastr/dist/angular-toastr.js')      
     ],
-    jslib_copy_only: [
-      resolve('systemjs/dist/system-polyfills.js'),
-      resolve('systemjs/dist/system-polyfills.js.map'),
+    jslib_copy_only: <string[]>[
+      
     ],
     csslib: [
       resolve('bootstrap/dist/css/bootstrap.min.css'),
-      resolve('bootstrap/dist/css/bootstrap.css.map')
+      resolve('bootstrap/dist/css/bootstrap.css.map'),
+      resolve('angular-toastr/dist/angular-toastr.css')
     ],
     font: [
       resolve('bootstrap/dist/fonts/glyphicons-halflings-regular.eot'),
