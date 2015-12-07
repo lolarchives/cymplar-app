@@ -16,9 +16,9 @@ export const LIVE_RELOAD_PORT: number = argv['reload-port'] || 4002;
 export const APP_BASE: string = argv['base'] || '/';
 export const APP_VERSION: string = pkg.version;
 
-const CLIENT_SRC_BASE = 'client';
-const CLIENT_DEST_BASE = 'dist';
-const ANGULAR_BUNDLES = './node_modules/angular2/bundles';
+const CLIENT_SRC_BASE = `client`;
+const DIST_BASE = `dist`;
+const CLIENT_DEST_BASE = `${DIST_BASE}/${CLIENT_SRC_BASE}`;
 
 
 export const PATH = {
@@ -36,16 +36,21 @@ export const PATH = {
       // Order is quite important here for the HTML tag injection.
       resolve('es6-shim/es6-shim.min.js'),
       resolve('es6-shim/es6-shim.map'),
+      resolve(`requirejs/require.js`),
       resolve(`angular/angular.js`),
       `${CWD}/bower_components/angular-bootstrap/ui-bootstrap.js`,
       `${CWD}/bower_components/angular-bootstrap/ui-bootstrap-tpls.js`,
       resolve(`angular-ui-router/build/angular-ui-router.js`),
       resolve('angular-sanitize/angular-sanitize.js'),    
       resolve('angular-messages/angular-messages.js'),    
-      resolve('angular-toastr/dist/angular-toastr.js')      
+      resolve('angular-toastr/dist/angular-toastr.js')
     ],
     jslib_copy_only: <string[]>[
-      
+    ],
+    js_inject: [
+      `${CWD}/${CLIENT_SRC_BASE}/bootstrap.ts`,
+      `${CWD}/${CLIENT_SRC_BASE}/**/*.ts`,
+      `!${CWD}/${CLIENT_SRC_BASE}/bootstrap.ts`, 
     ],
     csslib: [
       resolve('bootstrap/dist/css/bootstrap.min.css'),
@@ -61,20 +66,20 @@ export const PATH = {
     ],
     index: `${CLIENT_SRC_BASE}/index.html`,
     tpl: [
-      `${CLIENT_SRC_BASE}/components/**/*.html`,
+      `${CLIENT_SRC_BASE}/**/*.html`,
     ],
     css: [
-      `${CLIENT_SRC_BASE}/components/**/*.scss`,
+      `${CLIENT_SRC_BASE}/**/*.scss`,
     ],
     ts: [`${CLIENT_SRC_BASE}/**/*.ts`, `!${CLIENT_SRC_BASE}/**/*_spec.ts`]
   },
   dest: {
     app: {
-      base: CLIENT_DEST_BASE,
-      lib: `${CLIENT_DEST_BASE}/lib`,
-      css: `${CLIENT_DEST_BASE}/css`,
-      font: `${CLIENT_DEST_BASE}/fonts`,
-      component: `${CLIENT_DEST_BASE}/components`
+      base: DIST_BASE,
+      lib: `${DIST_BASE}/lib`,
+      css: `${DIST_BASE}/css`,
+      font: `${DIST_BASE}/fonts`,
+      client: `${CLIENT_DEST_BASE}`
     },
     test: 'test',
     tmp: '.tmp'

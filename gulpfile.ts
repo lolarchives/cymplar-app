@@ -27,9 +27,9 @@ templateLocals
 
 const tsProject = ts.createProject('tsconfig.json');
 
-function compileJs(src: string | string[], dest: string, inlineTpl?: boolean): NodeJS.ReadWriteStream {
+function compileJs(src: string[], dest: string, inlineTpl?: boolean): NodeJS.ReadWriteStream {
 
-  let result = gulp.src(src)    
+  let result = gulp.src(['./tools/typings/tsd/tsd.d.ts', './tools/typings/*.ts'].concat(src))    
     .pipe(plumber())
     .pipe(sourcemaps.init());
 
@@ -69,7 +69,7 @@ gulp.task('jslib.build', () => {
 gulp.task('css.build', () =>
   gulp.src(PATH.src.css)
     .pipe(sass().on('error', sass.logError))
-    .pipe(gulp.dest(PATH.dest.app.component))
+    .pipe(gulp.dest(PATH.dest.app.client))
 );
 
 gulp.task('css.watch', ['css.build'], () =>
@@ -80,7 +80,7 @@ gulp.task('css.watch', ['css.build'], () =>
 
 gulp.task('tpl.build', () =>
   gulp.src(PATH.src.tpl)
-    .pipe(gulp.dest(PATH.dest.app.component))
+    .pipe(gulp.dest(PATH.dest.app.client))
 );
 
 gulp.task('tpl.watch', ['tpl.build'], () =>
@@ -90,7 +90,7 @@ gulp.task('tpl.watch', ['tpl.build'], () =>
 );
 
 gulp.task('js.build', () => {
-  return compileJs(PATH.src.ts, PATH.dest.app.base);
+  return compileJs(PATH.src.ts, PATH.dest.app.client);
 });
 
 gulp.task('js.watch', ['js.build'], () =>
@@ -118,7 +118,7 @@ gulp.task('index.watch', ['index.build'], () =>
   )
 );
 
-gulp.task('build', ['dist.clean'], (done: gulp.TaskCallback) =>
+gulp.task('build', ['clean'], (done: gulp.TaskCallback) =>
   runSequence(
     [
       'csslib.build',
@@ -133,7 +133,7 @@ gulp.task('build', ['dist.clean'], (done: gulp.TaskCallback) =>
     done)
 );
 
-gulp.task('build.watch', ['dist.clean'], (done: gulp.TaskCallback) =>
+gulp.task('build.watch', ['clean'], (done: gulp.TaskCallback) =>
   runSequence(
     [
       'csslib.build',

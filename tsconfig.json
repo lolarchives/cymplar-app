@@ -6,7 +6,6 @@
         "noImplicitAny": true,
         "suppressImplicitAnyIndexErrors": true,
         "removeComments": true,
-        "noLib": false,
         "emitDecoratorMetadata": true,
         "experimentalDecorators": true,
         "sourceMap": false

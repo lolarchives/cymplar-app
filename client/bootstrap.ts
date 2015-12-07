@@ -30,7 +30,7 @@ function routerConfig($stateProvider: angular.ui.IStateProvider, $urlRouterProvi
   $urlRouterProvider.otherwise('/');
 }
 
-export module app {  
+module app {  
   angular.module('app', ['ngAnimate', 'ngTouch', 'ngSanitize', 'ngMessages', 'ui.router', 'ui.bootstrap', 'toastr'])
     .config(config)
     .config(routerConfig)
