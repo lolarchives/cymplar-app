@@ -1,34 +1,34 @@
 import * as express from 'express';
 
 import {sendError} from '../../core/web_util';
-import {contactStateService} from './service';
-import {ContactState} from '../../../client/core/shared/dto';
+import {contactStatusService} from './service';
+import {ContactStatus} from '../../../client/core/shared/dto';
 
 const router = express.Router();
 
 router.post('/', (req, res) => {
-  contactStateService.createOne(req.body)
-    .then((contactState: ContactState) => res.send(contactState), (err) => sendError(res, err));
+  contactStatusService.createOne(req.body)
+    .then((contactStatus: ContactStatus) => res.send(contactStatus), (err) => sendError(res, err));
 });
 
-router.put('/:id', (req, res) => {
-  contactStateService.updateOne(req.body)
-    .then((contactState: ContactState) => res.send(contactState), (err) => sendError(res, err));
+router.put('/', (req, res) => {
+  contactStatusService.updateOne(req.body)
+    .then((contactStatus: ContactStatus) => res.send(contactStatus), (err) => sendError(res, err));
 });
 
 router.delete('/:id', (req, res) => {
-  contactStateService.removeOneById(req.params.id)
-    .then((contactState: ContactState) => res.send(contactState), (err) => sendError(res, err));
+  contactStatusService.removeOneById(req.params.id)
+    .then((contactStatus: ContactStatus) => res.send(contactStatus), (err) => sendError(res, err));
 });
 
 router.get('/_find', (req: express.Request, res: express.Response) => {
-  contactStateService.find()
-    .then((contactStates: ContactState[]) => res.send(contactStates), (err: any) => sendError(res, err));
+  contactStatusService.find()
+    .then((contactStatuss: ContactStatus[]) => res.send(contactStatuss), (err: any) => sendError(res, err));
 });
 
 router.get('/:id', (req: express.Request, res: express.Response) => {
-  contactStateService.findOneById(req.params.id)
-    .then((contactState: ContactState) => res.send(contactState), (err: any) => sendError(res, err));
+  contactStatusService.findOneById(req.params.id)
+    .then((contactStatus: ContactStatus) => res.send(contactStatus), (err: any) => sendError(res, err));
 });
 
 

@@ -35,7 +35,7 @@ server.use('/api/country', countryRouter);
 server.use('/api/state', stateRouter);
 server.use('/api/city', cityRouter);
 server.use('/api/industry', industryRouter);
-server.use('/api/contactState', contactStateRouter);
+server.use('/api/contact-status', contactStateRouter);
 
 server.use('/api/group', groupRouter);
 server.use('/api/contact', contactRouter);

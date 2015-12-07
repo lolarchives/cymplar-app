@@ -26,7 +26,7 @@ export interface Contact extends BaseDto {
   email?: string;
   website?: string;
   group?: any;
-  state?: any;
+  status?: any;
 
 }
 

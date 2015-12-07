@@ -11,7 +11,7 @@ router.post('/', (req, res) => {
     .then((contact: Contact) => res.send(contact), (err) => sendError(res, err));
 });
 
-router.put('/:id', (req, res) => {
+router.put('/', (req, res) => {
   contactService.updateOne(req.body)
     .then((contact: Contact) => res.send(contact), (err) => sendError(res, err));
 });

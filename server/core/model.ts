@@ -7,7 +7,7 @@ const ObjectId = Schema.Types.ObjectId;
 // TODO obtain this config according to the profile (prod, dev, etc.).
 const connUri = 'mongodb://admin:Leo2006!@ds049754.mongolab.com:49754/cymplar';
 
-const db = createConnection(connUri);
+export const db = createConnection(connUri);
 db.on('error', () => console.error('Error connecting to Database:', connUri));
 db.once('open', () => console.log('%s: Connected to MongoDb on %s', new Date(), connUri));
 
@@ -87,11 +87,10 @@ for (let prop in schemas) {
 }
 
 
-export const UserModel = db.model('user', schemas.user);
-export const CompanyModel = db.model('company', schemas.company);
-export const IndustryModel = db.model('industry', schemas.industry);
-export const ContactModel = db.model('contact', schemas.contact);
-export const CityModel = db.model('city', schemas.city);
-export const CountryModel = db.model('country', schemas.country);
-
+//export const UserModel = db.model('user', schemas.user);
+//export const CompanyModel = db.model('company', schemas.company);
+//export const IndustryModel = db.model('industry', schemas.industry);
+//export const ContactModel = db.model('contact', schemas.contact);
+//export const CityModel = db.model('city', schemas.city);
+//export const CountryModel = db.model('country', schemas.country);
 

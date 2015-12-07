@@ -1,5 +1,5 @@
 ﻿import {Country} from '../../../client/core/shared/dto';
-import {CountryModel} from '../../core/shared/country';
+import {CountryModel} from '../../core/shared/model';
 import {BaseService} from '../../core/base_service';
 
 export class CountryService extends BaseService<Country> {

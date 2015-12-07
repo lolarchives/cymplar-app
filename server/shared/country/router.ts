@@ -11,7 +11,7 @@ router.post('/', (req, res) => {
     .then((country: Country) => res.send(country), (err) => sendError(res, err));
 });
 
-router.put('/:id', (req, res) => {
+router.put('/', (req, res) => {
   countryService.updateOne(req.body)
     .then((country: Country) => res.send(country), (err) => sendError(res, err));
 });

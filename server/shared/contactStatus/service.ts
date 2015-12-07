@@ -1,14 +1,14 @@
-﻿import {ContactState} from '../../../client/core/shared/dto';
-import {ContactStateModel} from '../../core/shared/contactState';
+﻿import {ContactStatus} from '../../../client/core/shared/dto';
+import {ContactStatusModel} from '../../core/shared/model';
 import {BaseService} from '../../core/base_service';
 
-export class ContactStateService extends BaseService<ContactState> {
+export class ContactStatusService extends BaseService<ContactStatus> {
 
 	constructor() {
-		super(ContactStateModel);
+		super(ContactStatusModel);
 	}
 
 }
 
-export const contactStateService = new ContactStateService();
+export const contactStatusService = new ContactStatusService();
 

@@ -1,7 +1,7 @@
 import {Model, Document} from 'mongoose';
 
 import {BaseDto} from '../../client/core/dto';
-import {ObjectUtilServer} from './util';
+import {ObjectUtil} from '../../client/core/util';
 
 export abstract class BaseService<T extends BaseDto> {
 	
@@ -50,6 +50,10 @@ export abstract class BaseService<T extends BaseDto> {
 					reject(err);
 					return;
 				}
+				if (!foundDoc) {
+					reject(new Error("The object could not be found"));
+					return;
+				}
 				foundDoc.remove((err: Error) => {
 					if (err) {
 						reject(err);
@@ -62,9 +66,11 @@ export abstract class BaseService<T extends BaseDto> {
 	}
 
 
-	find(): Promise<T[]> {
+	find(data?: T): Promise<T[]> {
+		const filter = ObjectUtil.isPresent(data) ? data : {};
+		
 		return new Promise<T[]>((resolve: Function, reject: Function) => {
-			this.Model.find({}, null, { sort: '-createdAt', lean: true }, (err, foundObjs) => {
+			this.Model.find(ObjectUtil.createFilter(filter), null, { sort: '-createdAt', lean: true }, (err, foundObjs) => {
 				if (err) {
 					reject(err);
 					return;
@@ -86,12 +92,29 @@ export abstract class BaseService<T extends BaseDto> {
 			});
 		});
 	}
-
-
-	findByFilter(data: T): Promise<T[]> { 
+	
+	findOneByIdPopulate(id: string, population: any): Promise<T> {
+		return new Promise<T>((resolve: Function, reject: Function) => {
+			this.Model.findById(id, null, { lean: true }) 
+			.populate(population)
+			.exec((err, foundObj) => {
+				if (err) {
+					reject(err);
+					return;
+				}
+				resolve(foundObj);
+			});
+		});
+	}
+	
+	findAndPopulate(data: T, population: any): Promise<T[]> { 
+		
+		const filter = ObjectUtil.isPresent(data) ? data : {};
 
 		return new Promise<T[]>((resolve: Function, reject: Function) => {
-			this.Model.find(ObjectUtilServer.createFilter(data), null, { sort: '-createdAt', lean: true }, (err, foundObjs) => {
+			this.Model.find(ObjectUtil.createFilter(filter), null, { sort: '-createdAt', lean: true }) 
+			.populate(population)
+			.exec((err, foundObjs) => {
 				if (err) {
 					reject(err);
 					return;
@@ -101,18 +124,30 @@ export abstract class BaseService<T extends BaseDto> {
 		});
 	}
 
-	removeByFilter(data: T): Promise<T> {
-
-		return new Promise<T>((resolve: Function, reject: Function) => {
-			this.Model.find(ObjectUtilServer.createFilter(data)).remove((err, removedObjs) => {
+	removeByFilter(data?: T): Promise<string[]> {
+		
+		const filter = ObjectUtil.isPresent(data) ? data : {};
+		
+		return new Promise<string[]>((resolve: Function, reject: Function) => {
+  
+			this.Model.find(ObjectUtil.createFilter(filter), null, { lean: false }, (err, foundObjs) => {
 				if (err) {
 					reject(err);
 					return;
 				}
-				resolve(removedObjs);
+				
+				foundObjs.forEach((doc) => {
+					doc.remove((err: Error) => {
+						if (err) {
+							reject(err);
+							return;
+						}
+					});
+				});
+				
+				resolve(foundObjs);
 			});
 		});
 	}
-
 }
 

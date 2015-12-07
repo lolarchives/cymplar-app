@@ -68,7 +68,9 @@
         "./server/contact/contact_service.ts",
         "./server/core/base_service.ts",
         "./server/core/model.ts",
-        "./server/core/web_util.ts"
+        "./server/core/web_util.ts",
+        "./server/core/database.ts",
+        "./server/shared/shared.ts"
     ],
     "atom": {
         "rewriteTsconfig": true

@@ -1,5 +1,5 @@
 ﻿import {City} from '../../../client/core/shared/dto';
-import {CityModel} from '../../core/shared/city';
+import {CityModel} from '../../core/shared/model';
 import {BaseService} from '../../core/base_service';
 
 export class CityService extends BaseService<City> {

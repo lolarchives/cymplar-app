@@ -11,8 +11,8 @@ router.get('/group', (req: express.Request, res: express.Response) => {
     .then((group: Group[]) => res.send(group), (err: any) => sendError(res, err));
 });
 
-router.delete('/group/:id', (req, res) => {
-  addressBookService.removeGroup(req.params.id)
+router.delete('/group', (req, res) => {
+  addressBookService.removeGroup(req.body)
     .then((group: Group[]) => res.send(group), (err) => sendError(res, err));
 });
 

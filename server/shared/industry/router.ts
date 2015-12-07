@@ -11,7 +11,7 @@ router.post('/', (req, res) => {
     .then((industry: Industry) => res.send(industry), (err) => sendError(res, err));
 });
 
-router.put('/:id', (req, res) => {
+router.put('/', (req, res) => {
   industryService.updateOne(req.body)
     .then((industry: Industry) => res.send(industry), (err) => sendError(res, err));
 });

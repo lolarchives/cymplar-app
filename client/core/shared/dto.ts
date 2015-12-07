@@ -31,7 +31,7 @@ export interface Industry extends BaseDto {
 
 }
 
-export interface ContactState extends BaseDto {
+export interface ContactStatus extends BaseDto {
 
   code?: string;
   name?: string;

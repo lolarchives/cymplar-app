@@ -18,8 +18,8 @@ export class ObjectUtil {
 			return src;
 		}
 		for (let prop in src) {
-      dest[prop] = src[prop];
-    }
+		dest[prop] = src[prop];
+		}
 	}
 
 	static isPresent(data: any): boolean {
@@ -28,5 +28,22 @@ export class ObjectUtil {
 
 	static isBlank(data: any): boolean {
 		return data === undefined || data === null;
+	}
+	
+	static createFilter(data: any): any {
+		let filters = {};
+
+		// Regular expresion to simplify the search
+		for (let entry in data) {
+		    if (ObjectUtil.isPresent(data[entry])) {
+		    	if (typeof data[entry] === 'string' && entry !== '_id') {
+		    		filters[entry] = new RegExp(data[entry], 'i');
+		    	} else {
+		    		filters[entry] = data[entry];
+		    	}
+		    } 
+		}
+
+		return filters;
 	}
 }

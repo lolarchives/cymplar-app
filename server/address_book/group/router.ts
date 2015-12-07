@@ -11,7 +11,7 @@ router.post('/', (req, res) => {
     .then((group: Group) => res.send(group), (err) => sendError(res, err));
 });
 
-router.put('/:id', (req, res) => {
+router.put('/', (req, res) => {
   groupService.updateOne(req.body)
     .then((group: Group) => res.send(group), (err) => sendError(res, err));
 });
