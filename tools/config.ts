@@ -20,6 +20,8 @@ const CLIENT_SRC_BASE = `client`;
 const DIST_BASE = `dist`;
 const CLIENT_DEST_BASE = `${DIST_BASE}`;
 
+const NM = `${CWD}/node_modules`;
+const BC = `${CWD}/bower_components`;
 
 export const PATH = {
   cwd: CWD,
@@ -39,14 +41,15 @@ export const PATH = {
       resolve('systemjs/dist/system.src.js'),
       `${CLIENT_SRC_BASE}/system.config.js`,
       resolve(`angular/angular.js`),
-      `${CWD}/bower_components/angular-bootstrap/ui-bootstrap.js`,
-      `${CWD}/bower_components/angular-bootstrap/ui-bootstrap-tpls.js`,
+      `${BC}/angular-bootstrap/ui-bootstrap.js`,
+      `${BC}/angular-bootstrap/ui-bootstrap-tpls.js`,
       resolve(`angular-ui-router/build/angular-ui-router.js`),
       resolve('angular-sanitize/angular-sanitize.js'),    
       resolve('angular-animate/angular-animate.js'),    
       resolve('angular-touch/angular-touch.js'),    
       resolve('angular-messages/angular-messages.js'),    
-      resolve('angular-toastr/dist/angular-toastr.js')
+      resolve('angular-toastr/dist/angular-toastr.js'),
+      resolve('angular-toastr/dist/angular-toastr.tpls.js')
     ],
     jslib_copy_only: [
       resolve('systemjs/dist/system-polyfills.js'),
