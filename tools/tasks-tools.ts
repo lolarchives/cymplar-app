@@ -7,8 +7,7 @@ import * as tinylrFn from 'tiny-lr';
 
 import {PATH, APP_BASE, APP_VERSION, LIVE_RELOAD_PORT} from './config';
 
-const tinylr = tinylrFn();
-tinylr.listen(LIVE_RELOAD_PORT);
+export const tinylr = tinylrFn();
 
 export function notifyLiveReload(changedFiles: string[]) {
   tinylr.changed({
@@ -16,13 +15,13 @@ export function notifyLiveReload(changedFiles: string[]) {
   });
 }
 
-export function injectableAssetsRef(): string[] {
+export function injectableJsLibRef(): string[] {
+  const injectables = obtainInjectableAssetsRef(PATH.src.jslib_inject, PATH.dest.app.lib);
+  return injectables;
+}
 
-  const aux1 = obtainInjectableAssetsRef(PATH.src.jslib_inject, PATH.dest.app.lib);
-  const aux2 = obtainInjectableAssetsRef(PATH.src.csslib, PATH.dest.app.css);
-
-  const injectables = aux1.concat(aux2);
-
+export function injectableCssLibRef(): string[] {
+  const injectables = obtainInjectableAssetsRef(PATH.src.csslib, PATH.dest.app.css);
   return injectables;
 }
 
@@ -32,11 +31,11 @@ function obtainInjectableAssetsRef(paths: string[], target = ''): string[] {
     .map(path => join(target, slash(path).split('/').pop()));
 }
 
-export function transformPath() {
+export function transformPath(prefix: string): Function {
   const v = '?v=' + APP_VERSION;
   return function(filepath: string) {
-    const filename = filepath.replace('/' + PATH.dest.app.base, '') + v;
-    arguments[0] = join(APP_BASE, filename);
+    const filename = filepath.replace('/' + prefix, '') + v;
+    arguments[0] = slash(join(APP_BASE, filename));
     return inject.transform.apply(inject.transform, arguments);
   };
 }

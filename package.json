@@ -29,6 +29,7 @@
     "gulp-ng-annotate": "^1.1.0",
     "gulp-nodemon": "^2.0.4",
     "gulp-plumber": "^1.0.1",
+    "gulp-rename": "^1.2.2",
     "gulp-sass": "^2.1.0",
     "gulp-shell": "^0.5.1",
     "gulp-sourcemaps": "^1.6.0",
@@ -75,7 +76,8 @@
     "moment": "^2.10.6",
     "mongoose": "^4.2.9",
     "requirejs": "^2.1.22",
-    "serve-static": "^1.10.0"
+    "serve-static": "^1.10.0",
+    "systemjs": "^0.19.6"
   },
   "engines": {
     "node": "^4.2.1"

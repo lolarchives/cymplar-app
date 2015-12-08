@@ -1,4 +1,5 @@
 import * as gulp from 'gulp';
+import * as path from 'path';
 import * as del from 'del';
 import * as runSequence from 'run-sequence';
 import * as plumber from 'gulp-plumber';
@@ -14,14 +15,16 @@ import {Server} from 'karma';
 import * as ts from 'gulp-typescript';
 import * as sourcemaps from 'gulp-sourcemaps';
 import * as ngAnnotate from 'gulp-ng-annotate';
+import * as rename from 'gulp-rename';
 
-import {PATH} from './tools/config';
-import {notifyLiveReload} from './tools/tasks-tools';
-
+import {PATH, APP_BASE, LIVE_RELOAD_PORT} from './tools/config';
 import {
-injectableAssetsRef,
+injectableJsLibRef,
+injectableCssLibRef,
 transformPath,
-templateLocals
+templateLocals,
+notifyLiveReload,
+tinylr
 } from './tools/tasks-tools';
 
 
@@ -29,14 +32,14 @@ const tsProject = ts.createProject('tsconfig.json');
 
 function compileJs(src: string[], dest: string, inlineTpl?: boolean): NodeJS.ReadWriteStream {
 
-  let result = gulp.src(['./tools/typings/tsd/tsd.d.ts', './tools/typings/*.ts'].concat(src))    
+  const result = gulp.src(['./tools/typings/tsd/tsd.d.ts', './tools/typings/*.ts'].concat(src))
     .pipe(plumber())
     .pipe(sourcemaps.init());
 
   return result
     .pipe(typescript(tsProject)).js
-    // .pipe(ngAnnotate())
-    .pipe(sourcemaps.write())    
+    .pipe(ngAnnotate())
+    .pipe(sourcemaps.write())
     .pipe(gulp.dest(dest));
 }
 
@@ -101,12 +104,22 @@ gulp.task('js.watch', ['js.build'], () =>
 
 gulp.task('index.build', () => {
 
-  const INDEX_INJECTABLES = injectableAssetsRef();
-  const INDEX_INJECTABLES_TARGET = gulp.src(INDEX_INJECTABLES, { read: false });
+  const JSLIB_INJECTABLES = injectableJsLibRef();
+  const JSLIB_INJECTABLES_TARGET = gulp.src(JSLIB_INJECTABLES, { read: false });
+  const CSSLIB_INJECTABLES = injectableCssLibRef();
+  const CSSLIB_INJECTABLES_TARGET = gulp.src(CSSLIB_INJECTABLES, { read: false });
+  
+  const transformLibPath = transformPath(PATH.dest.app.base);
+  const transform = transformPath(PATH.src.base);
 
   return gulp.src(PATH.src.index)
-    .pipe(inject(INDEX_INJECTABLES_TARGET, {
-      transform: transformPath()
+    .pipe(inject(CSSLIB_INJECTABLES_TARGET, {
+      transform: transformLibPath,
+      name: 'csslib'
+    }))
+    .pipe(inject(JSLIB_INJECTABLES_TARGET, {
+      transform: transformLibPath,
+      name: 'jslib'
     }))
     .pipe(template(templateLocals))
     .pipe(gulp.dest(PATH.dest.app.base));
@@ -164,9 +177,10 @@ gulp.task('server.watch', () => {
   });
 });
 
-gulp.task('serve', (done: gulp.TaskCallback) =>
-  runSequence('build.watch', 'server.watch', done)
-);
+gulp.task('serve', (done: gulp.TaskCallback) => {
+  tinylr.listen(LIVE_RELOAD_PORT);
+  runSequence('build.watch', 'server.watch', done);
+});
 
 // --------------
 // Test.
