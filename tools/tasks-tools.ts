@@ -1,39 +1,32 @@
 import * as gulp from 'gulp';
 import {join} from 'path';
-import * as slash from 'slash';
-import * as ts from 'gulp-typescript';
-import * as sourcemaps from 'gulp-sourcemaps';
-import * as plumber from 'gulp-plumber';
 import * as inject from 'gulp-inject';
 import * as template from 'gulp-template';
-import * as typescript from 'gulp-typescript';
+import * as tinylrFn from 'tiny-lr';
 
-import {PATH, APP_BASE, APP_VERSION} from './config';
+import {PATH, APP_BASE, APP_VERSION, LIVE_RELOAD_PORT} from './config';
 
+export const tinylr = tinylrFn();
 
-export function injectableAssetsRef(): string[] {
-
-  const aux1 = obtainInjectableAssetsRef(PATH.src.jslib_inject, PATH.dest.dev.lib);
-  const aux2 = obtainInjectableAssetsRef(PATH.src.csslib, PATH.dest.dev.css);
-
-  const injectables = aux1.concat(aux2);
-
-  return injectables;
+export function notifyLiveReload(changedFiles: string[]) {
+  tinylr.changed({
+    body: { files: changedFiles }
+  });
 }
 
-function obtainInjectableAssetsRef(paths: string[], target = ''): string[] {
-  return paths
-    .filter(path => !/(\.map)$/.test(path))
-    .map(path => join(target, slash(path).split('/').pop()));
+export function buildInjectable(paths: string[], newBaseDir?: string, newExt?: string): NodeJS.ReadWriteStream {
+  const rws = gulp.src(
+    paths
+      .filter(path => !/(\.map)$/.test(path), { read: false })
+  );
+  return rws;
 }
 
-export function transformPath(env: string) {
-  const v = '?v=' + APP_VERSION;
-  return function(filepath: string) {
-    const filename = filepath.replace('/' + PATH.dest[env].base, '') + v;
-    arguments[0] = join(APP_BASE, filename);
-    return inject.transform.apply(inject.transform, arguments);
-  };
+export function transformPath(filepath: string, newBaseDir: string) {
+  const namePos = filepath.lastIndexOf('/') + 1;
+  const filename = filepath.substring(namePos);
+  filepath = newBaseDir === '' ? filename : newBaseDir + '/' + filename;
+  return filepath;
 }
 
 // TODO: Add an interface to register more template locals.
@@ -42,18 +35,5 @@ export const templateLocals = {
   APP_BASE
 };
 
-export const tsProject = ts.createProject('tsconfig.json');
 
-export function compileTs(filesToCompile: string[]) {
-
-  const result = gulp.src(filesToCompile)
-    .pipe(plumber())
-    .pipe(sourcemaps.init())
-    .pipe(typescript(tsProject));
-
-  return result.js
-    .pipe(sourcemaps.write())
-    .pipe(template(templateLocals))
-    .pipe(gulp.dest(PATH.dest.dev.base));
-}
 

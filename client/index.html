@@ -3,24 +3,31 @@
 <head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <title>Cymplar 2</title>
+  <title ng-bind="$state.current.name + ' | Cymplar 2'">Cymplar 2</title>
   <base href="<%= APP_BASE %>">
   <meta name="description" content="">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <!-- csslib:css -->
+  <!-- endinject -->
+  
   <!-- inject:css -->
   <!-- endinject -->
+
 </head>
 <body data-app-version="<%= APP_VERSION %>">
 
-  <app>Loading...</app>
+  <main-navbar></main-navbar>
 
-  <!-- inject:js -->
+  <div ui-view class="main-container container-fluid"></div>
+
+  <!-- jslib:js -->
   <!-- endinject -->
-
+  
   <script>
     System.import('bootstrap')
-      .catch(function (ex) {
-        console.error(ex);
+      .catch(function (e) {
+        console.error(e);
       });
   </script>
 

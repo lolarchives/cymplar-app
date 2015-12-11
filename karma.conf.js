@@ -1,62 +1,102 @@
-// Karma configuration
-// Generated on Wed Jul 15 2015 09:44:02 GMT+0200 (Romance Daylight Time)
+'use strict';
+
+var path = require('path');
+var conf = require('./gulp/conf');
+
+var _ = require('lodash');
+var wiredep = require('wiredep');
+
+var pathSrcHtml = [
+  path.join(conf.paths.src, '/**/*.html')
+];
+
+function listFiles() {
+  var wiredepOptions = _.extend({}, conf.wiredep, {
+    dependencies: true,
+    devDependencies: true
+  });
+
+  var patterns = wiredep(wiredepOptions).js
+    .concat([
+      path.join(conf.paths.tmp, '/serve/app/index.module.js'),
+    ])
+    .concat(pathSrcHtml);
+
+  var files = patterns.map(function(pattern) {
+    return {
+      pattern: pattern
+    };
+  });
+  files.push({
+    pattern: path.join(conf.paths.src, '/assets/**/*'),
+    included: false,
+    served: true,
+    watched: false
+  });
+  return files;
+}
 
 module.exports = function(config) {
-  config.set({
 
-    // frameworks to use
-    // available frameworks: https://npmjs.org/browse/keyword/karma-adapter
+  var configuration = {
+    files: listFiles(),
+
+    singleRun: true,
+
+    autoWatch: false,
+
+    ngHtml2JsPreprocessor: {
+      stripPrefix: conf.paths.src + '/',
+      moduleName: 'ng1Ts'
+    },
+
+    logLevel: 'WARN',
+
     frameworks: ['jasmine'],
 
-    // list of files / patterns to load in the browser
-    files: [
-      'node_modules/es6-shim/es6-shim.js',
-      
-      // zone-microtask must be included first as it contains a Promise monkey patch
-      'node_modules/zone.js/dist/zone-microtask.js',
-      'node_modules/zone.js/dist/long-stack-trace-zone.js',
-      'node_modules/zone.js/dist/jasmine-patch.js',
-      
-      'node_modules/systemjs/dist/system.src.js',
-      { pattern: 'node_modules/@reactivex/rxjs/dist/**/*.js', included: false, watched: false },
-      'node_modules/reflect-metadata/Reflect.js',
-      { pattern: 'node_modules/systemjs/dist/system-polyfills.js', included: false, watched: false }, // PhantomJS2 (and possibly others) might require it
-      { pattern: 'node_modules/angular2/**/*.js', included: false, watched: false },
-            
-      { pattern: 'test/**/*.js', included: false, watched: false },      
-      'tools/build/file2modulename.js',
-      'test-main.js'
+    browsers : ['PhantomJS'],
+
+    plugins : [
+      'karma-phantomjs-launcher',
+      'karma-coverage',
+      'karma-jasmine',
+      'karma-ng-html2js-preprocessor'
     ],
 
-    // list of files to exclude
-    exclude: [
-    ],
+    coverageReporter: {
+      type : 'html',
+      dir : 'coverage/'
+    },
 
-    // test results reporter to use
-    // possible values: 'dots', 'progress'
-    // available reporters: https://npmjs.org/browse/keyword/karma-reporter
-    reporters: ['mocha'],
+    reporters: ['progress'],
 
-    // web server port
-    port: 9876,
+    proxies: {
+      '/assets/': path.join('/base/', conf.paths.src, '/assets/')
+    }
+  };
 
-    // start these browsers
-    // available browser launchers: https://npmjs.org/browse/keyword/karma-launcher
-    browsers: [
-      // 'Chrome',
-      'PhantomJS2'
-    ],
+  // This is the default preprocessors configuration for a usage with Karma cli
+  // The coverage preprocessor is added in gulp/unit-test.js only for single tests
+  // It was not possible to do it there because karma doesn't let us now if we are
+  // running a single test or not
+  configuration.preprocessors = {};
+  pathSrcHtml.forEach(function(path) {
+    configuration.preprocessors[path] = ['ng-html2js'];
+  });
 
-    customLaunchers: {
-      Chrome_travis_ci: {
+  // This block is needed to execute Chrome on Travis
+  // If you ever plan to use Chrome and Travis, you can keep it
+  // If not, you can safely remove it
+  // https://github.com/karma-runner/karma/issues/1144#issuecomment-53633076
+  if(configuration.browsers[0] === 'Chrome' && process.env.TRAVIS) {
+    configuration.customLaunchers = {
+      'chrome-travis-ci': {
         base: 'Chrome',
         flags: ['--no-sandbox']
       }
-    }
-  });
-
-  if (process.env.TRAVIS) {
-    config.browsers = ['Chrome_travis_ci'];
-    config.singleRun = true;
+    };
+    configuration.browsers = ['chrome-travis-ci'];
   }
+
+  config.set(configuration);
 };

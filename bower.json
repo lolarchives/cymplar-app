@@ -1,0 +1,18 @@
+{
+  "name": "cymplar-app",
+  "version": "0.0.0",
+  "homepage": "https://github.com/Neulinet/cymplar-app",
+  "authors": [
+    "Roger Padilla <rogerjose81@gmail.com>"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test"
+  ],
+  "dependencies": {
+    "angular-bootstrap": "~0.14.3"
+  }
+}

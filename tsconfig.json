@@ -1,5 +1,4 @@
 {
-    "version": "1.6.0",
     "compilerOptions": {
         "target": "es5",
         "module": "commonjs",
@@ -7,24 +6,24 @@
         "noImplicitAny": true,
         "suppressImplicitAnyIndexErrors": true,
         "removeComments": true,
-        "noLib": false,
         "emitDecoratorMetadata": true,
         "experimentalDecorators": true,
-        "experimentalAsyncFunctions": false,
-        "sourceMap": true
+        "sourceMap": false
     },
     "compileOnSave": false,
     "filesGlob": [
-        "./client/**/*.ts",
-        "./server/**/*.ts",
-        "./shared/**/*.ts",
-        "./gulpfile.ts",
         "./tools/**/*.ts",
         "!./tools/typings/tsd/**",
         "./tools/typings/tsd/tsd.d.ts",
-        "!./dist/**",        
-        "!./test/**",        
-        "!.tmp/**",        
+        "./gulpfile.ts",
+        "./client/**/*.ts",
+        "./server/**/*.ts",
+        "!./dist/**",
+        "!./test/**",
+        "!.tmp/**",
         "!./node_modules/**"
-    ]
+    ],
+    "atom": {
+        "rewriteTsconfig": true
+    }    
 }

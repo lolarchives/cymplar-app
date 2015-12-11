@@ -1,9 +1,66 @@
-import {bootstrap} from 'angular2/angular2';
-import {ROUTER_PROVIDERS} from 'angular2/router';
-import {HTTP_PROVIDERS} from 'angular2/http';
+import { MainController } from './components/main/main';
+import './components/contacts/contacts';
+import { mainNavbar } from './components/navbar/navbar.directive';
 
-import {AppCmp} from './components/app/app';
+declare var moment: moment.MomentStatic;
 
-bootstrap(AppCmp, [
-  ROUTER_PROVIDERS, HTTP_PROVIDERS
-]);
+namespace app {
+  
+  /** @ngInject */
+  function runBlock($rootScope: angular.IRootScopeService, $log: angular.ILogService, $state: any, $stateParams: any) {
+ 
+    // It's very handy to add references to $state and $stateParams to the $rootScope
+    // so that you can access them from any scope within your applications. For example,
+    // <li ng-class="{ active: $state.includes('contacts.list') }"> will set the <li>
+    // to active whenever 'contacts.list' or one of its decendents is active.
+    $rootScope['$state'] = $state;
+    $rootScope['$stateParams'] = $stateParams;
+ 
+    $log.debug('runBlock end');
+  }
+
+  /** @ngInject */
+  function config($logProvider: angular.ILogProvider, toastrConfig: any) {
+    // enable log
+    $logProvider.debugEnabled(true);
+    // set options third-party lib
+    toastrConfig.allowHtml = true;
+    toastrConfig.timeOut = 3000;
+    toastrConfig.positionClass = 'toast-top-right';
+    toastrConfig.preventDuplicates = true;
+    toastrConfig.progressBar = true;
+  }
+
+  /** @ngInject */
+  function routerConfig($stateProvider: angular.ui.IStateProvider, $urlRouterProvider: angular.ui.IUrlRouterProvider) {
+    $stateProvider
+      .state('main', {
+        url: '/',
+        templateUrl: 'components/main/main.html',
+        controller: 'MainController',
+        controllerAs: 'main'
+      });
+    $urlRouterProvider.otherwise('/');
+  }
+
+  angular.module('app', [
+    'ngAnimate',
+    'ngTouch',
+    'ngSanitize',
+    'ngMessages',
+    'ui.router',
+    'ui.bootstrap',
+    'toastr',
+    'app.contacts'
+  ])
+    .config(config)
+    .config(routerConfig)
+    .run(runBlock)
+    .constant('moment', moment)
+    .controller('MainController', MainController)
+    .directive('mainNavbar', mainNavbar);
+
+  const appContainer = document.documentElement;
+  appContainer.setAttribute('ng-strict-di', 'true');
+  angular.bootstrap(appContainer, ['app']);
+}
