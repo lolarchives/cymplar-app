@@ -8,7 +8,7 @@ Other tools: [TypeScript](http://www.typescriptlang.org/), [Gulp](http://gulpjs.
 
 ## Getting Started
 
-To get you started you can simply clone the angular-seed repository and install the dependencies:
+To get you started you can simply clone this repository and install the dependencies:
 
 ## Prerequisites
 
