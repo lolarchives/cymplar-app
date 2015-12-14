@@ -1,6 +1,7 @@
 import { MainController } from './components/main/main';
 import './components/contacts/contacts';
 import { mainNavbar } from './components/navbar/navbar.directive';
+import './components/signup/signup';
 
 declare var moment: moment.MomentStatic;
 
@@ -51,7 +52,8 @@ namespace app {
     'ui.router',
     'ui.bootstrap',
     'toastr',
-    'app.contacts'
+    'app.contacts',
+    'app.signup'
   ])
     .config(config)
     .config(routerConfig)
