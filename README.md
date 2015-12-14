@@ -4,6 +4,8 @@ This project is built according to the [MEAN](https://en.wikipedia.org/wiki/MEAN
 
 Additional frameworks / libraries: [UI-Bootstrap](https://angular-ui.github.io/bootstrap/), [Auth0](https://auth0.com/).
 
+Other tools: [TypeScript](http://www.typescriptlang.org/), [Gulp](http://gulpjs.com/).
+
 ## Getting Started
 
 To get you started you can simply clone the angular-seed repository and install the dependencies:
