@@ -123,16 +123,6 @@ for (let prop in schemas) {
   });
 }
 
-schemas.addressBookGroup.pre('remove', function(next: Function) {
-  const obj: Document = this;
-  AddressBookContactModel.find({ group: obj._id }).remove((err: any, removedObjs: any) => {
-    if (err) {
-      next(err);
-    }
-  });
-  next();
-});
-
 export const UserModel = db.model('user', schemas.user);
 export const CompanyModel = db.model('company', schemas.company);
 export const ContactModel = db.model('contact', schemas.contact);
@@ -143,3 +133,12 @@ export const AddressBookContactStatusModel = db.model('addressBookContactStatus'
 export const AddressBookContactModel = db.model('addressBookContact', schemas.addressBookContact);
 export const AddressBookGroupModel = db.model('addressBookGroup', schemas.addressBookGroup);
 
+schemas.addressBookGroup.pre('remove', function(next: Function) {
+  const obj: Document = this;
+  AddressBookContactModel.find({ group: obj._id }).remove((err: any, removedObjs: any) => {
+    if (err) {
+      next(err);
+    }
+  });
+  next();
+});
