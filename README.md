@@ -41,23 +41,7 @@ To ensure consistency throughout the source code, keep these rules in mind as yo
   _Why LIFT?: Provides a consistent structure that scales well, is modular, and makes it easier to increase developer efficiency by finding code quickly. Another way to check your app structure is to ask yourself: How quickly can you open and work in all of the related files for a feature?_.
 * All features or bug fixes **should be tested** by one or more specs (unit-tests).
 
-### <a name="issue"></a> Found an Issue?
-If you find a bug in the source code or a mistake in the documentation, you can help by
-[submitting an issue](#submit-issue) to our [GitHub Repository][github]. Even better, you can
-[submit a Pull Request](#submit-pr) with a fix.
-
-### <a name="submit-issue"></a> Submitting an Issue
-If your issue appears to be a bug, and hasn't been reported, open a new issue.
-Providing the following information will increase the chances of your issue being dealt with quickly:
-
-* **Overview of the Issue** - if an error is being thrown a non-minified stack trace helps
-* **Motivation for or Use Case** - explain why this is a bug for you
-* **Browsers and Operating System** - is this a problem with all browsers?
-* **Related Issues** - has a similar issue been reported before?
-* **Suggest a Fix** - if you can't fix the bug yourself, perhaps you can point to what might be
-  causing the problem (line of code or commit).
-  
-### Directory Layout
+#### Directory Layout
 
 ```
 client/                 --> all of the source files for the front-end application
@@ -74,12 +58,28 @@ client/                 --> all of the source files for the front-end applicatio
 karma.conf.js           --> config file for running unit tests with Karma
 ```
 
-##### Use a TypeScript-aware editor to view / edit the code.
+#### Use a TypeScript-aware editor to view / edit the code.
 * [Visual Studio Code](https://code.visualstudio.com/)
 * [Atom](https://atom.io/) with [TypeScript plugin](https://atom.io/packages/atom-typescript)
 * [Webstorm](https://www.jetbrains.com/webstorm/download/)
 * [Sublime Text](http://www.sublimetext.com) with [Typescript plugin](https://github.com/Microsoft/Typescript-Sublime-plugin#installation)
 
+### <a name="issue"></a> Found an Issue?
+If you find a bug in the source code or a mistake in the documentation, you can help by
+[submitting an issue](#submit-issue) to our [GitHub Repository][github]. Even better, you can
+[submit a Pull Request](#submit-pr) with a fix.
+
+### <a name="submit-issue"></a> Submitting an Issue
+If your issue appears to be a bug, and hasn't been reported, open a new issue.
+Providing the following information will increase the chances of your issue being dealt with quickly:
+
+* **Overview of the Issue** - if an error is being thrown a non-minified stack trace helps
+* **Motivation for or Use Case** - explain why this is a bug for you
+* **Browsers and Operating System** - is this a problem with all browsers?
+* **Related Issues** - has a similar issue been reported before?
+* **Suggest a Fix** - if you can't fix the bug yourself, perhaps you can point to what might be
+  causing the problem (line of code or commit).
+  
 ### <a name="submit-pr"></a> Submitting a Pull Request (PR)
 Before you submit your Pull Request (PR) consider the following guidelines:
 
