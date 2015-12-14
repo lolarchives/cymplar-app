@@ -10,13 +10,13 @@ Other tools: [TypeScript](http://www.typescriptlang.org/), [Gulp](http://gulpjs.
 
 To get you started you can simply clone this repository and install the dependencies:
 
-_Prerequisites:_ you need Node.js 4.2.x installed.
+__Prerequisites:__ you need Node.js 4.2.x installed.
 
 1. Clone / Download the repo. SourceTree is recommended to easily working with Git, you can download the SourceTree app from [here](https://www.sourcetreeapp.com/).
 2. Install dependencies: ```npm install```
 3. Launch Application: ```npm start```
 
-_Other commands_
+__Other commands__
 * Run tests: ```npm test```
 * Run static analysis linter: ```gulp tslint``` 
 
