@@ -45,9 +45,7 @@ function compileJs(src: string[], dest: string, inlineTpl?: boolean): NodeJS.Rea
 function lintJs(src: string | string[]) {
   return gulp.src(src)
     .pipe(jslint())
-    .pipe(jslint.report(jslintStylish, {
-      emitError: false
-    }));
+    .pipe(jslint.report(jslintStylish));
 }
 
 // --------------

@@ -22,12 +22,41 @@ You need Node.js 4.2.x installed.
 
 **Tested on:** Node.js 4.2.x
 
-##### Use a TypeScript-aware editor to view / edit the code.
-* [Visual Studio Code](https://code.visualstudio.com/)
-* [Atom](https://atom.io/) with [TypeScript plugin](https://atom.io/packages/atom-typescript)
-* [Webstorm](https://www.jetbrains.com/webstorm/download/)
-* [Sublime Text](http://www.sublimetext.com) with [Typescript plugin](https://github.com/Microsoft/Typescript-Sublime-plugin#installation)
+## Contributing to Cymplar-App
 
+As a developer, here are the guidelines we would like you to follow:
+
+ - [Coding Rules](#rules)
+ - [Issues and Bugs](#issue)
+ - [Submission Guidelines](#submit-issue)
+ 
+### <a name="rules"></a> Coding Rules
+To ensure consistency throughout the source code, keep these rules in mind as you are working:
+
+* We follow [Airbnb's JavaScript Style guide](https://github.com/airbnb/javascript) and
+  [Google's JavaScript Style Guide](https://google.github.io/styleguide/javascriptguide.xml).
+* We follow the [John Papa Style guide for Angular](https://github.com/johnpapa/angular-styleguide)
+* We follow the [LIFT Principle](https://github.com/johnpapa/angular-styleguide#application-structure-lift-principle) for Structuring our Application: _Structure your app such that you can Locate your code quickly, Identify the code at a glance, keep the Flattest structure you can, and Try to stay DRY. The structure should follow these 4 basic guidelines._
+  
+  _Why LIFT?: Provides a consistent structure that scales well, is modular, and makes it easier to increase developer efficiency by finding code quickly. Another way to check your app structure is to ask yourself: How quickly can you open and work in all of the related files for a feature?_.
+* All features or bug fixes **should be tested** by one or more specs (unit-tests).
+
+### <a name="issue"></a> Found an Issue?
+If you find a bug in the source code or a mistake in the documentation, you can help by
+[submitting an issue](#submit-issue) to our [GitHub Repository][github]. Even better, you can
+[submit a Pull Request](#submit-pr) with a fix.
+
+### <a name="submit-issue"></a> Submitting an Issue
+If your issue appears to be a bug, and hasn't been reported, open a new issue.
+Providing the following information will increase the chances of your issue being dealt with quickly:
+
+* **Overview of the Issue** - if an error is being thrown a non-minified stack trace helps
+* **Motivation for or Use Case** - explain why this is a bug for you
+* **Browsers and Operating System** - is this a problem with all browsers?
+* **Related Issues** - has a similar issue been reported before?
+* **Suggest a Fix** - if you can't fix the bug yourself, perhaps you can point to what might be
+  causing the problem (line of code or commit).
+  
 ### Directory Layout
 
 ```
@@ -45,41 +74,11 @@ client/                 --> all of the source files for the front-end applicatio
 karma.conf.js           --> config file for running unit tests with Karma
 ```
 
-## Contributing to Cymplar-App
-
-As a developer, here are the guidelines we would like you to follow:
-
- - [Coding Rules](#rules)
- - [Issues and Bugs](#issue)
- - [Submission Guidelines](#submit-issue)
- 
-
-### <a name="rules"></a> Coding Rules
-To ensure consistency throughout the source code, keep these rules in mind as you are working:
-
-* We follow [Airbnb's JavaScript Style guide](https://github.com/airbnb/javascript) and
-  [Google's JavaScript Style Guide](https://google.github.io/styleguide/javascriptguide.xml).
-* We follow the [John Papa Style guide for Angular](https://github.com/johnpapa/angular-styleguide)
-* We follow the [LIFT Principle](https://github.com/johnpapa/angular-styleguide#application-structure-lift-principle) for Structuring our Application: _Structure your app such that you can Locate your code quickly, Identify the code at a glance, keep the Flattest structure you can, and Try to stay DRY. The structure should follow these 4 basic guidelines.
-  
-  Why LIFT?: Provides a consistent structure that scales well, is modular, and makes it easier to increase developer efficiency by finding code quickly. Another way to check your app structure is to ask yourself: How quickly can you open and work in all of the related files for a feature?_. 
-* All features or bug fixes **should be tested** by one or more specs (unit-tests).
-
-### <a name="issue"></a> Found an Issue?
-If you find a bug in the source code or a mistake in the documentation, you can help by
-[submitting an issue](#submit-issue) to our [GitHub Repository][github]. Even better, you can
-[submit a Pull Request](#submit-pr) with a fix.
-
-### <a name="submit-issue"></a> Submitting an Issue
-If your issue appears to be a bug, and hasn't been reported, open a new issue.
-Providing the following information will increase the chances of your issue being dealt with quickly:
-
-* **Overview of the Issue** - if an error is being thrown a non-minified stack trace helps
-* **Motivation for or Use Case** - explain why this is a bug for you
-* **Browsers and Operating System** - is this a problem with all browsers?
-* **Related Issues** - has a similar issue been reported before?
-* **Suggest a Fix** - if you can't fix the bug yourself, perhaps you can point to what might be
-  causing the problem (line of code or commit)
+##### Use a TypeScript-aware editor to view / edit the code.
+* [Visual Studio Code](https://code.visualstudio.com/)
+* [Atom](https://atom.io/) with [TypeScript plugin](https://atom.io/packages/atom-typescript)
+* [Webstorm](https://www.jetbrains.com/webstorm/download/)
+* [Sublime Text](http://www.sublimetext.com) with [Typescript plugin](https://github.com/Microsoft/Typescript-Sublime-plugin#installation)
 
 ### <a name="submit-pr"></a> Submitting a Pull Request (PR)
 Before you submit your Pull Request (PR) consider the following guidelines:
@@ -151,15 +150,3 @@ from the main (upstream) repository:
     ```shell
     git pull --ff upstream develop
     ```
-
-## References
-[git]: http://git-scm.com/
-[bower]: http://bower.io
-[npm]: https://wguww.npmjs.org/
-[node]: http://nodejs.org
-[protractor]: https://github.com/angular/protractor
-[jasmine]: http://jasmine.github.io
-[karma]: http://karma-runner.github.io
-[express]: http://expressjs.com/en/index.html
-[gulp]: http://gulpjs.com/
-[tslint]: https://www.npmjs.com/package/tslint
