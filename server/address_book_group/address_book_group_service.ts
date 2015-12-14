@@ -48,12 +48,12 @@ export class AddressBookGroupService extends BaseService<AddressBookGroup> {
 
 		return new Promise<AddressBookGroup>((fulfill: Function, reject: Function) => {
 
-			let toLoad: any = [stateService.findOneByIdPopulate(groupToSend.city.state, 'country'), 
-							   contactService.findAndPopulate({ group: AddressBookGroupToSend._id }, 'status')];
+			let toLoad: any = [countryService.findOneById(groupToSend.city.country), 
+							   addressBookContactService.findAndPopulate({ group: groupToSend._id }, 'status')];
 
 			Promise.all(toLoad)
 			.then((results: any) => {
-				groupToSend.city.state = results[0];
+				groupToSend.city.country = results[0];
 				groupToSend.contacts = results[1];
 
 				fulfill(groupToSend);
