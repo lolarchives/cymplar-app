@@ -29,4 +29,22 @@ export class ObjectUtil {
 	static isBlank(data: any): boolean {
 		return data === undefined || data === null;
 	}
+	
+	static createFilter(data: any): any {
+		let filters = {};
+
+		// Regular expresion to simplify the search
+		for (let entry in data) {
+		    if (ObjectUtil.isPresent(data[entry])) {
+		    	if (typeof data[entry] === 'string' && typeof data[entry] !== 'ObjectID') {
+					console.log("data type " + typeof data[entry]);
+		    		filters[entry] = new RegExp(data[entry], 'i');
+		    	} else {
+		    		filters[entry] = data[entry];
+		    	}
+		    } 
+		}
+
+		return filters;
+	}
 }

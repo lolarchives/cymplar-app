@@ -1,0 +1,36 @@
+import * as express from 'express';
+
+import {sendError} from '../core/web_util';
+import {addressBookGroupService} from './address_book_group_service';
+import {AddressBookGroup} from '../../client/core/dto';
+
+const router = express.Router();
+
+router.post('/', (req, res) => {
+  addressBookGroupService.createOne(req.body)
+    .then((group: AddressBookGroup) => res.send(group), (err) => sendError(res, err));
+});
+
+router.put('/', (req, res) => {
+  addressBookGroupService.updateOne(req.body)
+    .then((group: AddressBookGroup) => res.send(group), (err) => sendError(res, err));
+});
+
+router.delete('/:id', (req, res) => {
+  addressBookGroupService.removeOneById(req.params.id)
+    .then((group: AddressBookGroup) => res.send(group), (err) => sendError(res, err));
+});
+
+router.get('/_find', (req: express.Request, res: express.Response) => {
+  addressBookGroupService.find()
+    .then((groups: AddressBookGroup[]) => res.send(groups), (err: any) => sendError(res, err));
+});
+
+router.get('/:id', (req: express.Request, res: express.Response) => {
+  addressBookGroupService.findOneById(req.params.id)
+    .then((group: AddressBookGroup) => res.send(group), (err: any) => sendError(res, err));
+});
+
+
+export = router;
+
