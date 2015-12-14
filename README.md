@@ -35,8 +35,8 @@ As a developer, here are the guidelines we would like you to follow:
 ### <a name="rules"></a>Coding Rules
 To ensure consistency throughout the source code, keep these rules in mind as you are working:
 
-* We follow [Airbnb's JavaScript Style guide](https://github.com/airbnb/javascript) and
-  [Google's JavaScript Style Guide](https://google.github.io/styleguide/javascriptguide.xml).
+* We follow the JavaScript Style guides from [Airbnb](https://github.com/airbnb/javascript) and
+  [Google](https://google.github.io/styleguide/javascriptguide.xml).
 * We follow the [John Papa Style guide for Angular](https://github.com/johnpapa/angular-styleguide).
 * We follow the [LIFT Principle](https://github.com/johnpapa/angular-styleguide#application-structure-lift-principle) for Structuring our Application: "_Structure your app such that you can Locate your code quickly, Identify the code at a glance, keep the Flattest structure you can, and Try to stay DRY. The structure should follow these 4 basic guidelines._
   _Why LIFT?: Provides a consistent structure that scales well, is modular, and makes it easier to increase developer efficiency by finding code quickly. Another way to check your app structure is to ask yourself: How quickly can you open and work in all of the related files for a feature?_".
