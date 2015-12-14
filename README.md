@@ -52,7 +52,7 @@ client/                 --> all of the source files for the front-end applicatio
   components/             --> all app specific modules
     contacts/               --> Sample module for the app with sub-routing
     navbar/                 --> main menu of the app
-  core                    --> Only transversal code goes here
+  core/                   --> Only transversal code goes here
     dto.ts                  --> DTOs or domain classes for the app
     util.ts                 --> Common utility classes for thr app
 karma.conf.js           --> config file for running unit tests with Karma
