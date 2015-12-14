@@ -32,7 +32,7 @@ As a developer, here are the guidelines we would like you to follow:
  - [Issues and Bugs](#issue)
  - [Submission Guidelines](#submit-issue)
  
-### <a name="rules"></a> Coding Rules
+### <a name="rules"></a>Coding Rules
 To ensure consistency throughout the source code, keep these rules in mind as you are working:
 
 * We follow [Airbnb's JavaScript Style guide](https://github.com/airbnb/javascript) and
@@ -65,12 +65,12 @@ karma.conf.js           --> config file for running unit tests with Karma
 * [Webstorm](https://www.jetbrains.com/webstorm/download/)
 * [Sublime Text](http://www.sublimetext.com) with [Typescript plugin](https://github.com/Microsoft/Typescript-Sublime-plugin#installation)
 
-### <a name="issue"></a> Found an Issue?
+### <a name="issue"></a>Found an Issue?
 If you find a bug in the source code or a mistake in the documentation, you can help by
 [submitting an issue](#submit-issue) to our [GitHub Repository][github]. Even better, you can
 [submit a Pull Request](#submit-pr) with a fix.
 
-### <a name="submit-issue"></a> Submitting an Issue
+### <a name="submit-issue"></a>Submitting an Issue
 If your issue appears to be a bug, and hasn't been reported, open a new issue.
 Providing the following information will increase the chances of your issue being dealt with quickly:
 
@@ -81,7 +81,7 @@ Providing the following information will increase the chances of your issue bein
 * **Suggest a Fix** - if you can't fix the bug yourself, perhaps you can point to what might be
   causing the problem (line of code or commit).
   
-### <a name="submit-pr"></a> Submitting a Pull Request (PR)
+### <a name="submit-pr"></a>Submitting a Pull Request (PR)
 Before you submit your Pull Request (PR) consider the following guidelines:
 
 * Search [GitHub](https://github.com/Neulinet/cymplar-app/pulls) for an open or closed PR
