@@ -11,7 +11,8 @@ router.post('/', (req, res) => {
     .then((industry: Industry) => res.send(industry), (err) => sendError(res, err));
 });
 
-router.put('/', (req, res) => {
+router.put('/:id', (req, res) => {
+  req.body._id = req.params.id;
   industryService.updateOne(req.body)
     .then((industry: Industry) => res.send(industry), (err) => sendError(res, err));
 });
@@ -22,8 +23,8 @@ router.delete('/:id', (req, res) => {
 });
 
 router.get('/_find', (req: express.Request, res: express.Response) => {
-  industryService.find()
-    .then((industrys: Industry[]) => res.send(industrys), (err: any) => sendError(res, err));
+  industryService.find(req.query)
+    .then((industries: Industry[]) => res.send(industries), (err: any) => sendError(res, err));
 });
 
 router.get('/:id', (req: express.Request, res: express.Response) => {

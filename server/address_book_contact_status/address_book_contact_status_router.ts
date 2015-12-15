@@ -11,7 +11,8 @@ router.post('/', (req, res) => {
     .then((contactStatus: AddressBookContactStatus) => res.send(contactStatus), (err) => sendError(res, err));
 });
 
-router.put('/', (req, res) => {
+router.put('/:id', (req, res) => {
+  req.body._id = req.params.id;
   addressBookContactStatusService.updateOne(req.body)
     .then((contactStatus: AddressBookContactStatus) => res.send(contactStatus), (err) => sendError(res, err));
 });
@@ -22,7 +23,7 @@ router.delete('/:id', (req, res) => {
 });
 
 router.get('/_find', (req: express.Request, res: express.Response) => {
-  addressBookContactStatusService.find()
+  addressBookContactStatusService.find(req.query)
     .then((contactStatuss: AddressBookContactStatus[]) => res.send(contactStatuss), (err: any) => sendError(res, err));
 });
 

@@ -11,7 +11,8 @@ router.post('/', (req, res) => {
     .then((city: City) => res.send(city), (err) => sendError(res, err));
 });
 
-router.put('/', (req, res) => {
+router.put('/:id', (req, res) => {
+  req.body._id = req.params.id;
   cityService.updateOne(req.body)
     .then((city: City) => res.send(city), (err) => sendError(res, err));
 });
@@ -22,7 +23,7 @@ router.delete('/:id', (req, res) => {
 });
 
 router.get('/_find', (req: express.Request, res: express.Response) => {
-  cityService.find()
+  cityService.find(req.query)
     .then((citys: City[]) => res.send(citys), (err: any) => sendError(res, err));
 });
 

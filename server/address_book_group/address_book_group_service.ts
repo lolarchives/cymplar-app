@@ -2,6 +2,7 @@
 import {AddressBookGroupModel} from '../core/model';
 import {BaseService} from '../core/base_service';
 import {addressBookContactService} from '../address_book_contact/address_book_contact_service';
+import {countryService} from '../country/country_service';
 
 export class AddressBookGroupService extends BaseService<AddressBookGroup> {
 
@@ -19,7 +20,7 @@ export class AddressBookGroupService extends BaseService<AddressBookGroup> {
 			this.findAndPopulate(data, populationOpts)
 				.then((groups: AddressBookGroup[]) => {
 
-				let promises: Promise<AddressBookGroup>[] = [];
+				const promises: Promise<AddressBookGroup>[] = [];
 
 					for (let i = 0; i < groups.length; i++) {
 						promises.push(this.loadGroup(groups[i]));
@@ -34,7 +35,6 @@ export class AddressBookGroupService extends BaseService<AddressBookGroup> {
 				.catch((err: any) => {
 					reject(err);
 				});
-
 		});
 	}
 
@@ -44,11 +44,11 @@ export class AddressBookGroupService extends BaseService<AddressBookGroup> {
 
 	private loadGroup(data: AddressBookGroup): Promise<AddressBookGroup> {
 
-		let groupToSend: AddressBookGroup = data;
+		const groupToSend: AddressBookGroup = data;
 
 		return new Promise<AddressBookGroup>((fulfill: Function, reject: Function) => {
 
-			let toLoad: any = [countryService.findOneById(groupToSend.city.country), 
+			const toLoad: any = [countryService.findOneById(groupToSend.city.country), 
 							   addressBookContactService.findAndPopulate({ group: groupToSend._id }, 'status')];
 
 			Promise.all(toLoad)
@@ -66,4 +66,3 @@ export class AddressBookGroupService extends BaseService<AddressBookGroup> {
 }
 
 export const addressBookGroupService = new AddressBookGroupService();
-

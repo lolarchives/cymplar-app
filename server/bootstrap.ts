@@ -33,10 +33,10 @@ server.use('/api/contact', contactRouter);
 server.use('/api/country', countryRouter);
 server.use('/api/city', cityRouter);
 server.use('/api/industry', industryRouter);
-server.use('/api/address-book/contact-status', addressBookContactStatusRouter);
+server.use('/api/address_book_contact_status', addressBookContactStatusRouter);
 
-server.use('/api/address-book/group', addressBookGroupRouter);
-server.use('/api/address-book/contact', addresssBookContactRouter);
+server.use('/api/address_book_group', addressBookGroupRouter);
+server.use('/api/address_book_contact', addresssBookContactRouter);
 
 server.all(APP_BASE + '*', (req, res) =>
   res.sendFile(INDEX_DEST_PATH)
@@ -51,5 +51,4 @@ server.listen(PORT, () => {
     console.log('Server started at: ', url);
   }
 });
-
 

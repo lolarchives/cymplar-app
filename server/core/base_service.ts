@@ -64,11 +64,9 @@ export abstract class BaseService<T extends BaseDto> {
 
 	removeByFilter(data?: T): Promise<string[]> {
 		
-		const filter = ObjectUtil.isPresent(data) ? data : {};
-		
 		return new Promise<string[]>((resolve: Function, reject: Function) => {
   
-			this.Model.find(ObjectUtil.createFilter(filter), null, { lean: false }, (err, foundObjs) => {
+			this.Model.find(ObjectUtil.createFilter(data), (err, foundObjs) => {
 				if (err) {
 					reject(err);
 					return;
@@ -89,10 +87,9 @@ export abstract class BaseService<T extends BaseDto> {
 	}
 	
 	find(data?: T): Promise<T[]> {
-		const filter = ObjectUtil.isPresent(data) ? data : {};
 		
 		return new Promise<T[]>((resolve: Function, reject: Function) => {
-			this.Model.find(ObjectUtil.createFilter(filter), null, { sort: '-createdAt', lean: true }, (err, foundObjs) => {
+			this.Model.find(ObjectUtil.createFilter(data), null, { sort: '-createdAt', lean: true }, (err, foundObjs) => {
 				if (err) {
 					reject(err);
 					return;
@@ -104,6 +101,7 @@ export abstract class BaseService<T extends BaseDto> {
 
 	
 	findOneById(id: string): Promise<T> {
+		
 		return new Promise<T>((resolve: Function, reject: Function) => {
 			this.Model.findById(id, null, { lean: true }, (err, foundObj) => {
 				if (err) {
@@ -116,6 +114,7 @@ export abstract class BaseService<T extends BaseDto> {
 	}
 	
 	findOneByIdPopulate(id: string, population: any): Promise<T> {
+		
 		return new Promise<T>((resolve: Function, reject: Function) => {
 			this.Model.findById(id, null, { lean: true }) 
 			.populate(population)
@@ -130,11 +129,9 @@ export abstract class BaseService<T extends BaseDto> {
 	}
 	
 	findAndPopulate(data: T, population: any): Promise<T[]> { 
-		
-		const filter = ObjectUtil.isPresent(data) ? data : {};
 
 		return new Promise<T[]>((resolve: Function, reject: Function) => {
-			this.Model.find(ObjectUtil.createFilter(filter), null, { sort: '-createdAt', lean: true }) 
+			this.Model.find(ObjectUtil.createFilter(data), null, { sort: '-createdAt', lean: true }) 
 			.populate(population)
 			.exec((err, foundObjs) => {
 				if (err) {

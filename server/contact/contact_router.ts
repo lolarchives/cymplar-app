@@ -12,6 +12,7 @@ router.post('/', (req, res) => {
 });
 
 router.put('/:id', (req, res) => {
+  req.body._id = req.params.id;
   contactService.updateOne(req.body)
     .then((contact: Contact) => res.send(contact), (err) => sendError(res, err));
 });
@@ -22,7 +23,7 @@ router.delete('/:id', (req, res) => {
 });
 
 router.get('/', (req: express.Request, res: express.Response) => {
-  contactService.find()
+  contactService.find(req.query)
     .then((contacts: Contact[]) => res.send(contacts), (err: any) => sendError(res, err));
 });
 

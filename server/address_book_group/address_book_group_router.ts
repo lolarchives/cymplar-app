@@ -11,7 +11,8 @@ router.post('/', (req, res) => {
     .then((group: AddressBookGroup) => res.send(group), (err) => sendError(res, err));
 });
 
-router.put('/', (req, res) => {
+router.put('/:id', (req, res) => {
+  req.body._id = req.params.id;
   addressBookGroupService.updateOne(req.body)
     .then((group: AddressBookGroup) => res.send(group), (err) => sendError(res, err));
 });
@@ -22,7 +23,7 @@ router.delete('/:id', (req, res) => {
 });
 
 router.get('/_find', (req: express.Request, res: express.Response) => {
-  addressBookGroupService.find()
+  addressBookGroupService.findGroup(req.query)
     .then((groups: AddressBookGroup[]) => res.send(groups), (err: any) => sendError(res, err));
 });
 

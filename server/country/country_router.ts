@@ -11,7 +11,8 @@ router.post('/', (req, res) => {
     .then((country: Country) => res.send(country), (err) => sendError(res, err));
 });
 
-router.put('/', (req, res) => {
+router.put('/:id', (req, res) => {
+  req.body._id = req.params.id;
   countryService.updateOne(req.body)
     .then((country: Country) => res.send(country), (err) => sendError(res, err));
 });
@@ -22,7 +23,7 @@ router.delete('/:id', (req, res) => {
 });
 
 router.get('/_find', (req: express.Request, res: express.Response) => {
-  countryService.find()
+  countryService.find(req.query)
     .then((countrys: Country[]) => res.send(countrys), (err: any) => sendError(res, err));
 });
 
