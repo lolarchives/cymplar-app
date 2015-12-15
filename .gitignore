@@ -29,3 +29,4 @@ dist
 test
 .tmp
 tools/typings/tsd
+.idea
