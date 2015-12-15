@@ -3,7 +3,7 @@ namespace SignUp {
 		'ui.router'
 	])
 	.config(config)
-	.controller('SignUpController', SignUp.SignUpController);
+	.controller('SignUpController', SignUpController);
 	
 	/* @ngInject */
 	function config($stateProvider: any) {
