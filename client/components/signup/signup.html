@@ -3,7 +3,7 @@
     	<img src="/img/logo-red.jpg" alt="Cymplar" class="margin-b-xl">
         <div class="margin-b-xl">
         	<h3 class="margin-n"><strong>Sign Up </strong></h3>
-            <p class="margin-b-n">Email confiming email redirects to complete signup porcess </p>
+            <p class="margin-b-n">Email confirming email redirects to complete sign up porcess </p>
         </div>
         
         <div class="progress margin-b-xl">
@@ -11,13 +11,13 @@
         </div>
         
         <p class="margin-b-l"><strong class="text-danger">*</strong> required fields</p>
-        <form class="form-horizontal">
+        <form class="form-horizontal" name="step1Form" ng-submit="suCtrl.submitStep1(step1Form)">
             <div class="form-group">
                 <div class="col-md-5 control-label">
                     <label for="input1" class="margin-b-n"><strong class="text-danger">*</strong> Organisation Name</label>
                 </div>
                 <div class="col-md-7">
-                    <input type="text" class="form-control" id="input1">
+                    <input type="text" class="form-control" id="input1" name="organizationName" ng-model="suCtrl.signUpDetails.organizationName" required>
                 </div>
             </div><!--form-group-->
             <div class="form-group">
@@ -47,10 +47,10 @@
         
             <div class="row margin-b-xl">
                 <div class="col-xs-6 invisible">
-                    <a href="sign-up1.html" class="btn btn-default">Back</a>
+                    <a class="btn btn-default" >Back</a>
                 </div>
                 <div class="col-xs-6 text-right">
-                    <a href="sign-up2.html" class="btn btn-primary">Next</a>
+                    <button class="btn btn-primary" type="submit">Next</button>
                 </div>
             </div>
         </form>

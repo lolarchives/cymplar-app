@@ -13,6 +13,16 @@ export interface Contact extends BaseDto {
   city?: any;
 }
 
+export interface SignUpDetails extends BaseDto {
+  organizationName: string;
+  email: string;
+  password: string;
+  passwordConfirm: string;
+  country: string;
+  city: string;
+  suburb?: string;
+}
+
 export interface Notification {
   type: string;
   data?: any;

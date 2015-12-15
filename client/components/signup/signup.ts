@@ -1,3 +1,4 @@
+import {SignUpDetails} from "../../core/dto";
 namespace SignUp {
 	
 	/* @ngInject */
@@ -12,12 +13,18 @@ namespace SignUp {
 	}
 	
 	export class SignUpController {
-		private helloWorld: String;
+		private helloWorld: string;
+		private signUpDetails: SignUpDetails;
+
 		/* @ngInject */
-		constructor(private $scope: any, private $http: angular.IHttpBackendService) {
+		constructor(private $scope: any, private $http: angular.IHttpBackendService, private $log: angular.ILogService) {
 			this.helloWorld = 'Hello World';
 			$scope.helloWorld = 'Scope hello world';
 		};
+		
+		submitStep1(step1Form: any) {
+			this.$log.info(this.signUpDetails);
+		}
 	};
 	angular.module('app.signup', [
 		'ui.router'
