@@ -17,7 +17,7 @@
 </head>
 <body data-app-version="<%= APP_VERSION %>">
 
-  <main-navbar></main-navbar>
+  <main-navbar ng-hide="$state.current.name == 'signup'"></main-navbar>
 
   <div ui-view class="main-container container-fluid"></div>
 

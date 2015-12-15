@@ -57,6 +57,8 @@ gulp.task('csslib.build', () =>
     .pipe(gulp.dest(PATH.dest.app.lib))
 );
 
+
+
 gulp.task('font.build', () =>
   gulp.src(PATH.src.font)
     .pipe(gulp.dest(PATH.dest.app.font))
@@ -77,6 +79,16 @@ gulp.task('css.build', () =>
 gulp.task('css.watch', ['css.build'], () =>
   gulp.watch(PATH.src.css, (evt) =>
     runSequence('css.build', () => notifyLiveReload([evt.path]))
+  )
+);
+gulp.task('img.build', () =>
+  gulp.src(PATH.src.img)
+    .pipe(gulp.dest(PATH.dest.app.img))
+);
+
+gulp.task('img.watch', ['img.build'], () =>
+  gulp.watch(PATH.src.img, (evt) =>
+    runSequence('img.build', () => notifyLiveReload([evt.path]))
   )
 );
 
@@ -148,6 +160,7 @@ gulp.task('build', ['clean'], (done: gulp.TaskCallback) =>
       'font.build',
       'jslib.build',
       'css.build',
+      'img.build',
       'tpl.build',
       'jslint',
       'js.build'
@@ -163,6 +176,7 @@ gulp.task('build.watch', ['clean'], (done: gulp.TaskCallback) =>
       'font.build',
       'jslib.build',
       'css.watch',
+      'img.watch',
       'tpl.watch',
       'jslint.watch',
       'js.watch',

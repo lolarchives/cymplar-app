@@ -67,7 +67,10 @@ export const PATH = {
       slash(resolve('bootstrap/dist/fonts/glyphicons-halflings-regular.svg')),
       slash(resolve('bootstrap/dist/fonts/glyphicons-halflings-regular.ttf')),
       slash(resolve('bootstrap/dist/fonts/glyphicons-halflings-regular.woff')),
-      slash(resolve('bootstrap/dist/fonts/glyphicons-halflings-regular.woff2'))
+      slash(resolve('bootstrap/dist/fonts/glyphicons-halflings-regular.woff2')),
+    ],
+    img: [
+      `${CLIENT_SRC_BASE}/assets/img/**/*.*`,
     ],
     index: `${CLIENT_SRC_BASE}/index.html`,
     tpl: [
@@ -83,6 +86,7 @@ export const PATH = {
       base: DIST_BASE,
       lib: `${DIST_BASE}/lib`,
       font: `${DIST_BASE}/fonts`,
+      img: `${DIST_BASE}/img`,
       client: `${CLIENT_DEST_BASE}`
     },
     test: 'test',

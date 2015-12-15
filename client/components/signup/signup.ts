@@ -1,9 +1,4 @@
 namespace SignUp {
-	angular.module('app.signup', [
-		'ui.router'
-	])
-	.config(config)
-	.controller('SignUpController', SignUpController);
 	
 	/* @ngInject */
 	function config($stateProvider: any) {
@@ -17,10 +12,16 @@ namespace SignUp {
 	}
 	
 	export class SignUpController {
+		private helloWorld: String;
 		/* @ngInject */
-		constructor(private $scope: angular.IScope, private $http: angular.IHttpBackendService, private helloWorld: String) {
+		constructor(private $scope: any, private $http: angular.IHttpBackendService) {
 			this.helloWorld = 'Hello World';
+			$scope.helloWorld = 'Scope hello world';
 		};
 	};
-	
+	angular.module('app.signup', [
+		'ui.router'
+	])
+	.config(config)
+	.controller('SignUpController', SignUpController);
 }
