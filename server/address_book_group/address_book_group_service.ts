@@ -15,7 +15,7 @@ export class AddressBookGroupService extends BaseService<AddressBookGroup> {
 		return new Promise<AddressBookGroup[]>((fulfill: Function, reject: Function) => {
 
 			const populationOpts = [{ path: 'industry', select: 'code description'},
-									{ path: 'city', select: 'code description' }];
+									{ path: 'city', select: 'code name country' }];
 			
 			this.findAndPopulate(data, populationOpts)
 				.then((groups: AddressBookGroup[]) => {
@@ -45,7 +45,7 @@ export class AddressBookGroupService extends BaseService<AddressBookGroup> {
 	private loadGroup(data: AddressBookGroup): Promise<AddressBookGroup> {
 
 		const groupToSend: AddressBookGroup = data;
-
+		
 		return new Promise<AddressBookGroup>((fulfill: Function, reject: Function) => {
 
 			const toLoad: any = [countryService.findOneById(groupToSend.city.country), 

@@ -62,9 +62,9 @@ export abstract class BaseService<T extends BaseDto> {
 		});
 	}
 
-	removeByFilter(data?: T): Promise<string[]> {
+	removeByFilter(data: T): Promise<T[]> {
 		
-		return new Promise<string[]>((resolve: Function, reject: Function) => {
+		return new Promise<T[]>((resolve: Function, reject: Function) => {
   
 			this.Model.find(ObjectUtil.createFilter(data), (err, foundObjs) => {
 				if (err) {
@@ -86,7 +86,7 @@ export abstract class BaseService<T extends BaseDto> {
 		});
 	}
 	
-	find(data?: T): Promise<T[]> {
+	find(data: T): Promise<T[]> {
 		
 		return new Promise<T[]>((resolve: Function, reject: Function) => {
 			this.Model.find(ObjectUtil.createFilter(data), null, { sort: '-createdAt', lean: true }, (err, foundObjs) => {
