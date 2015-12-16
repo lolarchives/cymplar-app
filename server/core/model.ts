@@ -105,10 +105,11 @@ const schemas = {
   })
 };
 
-schemas.city.index({ code: 1, state: 1 }, { unique: true });
 
+schemas.city.index({ code: 1, state: 1 }, { unique: true });
 schemas.addressBookContact.index({ email: 1, group: 1 }, { unique: true });
 schemas.addressBookGroup.index({ name: 1, owner: 1 }, { unique: true });
+
 
 for (let prop in schemas) {
   const schem: Schema = schemas[prop];
@@ -123,6 +124,7 @@ for (let prop in schemas) {
   });
 }
 
+
 export const UserModel = db.model('user', schemas.user);
 export const CompanyModel = db.model('company', schemas.company);
 export const ContactModel = db.model('contact', schemas.contact);
@@ -132,6 +134,7 @@ export const IndustryModel = db.model('industry', schemas.industry);
 export const AddressBookContactStatusModel = db.model('addressBookContactStatus', schemas.addressBookContactStatus);
 export const AddressBookContactModel = db.model('addressBookContact', schemas.addressBookContact);
 export const AddressBookGroupModel = db.model('addressBookGroup', schemas.addressBookGroup);
+
 
 schemas.addressBookGroup.pre('remove', function(next: Function) {
   const obj: Document = this;
