@@ -8,6 +8,13 @@ import {resolve} from 'path';
 import {APP_BASE, LIVE_RELOAD_PORT, PATH, PORT} from '../tools/config';
 import * as contactRouter from './contact/contact_router';
 
+import * as countryRouter from './country/country_router';
+import * as cityRouter from './city/city_router';
+import * as industryRouter from './industry/industry_router';
+import * as addressBookContactStatusRouter from './address_book_contact_status/address_book_contact_status_router';
+import * as addressBookGroupRouter from './address_book_group/address_book_group_router';
+import * as addresssBookContactRouter from './address_book_contact/address_book_contact_router';
+
 const INDEX_DEST_PATH = resolve(PATH.cwd, PATH.dest.app.base, 'index.html');
 
 const server = express();
@@ -23,6 +30,14 @@ server.use(bodyParser.urlencoded({ extended: false }));
 
 server.use('/api/contact', contactRouter);
 
+server.use('/api/country', countryRouter);
+server.use('/api/city', cityRouter);
+server.use('/api/industry', industryRouter);
+server.use('/api/address-book-contact-status', addressBookContactStatusRouter);
+
+server.use('/api/address-book-group', addressBookGroupRouter);
+server.use('/api/address-book-contact', addresssBookContactRouter);
+
 server.all(APP_BASE + '*', (req, res) =>
   res.sendFile(INDEX_DEST_PATH)
 );
@@ -36,5 +51,4 @@ server.listen(PORT, () => {
     console.log('Server started at: ', url);
   }
 });
-
 

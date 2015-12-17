@@ -1,6 +1,7 @@
 import {Model, Document} from 'mongoose';
 
 import {BaseDto} from '../../client/core/dto';
+import {ObjectUtil} from '../../client/core/util';
 
 
 export abstract class BaseService<T extends BaseDto> {
@@ -61,9 +62,34 @@ export abstract class BaseService<T extends BaseDto> {
 		});
 	}
 
-	find(): Promise<T[]> {
+	removeByFilter(data: T): Promise<T[]> {
+		
 		return new Promise<T[]>((resolve: Function, reject: Function) => {
-			this.Model.find({}, null, { sort: '-createdAt', lean: true }, (err, foundObjs) => {
+  
+			this.Model.find(ObjectUtil.createFilter(data), (err, foundObjs) => {
+				if (err) {
+					reject(err);
+					return;
+				}
+				
+				foundObjs.forEach((doc) => {
+					doc.remove((err: Error) => {
+						if (err) {
+							reject(err);
+							return;
+						}
+					});
+				});
+				
+				resolve(foundObjs);
+			});
+		});
+	}
+	
+	find(data: T): Promise<T[]> {
+		
+		return new Promise<T[]>((resolve: Function, reject: Function) => {
+			this.Model.find(ObjectUtil.createFilter(data), null, { sort: '-createdAt', lean: true }, (err, foundObjs) => {
 				if (err) {
 					reject(err);
 					return;
@@ -73,7 +99,9 @@ export abstract class BaseService<T extends BaseDto> {
 		});
 	}
 
+	
 	findOneById(id: string): Promise<T> {
+		
 		return new Promise<T>((resolve: Function, reject: Function) => {
 			this.Model.findById(id, null, { lean: true }, (err, foundObj) => {
 				if (err) {
@@ -84,6 +112,35 @@ export abstract class BaseService<T extends BaseDto> {
 			});
 		});
 	}
+	
+	findOneByIdPopulate(id: string, population: any): Promise<T> {
+		
+		return new Promise<T>((resolve: Function, reject: Function) => {
+			this.Model.findById(id, null, { lean: true }) 
+			.populate(population)
+			.exec((err, foundObj) => {
+				if (err) {
+					reject(err);
+					return;
+				}
+				resolve(foundObj);
+			});
+		});
+	}
+	
+	findAndPopulate(data: T, population: any): Promise<T[]> { 
+
+		return new Promise<T[]>((resolve: Function, reject: Function) => {
+			this.Model.find(ObjectUtil.createFilter(data), null, { sort: '-createdAt', lean: true }) 
+			.populate(population)
+			.exec((err, foundObjs) => {
+				if (err) {
+					reject(err);
+					return;
+				}
+				resolve(foundObjs);
+			});
+		});
+	}
 
 }
-

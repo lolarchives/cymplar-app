@@ -29,4 +29,24 @@ export class ObjectUtil {
 	static isBlank(data: any): boolean {
 		return data === undefined || data === null;
 	}
+	
+	static createFilter(data: any = {}): any {
+		
+		//TODO Consult if it should be moved to the server folder in order to use mongoose types
+		const regObjId = new RegExp('^[0-9a-fA-F]{24}$');
+		let filters = {};
+		
+		// Regular expresion to simplify the search
+		for (const entry in data) {
+		    if (ObjectUtil.isPresent(data[entry])) {
+		    	if (typeof data[entry] === 'string' && !regObjId.test(data[entry])) {
+					filters[entry] = new RegExp(data[entry], 'i');
+		    	} else {
+		    		filters[entry] = data[entry];
+		    	}
+		    } 
+		}
+		console.log(JSON.stringify(filters));
+		return filters;
+	}
 }
