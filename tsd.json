@@ -97,6 +97,12 @@
     },
     "mime/mime.d.ts": {
       "commit": "5c3e47967affa3c4128a3875d1664ba206ae1b0f"
+    },
+    "bcrypt/bcrypt.d.ts": {
+      "commit": "11322524f8db9cdb921427cad84cd22fe2d4f965"
+    },
+    "jwt-simple/jwt-simple.d.ts": {
+      "commit": "11322524f8db9cdb921427cad84cd22fe2d4f965"
     }
   }
 }
