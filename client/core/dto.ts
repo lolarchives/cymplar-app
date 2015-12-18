@@ -13,6 +13,77 @@ export interface Contact extends BaseDto {
   city?: any;
 }
 
+export interface Notification {
+  type: string;
+  data?: any;
+}
+
+export interface Country extends BaseDto {
+
+  code?: string;
+  name?: string;
+
+}
+
+export interface State extends BaseDto {
+
+  code?: string;
+  name?: string;
+  country?: any;
+
+}
+
+export interface City extends BaseDto {
+
+  code?: string;
+  name?: string;
+  state?: any;
+
+}
+
+export interface Industry extends BaseDto {
+
+  code?: string;
+  description?: string;
+
+}
+
+export interface AddressBookContactStatus extends BaseDto {
+
+  code?: string;
+  name?: string;
+
+}
+
+export interface AddressBookGroup extends BaseDto {
+
+  name?: string;
+  description?: string;
+  city?: any;
+  postcode?: any;
+  streetName?: string;
+  industry?: any;
+  website?: string;
+  bussinessNumber?: string;
+  owner?: any;
+  contacts?: any;
+
+}
+
+export interface AddressBookContact extends BaseDto {
+
+  name?: string;
+  description?: string;
+  position?: string;
+  contactNumber?: string;
+  altContactNumber?: string;
+  email?: string;
+  website?: string;
+  group?: any;
+  status?: any;
+
+}
+
 export interface SignUpDetails extends BaseDto {
   organizationName: string;
   username: string;
@@ -33,9 +104,3 @@ export interface SignUpDetails extends BaseDto {
   dribble?: string;
   pinterest?: string;
 }
-
-export interface Notification {
-  type: string;
-  data?: any;
-}
-
