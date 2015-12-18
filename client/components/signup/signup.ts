@@ -1,4 +1,5 @@
 import {SignUpDetails} from "../../core/dto";
+import './signup.service';
 namespace SignUp {
 	
 	/* @ngInject */
@@ -20,8 +21,8 @@ namespace SignUp {
 		private secondStep: boolean;
 		private finalStep: boolean;
 		/* @ngInject */
-		constructor(private $scope: any, private $http: angular.IHttpBackendService, private $log: angular.ILogService) {
-
+		constructor(private $scope: any, private $http: angular.IHttpBackendService, private $log: angular.ILogService, 
+					private $SignUpRESTService: any) {
 			this.firstStep = true;
 			this.secondStep = false;
 			this.finalStep = false;
@@ -34,13 +35,14 @@ namespace SignUp {
 				email: 'C@D.com',
 				password: 'abcdeF1',
 				country: 'Wano',
-				city: 'Dawn'
-				
+				city: 'Dawn',
+				industryType: 'B',
+				description: 'C'
 			};
 		};
 		//TODO: add in email check from server, check organization name from server, username check from server
 		submitStep1(step1Form: any) {
-			this.$log.info(this.signUpDetails);
+			
 			this.errors = [];
 			if (this.signUpDetails.password !== this.passwordConfirmation) {
 				this.errors.push("Passwords does not match");
@@ -51,17 +53,21 @@ namespace SignUp {
 		}
 	
 		submitStep2(step2Form: any) {
-			this.$log.info(this.signUpDetails);
+		
 			this.errors = [];
 			this.secondStep = false;
 			this.finalStep = true;
 		}
 		submitFinalSep(finalStepForm: any) {
-			this.$log.info(this.signUpDetails);
+			this.$log.info('signup details ', this.signUpDetails);
 			this.errors = [];
 			
 			// TODO: rearranged the object here according to the backend schema
-			
+			this.$SignUpRESTService.getSampleJson().then(function (response: any) {
+				console.log(response);
+				alert('Check console for info');
+				return response;
+			});
 		}
 		
 		back() {
@@ -77,7 +83,8 @@ namespace SignUp {
 		
 	};
 	angular.module('app.signup', [
-		'ui.router'
+		'ui.router',
+		'app.signup.service'
 	])
 	.config(config)
 	.controller('SignUpController', SignUpController);

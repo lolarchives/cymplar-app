@@ -2,6 +2,7 @@ import { MainController } from './components/main/main';
 import './components/contacts/contacts';
 import { mainNavbar } from './components/navbar/navbar.directive';
 import './components/signup/signup';
+import './components/signup/signup.service';
 
 declare var moment: moment.MomentStatic;
 
@@ -49,11 +50,14 @@ namespace app {
     'ngTouch',
     'ngSanitize',
     'ngMessages',
+    //'ngResource',
     'ui.router',
     'ui.bootstrap',
     'toastr',
     'app.contacts',
-    'app.signup'
+    'app.signup',
+      'app.signup.service',
+      
   ])
     .config(config)
     .config(routerConfig)

@@ -60,7 +60,7 @@
       "commit": "5c3e47967affa3c4128a3875d1664ba206ae1b0f"
     },
     "angularjs/angular.d.ts": {
-      "commit": "5c3e47967affa3c4128a3875d1664ba206ae1b0f"
+      "commit": "40c60850ad6c8175a62d5ab48c4e016ea5b3dffe"
     },
     "angularjs/angular-mocks.d.ts": {
       "commit": "5c3e47967affa3c4128a3875d1664ba206ae1b0f"
@@ -84,7 +84,7 @@
       "commit": "5c3e47967affa3c4128a3875d1664ba206ae1b0f"
     },
     "jquery/jquery.d.ts": {
-      "commit": "5c3e47967affa3c4128a3875d1664ba206ae1b0f"
+      "commit": "40c60850ad6c8175a62d5ab48c4e016ea5b3dffe"
     },
     "vinyl/vinyl.d.ts": {
       "commit": "5c3e47967affa3c4128a3875d1664ba206ae1b0f"
@@ -97,6 +97,9 @@
     },
     "mime/mime.d.ts": {
       "commit": "5c3e47967affa3c4128a3875d1664ba206ae1b0f"
+    },
+    "angularjs/angular-resource.d.ts": {
+      "commit": "40c60850ad6c8175a62d5ab48c4e016ea5b3dffe"
     }
   }
 }
