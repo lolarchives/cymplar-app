@@ -1,0 +1,62 @@
+export interface AccountUser extends BaseDto {
+ username?: string;
+ password?: string;
+ firstName?: string;
+ middleName?: string;
+ lastName?: string;
+ alias?: string;
+ birthday?: Date;
+}
+
+export interface AccountOrganization extends BaseDto {
+ name?: string;
+ domain?: string;
+ description?: string;
+ city?: any;
+ postcode?: any;
+ suburb?: string;
+ industryType?: any;
+ bussinessNumber?: string;
+ team?: number;
+ web?: string;
+ facebook?: string;
+ linkedin?: string;
+ twitter?: string;
+ plus?: string;
+ dribble?: string;
+ pinterest?: string;
+}
+
+export interface AccountOrganizationMember extends BaseDto {
+ name?: string;
+ email?: string;
+ position?: string;
+ contactNumber?: string;
+ altContactNumber?: string;
+ organization?: any;
+ user?: any;
+ role?: any;
+}
+
+export interface AccountMemberRole extends BaseDto {
+ code?: string;
+ name?: string;
+ description?: string;
+ system?: boolean;
+}
+
+export interface SignUp extends BaseDto {
+ organizationMember?: AccountOrganizationMember;
+ organization?: AccountOrganization;
+ user?: AccountUser;
+}
+
+export interface LogIn extends BaseDto {
+ username: string;
+ password: string;
+}
+
+export interface AuthenticationResponse {
+ token?: any;
+ init?: any;
+}
