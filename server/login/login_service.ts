@@ -19,45 +19,17 @@ export class LoginService {
 
 		return new Promise<string>((resolve: Function, reject: Function) => {
 			this.validateAccountUser(data)
-			.then((AccountUser: AccountUser) => 
-				resolve(this.getToken(AccountUser)), (err: any) => reject(err));
+			.then((accountUser: AccountUser) => 
+				resolve(this.getToken(accountUser)), (err: any) => reject(err));
 		});
 	}
 
-	validate(req: express.Request, res: express.Response, next: Function) {
-
-		const token = (req.body && req.body.access_token) || (req.query && req.query.access_token) 
-			|| (req.headers && (req.headers['x-access-token'] || req.headers['Authorization'].split(' ')[1])) || '';
-		
-		if (ObjectUtil.isBlank(token)) { 
-			sendError(res, new Error('Invalid Token'));
-			return;
-		}
-
-		try {
-			const decoded = decode(token, process.env.CYMPLAR_SECRET);
-
-			if (decoded.exp <= Date.now()) {
-				sendError(res, new Error('Token expired'));
-				return;
-			}
-
-			req.body.tempCymplar = decoded;
-
-		} catch (err) {
-			sendError(res, new Error('Invalid Token'));
-			return;
-		}
-		
-		next();
-	}
-	
-	getToken(AccountUser: AccountUser) {
-		const time = 1; // 1 day
-		const expires = (Date.now() + time);
+	getToken(accountUser: AccountUser) {
+		const days = 1; // 1 day
+		const expires = (Date.now() + (days*24*60*60*1000));
 
 		const payload = { 
-			sub: AccountUser._id,
+			sub: accountUser._id,
 			exp: expires 
 		};
 		

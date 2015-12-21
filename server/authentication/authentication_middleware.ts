@@ -21,34 +21,33 @@ export class Authentication {
 	validate(req: express.Request, res: express.Response, next: Function) {
 		
 		if (NON_SECURED_URL.indexOf(req.originalUrl.split("?")[0]) > -1) {
-			next();
-			return;
+			return next();
 		}
 		
-		const token = (req.body && req.body.access_token) || (req.query && req.query.access_token) || 
-		(req.headers && (req.headers['x-access-token'] || (req.headers['authorization'] && req.headers['authorization'].split(' ')[1]))) || '';
+		const token = (req.body && req.body.access_token) || (req.query && req.query.access_token) 
+			|| (req.headers && ((req.headers['x-access-token']) 
+			|| (req.headers['authorization'] && req.headers['authorization'].split(' ')[1]))) || '';
 		
 		if (ObjectUtil.isBlank(token)) { 
-			sendError(res, new Error('There is no token'));
-			return;
+			sendError(res, new Error('Invalid Token'));
+			return next();
 		}
 
 		try {
 			const decoded = decode(token, process.env.CYMPLAR_SECRET);
-
+			
 			if (decoded.exp <= Date.now()) {
 				sendError(res, new Error('Token expired'));
-				return;
+				return next();
 			}
 
 			req.body.tempCymplar = decoded;
-
+			return next();
+			
 		} catch (err) {
 			sendError(res, new Error('Invalid Token'));
-			return;
+			return next();
 		}
-		
-		next();
 	}
 }
 
