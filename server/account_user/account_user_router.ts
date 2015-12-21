@@ -28,8 +28,8 @@ router.get('/_find', (req, res) => {
 });
 
 router.get('/_exist', (req, res) => {
-  accountUserService.find(req.query, {regularExpresion: false})
-    .then((users: AccountUser[]) => res.send(users.length > 0), (err: any) => sendError(res, err));
+  accountUserService.exist(req.query)
+    .then((exist: boolean) => res.send(exist), (err: any) => sendError(res, err));
 });
 
 router.get('/:id', (req, res) => {

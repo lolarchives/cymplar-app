@@ -5,7 +5,7 @@ import {ObjectUtil} from '../../client/core/util';
 
 export interface SearchOptions {
   regularExpresion?: boolean;
-  select?: any;
+  projection?: any;
 }
 
 export interface ModelOptions {
@@ -106,9 +106,9 @@ export abstract class BaseService<T extends BaseDto> {
 		});
 	}
 	
-	find(data: T, options: SearchOptions = {}): Promise<T[]> {
+	find(data: T, options: SearchOptions = {regularExpresion: false, projection: null}): Promise<T[]> {
 		return new Promise<T[]>((resolve: Function, reject: Function) => {
-			this.Model.find(ObjectUtil.createFilter(data, options.regularExpresion), options.select,
+			this.Model.find(ObjectUtil.createFilter(data, options.regularExpresion), options.projection,
 			 { sort: '-createdAt', lean: true }).populate(this.options.defaultPopulation)
 			.exec( (err, foundObjs) => {
 				if (err) {
@@ -162,4 +162,40 @@ export abstract class BaseService<T extends BaseDto> {
 		});
 	}
 	
+	exist(data: T): Promise<boolean> {
+		return new Promise<boolean>((resolve: Function, reject: Function) => {
+			
+			if (Object.keys(data).length < 1) {
+				reject(new Error('At least one filter value should be specified'));
+			}
+			
+			this.Model.findOne(ObjectUtil.createFilter(data, false), null, { sort: '-createdAt', lean: true })
+			.exec((err, foundObj) => {
+				if (err) {
+					reject(err);
+					return;
+				}
+				resolve(ObjectUtil.isPresent(foundObj));
+			});
+		});
+	}
+	
+	findOne(data: T, options: SearchOptions = {regularExpresion: false, projection: null}): Promise<T[]> {
+		return new Promise<T[]>((resolve: Function, reject: Function) => {
+			
+			if (Object.keys(data).length < 1) {
+				reject(new Error('At least one filter value should be specified'));
+			}
+			
+			this.Model.findOne(ObjectUtil.createFilter(data, options.regularExpresion), options.projection,
+			 { sort: '-createdAt', lean: true })
+			.exec( (err, foundObjs) => {
+				if (err) {
+					reject(err);
+					return;
+				}
+				resolve(foundObjs);
+			});
+		});
+	}
 }

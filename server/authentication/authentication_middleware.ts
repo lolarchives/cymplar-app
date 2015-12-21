@@ -5,21 +5,20 @@ import * as bcrypt from 'bcrypt';
 import {sendError} from '../core/web_util';
 import {ObjectUtil} from '../../client/core/util';
 
-
+const NON_SECURED_URL: string[] = ['/api/account-user/_exist', 
+		'/api/account-organization-member/_exist',
+		'/api/account-organization/_login',
+		'/api/account-organization/_exist',
+		'/api/industry/_find',
+		'/api/country/_find',
+		'/api/city/_find',
+		'/api/account-member-role/_find',
+		'/api/signup',
+		'/api/login'];
+		
 export class Authentication {
 
 	validate(req: express.Request, res: express.Response, next: Function) {
-		
-		const NON_SECURED_URL: string[] = [];
-		NON_SECURED_URL.push('/api/account-user/_exist');
-		NON_SECURED_URL.push('/api/account-organization-member/_exist');
-		NON_SECURED_URL.push('/api/account-organization/_exist');
-		NON_SECURED_URL.push('/api/industry/_find');
-		NON_SECURED_URL.push('/api/country/_find');
-		NON_SECURED_URL.push('/api/city/_find');
-		NON_SECURED_URL.push('/api/account-member-role');
-		NON_SECURED_URL.push('/api/signup');
-		NON_SECURED_URL.push('/api/login');
 		
 		if (NON_SECURED_URL.indexOf(req.originalUrl.split("?")[0]) > -1) {
 			next();

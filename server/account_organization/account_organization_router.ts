@@ -28,8 +28,13 @@ router.get('/_find', (req: express.Request, res: express.Response) => {
 });
 
 router.get('/_exist', (req, res) => {
-  accountOrganizationService.find(req.query, {regularExpresion: false})
-    .then((organizations: AccountOrganization[]) => res.send(organizations.length > 0), (err: any) => sendError(res, err));
+  accountOrganizationService.exist(req.query)
+    .then((exist: boolean) => res.send(exist), (err: any) => sendError(res, err));
+});
+
+router.get('/_login', (req, res) => {
+  accountOrganizationService.findOne(req.query, {regularExpresion: false, projection: '_id'})
+    .then((organization: AccountOrganization) => res.send(organization), (err) => sendError(res, err));
 });
 
 router.get('/:id', (req: express.Request, res: express.Response) => {

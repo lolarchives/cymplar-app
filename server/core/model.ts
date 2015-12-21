@@ -4,6 +4,7 @@ import * as bcrypt from 'bcrypt';
 /* tslint:disable */
 const ObjectId = Schema.Types.ObjectId;
 /* tslint:enable */
+const SALT = 10;
 
 const db = createConnection(process.env.CYMPLAR_MONGO_URI);
 db.on('error', () => console.error('Error connecting to Database:', process.env.CYMPLAR_MONGO_URI));
@@ -136,7 +137,7 @@ const schemas = {
     altContactNumber: { type: String },
     organization: { type: ObjectId, ref: 'organization', required: true },
     user: { type: ObjectId, ref: 'accountUser', required: true },
-    role: { type: ObjectId, ref: 'accountMemberRole' },
+    role: { type: ObjectId, ref: 'accountMemberRole', required: true },
     createdBy: { type: ObjectId, ref: 'accountUser' }
   }),
   accountMemberRole: new Schema({
@@ -203,7 +204,7 @@ schemas.accountUser.pre('save', function(next: Function) {
     next();
   }
  
-  bcrypt.hash(self.password, 10, (err, hash) => {
+  bcrypt.hash(self.password, SALT, (err, hash) => {
       if (err) { 
         next(err);
       };

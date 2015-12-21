@@ -11,8 +11,7 @@ import {LogIn, AccountUser} from '../../client/core/dto';
 export class LoginService {
 
 	createOne(data: LogIn): Promise<string> {
-
-		if (ObjectUtil.isPresent(data.username) && ObjectUtil.isPresent(data.password)) {
+		if (ObjectUtil.isBlank(data.username) || ObjectUtil.isBlank(data.password)) {
 			return new Promise(function (fulfill, reject) {
 			  reject(new Error('Invalid credentials'));
 			});
@@ -54,7 +53,8 @@ export class LoginService {
 	}
 	
 	getToken(AccountUser: AccountUser) {
-		const expires = this.expiresIn(1); // 1 day
+		const time = 1; // 1 day
+		const expires = (Date.now() + time);
 
 		const payload = { 
 			sub: AccountUser._id,
@@ -65,14 +65,8 @@ export class LoginService {
 
 		return token;
 	}
-	
-	private expiresIn(time: number) {
-		const dateObject = new Date();
-		return dateObject.setDate(dateObject.getDate() + time);
-	}
 
 	private validateAccountUser(data: LogIn): Promise<AccountUser> {
-		
 		return new Promise<AccountUser>((resolve: Function, reject: Function) => {
 			AccountUserModel.findOne({ username: data.username}, (err: Error, foundDoc: AccountUser) => {
 				if (err) {
@@ -85,12 +79,12 @@ export class LoginService {
 					return;
 				}
 				
-				if (!bcrypt.compareSync(data.password, foundDoc[0].password)) {
+				if (!bcrypt.compareSync(data.password, foundDoc.password)) {
 					reject(new Error('Invalid password'));
 					return;
 				}
-
-				resolve(foundDoc[0]);
+				
+				resolve(foundDoc);
 			});
 		});
 	}

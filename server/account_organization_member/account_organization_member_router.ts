@@ -28,8 +28,8 @@ router.get('/_find', (req: express.Request, res: express.Response) => {
 });
 
 router.get('/_exist', (req, res) => {
-  accountOrganizationMemberService.find(req.query, {regularExpresion: false})
-    .then((members: AccountOrganizationMember[]) => res.send(members.length > 0), (err: any) => sendError(res, err));
+  accountOrganizationMemberService.exist(req.query)
+    .then((exist: boolean) => res.send(exist), (err: any) => sendError(res, err));
 });
 
 router.get('/:id', (req: express.Request, res: express.Response) => {
