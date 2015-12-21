@@ -50,6 +50,7 @@ export const PATH = {
       `${CLIENT_SRC_BASE}/system.config.js`,
       slash(resolve('moment/moment.js')),
       slash(resolve(`angular/angular.js`)),
+      slash(resolve(`angular-resource/angular-resource.js`)),
       `${BC}/angular-bootstrap/ui-bootstrap.js`,
       `${BC}/angular-bootstrap/ui-bootstrap-tpls.js`,
       slash(resolve(`angular-ui-router/build/angular-ui-router.js`)),
