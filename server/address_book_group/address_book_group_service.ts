@@ -14,10 +14,10 @@ export class AddressBookGroupService extends BaseService<AddressBookGroup> {
 
 		return new Promise<AddressBookGroup[]>((fulfill: Function, reject: Function) => {
 
-			const populationOpts = [{ path: 'industry', select: 'code description'},
-									{ path: 'city', select: 'code name country' }];
+			const populationOpts = {population: [{path: 'industry', select: 'code description'},
+									{path: 'city', select: 'code name country' }]};
 			
-			this.findAndPopulate(data, populationOpts)
+			this.find(data, populationOpts)
 				.then((groups: AddressBookGroup[]) => {
 
 				const promises: Promise<AddressBookGroup>[] = [];
@@ -49,7 +49,7 @@ export class AddressBookGroupService extends BaseService<AddressBookGroup> {
 		return new Promise<AddressBookGroup>((fulfill: Function, reject: Function) => {
 
 			const toLoad: any = [countryService.findOneById(groupToSend.city.country), 
-							   addressBookContactService.findAndPopulate({ group: groupToSend._id }, 'status')];
+							   addressBookContactService.find({ group: groupToSend._id }, {population: 'status'})];
 
 			Promise.all(toLoad)
 			.then((results: any) => {

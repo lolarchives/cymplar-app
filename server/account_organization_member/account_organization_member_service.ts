@@ -5,7 +5,7 @@ import {BaseService} from '../core/base_service';
 export class AccountOrganizationMemberService extends BaseService<AccountOrganizationMember> {
 
 	constructor() {
-		super(AccountOrganizationMemberModel, {defaultPopulation: 'role'});
+		super(AccountOrganizationMemberModel, {population: 'role'});
 	}
 
 }

@@ -3,20 +3,20 @@ import {Model, Document} from 'mongoose';
 import {BaseDto} from '../../client/core/dto';
 import {ObjectUtil} from '../../client/core/util';
 
-export interface SearchOptions {
-  regularExpresion?: boolean;
-  projection?: any;
-}
 
 export interface ModelOptions {
-  defaultPopulation?: any;
+  population?: any;
+  projection?: any;
+  regularExpresion?: boolean;
 }
+
 
 export abstract class BaseService<T extends BaseDto> {
 	
 	options: ModelOptions;
-	constructor(public Model: Model<Document>, options = {defaultPopulation: ''})  {
-		this.options = options;		
+	constructor(public Model: Model<Document>, options: ModelOptions = {})  {
+		this.options = { population: '', projection: '', regularExpresion: false };
+		ObjectUtil.merge(this.options, options);		
 	}
 
 	createOne(data: T): Promise<T> {
@@ -63,7 +63,7 @@ export abstract class BaseService<T extends BaseDto> {
 	removeOneById(id: string): Promise<T> {
 		return new Promise<T>((resolve: Function, reject: Function) => {
 			this.Model.findById(id) 
-			.populate(this.options.defaultPopulation).exec((err, foundDoc) => {
+			.populate(this.options.population).exec((err, foundDoc) => {
 				if (err) {
 					reject(err);
 					return;
@@ -87,7 +87,8 @@ export abstract class BaseService<T extends BaseDto> {
 
 	removeByFilter(data: T): Promise<T[]> {
 		return new Promise<T[]>((resolve: Function, reject: Function) => {
-			this.Model.find(ObjectUtil.createFilter(data)).populate(this.options.defaultPopulation).exec((err, foundObjs) => {
+			this.Model.find(ObjectUtil.createFilter(data)).populate(this.options.population)
+			.exec((err, foundObjs) => {
 				if (err) {
 					reject(err);
 					return;
@@ -106,10 +107,11 @@ export abstract class BaseService<T extends BaseDto> {
 		});
 	}
 	
-	find(data: T, options: SearchOptions = {regularExpresion: false, projection: null}): Promise<T[]> {
+	find(data: T, newOptions: ModelOptions = {}): Promise<T[]> {
+		ObjectUtil.merge(this.options, newOptions);
 		return new Promise<T[]>((resolve: Function, reject: Function) => {
-			this.Model.find(ObjectUtil.createFilter(data, options.regularExpresion), options.projection,
-			 { sort: '-createdAt', lean: true }).populate(this.options.defaultPopulation)
+			this.Model.find(ObjectUtil.createFilter(data, this.options.regularExpresion), this.options.projection,
+			 { sort: '-createdAt', lean: true }).populate(this.options.population)
 			.exec( (err, foundObjs) => {
 				if (err) {
 					reject(err);
@@ -123,41 +125,13 @@ export abstract class BaseService<T extends BaseDto> {
 	
 	findOneById(id: string): Promise<T> {
 		return new Promise<T>((resolve: Function, reject: Function) => {
-			this.Model.findById(id, null, { lean: true }).populate(this.options.defaultPopulation).exec(
-				(err, foundObj) => {
-				if (err) {
-					reject(err);
-					return;
-				}
-				resolve(foundObj);
-			});
-		});
-	}
-	
-	findOneByIdPopulate(id: string, population: any): Promise<T> {
-		return new Promise<T>((resolve: Function, reject: Function) => {
-			this.Model.findById(id, null, { lean: true }) 
-			.populate(population)
+			this.Model.findById(id, null, { lean: true }).populate(this.options.population)
 			.exec((err, foundObj) => {
 				if (err) {
 					reject(err);
 					return;
 				}
 				resolve(foundObj);
-			});
-		});
-	}
-	
-	findAndPopulate(data: T, population: any): Promise<T[]> { 
-		return new Promise<T[]>((resolve: Function, reject: Function) => {
-			this.Model.find(ObjectUtil.createFilter(data), null, { sort: '-createdAt', lean: true }) 
-			.populate(population)
-			.exec((err, foundObjs) => {
-				if (err) {
-					reject(err);
-					return;
-				}
-				resolve(foundObjs);
 			});
 		});
 	}
@@ -180,16 +154,16 @@ export abstract class BaseService<T extends BaseDto> {
 		});
 	}
 	
-	findOne(data: T, options: SearchOptions = {regularExpresion: false, projection: null}): Promise<T[]> {
+	findOne(data: T, newOptions: ModelOptions = {}): Promise<T[]> {
 		return new Promise<T[]>((resolve: Function, reject: Function) => {
 			
 			if (Object.keys(data).length < 1) {
 				reject(new Error('At least one filter value should be specified'));
 			}
 			
-			this.Model.findOne(ObjectUtil.createFilter(data, options.regularExpresion), options.projection,
-			 { sort: '-createdAt', lean: true })
-			.exec( (err, foundObjs) => {
+			this.Model.findOne(ObjectUtil.createFilter(data, this.options.regularExpresion), this.options.projection,
+			 { sort: '-createdAt', lean: true }).populate(this.options.population)
+			.exec((err, foundObjs) => {
 				if (err) {
 					reject(err);
 					return;

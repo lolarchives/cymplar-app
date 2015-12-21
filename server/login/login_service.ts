@@ -26,7 +26,7 @@ export class LoginService {
 
 	getToken(accountUser: AccountUser) {
 		const days = 1; // 1 day
-		const expires = (Date.now() + (days*24*60*60*1000));
+		const expires = (Date.now() + (days * 24 * 60 * 60 * 1000));
 
 		const payload = { 
 			sub: accountUser._id,
