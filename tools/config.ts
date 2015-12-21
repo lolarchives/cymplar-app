@@ -12,6 +12,13 @@ const pkg = JSON.parse(fs.readFileSync(`${CWD}/package.json`, 'utf8'));
 const ENV: string = argv['env'] || process.env.profile || 'dev';
 process.env.profile = ENV;
 
+const CYMPLAR_MONGO_URI: string = argv['CYMPLAR_MONGO_URI'] || process.env.CYMPLAR_MONGO_URI || 
+  'mongodb://cymplarUser:cympl4rUs3r@ds033175.mongolab.com:33175/cymplar';
+process.env.CYMPLAR_MONGO_URI = CYMPLAR_MONGO_URI;
+
+const CYMPLAR_SECRET: string = argv['CYMPLAR_SECRET'] || process.env.CYMPLAR_SECRET || 'cymplarSecret';
+process.env.CYMPLAR_SECRET = CYMPLAR_SECRET;
+
 export const PORT: number = argv['port'] || 5555;
 export const LIVE_RELOAD_PORT: number = argv['reload-port'] || 4002;
 export const APP_BASE: string = argv['base'] || '/';

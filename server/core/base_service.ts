@@ -3,10 +3,20 @@ import {Model, Document} from 'mongoose';
 import {BaseDto} from '../../client/core/dto';
 import {ObjectUtil} from '../../client/core/util';
 
+export interface SearchOptions {
+  regularExpresion?: boolean;
+  projection?: any;
+}
+
+export interface ModelOptions {
+  defaultPopulation?: any;
+}
 
 export abstract class BaseService<T extends BaseDto> {
 	
-	constructor(public Model: Model<Document>) {		
+	options: ModelOptions;
+	constructor(public Model: Model<Document>, options = {defaultPopulation: ''})  {
+		this.options = options;		
 	}
 
 	createOne(data: T): Promise<T> {
@@ -30,6 +40,12 @@ export abstract class BaseService<T extends BaseDto> {
 					reject(err);
 					return;
 				}
+				
+				if (ObjectUtil.isBlank(foundDoc)) {
+					reject(new Error("Object could not be found"));
+					return;
+				}
+				
 				for (let prop in data) {
 					foundDoc[prop] = data[prop];
 				}
@@ -46,11 +62,18 @@ export abstract class BaseService<T extends BaseDto> {
 
 	removeOneById(id: string): Promise<T> {
 		return new Promise<T>((resolve: Function, reject: Function) => {
-			this.Model.findById(id, (err, foundDoc) => {
+			this.Model.findById(id) 
+			.populate(this.options.defaultPopulation).exec((err, foundDoc) => {
 				if (err) {
 					reject(err);
 					return;
 				}
+				
+				if (ObjectUtil.isBlank(foundDoc)) {
+					reject(new Error("Object could not be found"));
+					return;
+				}
+					
 				foundDoc.remove((err: Error) => {
 					if (err) {
 						reject(err);
@@ -63,15 +86,13 @@ export abstract class BaseService<T extends BaseDto> {
 	}
 
 	removeByFilter(data: T): Promise<T[]> {
-		
 		return new Promise<T[]>((resolve: Function, reject: Function) => {
-  
-			this.Model.find(ObjectUtil.createFilter(data), (err, foundObjs) => {
+			this.Model.find(ObjectUtil.createFilter(data)).populate(this.options.defaultPopulation).exec((err, foundObjs) => {
 				if (err) {
 					reject(err);
 					return;
 				}
-				
+										
 				foundObjs.forEach((doc) => {
 					doc.remove((err: Error) => {
 						if (err) {
@@ -80,16 +101,16 @@ export abstract class BaseService<T extends BaseDto> {
 						}
 					});
 				});
-				
 				resolve(foundObjs);
 			});
 		});
 	}
 	
-	find(data: T): Promise<T[]> {
-		
+	find(data: T, options: SearchOptions = {regularExpresion: false, projection: null}): Promise<T[]> {
 		return new Promise<T[]>((resolve: Function, reject: Function) => {
-			this.Model.find(ObjectUtil.createFilter(data), null, { sort: '-createdAt', lean: true }, (err, foundObjs) => {
+			this.Model.find(ObjectUtil.createFilter(data, options.regularExpresion), options.projection,
+			 { sort: '-createdAt', lean: true }).populate(this.options.defaultPopulation)
+			.exec( (err, foundObjs) => {
 				if (err) {
 					reject(err);
 					return;
@@ -101,9 +122,9 @@ export abstract class BaseService<T extends BaseDto> {
 
 	
 	findOneById(id: string): Promise<T> {
-		
 		return new Promise<T>((resolve: Function, reject: Function) => {
-			this.Model.findById(id, null, { lean: true }, (err, foundObj) => {
+			this.Model.findById(id, null, { lean: true }).populate(this.options.defaultPopulation).exec(
+				(err, foundObj) => {
 				if (err) {
 					reject(err);
 					return;
@@ -114,7 +135,6 @@ export abstract class BaseService<T extends BaseDto> {
 	}
 	
 	findOneByIdPopulate(id: string, population: any): Promise<T> {
-		
 		return new Promise<T>((resolve: Function, reject: Function) => {
 			this.Model.findById(id, null, { lean: true }) 
 			.populate(population)
@@ -129,7 +149,6 @@ export abstract class BaseService<T extends BaseDto> {
 	}
 	
 	findAndPopulate(data: T, population: any): Promise<T[]> { 
-
 		return new Promise<T[]>((resolve: Function, reject: Function) => {
 			this.Model.find(ObjectUtil.createFilter(data), null, { sort: '-createdAt', lean: true }) 
 			.populate(population)
@@ -142,5 +161,41 @@ export abstract class BaseService<T extends BaseDto> {
 			});
 		});
 	}
-
+	
+	exist(data: T): Promise<boolean> {
+		return new Promise<boolean>((resolve: Function, reject: Function) => {
+			
+			if (Object.keys(data).length < 1) {
+				reject(new Error('At least one filter value should be specified'));
+			}
+			
+			this.Model.findOne(ObjectUtil.createFilter(data, false), null, { sort: '-createdAt', lean: true })
+			.exec((err, foundObj) => {
+				if (err) {
+					reject(err);
+					return;
+				}
+				resolve(ObjectUtil.isPresent(foundObj));
+			});
+		});
+	}
+	
+	findOne(data: T, options: SearchOptions = {regularExpresion: false, projection: null}): Promise<T[]> {
+		return new Promise<T[]>((resolve: Function, reject: Function) => {
+			
+			if (Object.keys(data).length < 1) {
+				reject(new Error('At least one filter value should be specified'));
+			}
+			
+			this.Model.findOne(ObjectUtil.createFilter(data, options.regularExpresion), options.projection,
+			 { sort: '-createdAt', lean: true })
+			.exec( (err, foundObjs) => {
+				if (err) {
+					reject(err);
+					return;
+				}
+				resolve(foundObjs);
+			});
+		});
+	}
 }
