@@ -26,7 +26,7 @@ export interface Country extends BaseDto {
 export interface City extends BaseDto {
   code?: string;
   name?: string;
-  state?: any;
+  country?: any;
 }
 
 export interface Industry extends BaseDto {
