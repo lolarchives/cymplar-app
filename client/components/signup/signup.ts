@@ -1,7 +1,30 @@
-import {SignUpDetails} from "../../core/dto";
-import './signup.service';
+
+import '../helper/helper';
+import {SignUp, AccountUser, AccountOrganization, AccountOrganizationMember, City, Industry, Country} from "../../core/dto.ts";
+
 namespace SignUp {
-	
+	export interface SignUpDetails {
+		organizationName: string;
+		username: string;
+		email: string;
+		password: string;
+		passwordConfirm: string;
+		country: string;
+		city: string;
+		suburb?: string;
+		postcode?: number;
+		industryType: string;
+		description: string;
+		team?: number;
+		facebook?: string;
+		linkedin?: string;
+		twitter?: string;
+		plus?: string;
+		dribble?: string;
+		pinterest?: string;
+	}
+
+
 	/* @ngInject */
 	function config($stateProvider: any) {
 		$stateProvider
@@ -17,12 +40,12 @@ namespace SignUp {
 		private signUpDetails: SignUpDetails;
 		private errors: Array<string>;
 		private passwordConfirmation: string;
-	    private firstStep: boolean;
+		private firstStep: boolean;
 		private secondStep: boolean;
 		private finalStep: boolean;
 		/* @ngInject */
-		constructor(private $scope: any, private $http: angular.IHttpBackendService, private $log: angular.ILogService, 
-					private $SignUpRESTService: any) {
+		constructor(private $scope: any, private $http: angular.IHttpBackendService, private $log: angular.ILogService,
+			private $SignUpRESTService: any) {
 			this.firstStep = true;
 			this.secondStep = false;
 			this.finalStep = false;
@@ -42,7 +65,7 @@ namespace SignUp {
 		};
 		//TODO: add in email check from server, check organization name from server, username check from server
 		submitStep1(step1Form: any) {
-			
+
 			this.errors = [];
 			if (this.signUpDetails.password !== this.passwordConfirmation) {
 				this.errors.push("Passwords does not match");
@@ -51,9 +74,9 @@ namespace SignUp {
 				this.secondStep = true;
 			}
 		}
-	
+
 		submitStep2(step2Form: any) {
-		
+
 			this.errors = [];
 			this.secondStep = false;
 			this.finalStep = true;
@@ -63,12 +86,15 @@ namespace SignUp {
 			this.errors = [];
 			
 			// TODO: rearranged the object here according to the backend schema
-			this.$SignUpRESTService.getSampleJson().then(function (response: any) {
-				console.log(response);
+			let RESTCall = this.$SignUpRESTService.getSampleJsonFromResource({console: 'hi'} );
+			RESTCall.then(function(response: any) {
+				console.log('success:', response);
 				alert('Check console for info');
-				return response;
+			}, function(error: any) {
+				console.log('error', error);
 			});
-		}
+			console.log(RESTCall);
+		};
 		
 		back() {
 			this.errors = [];
@@ -81,11 +107,27 @@ namespace SignUp {
 			}
 		}
 		
+		private mapFormToDto(details: SignUpDetails): SignUp {
+			let result: SignUp = <SignUp>{};
+			let city: City = { name: details.city, country: details.country };
+	
+			let accountOrganization: AccountOrganization = {
+				name: details.organizationName,
+				description: details.description,
+				city: city,
+				postcode: details.postcode,
+				suburb: details.suburb,
+			};
+
+			return result;
+		}
+
 	};
 	angular.module('app.signup', [
 		'ui.router',
-		'app.signup.service'
+		'ngResource',
+		'app.helper'
 	])
-	.config(config)
-	.controller('SignUpController', SignUpController);
+		.config(config)
+		.controller('SignUpController', SignUpController);
 }

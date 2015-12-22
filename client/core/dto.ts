@@ -130,24 +130,5 @@ export interface AuthenticationResponse {
   init?: any;
 }
 
-export interface SignUpDetails extends BaseDto {
-  organizationName: string;
-  username: string;
-  email: string;
-  password: string;
-  passwordConfirm: string;
-  country: string;
-  city: string;
-  suburb?: string;
-  postcode?: number;
-  industryType: string;
-  description: string;
-  team?: number;
-  facebook?: string;
-  linkedin?: string;
-  twitter?: string;
-  plus?: string;
-  dribble?: string;
-  pinterest?: string;
-}
+
 

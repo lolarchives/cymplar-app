@@ -6,7 +6,7 @@
   "bundle": "tools/typings/tsd/tsd.d.ts",
   "installed": {
     "node/node.d.ts": {
-      "commit": "5c3e47967affa3c4128a3875d1664ba206ae1b0f"
+      "commit": "40c60850ad6c8175a62d5ab48c4e016ea5b3dffe"
     },
     "gulp/gulp.d.ts": {
       "commit": "5c3e47967affa3c4128a3875d1664ba206ae1b0f"
@@ -106,6 +106,12 @@
     },
     "jwt-simple/jwt-simple.d.ts": {
       "commit": "11322524f8db9cdb921427cad84cd22fe2d4f965"
+    },
+    "autoprefixer-core/autoprefixer-core.d.ts": {
+      "commit": "40c60850ad6c8175a62d5ab48c4e016ea5b3dffe"
+    },
+    "gulp-autoprefixer/gulp-autoprefixer.d.ts": {
+      "commit": "40c60850ad6c8175a62d5ab48c4e016ea5b3dffe"
     }
   }
 }

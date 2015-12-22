@@ -1,92 +1,51 @@
-*:active,
-*:focus {
+p:active, a:active
+p:focus, a:focus {
 	outline:none !important;
-	}
+}
 
 .grid-frame {
-    display: -webkit-flex;
-    display: -ms-flexbox;
     display: flex;
     height: 100vh;
     position: relative;
     overflow: hidden;
-    -webkit-backface-visibility: hidden;
     backface-visibility: hidden;
-    -webkit-flex: 1 1 auto;
-    -ms-flex: 1 1 auto;
     flex: 1 1 auto;
-    -webkit-flex-flow: row wrap;
-    -ms-flex-flow: row wrap;
     flex-flow: row wrap;
-    -webkit-flex-wrap: nowrap;
-    -ms-flex-wrap: nowrap;
     flex-wrap: nowrap;
-    -webkit-align-items: stretch;
-    -ms-flex-align: stretch;
     align-items: stretch;
-    -webkit-justify-content: flex-start;
-    -ms-flex-pack: start;
     justify-content: flex-start;
-    -webkit-order: 0;
-    -ms-flex-order: 0;
     order: 0;
 }
 
 .vertical.grid-frame, .vertical.grid-block, .vertical.small-grid-block, .vertical.medium-grid-block, .vertical.large-grid-block {
-    -webkit-flex-flow: column nowrap;
-    -ms-flex-flow: column nowrap;
     flex-flow: column nowrap;
-    -webkit-align-items: stretch;
-    -ms-flex-align: stretch;
     align-items: stretch;
 }
 
 .grid-block {
-    display: -webkit-flex;
-    display: -ms-flexbox;
+
     display: flex;
     height: 100vh;
     position: relative;
     overflow: hidden;
-    -webkit-backface-visibility: hidden;
     backface-visibility: hidden;
-    -webkit-flex: 1 1 auto;
-    -ms-flex: 1 1 auto;
     flex: 1 1 auto;
-    -webkit-flex-flow: row wrap;
-    -ms-flex-flow: row wrap;
     flex-flow: row wrap;
-    -webkit-flex-wrap: nowrap;
-    -ms-flex-wrap: nowrap;
     flex-wrap: nowrap;
-    -webkit-align-items: stretch;
-    -ms-flex-align: stretch;
     align-items: stretch;
-    -webkit-justify-content: flex-start;
-    -ms-flex-pack: start;
     justify-content: flex-start;
-    -webkit-order: 0;
-    -ms-flex-order: 0;
     order: 0;
     height: auto;
     overflow-y: auto;
-    -webkit-overflow-scrolling: touch;
-    -ms-overflow-style: -ms-autohiding-scrollbar;
 }
 
 .grid-content {
     display: block;
     overflow-y: auto;
-    -webkit-overflow-scrolling: touch;
-    -ms-overflow-style: -ms-autohiding-scrollbar;
-    -webkit-flex: 1 1 auto;
-    -ms-flex: 1 1 auto;
     flex: 1 1 auto;
 }
 
 .shrink.grid-block, .shrink.grid-content, .shrink.small-grid-block, .shrink.small-grid-content, .shrink.medium-grid-block, .shrink.medium-grid-content, .shrink.large-grid-block, .shrink.large-grid-content {
-    -webkit-flex: 0 0 auto;
-    -ms-flex: 0 0 auto;
     flex: 0 0 auto;
 }
 
@@ -95,12 +54,7 @@
 	display: block;
     padding: 0 1rem;
     overflow-y: auto;
-    -webkit-overflow-scrolling: touch;
-    -ms-overflow-style: -ms-autohiding-scrollbar;
-    -webkit-flex: 1 1 auto;
-    -ms-flex: 1 1 auto;
     flex: 1 1 auto;
-    -webkit-transform: none;
     transform: none;
     position: relative;
     width: auto;
@@ -110,8 +64,6 @@
     right: auto; 
     bottom: auto; 
     left: auto; 
-    -webkit-flex: 0 0 15%;
-    -ms-flex: 0 0 15%;
     flex: 0 0 15%;
     max-width: 15%;
 	padding:15px;
@@ -756,8 +708,6 @@
 	position:absolute;
 	top:50%;
 	left:10px;
-	-webkit-transition:all ease .3s;
-	-moz-transition:all ease .3s;
 	transition:all ease .3s;
 	}
 
@@ -782,18 +732,11 @@
 	}
 	
 .nav-btn.active span:last-child {
-	-moz-transform: rotate(45deg);
-	-webkit-transform: rotate(45deg);
-	-o-transform: rotate(45deg);
-	-ms-transform: rotate(45deg);
 	transform: rotate(45deg);
 	}
 
 .nav-btn.active span:first-child {
-	-moz-transform: rotate(-45deg);
-	-webkit-transform: rotate(-45deg);
-	-o-transform: rotate(-45deg);
-	-ms-transform: rotate(-45deg);
+
 	transform: rotate(-45deg);
 	}
 
@@ -871,8 +814,6 @@ hr {
 	
 @media (max-width:1400px){
 	.side-panel{
-		-webkit-flex: 0 0 20%;
-		-ms-flex: 0 0 20%;
 		flex: 0 0 20%;
 		max-width: 20%;
 		}
@@ -948,8 +889,6 @@ hr {
 		top:50px;
 		left:-80%;
 		width:80%;
-		-webkit-transition:left .3s ease;
-		-moz-transition:left .3s ease;
 		transition:left .3s ease;
 		max-width:none;
 		display:block !important;
@@ -968,8 +907,6 @@ hr {
 		top:50px;
 		right:-80%;
 		width:80%;
-		-webkit-transition:right .3s ease;
-		-moz-transition:right .3s ease;
 		transition:right .3s ease;
 		max-width:none;
 		display:block !important;

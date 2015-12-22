@@ -3,6 +3,7 @@ import './components/contacts/contacts';
 import { mainNavbar } from './components/navbar/navbar.directive';
 import './components/signup/signup';
 import './components/signup/signup.service';
+import './components/helper/helper';
 
 declare var moment: moment.MomentStatic;
 
@@ -50,13 +51,13 @@ namespace app {
     'ngTouch',
     'ngSanitize',
     'ngMessages',
-    //'ngResource',
+    'ngResource',
     'ui.router',
     'ui.bootstrap',
     'toastr',
     'app.contacts',
     'app.signup',
-      'app.signup.service',
+    'app.helper',
       
   ])
     .config(config)
