@@ -5,12 +5,12 @@ import * as bcrypt from 'bcrypt';
 import {sendError} from '../core/web_util';
 import {ObjectUtil} from '../../client/core/util';
 import {AccountUserModel} from '../core/model';
-import {LogIn, AccountUser} from '../../client/core/dto';
+import {LogIn, AccountUser, ModelOptions} from '../../client/core/dto';
 
 
 export class LoginService {
 
-	createOne(data: LogIn): Promise<string> {
+	createOne(data: LogIn, options: ModelOptions = {}): Promise<string> {
 		if (ObjectUtil.isBlank(data.username) || ObjectUtil.isBlank(data.password)) {
 			return new Promise(function (fulfill, reject) {
 			  reject(new Error('Invalid credentials'));
@@ -32,7 +32,8 @@ export class LoginService {
 			sub: accountUser._id,
 			exp: expires 
 		};
-		
+		console.log("account user" + accountUser);
+		console.log("account payload" + payload);
 		const token = encode(payload, process.env.CYMPLAR_SECRET);
 
 		return token;
@@ -40,7 +41,10 @@ export class LoginService {
 
 	private validateAccountUser(data: LogIn): Promise<AccountUser> {
 		return new Promise<AccountUser>((resolve: Function, reject: Function) => {
-			AccountUserModel.findOne({ username: data.username}, (err: Error, foundDoc: AccountUser) => {
+			const accountUserModelOptions: ModelOptions = {
+				requireAuthorization: false
+			};
+			AccountUserModel.findOne({ username: data.username }, (err: Error, foundDoc: AccountUser) => {
 				if (err) {
 					reject(err);
 					return;

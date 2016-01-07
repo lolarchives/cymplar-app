@@ -1,35 +1,50 @@
 import * as express from 'express';
 
-import {sendError} from '../core/web_util';
+import {sendError, formatSend, getAuthorizationData} from '../core/web_util';
 import {addressBookContactService} from './address_book_contact_service';
-import {AddressBookContact} from '../../client/core/dto';
+import {AddressBookContact, ModelOptions} from '../../client/core/dto';
 
 const router = express.Router();
 
 router.post('/', (req, res) => {
+  const modelOptions: ModelOptions = {
+    authorization: getAuthorizationData(req)
+  };
   addressBookContactService.createOne(req.body)
-    .then((contact: AddressBookContact) => res.send(contact), (err) => sendError(res, err));
+    .then((contact: AddressBookContact) => formatSend(res, contact), (err) => sendError(res, err));
 });
 
 router.put('/:id', (req, res) => {
-  req.body._id = req.params.id;
+  const modelOptions: ModelOptions = {
+    authorization: getAuthorizationData(req),
+    additionalData: {_id: req.params.id}
+  };
   addressBookContactService.updateOne(req.body)
-    .then((contact: AddressBookContact) => res.send(contact), (err) => sendError(res, err));
+    .then((contact: AddressBookContact) => formatSend(res, contact), (err) => sendError(res, err));
 });
 
 router.delete('/:id', (req, res) => {
+  const modelOptions: ModelOptions = {
+    authorization: getAuthorizationData(req)
+  };
   addressBookContactService.removeOneById(req.params.id)
-    .then((contact: AddressBookContact) => res.send(contact), (err) => sendError(res, err));
+    .then((contact: AddressBookContact) => formatSend(res, contact), (err) => sendError(res, err));
 });
 
 router.get('/_find', (req: express.Request, res: express.Response) => {
+  const modelOptions: ModelOptions = {
+    authorization: getAuthorizationData(req)
+  };
   addressBookContactService.find(req.query)
-    .then((contacts: AddressBookContact[]) => res.send(contacts), (err: any) => sendError(res, err));
+    .then((contacts: AddressBookContact[]) => formatSend(res, contacts), (err: any) => sendError(res, err));
 });
 
 router.get('/:id', (req: express.Request, res: express.Response) => {
+  const modelOptions: ModelOptions = {
+    authorization: getAuthorizationData(req)
+  };
   addressBookContactService.findOneById(req.params.id)
-    .then((contact: AddressBookContact) => res.send(contact), (err: any) => sendError(res, err));
+    .then((contact: AddressBookContact) => formatSend(res, contact), (err: any) => sendError(res, err));
 });
 
 
