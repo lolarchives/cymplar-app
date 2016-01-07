@@ -198,6 +198,7 @@ const schemas = {
 schemas.city.index({ code: 1, country: 1 }, { unique: true });
 schemas.addressBookContact.index({ email: 1, group: 1 }, { unique: true });
 schemas.addressBookGroup.index({ name: 1, createdBy: 1 }, { unique: true });
+schemas.accountOrganizationMember.index({ email: 1, organization: 1 }, { unique: true });
 schemas.accountMemberRole.index({ code: 1, name: 1 }, { unique: true });
 schemas.salesLead.index({ name: 1, organization: 1 }, { unique: true });
 schemas.salesLeadContact.index({ leadGroup: 1, contact: 1 }, { unique: true });
