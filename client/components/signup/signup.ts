@@ -174,11 +174,19 @@ namespace SignUp {
 				console.log(response);	
 			});
 		}
+		
+		emailChanged() {
+			this.$SignUpRESTService.isAccountOrganizatioMemberExisted(this.signUpDetails.email).then( (response: any) => {
+				console.log(response);	
+			});
+		}
 		// TODO: finish this method
 		private mapFormToDto(details: SignUpDetails): SignUp {
 			let result: SignUp = <SignUp>{};
 			
 			let accountUser: AccountUser = {
+				username: details.username,
+				password: details.password
 				
 			};	
 
@@ -202,7 +210,11 @@ namespace SignUp {
 				email: details.email,
 				contactNumber: details.contactNumber
 			};
-	
+			result = {
+				user: accountUser,
+				organization: organization,
+				organizationMember: organizationMember,
+			};
 
 			return result;
 		}

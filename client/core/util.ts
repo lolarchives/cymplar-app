@@ -38,13 +38,9 @@ export class ObjectUtil {
 		
 		// Regular expresion to simplify the search
 		for (const entry in data) {
-<<<<<<< HEAD
-			if (ObjectUtil.isPresent(data[entry])) {
-				if (regExp && typeof data[entry] === 'string' && !regObjId.test(data[entry])) {
-=======
+
 		    if (ObjectUtil.isPresent(data[entry]) && entry !== 'ido' && entry !== 'idl') {
 		    	if (regExp && typeof data[entry] === 'string' && !regObjId.test(data[entry])) {
->>>>>>> a4b80a08563f6eda020f1ed206f5605c7a55d159
 					filters[entry] = new RegExp(data[entry], 'i');
 				} else {
 					filters[entry] = data[entry];

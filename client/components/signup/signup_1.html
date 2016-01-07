@@ -18,14 +18,13 @@
 			required ng-blur="suCtrl.organizationNameChanged()">
 		</div>
 	</div>
-	
+
 	<div class="form-group">
 		<div class="col-md-5 control-label">
-			<label for="username" class="margin-b-n"><strong class="text-danger">*</strong>  Username</label>
+			<label for="username" class="margin-b-n"><strong class="text-danger">*</strong> Username</label>
 		</div>
 		<div class="col-md-7">
-			<input type="text" class="form-control" id="username" name="username" ng-model="suCtrl.signUpDetails.username"
-			required ng-blur="suCtrl.usernameChanged()">
+			<input type="text" class="form-control" id="username" name="username" ng-model="suCtrl.signUpDetails.username" required ng-blur="suCtrl.usernameChanged()">
 		</div>
 	</div>
 	<!--form-group-->
@@ -34,9 +33,20 @@
 			<label for="email" class="margin-b-n"><strong class="text-danger">*</strong> Email</label>
 		</div>
 		<div class="col-md-7">
-			<input type="email" class="form-control" id="email" required ng-model="suCtrl.signUpDetails.email">
+			<input type="email" class="form-control" id="email" required ng-model="suCtrl.signUpDetails.email" ng-blur="suCtrl.emailChanged()">
 		</div>
 	</div>
+	<!--form-group-->
+	<div class="form-group">
+		<div class="col-md-5 control-label">
+			<label for="contactNumber" class="margin-b-n"><strong class="text-danger">*</strong>Contact number</label>
+		</div>
+		<div class="col-md-7">
+			<input type="text" class="form-control" id="contactNumber" name="contactNumber" ng-model="suCtrl.signUpDetails.contactNumber"
+			required>
+		</div>
+	</div>
+
 	<!--form-group-->
 	<div class="form-group">
 		<div class="col-md-5 control-label">

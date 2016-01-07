@@ -83,8 +83,8 @@ namespace SignUpServices {
 		isAccountUserExisted = (username: string) => {
 			return this.$resourceHelper.resourceRESTCall(this.$SignUpRESTResource, "isAccountUserExisted", {username: username});
 		};
-		isAccountOrganizatioMemberExisted = (params: any) => {
-			return this.$resourceHelper.resourceRESTCall(this.$SignUpRESTResource, "isAccountOrganizationMemberExisted", params);
+		isAccountOrganizatioMemberExisted = (email: string) => {
+			return this.$resourceHelper.resourceRESTCall(this.$SignUpRESTResource, "isAccountOrganizationMemberExisted", {email: email});
 		};
 		isAccountOrganizationExisted = (organizationName: string) => {
 			return this.$resourceHelper.resourceRESTCall(this.$SignUpRESTResource, "isAccountOrganizationExisted", {domain: organizationName });

@@ -32,7 +32,7 @@
 			<label for="city" class="margin-b-n"><strong class="text-danger">*</strong> City</label>
 		</div>
 		<div class="col-md-7">
-			<select class="form-control" ng-disabled="suCtrl.disableCity" id="city" name="city" ng-options="city as city.name for city in suCtrl.availableCities" ng-model="suCtrl.signUpDetails.city" required>
+			<select class="form-control" ng-disabled="suCtrl.disableCity" id="city" name="city" ng-options="city as city.name for city in suCtrl.availableCities" ng-model="suCtrl.signUpDetails.city" ng-required="suCtrl.availableCities.length > 0">
 				<option value=""></option>
 			</select>
 		</div>
