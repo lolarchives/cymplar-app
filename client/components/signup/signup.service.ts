@@ -1,5 +1,6 @@
 import './signup';
-import {BACK_END_ROUTE} from '../../core/dto';
+import {BACK_END_ROUTE, SignUp} from '../../core/dto';
+
 
 namespace SignUpServices {
 
@@ -19,22 +20,18 @@ namespace SignUpServices {
 			},
 			'getIndustries': {
 				method: 'GET',
-				isArray: true,
 				url: BACK_END_ROUTE + '/industry/_find'
 			},
 			'getCountries': {
 				method: 'GET',
-				isArray: true,
 				url: BACK_END_ROUTE + '/country/_find'
 			},
 			'getCities': {
 				method: 'GET',
-				isArray: true,
 				url: BACK_END_ROUTE + '/city/_find'
 			},
 			'getRoles': {
 				method: 'GET',
-				isArray: false,
 				url: BACK_END_ROUTE + '/account-member-role/_find'	
 			},
 			'isAccountUserExisted': {
@@ -48,6 +45,10 @@ namespace SignUpServices {
 			'isAccountOrganizationMemberExisted': {
 				method: 'GET',
 				url: BACK_END_ROUTE + '/account-organization-member/_exist'
+			},
+			'signUp':{
+				method: 'POST',
+				url: BACK_END_ROUTE + '/signup'
 			}
 
 		});
@@ -89,6 +90,9 @@ namespace SignUpServices {
 		isAccountOrganizationExisted = (organizationName: string) => {
 			return this.$resourceHelper.resourceRESTCall(this.$SignUpRESTResource, "isAccountOrganizationExisted", {domain: organizationName });
 		};
+		signUp = (signUpDetails: SignUp) => {
+			return this.$resourceHelper.resourceRESTCall(this.$SignUpRESTResource, "signUp",signUpDetails)
+		}
 
 	};
 

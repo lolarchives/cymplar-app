@@ -17,15 +17,14 @@ namespace SignUp {
 		description: string;
 		team?: number;
 		web?: string;
+		contactNumber: string;
 		facebook?: string;
 		linkedin?: string;
 		twitter?: string;
 		plus?: string;
 		dribble?: string;
 		pinterest?: string;
-		contactNumber?: string;
 	}
-
 
 	/* @ngInject */
 	function config($stateProvider: any) {
@@ -37,161 +36,70 @@ namespace SignUp {
 				controllerAs: 'suCtrl',
 				resolve: {
 					countries: ($SignUpRESTService: any) => {
-						return $SignUpRESTService.getCountries();
-					},
-					cities: ($SignUpRESTService: any) => {
-						return $SignUpRESTService.getCities();
+						return $SignUpRESTService.getCountries().then((response: any) => {
+							return response.data;
+						});
 					},
 					industries: ($SignUpRESTService: any) => {
-						return $SignUpRESTService.getIndustries();
+						return $SignUpRESTService.getIndustries().then((response: any) => {
+							return response.data;
+						});
 					},
-					// not yet implemented
-					/*roles: ($SignUpRESTService: any) => {
-						return $SignUpRESTService.getRoles();
-					}*/
 				}
 			});
 	}
 
 	export class SignUpController {
-		private signUpDetails: SignUpDetails;
-		private errors: Array<string>;
-		private passwordConfirmation: string;
-		private firstStep: boolean;
-		private secondStep: boolean;
-		private finalStep: boolean;
-		private cachedCities: any = {};
-		private availableCities: any = [
-			{	"_id": "56738efef76ae1323312ba7c",
-		 		"updatedAt": 1450413822843, 
-				"createdAt": 1450413822843,
-				"code": "SYD",
-				"name": "Sidney",
-				"country": "56738c5fd4c571f932e75a90", 
-				"__v": 0}, 
-			{	"_id": "56738c6bd4c571f932e75a91",
-				"updatedAt": 1450413163466,
-				"createdAt": 1450413163466,
-				"code": "MEL",
-				"name": "Melbourne",
-				"country": "56738c5fd4c571f932e75a90",
-				"__v": 0
-			}] ;
-		private disableCity: boolean = true;
-		/* @ngInject */
-		constructor(private $scope: any, private $http: angular.IHttpBackendService, private $log: angular.ILogService,
-			private $SignUpRESTService: any, private cities: any, private countries: any, private industries: any) {
-			this.firstStep = true;
-			this.secondStep = false;
-			this.finalStep = false;
-			
-			// this is to bypass validation process, for testing, comments out when deploys
-			this.passwordConfirmation = 'abcdeF1';
-			this.signUpDetails = <SignUpDetails>{
-				organizationName: 'A',
-				username: 'B',
-				email: 'C@D.com',
-				password: 'abcdeF1',
-				country: '56738c5fd4c571f932e75a90',
-				city: '56738efef76ae1323312ba7c',
-				industryType: '56738c35d4c571f932e75a8e',
-				description: 'C',
-			};
-		};
-		//TODO: add in email check from server, check organization name from server, username check from server
-		submitStep1(step1Form: any) {
 
-			this.errors = [];
-			if (this.signUpDetails.password !== this.passwordConfirmation) {
-				this.errors.push("Passwords does not match");
-			} else {
-				this.firstStep = false;
-				this.secondStep = true;
+		organizationNameChanged = () => {
+
+			this.checkingOrganization = true;
+			this.availableOrganizationName = undefined;
+			if (this.signUpDetails.organizationName != undefined && this.signUpDetails.organizationName.trim() != '') {
+				this.$SignUpRESTService.isAccountOrganizationExisted(this.signUpDetails.organizationName).then((response: any) => {
+					this.checkingOrganization = false;
+					this.availableOrganizationName = !response.data.exist;
+
+				});
 			}
-		}
+		};
+		usernameChanged = () => {
+			this.checkingUsername = true;
+			this.availableUsername = undefined;
+			if (this.signUpDetails.username != undefined && this.signUpDetails.username.trim() != '') {
+				this.$SignUpRESTService.isAccountUserExisted(this.signUpDetails.username).then((response: any) => {
+					this.checkingUsername = false;
+					this.availableUsername = !response.data.exist;
 
-		submitStep2(step2Form: any) {
+				});
+			}
+		};
 
-			this.errors = [];
-			this.secondStep = false;
-			this.finalStep = true;
-		}
-		submitFinalSep(finalStepForm: any) {
-			this.$log.info('signup details ', this.signUpDetails);
-			this.errors = [];
-			
-			// TODO: rearranged the object here according to the backend schema
-			let RESTCall = this.$SignUpRESTService.getSampleJsonFromResource({ console: 'hi' });
-			RESTCall.then(function(response: any) {
-				console.log('success:', response);
-				alert('Check console for info');
-			}, function(error: any) {
-				console.log('error', error);
-			});
+		emailChanged = () => {
+			this.checkingEmail = true;
+			this.availableEmail = undefined;
+			if (this.signUpDetails.email != undefined && this.signUpDetails.email.trim() != '') {
+				this.$SignUpRESTService.isAccountOrganizatioMemberExisted(this.signUpDetails.email).then((response: any) => {
+					this.checkingEmail = false;
+					this.availableEmail = !response.data.exist;
+
+				});
+			}
 
 		};
 
-		back() {
-			this.errors = [];
-			if (this.secondStep) {
-				this.secondStep = false;
-				this.firstStep = true;
-			} else if (this.finalStep) {
-				this.finalStep = false;
-				this.secondStep = true;
-			}
-		}
-		countryChanged() {
-			// implement caching for higher network efficiency
-
-			if (this.signUpDetails.country === undefined) {
-				this.disableCity = true;
-				this.signUpDetails.city = undefined;
-			} else {
-				if (this.cachedCities[this.signUpDetails.country] === undefined) {
-					this.disableCity = true;
-					this.$SignUpRESTService.getCities( this.signUpDetails.country).then((response: any) => {
-						this.cachedCities[this.signUpDetails.country] = response;
-						this.disableCity = false;
-						this.availableCities = response;
-					
-					});
-				} else {
-					this.disableCity = false;
-					this.availableCities = this.cachedCities[this.signUpDetails.country];
-				}
-			}
-
-			
-		}
-		organizationNameChanged() {
-			this.$SignUpRESTService.isAccountOrganizationExisted(this.signUpDetails.organizationName).then( (response: any) => {
-				console.log(response);	
-			});
-		}
-		usernameChanged() {
-			this.$SignUpRESTService.isAccountUserExisted(this.signUpDetails.username).then( (response: any) => {
-				console.log(response);	
-			});
-		}
-		
-		emailChanged() {
-			this.$SignUpRESTService.isAccountOrganizatioMemberExisted(this.signUpDetails.email).then( (response: any) => {
-				console.log(response);	
-			});
-		}
-		// TODO: finish this method
-		private mapFormToDto(details: SignUpDetails): SignUp {
+		mapFormToDto = (details: SignUpDetails): SignUp => {
 			let result: SignUp = <SignUp>{};
-			
+
 			let accountUser: AccountUser = {
 				username: details.username,
 				password: details.password
-				
-			};	
+
+			};
 
 			let organization: AccountOrganization = {
 				name: details.organizationName,
+				domain: details.organizationName,
 				description: details.description,
 				city: details.city,
 				postcode: details.postcode,
@@ -217,8 +125,107 @@ namespace SignUp {
 			};
 
 			return result;
+		};
+
+
+		private signUpDetails: SignUpDetails;
+		private errors: Array<string> = [];
+		private passwordConfirmation: string;
+		private firstStep: boolean;
+		private secondStep: boolean;
+		private finalStep: boolean;
+		private cachedCities: any = {};
+		private checkingOrganization: boolean;
+		private availableOrganizationName: boolean;
+		private availableUsername: boolean;
+		private availableEmail: boolean;
+		private checkingUsername: boolean;
+		private checkingEmail: boolean;
+		private queryingCity: boolean;
+		private availableCities: any = [];
+		private disableCity: boolean = true;
+		
+		
+		
+		
+		/* @ngInject */
+		constructor(private $scope: any, private $http: angular.IHttpBackendService, private $log: angular.ILogService,
+			private $SignUpRESTService: any, private countries: any, private industries: any) {
+			this.firstStep = true;
+			this.secondStep = false;
+			this.finalStep = false;
+		};
+		
+		
+		
+		//TODO: add in email check from server, check organization name from server, username check from server
+		submitStep1(step1Form: any) {
+
+			this.errors = [];
+			if (this.signUpDetails.password !== this.passwordConfirmation) {
+				this.errors.push("Passwords does not match");
+			}
+
+			if (this.errors.length === 0 && this.availableEmail && this.availableOrganizationName && this.availableUsername) {
+				this.firstStep = false;
+				this.secondStep = true;
+			}
 		}
 
+		submitStep2(step2Form: any) {
+
+			this.errors = [];
+			this.secondStep = false;
+			this.finalStep = true;
+		}
+		submitFinalSep(finalStepForm: any) {
+			this.$log.info('signup details ', this.signUpDetails);
+			this.errors = [];
+			
+			// TODO: rearranged the object here according to the backend schema
+			this.$SignUpRESTService.signUp(this.mapFormToDto(this.signUpDetails)).then(function(response: any) {
+				console.log('success:', response);
+				alert("Successfully sign up");
+
+			}, function(error: any) {
+				console.log('error', error);
+			});
+
+		};
+
+		back() {
+			this.errors = [];
+			if (this.secondStep) {
+				this.secondStep = false;
+				this.firstStep = true;
+			} else if (this.finalStep) {
+				this.finalStep = false;
+				this.secondStep = true;
+			}
+		}
+		countryChanged() {
+			// implement caching for higher network efficiency
+
+			if (this.signUpDetails.country === undefined) {
+				this.disableCity = true;
+				this.signUpDetails.city = undefined;
+			} else {
+				if (this.cachedCities[this.signUpDetails.country] === undefined) {
+					this.disableCity = true;
+					this.queryingCity = true;
+					this.$SignUpRESTService.getCities(this.signUpDetails.country).then((response: any) => {
+						this.cachedCities[this.signUpDetails.country] = response;
+						this.disableCity = false;
+						this.queryingCity = false;
+						this.availableCities = response.data;
+
+					});
+				} else {
+					this.disableCity = false;
+					this.availableCities = this.cachedCities[this.signUpDetails.country];
+				}
+			}
+		}
 
 	};
 	angular.module('app.signup', [

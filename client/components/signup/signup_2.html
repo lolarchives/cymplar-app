@@ -30,6 +30,7 @@
 	<div class="form-group">
 		<div class="col-md-5 control-label">
 			<label for="city" class="margin-b-n"><strong class="text-danger">*</strong> City</label>
+			<i class="fa fa-spinner pull-right fa-lg fa-spin" ng-show="suCtrl.queryingCity"></i>
 		</div>
 		<div class="col-md-7">
 			<select class="form-control" ng-disabled="suCtrl.disableCity" id="city" name="city" ng-options="city as city.name for city in suCtrl.availableCities" ng-model="suCtrl.signUpDetails.city" ng-required="suCtrl.availableCities.length > 0">
