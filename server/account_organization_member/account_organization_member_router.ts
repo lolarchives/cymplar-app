@@ -56,7 +56,7 @@ router.get('/_exist', (req, res) => {
     requireAuthorization: false
   };
   accountOrganizationMemberService.exist(req.query, modelOptions)
-    .then((exist: boolean) => formatSend(res, exist), (err: any) => sendError(res, err));
+    .then((exist: boolean) => formatSend(res, {exist: exist}), (err: any) => sendError(res, err));
 });
 
 router.get('/:id', (req: express.Request, res: express.Response) => {

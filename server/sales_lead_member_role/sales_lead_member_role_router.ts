@@ -29,7 +29,7 @@ router.get('/_find', (req: express.Request, res: express.Response) => {
 
 router.get('/_exist', (req, res) => {
   salesLeadMemberRoleService.exist(req.query)
-    .then((exist: boolean) => res.send(exist), (err: any) => sendError(res, err));
+    .then((exist: boolean) => res.send({exist: exist}), (err: any) => sendError(res, err));
 });
 
 router.get('/:id', (req: express.Request, res: express.Response) => {
