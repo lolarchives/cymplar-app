@@ -1,3 +1,4 @@
+export const BACK_END_ROUTE = '/api';
 export interface BaseDto {
   _id?: any;
   createdBy?: any;
@@ -92,6 +93,28 @@ export interface AccountOrganization extends BaseDto {
   dribble?: string;
   pinterest?: string;
 }
+
+export interface SignUpDetails {
+		organizationName: string;
+		username: string;
+		email: string;
+		password: string;
+		passwordConfirm: string;
+		country: string;
+		city: string;
+		suburb?: string;
+		postcode?: number;
+		industryType: string;
+		description: string;
+		team?: number;
+    web?: string;
+		facebook?: string;
+		linkedin?: string;
+		twitter?: string;
+		plus?: string;
+		dribble?: string;
+		pinterest?: string;
+	}
 
 export interface AccountOrganizationMember extends BaseDto {
   name?: string;

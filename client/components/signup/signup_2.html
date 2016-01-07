@@ -20,7 +20,10 @@
 			<label for="country" class="margin-b-n"><strong class="text-danger">*</strong> Country</label>
 		</div>
 		<div class="col-md-7">
-			<input type="text" class="form-control" id="country" name="country" ng-model="suCtrl.signUpDetails.country" required>
+			
+			<select class="form-control" id="country" name="country" required ng-options="country._id as country.name for country in suCtrl.countries" ng-model="suCtrl.signUpDetails.country" ng-change="suCtrl.countryChanged()">
+				<option></option>
+			</select>
 		</div>
 	</div>
 	<!--form-group-->
@@ -29,7 +32,9 @@
 			<label for="city" class="margin-b-n"><strong class="text-danger">*</strong> City</label>
 		</div>
 		<div class="col-md-7">
-			<input type="text" class="form-control" id="city" name="city" ng-model="suCtrl.signUpDetails.city" required>
+			<select class="form-control" ng-disabled="suCtrl.disableCity" id="city" name="city" ng-options="city as city.name for city in suCtrl.availableCities" ng-model="suCtrl.signUpDetails.city" required>
+				<option value=""></option>
+			</select>
 		</div>
 	</div>
 	<!--form-group-->
@@ -47,7 +52,7 @@
 			<label for="input4" class="margin-b-n">Postcode</label>
 		</div>
 		<div class="col-md-7">
-			<input type="number" class="form-control" id="postcode"ng-model="suCtrl.signUpDetails.postcode">
+			<input type="number" class="form-control" id="postcode" min="0" ng-model="suCtrl.signUpDetails.postcode">
 		</div>
 	</div>
 	<!--form-group-->

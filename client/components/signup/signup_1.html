@@ -15,7 +15,7 @@
 		</div>
 		<div class="col-md-7">
 			<input type="text" class="form-control" id="organizationName" name="organizationName" ng-model="suCtrl.signUpDetails.organizationName"
-			required>
+			required ng-blur="suCtrl.organizationNameChanged()">
 		</div>
 	</div>
 	
@@ -25,7 +25,7 @@
 		</div>
 		<div class="col-md-7">
 			<input type="text" class="form-control" id="username" name="username" ng-model="suCtrl.signUpDetails.username"
-			required>
+			required ng-blur="suCtrl.usernameChanged()">
 		</div>
 	</div>
 	<!--form-group-->

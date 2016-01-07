@@ -15,7 +15,9 @@
 			<label for="organizationIndustry" class="margin-b-n"><strong class="text-danger">*</strong> Organisation Industry</label>
 		</div>
 		<div class="col-md-7">
-			<input type="text" class="form-control" id="organizationIndustry" required ng-model="suCtrl.signUpDetails.industryType">
+			<select class="form-control" id="organizationIndustry" name="organizationIndustry" ng-options="industry._id as industry.description for industry in suCtrl.industries" ng-model="suCtrl.signUpDetails.industryType" required>
+				<option value=""></option>
+			</select>
 		</div>
 	</div>
 	<!--form-group-->
