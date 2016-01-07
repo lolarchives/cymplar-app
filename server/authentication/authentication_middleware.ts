@@ -4,6 +4,10 @@ import * as bcrypt from 'bcrypt';
 
 import {sendError} from '../core/web_util';
 import {ObjectUtil} from '../../client/core/util';
+import {accountOrganizationMemberService} from '../account_organization_member/account_organization_member_service';
+import {AccountOrganizationMember, SalesLeadOrganizationMember, ModelOptions} from '../../client/core/dto';
+import {salesLeadOrganizationMemberService} from '../sales_lead_organization_member/sales_lead_organization_member_service';
+
 
 const NON_SECURED_URL: string[] = ['/api/account-user/_exist', 
 		'/api/account-organization-member/_exist',
@@ -20,6 +24,8 @@ export class Authentication {
 
 	validate(req: express.Request, res: express.Response, next: Function) {
 		
+		req.body.cymplarRole = {};
+		
 		if (NON_SECURED_URL.indexOf(req.originalUrl.split("?")[0]) > -1) {
 			return next();
 		}
@@ -29,24 +35,81 @@ export class Authentication {
 			|| (req.headers['authorization'] && req.headers['authorization'].split(' ')[1]))) || '';
 		
 		if (ObjectUtil.isBlank(token)) { 
-			sendError(res, new Error('Invalid Token'));
-			return next();
+			return next(new Error('Invalid Token'));
 		}
-
+		
 		try {
 			const decoded = decode(token, process.env.CYMPLAR_SECRET);
 			
 			if (decoded.exp <= Date.now()) {
-				sendError(res, new Error('Token expired'));
-				return next();
+				return next(new Error('Token expired'));
 			}
-
-			req.body.tempCymplar = decoded;
-			return next();
+			
+			//query id_organization (ido), id_lead (idl)
+			const idSessionParams = {
+				ido: (req.query.ido ? req.query.ido : req.body.ido),
+				idl: (req.query.idl ? req.query.idl : req.body.idl)
+			};
+			
+			const orgMemberSearchParams = {
+				user: decoded.sub
+			};
+			
+			if (ObjectUtil.isPresent(idSessionParams.ido)) {
+				orgMemberSearchParams['organization'] = idSessionParams.ido;
+			}
+				
+			const orgMemberModelOptions: ModelOptions = {
+				projection: 'user role organization',
+				population: 'role',
+				requireAuthorization: false
+			}; 
+						
+			accountOrganizationMemberService.findOne(orgMemberSearchParams, orgMemberModelOptions)
+			.then((organizationMember: AccountOrganizationMember) => {
+			
+				if (ObjectUtil.isBlank(idSessionParams.ido)) {
+					delete organizationMember._id;
+					delete organizationMember.organization;
+					delete organizationMember.role;
+				}
+				
+				if (ObjectUtil.isPresent(organizationMember)) {
+					req.body.cymplarRole.organizationMember = organizationMember;	
+				} 
+				
+				if (ObjectUtil.isPresent(idSessionParams.ido) && ObjectUtil.isPresent(idSessionParams.idl)) {
+					
+					const leadMemberModelOptions: ModelOptions = {
+						projection: 'role leardOrganization',
+						population: 'role leadOrganization',
+						complexSearch: {
+							'member': req.body.cymplarRole.organizationMember._id,
+							'leadOrganization.organization': req.body.cymplarRole.organizationMember.organization,
+							'leadOrganization.lead': idSessionParams.idl
+						},
+						requireAuthorization: false
+					};
+						
+					return salesLeadOrganizationMemberService.findOne({}, leadMemberModelOptions);
+				} else {
+					return Promise.resolve({});
+				}
+			})
+			.then((leadMember: SalesLeadOrganizationMember) => {
+			
+				if (ObjectUtil.isPresent(leadMember) && ObjectUtil.isPresent(leadMember._id)) {
+					req.body.cymplarRole.leadMember = leadMember;
+				}
+	
+				return next();
+			})
+			.catch((err) => {
+				return next(new Error("This user could not be found, therefore no authorization can be granted"));
+			});
 			
 		} catch (err) {
-			sendError(res, new Error('Invalid Token'));
-			return next();
+			return next(new Error("Token could not be verified"));
 		}
 	}
 }

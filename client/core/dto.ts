@@ -35,11 +35,6 @@ export interface Industry extends BaseDto {
   description?: string;
 }
 
-export interface AddressBookContactStatus extends BaseDto {
-  code?: string;
-  name?: string;
-}
-
 export interface AddressBookGroup extends BaseDto {
   name?: string;
   description?: string;
@@ -62,7 +57,6 @@ export interface AddressBookContact extends BaseDto {
   email?: string;
   website?: string;
   group?: any;
-  status?: any;
 }
 
 export interface AccountUser extends BaseDto {
@@ -131,10 +125,11 @@ export interface AccountMemberRole extends BaseDto {
   code?: string;
   name?: string;
   description?: string;
-  grandDelete?: boolean;
-  grandUpdate?: boolean;
-  grandCreate?: boolean;
-  grandRead?: boolean;
+  grantDelete?: boolean;
+  grantUpdate?: boolean;
+  grantCreate?: boolean;
+  grantRead?: boolean;
+  grantInvitation?: boolean;
 }
 
 export interface SignUp extends BaseDto {
@@ -153,5 +148,60 @@ export interface AuthenticationResponse {
   init?: any;
 }
 
+export interface SalesLeadStatus extends BaseDto {
+  code?: string;
+  name?: string;
+}
 
+export interface SalesLead extends BaseDto {
+  name?: string;
+  status?: any;
+  contract?: string;
+  amount?: number;
+  contact?: any;
+}
+
+export interface SalesLeadContact extends BaseDto {
+  lead?: any;
+  contact?: any;
+}
+
+export interface SalesLeadOrganization extends BaseDto {
+  lead?: any;
+  organization?: any;
+}
+
+export interface SalesLeadMemberRole extends BaseDto {
+  code?: string;
+  name?: string;
+  description?: string;
+  grantDelete?: boolean;
+  grantUpdate?: boolean;
+  grantCreate?: boolean;
+  grantRead?: boolean;
+  grantInvitation?: boolean;
+}
+
+export interface SalesLeadOrganizationMember extends BaseDto {
+  leadOrganization?: any;
+  member?: any;
+}
+
+export interface AuthorizationData {
+  organizationMember?: AccountOrganizationMember;
+  leadMember?: SalesLeadOrganizationMember;
+}
+
+export interface ModelOptions {
+  additionalData?: any;
+  complexSearch?: any;
+  population?: any;
+  projection?: any;
+  regularExpresion?: boolean;
+  distinct?: any;
+  authorization?: AuthorizationData;
+  requireAuthorization?: boolean;
+  copyAuthorizationData?: boolean;
+  specialAuthorizationDataSearch?: boolean;
+}
 
