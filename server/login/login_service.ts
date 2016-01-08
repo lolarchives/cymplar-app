@@ -5,7 +5,7 @@ import * as bcrypt from 'bcrypt';
 import {sendError} from '../core/web_util';
 import {ObjectUtil} from '../../client/core/util';
 import {AccountUserModel} from '../core/model';
-import {LogIn, AccountUser, ModelOptions} from '../../client/core/dto';
+import {LogIn, AuthenticationResponse, AccountUser, ModelOptions} from '../../client/core/dto';
 
 
 export class LoginService {
@@ -19,8 +19,11 @@ export class LoginService {
 
 		return new Promise<string>((resolve: Function, reject: Function) => {
 			this.validateAccountUser(data)
-			.then((accountUser: AccountUser) => 
-				resolve(this.getToken(accountUser)), (err: any) => reject(err));
+			.then((accountUser: AccountUser) => {
+				const authenticationResp: AuthenticationResponse = {};
+				authenticationResp.token = this.getToken(accountUser);
+				resolve(authenticationResp);
+		}, (err: any) => reject(err));
 		});
 	}
 
@@ -32,8 +35,6 @@ export class LoginService {
 			sub: accountUser._id,
 			exp: expires 
 		};
-		console.log("account user" + accountUser);
-		console.log("account payload" + payload);
 		const token = encode(payload, process.env.CYMPLAR_SECRET);
 
 		return token;

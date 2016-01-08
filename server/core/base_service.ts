@@ -136,7 +136,6 @@ export abstract class BaseService<T extends BaseDto> {
 				this.isSearchAuthorized(txModelOptions.authorization, reject);
 			}
 			const search = this.obtainSearchExpression(data, txModelOptions);
-			console.log("search " + JSON.stringify(search));
 			this.Model.find(search, txModelOptions.projection,
 			 { sort: '-createdAt', lean: true }).populate(txModelOptions.population)
 			.exec((err, foundObjs) => {
@@ -238,7 +237,6 @@ export abstract class BaseService<T extends BaseDto> {
 		const transactionOptions: ModelOptions = {};
 		ObjectUtil.merge(transactionOptions, this.options); 
 		ObjectUtil.merge(transactionOptions, newOptions);
-		console.log("transaccion options " + JSON.stringify(transactionOptions));
 		return transactionOptions;
 	}
 	
@@ -264,12 +262,9 @@ export abstract class BaseService<T extends BaseDto> {
 	}
 	
 	protected copySignificantAuthorizationData(data: T, modelOptions: ModelOptions = {}): void {
-		console.log("copying authorization data in baseservice");
 	}
 	
 	protected isCreateAuthorized(modelOptions: ModelOptions = {}, reject: Function, data?: T): void {
-		console.log("evaluating authorization for create");
-		
 		if (this.existUser(modelOptions.authorization)) {
 			reject(new Error("Unauthorized user"));
 		}
@@ -277,8 +272,6 @@ export abstract class BaseService<T extends BaseDto> {
 	}
 	
 	protected isUpdateAuthorized(modelOptions: ModelOptions = {}, reject: Function, data?: T): void {
-		console.log("evaluating authorization for update");
-		
 		if (this.existUser(modelOptions.authorization)) {
 			reject(new Error("Unauthorized user"));
 		}
@@ -286,8 +279,6 @@ export abstract class BaseService<T extends BaseDto> {
 	}
 	
 	protected isRemoveAuthorized(modelOptions: ModelOptions = {}, reject: Function, data?: T): void {
-		console.log("evaluating authorization for remove");
-	
 		if (this.existUser(modelOptions.authorization)) {
 			reject(new Error("Unauthorized user"));
 		}
@@ -295,8 +286,6 @@ export abstract class BaseService<T extends BaseDto> {
 	}
 	
 	protected isSearchAuthorized(modelOptions: ModelOptions = {}, reject: Function, data?: T): void {
-		console.log("evaluating authorization for search");
-		
 		if (this.existUser(modelOptions.authorization)) {
 			reject(new Error("Unauthorized user"));
 		}
@@ -304,12 +293,10 @@ export abstract class BaseService<T extends BaseDto> {
 	}
 		
 	protected isUpdateAuthorizedExecution(modelOptions: ModelOptions = {}, reject: Function, data?: T): void {
-		console.log("evaluating authorization for update execution");
 		return;
 	}
 	
 	protected isRemoveAuthorizedExecution(modelOptions: ModelOptions = {}, reject: Function, data?: T): void {
-		console.log("evaluating authorization for remove execution");
 		return;
 	}
 	
