@@ -36,7 +36,7 @@ router.get('/_find', (req: express.Request, res: express.Response) => {
     authorization: getAuthorizationData(req),
     population: [
 					{ path: 'industry', select: 'code description' },
-					{ path: 'city', select: 'code name country', populate: { path: 'country', select: 'code name country' } }
+					{ path: 'city', select: 'code name country', populate: { path: 'country', select: 'code name' } }
 				]
   };
   addressBookGroupService.findGroup(req.query, modelOptions)
