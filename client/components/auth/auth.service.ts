@@ -2,11 +2,11 @@ namespace AuthServices {
 
 	export class AuthToken {
 		constructor(private $cookies: any) {
-
+			
 		}
 		setToken(token: any) {
 			if (token) {
-				this.$cookies.set('token', token);
+				this.$cookies.put('token', token);
 			} else {
 				this.$cookies.remove('token');
 			}
@@ -16,7 +16,7 @@ namespace AuthServices {
 		}
 		setIdO(ido: any) {
 			if (ido) {
-				this.$cookies.set('ido', ido);
+				this.$cookies.put('ido', ido);
 			} else {
 				this.$cookies.remove('ido');
 			}
@@ -24,24 +24,26 @@ namespace AuthServices {
 		getIdoO(): any {
 			return this.$cookies.get('ido');
 		}
+		isLoggedIn(): boolean {
+			return (this.$cookies.get('token') !== undefined) && (this.$cookies.get('ido') !== undefined) ;
+		}
 	}
 
-	export class AuthInterceptor {
-		constructor(private AuthToken: any, private $q: any) {
-
-		}
-
-		request(config: any): any {
-			let token = this.AuthToken.getToken();
+	function AuthInterceptor(AuthToken: any, $q: any): any {
+		/** ngInject */
+		let AuthInterceptorFactory = {};
+		AuthInterceptorFactory["request"] = (config: any): any => {
+			let token = AuthToken.getToken();
 			if (token) {
 				config.headers['Authentication'] = token;
 			};
 			return config;
 		}
-		responseError(response: any) {
+		AuthInterceptorFactory["responseError"] = (response: any) => {
 
-			return this.$q.reject(response);
+			return $q.reject(response);
 		}
+		return AuthInterceptorFactory;
 	}
 	/** @ngInject */
 	function getAuthTokenInstance($cookies: any) {
@@ -49,12 +51,10 @@ namespace AuthServices {
 	}
 	
 	/** @ngInject */
-	function getAuthInterceptorInstance(AuthToken: any, $q: any) {
-		return new AuthInterceptor(AuthToken, $q);
-	}
+	
 
 	angular
-		.module('app.auth')
+		.module('app.auth',[])
 		.factory('AuthToken', getAuthTokenInstance)
-		.factory('AuthInterceptor', getAuthInterceptorInstance);
+		.factory('AuthInterceptor', AuthInterceptor);
 }

@@ -26,17 +26,23 @@ namespace HelperServices {
 					template: '<div class="text-center"><h1>Loading <i class="fa fa-spinner fa-spin"></i></h1></div>'
 				});
 			}
-
+			/**
+			 * Using custom promise and $q to DRY up some of the code ,
+			 *  everything will be handle in the success call in controller 
+			 * with more descriptive error message
+			*/
 			resource[method](params, (response: any) => {
 				if (loading) {
 					this.loadingModal.close();
 				}
-				deferred.resolve(response.data);
+				deferred.resolve(response);
 				
 			}, (error: any) => {
 				if (loading) {
 					this.loadingModal.close();
+				error.data.status = error.status;
 				}
+				error.data.statusText = error.statusText
 				deferred.resolve(error.data);
 			})
 
