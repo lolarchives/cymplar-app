@@ -5,12 +5,19 @@ import * as bcrypt from 'bcrypt';
 import {sendError} from '../core/web_util';
 import {ObjectUtil} from '../../client/core/util';
 import {AccountUserModel} from '../core/model';
-import {LogIn, AccountUser} from '../../client/core/dto';
+import {LogIn, AuthenticationResponse, AccountUser, AccountOrganizationMember, ModelOptions} from '../../client/core/dto';
+import {accountOrganizationMemberService} from '../account_organization_member/account_organization_member_service';
 
 
 export class LoginService {
 
-	createOne(data: LogIn): Promise<string> {
+	createOne(data: LogIn, options: ModelOptions = {}): Promise<string> {
+		if (ObjectUtil.isBlank(data.organization)) {
+			return new Promise(function (fulfill, reject) {
+			  reject(new Error('An organization should be chosen'));
+			});
+    	}
+		
 		if (ObjectUtil.isBlank(data.username) || ObjectUtil.isBlank(data.password)) {
 			return new Promise(function (fulfill, reject) {
 			  reject(new Error('Invalid credentials'));
@@ -19,8 +26,11 @@ export class LoginService {
 
 		return new Promise<string>((resolve: Function, reject: Function) => {
 			this.validateAccountUser(data)
-			.then((accountUser: AccountUser) => 
-				resolve(this.getToken(accountUser)), (err: any) => reject(err));
+			.then((accountUser: AccountUser) => {
+				const authenticationResp: AuthenticationResponse = {};
+				authenticationResp.token = this.getToken(accountUser);
+				resolve(authenticationResp);
+		}, (err: any) => reject(err));
 		});
 	}
 
@@ -32,7 +42,6 @@ export class LoginService {
 			sub: accountUser._id,
 			exp: expires 
 		};
-		
 		const token = encode(payload, process.env.CYMPLAR_SECRET);
 
 		return token;
@@ -40,23 +49,28 @@ export class LoginService {
 
 	private validateAccountUser(data: LogIn): Promise<AccountUser> {
 		return new Promise<AccountUser>((resolve: Function, reject: Function) => {
-			AccountUserModel.findOne({ username: data.username}, (err: Error, foundDoc: AccountUser) => {
-				if (err) {
-					reject(err);
+			const accountUserModelOptions: ModelOptions = {
+				requireAuthorization: false,
+				population: {
+					path: 'user',
+					match: { username: data.username }
+					},
+				copyAuthorizationData: false
+			};
+			accountOrganizationMemberService.findOne({ organization: data.organization }, accountUserModelOptions)
+			.then((accountOrganizationMember: AccountOrganizationMember) => {
+				if (ObjectUtil.isBlank(accountOrganizationMember.user)) {
+					reject(new Error('The user does not exist within this organization'));
 					return;
 				}
-				
-				if (!foundDoc) {
-					reject(new Error('User not found'));
-					return;
-				}
-				
-				if (!bcrypt.compareSync(data.password, foundDoc.password)) {
+				if (!bcrypt.compareSync(data.password, accountOrganizationMember.user.password)) {
 					reject(new Error('Invalid password'));
 					return;
 				}
-				
-				resolve(foundDoc);
+				resolve(accountOrganizationMember.user);
+			})
+			.catch((err) => {
+				return reject(err);
 			});
 		});
 	}

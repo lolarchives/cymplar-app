@@ -1,3 +1,4 @@
+export const BACK_END_ROUTE = '/api';
 export interface BaseDto {
   _id?: any;
   createdBy?: any;
@@ -34,11 +35,6 @@ export interface Industry extends BaseDto {
   description?: string;
 }
 
-export interface AddressBookContactStatus extends BaseDto {
-  code?: string;
-  name?: string;
-}
-
 export interface AddressBookGroup extends BaseDto {
   name?: string;
   description?: string;
@@ -61,7 +57,6 @@ export interface AddressBookContact extends BaseDto {
   email?: string;
   website?: string;
   group?: any;
-  status?: any;
 }
 
 export interface AccountUser extends BaseDto {
@@ -93,6 +88,28 @@ export interface AccountOrganization extends BaseDto {
   pinterest?: string;
 }
 
+export interface SignUpDetails {
+		organizationName: string;
+		username: string;
+		email: string;
+		password: string;
+		passwordConfirm: string;
+		country: string;
+		city: string;
+		suburb?: string;
+		postcode?: number;
+		industryType: string;
+		description: string;
+		team?: number;
+    web?: string;
+		facebook?: string;
+		linkedin?: string;
+		twitter?: string;
+		plus?: string;
+		dribble?: string;
+		pinterest?: string;
+	}
+
 export interface AccountOrganizationMember extends BaseDto {
   name?: string;
   email?: string;
@@ -108,10 +125,11 @@ export interface AccountMemberRole extends BaseDto {
   code?: string;
   name?: string;
   description?: string;
-  grandDelete?: boolean;
-  grandUpdate?: boolean;
-  grandCreate?: boolean;
-  grandRead?: boolean;
+  grantDelete?: boolean;
+  grantUpdate?: boolean;
+  grantCreate?: boolean;
+  grantRead?: boolean;
+  grantInvitation?: boolean;
 }
 
 export interface SignUp extends BaseDto {
@@ -123,6 +141,7 @@ export interface SignUp extends BaseDto {
 export interface LogIn extends BaseDto {
   username: string;
   password: string;
+  organization: string;
 }
 
 export interface AuthenticationResponse {
@@ -130,4 +149,22 @@ export interface AuthenticationResponse {
   init?: any;
 }
 
+export interface AuthorizationData {
+  user?: AccountUser;
+  organizationMember?: AccountOrganizationMember;
+}
+
+export interface ModelOptions {
+  additionalData?: any;
+  complexSearch?: any;
+  population?: any;
+  projection?: any;
+  regularExpresion?: boolean;
+  distinct?: any;
+  authorization?: AuthorizationData;
+  requireAuthorization?: boolean;
+  copyAuthorizationData?: boolean;
+  copyOptionalAuthorizationData?: boolean;
+  specialAuthorizationDataSearch?: boolean;
+}
 

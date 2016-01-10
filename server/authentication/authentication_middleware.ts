@@ -4,6 +4,11 @@ import * as bcrypt from 'bcrypt';
 
 import {sendError} from '../core/web_util';
 import {ObjectUtil} from '../../client/core/util';
+import {accountOrganizationMemberService} from '../account_organization_member/account_organization_member_service';
+import {AccountUser, AccountOrganizationMember, ModelOptions} from '../../client/core/dto';
+import {accountUserService} from '../account_user/account_user_service';
+import {AuthorizationData} from '../../client/core/dto';
+
 
 const NON_SECURED_URL: string[] = ['/api/account-user/_exist', 
 		'/api/account-organization-member/_exist',
@@ -20,6 +25,8 @@ export class Authentication {
 
 	validate(req: express.Request, res: express.Response, next: Function) {
 		
+		req.body.cymplarRole = {};
+		
 		if (NON_SECURED_URL.indexOf(req.originalUrl.split("?")[0]) > -1) {
 			return next();
 		}
@@ -29,24 +36,55 @@ export class Authentication {
 			|| (req.headers['authorization'] && req.headers['authorization'].split(' ')[1]))) || '';
 		
 		if (ObjectUtil.isBlank(token)) { 
-			sendError(res, new Error('Invalid Token'));
-			return next();
+			return next(new Error('Invalid Token'));
 		}
-
+		
 		try {
 			const decoded = decode(token, process.env.CYMPLAR_SECRET);
 			
 			if (decoded.exp <= Date.now()) {
-				sendError(res, new Error('Token expired'));
-				return next();
+				return next(new Error('Token expired'));
 			}
-
-			req.body.tempCymplar = decoded;
-			return next();
 			
+			//query id_organization (ido), id_lead (idl)
+			const idSessionParams = {
+				ido: (req.query.ido ? req.query.ido : req.body.ido)
+			};
+			
+			const accountUserModelOptions: ModelOptions = {
+				requireAuthorization: false,
+				projection: '_id'
+			}; 
+					
+			accountUserService.findOneById(decoded.sub, accountUserModelOptions)
+			.then((user: AccountUser) => {
+				if (user._id) {
+					req.body.cymplarRole.user = user;	
+				}
+				
+				if (ObjectUtil.isPresent(user._id) && ObjectUtil.isPresent(idSessionParams.ido)) {
+					const orgMemberModelOptions: ModelOptions = {
+						projection: 'user role organization',
+						population: 'role',
+						requireAuthorization: false
+					}; 		
+					
+					return accountOrganizationMemberService.findOne({user: user._id, organization: idSessionParams.ido}, orgMemberModelOptions);
+				} else { 
+					return Promise.resolve({});
+				};
+			})
+			.then((organizationMember: AccountOrganizationMember) => {
+				if (ObjectUtil.isPresent(organizationMember._id)) {
+					req.body.cymplarRole.organizationMember = organizationMember;	
+				}
+				return next();
+			})
+			.catch((err) => {
+				return next(err);
+			});
 		} catch (err) {
-			sendError(res, new Error('Invalid Token'));
-			return next();
+			return next(new Error("Token could not be verified"));
 		}
 	}
 }

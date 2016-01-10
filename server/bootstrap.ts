@@ -12,7 +12,6 @@ import * as contactRouter from './contact/contact_router';
 import * as countryRouter from './country/country_router';
 import * as cityRouter from './city/city_router';
 import * as industryRouter from './industry/industry_router';
-import * as addressBookContactStatusRouter from './address_book_contact_status/address_book_contact_status_router';
 import * as addressBookGroupRouter from './address_book_group/address_book_group_router';
 import * as addresssBookContactRouter from './address_book_contact/address_book_contact_router';
 import * as loginRouter from './login/login_router';
@@ -40,7 +39,6 @@ server.use('/api/contact', contactRouter);
 server.use('/api/country', countryRouter);
 server.use('/api/city', cityRouter);
 server.use('/api/industry', industryRouter);
-server.use('/api/address-book-contact-status', addressBookContactStatusRouter);
 server.use('/api/address-book-group', addressBookGroupRouter);
 server.use('/api/address-book-contact', addresssBookContactRouter);
 
