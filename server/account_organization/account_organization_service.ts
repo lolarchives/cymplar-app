@@ -16,6 +16,9 @@ export class AccountOrganizationService extends BaseService<AccountOrganization>
 		this.createOne(data.organization, options)
 		.then((accountOrganization: AccountOrganization) => {
 			createdAccountOrganization = accountOrganization;
+			const memberModelOptions: ModelOptions = {
+				authorization: options.authorization
+			};
 			return this.createOrganizationMember(accountOrganization, data.organizationMember, options);
 		})
 		.then((accountMember: AccountOrganizationMember) => {
@@ -33,9 +36,9 @@ export class AccountOrganizationService extends BaseService<AccountOrganization>
 	
 	copySignificantAuthorizationData(data: AccountOrganizationMember, modelOptions: ModelOptions = {}): void {
 		const authorization: AuthorizationData = modelOptions.authorization;
-		if (ObjectUtil.isPresent(authorization) && ObjectUtil.isPresent(authorization.organizationMember)) {
+		if (ObjectUtil.isPresent(authorization) && ObjectUtil.isPresent(authorization.user)) {
 			if (modelOptions.copyAuthorizationData) {
-				data.createdBy = authorization.organizationMember.user;	
+				data.createdBy = authorization.user;	
 			}
 		}
 	}

@@ -11,8 +11,8 @@ export class AccountUserService extends BaseService<AccountUser> {
 	
 	copySignificantAuthorizationData(data: AccountUser, modelOptions: ModelOptions = {}): void {
 		const authorization = modelOptions.authorization;
-		if (ObjectUtil.isPresent(authorization) && ObjectUtil.isPresent(authorization.organizationMember)) {
-			data._id = authorization.organizationMember.user;
+		if (ObjectUtil.isPresent(authorization) && ObjectUtil.isPresent(authorization.user)) {
+			data._id = authorization.user._id;
 		}
 	}
 

@@ -1,4 +1,4 @@
-﻿import {AddressBookGroup, AccountUser, ModelOptions, AuthorizationData} from '../../client/core/dto';
+﻿import {AddressBookGroup, AddressBookContact, AccountUser, ModelOptions, AuthorizationData} from '../../client/core/dto';
 import {AddressBookGroupModel} from '../core/model';
 import {BaseService} from '../core/base_service';
 import {addressBookContactService} from '../address_book_contact/address_book_contact_service';
@@ -36,27 +36,18 @@ export class AddressBookGroupService extends BaseService<AddressBookGroup> {
 	
 	copySignificantAuthorizationData(data: AccountUser, modelOptions: ModelOptions = {}): void {
 		const authorization = modelOptions.authorization;
-		if (ObjectUtil.isPresent(authorization) && ObjectUtil.isPresent(authorization.organizationMember)) {
-			data.createdBy = authorization.organizationMember.user;
+		if (ObjectUtil.isPresent(authorization) && ObjectUtil.isPresent(authorization.user)) {
+			data.createdBy = authorization.user;
 		}
 	}
 	
-	
 	private loadGroup(data: AddressBookGroup): Promise<AddressBookGroup> {
-
 		const groupToSend: AddressBookGroup = data;
-		
 		return new Promise<AddressBookGroup>((fulfill: Function, reject: Function) => {
-			
 			const modelOptions: ModelOptions = { requireAuthorization: false };
-			const toLoad: any = [countryService.findOneById(groupToSend.city.country, modelOptions), 
-							   addressBookContactService.find({ group: groupToSend._id }, modelOptions)];
-
-			Promise.all(toLoad)
-			.then((results: any) => {
-				groupToSend.city.country = results[0];
-				groupToSend.contacts = results[1];
-
+			addressBookContactService.find({ group: groupToSend._id }, modelOptions)
+			.then((contacts: AddressBookContact[]) => {
+				groupToSend.contacts = contacts;
 				fulfill(groupToSend);
 			})
 			.catch((err: any) => {

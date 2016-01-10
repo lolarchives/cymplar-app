@@ -26,7 +26,6 @@ export class SalesLeadService extends BaseService<SalesLead> {
 					requireAuthorization: false, // As it is a creation in chain the authorization validation can be skipped
 					authorization: newOptions.authorization
 				};
-				
 				const toAssociate: any = [this.associateOrganization(createdSalesLead, chainCreationModelOptions), 
 							   this.associateContact(createdSalesLead, chainCreationModelOptions, data.contact)];
 							   
@@ -60,9 +59,8 @@ export class SalesLeadService extends BaseService<SalesLead> {
 				lead: data,
 				organization: options.authorization.organizationMember.organization
 			};
-			
 			salesLeadOrganizationService.createOne(leadOrganization, options)
-			.then((createdLeadOrganization: SalesLeadOrganization) => { 	
+			.then((createdLeadOrganization: SalesLeadOrganization) => { 
 				fulfill(createdLeadOrganization); 
 			})
 			.catch((err) => {
