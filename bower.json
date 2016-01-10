@@ -13,6 +13,7 @@
     "test"
   ],
   "dependencies": {
-    "angular-bootstrap": "~0.14.3"
+    "angular-bootstrap": "~0.14.3",
+    "angular-cookies": "~1.4.8"
   }
 }

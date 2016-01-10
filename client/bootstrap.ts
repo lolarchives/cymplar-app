@@ -3,6 +3,8 @@ import './components/contacts/contacts';
 import { mainNavbar } from './components/navbar/navbar.directive';
 import './components/signup/signup';
 import './components/signup/signup.service';
+import './components/login/login';
+import './components/login/login.service';
 import './components/helper/helper';
 
 declare var moment: moment.MomentStatic;
@@ -55,8 +57,10 @@ namespace app {
     'ui.router',
     'ui.bootstrap',
     'toastr',
+    'ngCookies',
     'app.contacts',
     'app.signup',
+    'app.login',
     'app.helper',
       
   ])

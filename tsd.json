@@ -60,7 +60,7 @@
       "commit": "5c3e47967affa3c4128a3875d1664ba206ae1b0f"
     },
     "angularjs/angular.d.ts": {
-      "commit": "40c60850ad6c8175a62d5ab48c4e016ea5b3dffe"
+      "commit": "4639f126d25956b6a7ddf8462dd4e73101983b85"
     },
     "angularjs/angular-mocks.d.ts": {
       "commit": "5c3e47967affa3c4128a3875d1664ba206ae1b0f"
@@ -84,7 +84,7 @@
       "commit": "5c3e47967affa3c4128a3875d1664ba206ae1b0f"
     },
     "jquery/jquery.d.ts": {
-      "commit": "40c60850ad6c8175a62d5ab48c4e016ea5b3dffe"
+      "commit": "4639f126d25956b6a7ddf8462dd4e73101983b85"
     },
     "vinyl/vinyl.d.ts": {
       "commit": "5c3e47967affa3c4128a3875d1664ba206ae1b0f"
@@ -112,6 +112,9 @@
     },
     "gulp-autoprefixer/gulp-autoprefixer.d.ts": {
       "commit": "40c60850ad6c8175a62d5ab48c4e016ea5b3dffe"
+    },
+    "angularjs/angular-cookies.d.ts": {
+      "commit": "4639f126d25956b6a7ddf8462dd4e73101983b85"
     }
   }
 }
