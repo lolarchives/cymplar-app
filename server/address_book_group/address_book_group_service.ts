@@ -12,17 +12,13 @@ export class AddressBookGroupService extends BaseService<AddressBookGroup> {
 	}
 	
 	findGroup(data: AddressBookGroup, options: ModelOptions = {}): Promise<AddressBookGroup[]> {
-
 		return new Promise<AddressBookGroup[]>((fulfill: Function, reject: Function) => {			
 			this.find(data, options)
 			.then((groups: AddressBookGroup[]) => {
-
 				const promises: Promise<AddressBookGroup>[] = [];
-
 				for (let i = 0; i < groups.length; i++) {
 					promises.push(this.loadGroup(groups[i]));
 				}
-
 				return Promise.all(promises);
 			})
 			.then((results: any) => {

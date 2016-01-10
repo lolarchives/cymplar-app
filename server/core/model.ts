@@ -247,7 +247,7 @@ schemas.addressBookGroup.pre('remove', function(next: Function) {
       'contact.group': obj['_id']
   };
   
-  SalesLeadContactModel.find(query).populate('contact') // Retrieves contacts per lead
+  SalesLeadContactModel.find({}).populate({ path: 'contact', match: { group: obj['_id'] }}) // Retrieves contacts per lead
   .exec((err: any, foundObjs: any) => {
     if (err) {
       next(err);

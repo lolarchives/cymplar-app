@@ -211,7 +211,7 @@ export abstract class BaseService<T extends BaseDto> {
 	
 	protected obtainTransactionModelOptions(newOptions: ModelOptions = {}): ModelOptions {	
 		const transactionOptions: ModelOptions = {};
-		ObjectUtil.merge(transactionOptions, this.options); 
+		ObjectUtil.merge(transactionOptions, this.options);
 		ObjectUtil.merge(transactionOptions, newOptions);
 		return transactionOptions;
 	}
