@@ -42,7 +42,9 @@
 			</div>
 		</div>
 
-		
+		<div class="form-group text-center" ng-show="liCtrl.loginError">
+			<p class="text-danger">{{liCtrl.errorMessage}}</p>
+		</div>
 			
 		<button class="btn btn-primary btn-block margin-b-l"  type="submit">Login</button>
 			

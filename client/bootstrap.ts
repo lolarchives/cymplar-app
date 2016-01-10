@@ -45,6 +45,7 @@ namespace app {
         controller: 'MainController',
         controllerAs: 'main'
       });
+      
     $urlRouterProvider.otherwise('/');
   }
 

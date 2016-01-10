@@ -21,6 +21,8 @@ namespace Login {
 		private domainExist: boolean;
 		private accountOrganizationId: string;
 		private loginDetails: any;
+		private loginError: boolean;
+		private errorMessage: string;
 		/** @ngInject */
 		constructor(private $LoginRESTService: any, private $cookies: any, private $SignUpRESTService: any) {
 			
@@ -42,7 +44,9 @@ namespace Login {
 			this.$LoginRESTService.accountLogin(this.loginDetails).then((response: any) => {
 				console.log('response', response);
 			}, (error: any) => {
-				console.log('Errors', error);
+				console.log('error',error);
+				this.loginError = true;
+				this.errorMessage = error.data.msg;
 			});
 		}
 	};
