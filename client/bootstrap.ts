@@ -6,6 +6,7 @@ import './components/signup/signup.service';
 import './components/login/login';
 import './components/login/login.service';
 import './components/helper/helper';
+import './components/helper/progressBar';
 
 declare var moment: moment.MomentStatic;
 
@@ -63,6 +64,7 @@ namespace app {
     'app.signup',
     'app.login',
     'app.helper',
+    'app.ui.helper',
       
   ])
     .config(config)

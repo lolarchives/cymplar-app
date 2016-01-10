@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -10,19 +11,23 @@
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
   <!-- csslib:css -->
   <!-- endinject -->
-  
+
   <!-- inject:css -->
   <!-- endinject -->
 
 </head>
-<body data-app-version="<%= APP_VERSION %>">
 
+<body data-app-version="<%= APP_VERSION %>">
+  <div ng-controller="ProgressBarController as pbCtrl">
+     <uib-progressbar ng-show="pbCtrl.loading" class="progress-striped active custom-progress" value="pbCtrl.progressValue" type="{{pbCtrl.type}}"></uib-progressbar>
+  </div>
+ 
 
   <div ui-view class="main-container"></div>
 
   <!-- jslib:js -->
   <!-- endinject -->
-  
+
   <script>
     System.import('bootstrap')
       .catch(function (e) {
@@ -31,4 +36,5 @@
   </script>
 
 </body>
+
 </html>

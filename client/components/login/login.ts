@@ -30,6 +30,7 @@ namespace Login {
 		submitDomain() {
 			if (this.domain !== undefined && this.domain.trim() !== '') {
 				this.$LoginRESTService.accountOrganizationLogin(this.domain).then((response: any) => {
+					console.log('response', response);
 					this.domainExist = response.success;
 					if (this.domainExist) {
 						this.accountOrganizationId = response.data._id; 
@@ -44,7 +45,7 @@ namespace Login {
 			this.$LoginRESTService.accountLogin(this.loginDetails).then((response: any) => {
 				console.log('response', response);
 			}, (error: any) => {
-				console.log('error',error);
+				console.log('error', error);
 				this.loginError = true;
 				this.errorMessage = error.data.msg;
 			});
