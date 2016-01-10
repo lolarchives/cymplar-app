@@ -29,11 +29,7 @@ export abstract class BaseService<T extends BaseDto> {
 		const txModelOptions = this.obtainTransactionModelOptionsAndAddData(data, newOptions);
 		const newDocument = new this.Model(data);
 		return new Promise<T>((resolve: Function, reject: Function) => {
-			
-			if (txModelOptions.requireAuthorization) {
-				this.isCreateAuthorized(txModelOptions.authorization, reject);	
-			}
-		
+			this.isCreateAuthorized(txModelOptions, reject);
 			newDocument.save((err: Error, savedDoc: any) => {
 				if (err) {
 					reject(err);
@@ -47,11 +43,7 @@ export abstract class BaseService<T extends BaseDto> {
 	updateOne(data: T, newOptions: ModelOptions = {}): Promise<T> {	
 		const txModelOptions = this.obtainTransactionModelOptionsAndAddData(data, newOptions);
 		return new Promise<T>((resolve: Function, reject: Function) => {
-			
-			if (txModelOptions.requireAuthorization) {
-				this.isUpdateAuthorized(txModelOptions.authorization, reject, data);
-			}
-			
+			this.isUpdateAuthorized(txModelOptions, reject, data);
 			this.Model.findById(data._id, (err: Error, foundDoc: any) => {
 				if (err) {
 					reject(err);
@@ -80,9 +72,7 @@ export abstract class BaseService<T extends BaseDto> {
 	removeOneById(id: string, newOptions: ModelOptions = {}): Promise<T> {
 		return new Promise<T>((resolve: Function, reject: Function) => {	
 			const txModelOptions = this.obtainTransactionModelOptions(newOptions);
-			if (txModelOptions.requireAuthorization) {
-				this.isRemoveAuthorized(txModelOptions.authorization, reject);
-			}
+			this.isRemoveAuthorized(txModelOptions, reject);
 			this.Model.findById(id).populate(txModelOptions.population).exec((err: Error, foundDoc: any) => {
 				if (err) {
 					reject(err);
@@ -92,9 +82,7 @@ export abstract class BaseService<T extends BaseDto> {
 					reject(new Error("Object could not be found"));
 					return;
 				}
-				if (txModelOptions.requireAuthorization) {
-					this.isRemoveAuthorizedExecution(txModelOptions.authorization, reject, foundDoc);
-				}
+				this.isRemoveAuthorizedExecution(txModelOptions, reject, foundDoc);
 				foundDoc.remove((err: Error) => {
 					if (err) {
 						reject(err);
@@ -109,9 +97,7 @@ export abstract class BaseService<T extends BaseDto> {
 	removeByFilter(data: T, newOptions: ModelOptions = {}): Promise<T[]> {
 		const txModelOptions = this.obtainTransactionModelOptionsAndAddData(data, newOptions);
 		return new Promise<T[]>((resolve: Function, reject: Function) => {
-			if (txModelOptions.requireAuthorization) {
-				this.isRemoveAuthorized(txModelOptions.authorization, reject);
-			}
+			this.isRemoveAuthorized(txModelOptions, reject);
 			this.Model.find(ObjectUtil.createFilter(data)).populate(txModelOptions.population)
 			.exec((err, foundObjs) => {
 				if (err) {
@@ -132,11 +118,8 @@ export abstract class BaseService<T extends BaseDto> {
 	find(data: T, newOptions: ModelOptions = {}): Promise<T[]> {
 		const txModelOptions = this.obtainTransactionModelOptionsAndAddData(data, newOptions);
 		return new Promise<T[]>((resolve: Function, reject: Function) => {
-			if (txModelOptions.requireAuthorization) {
-				this.isSearchAuthorized(txModelOptions.authorization, reject);
-			}
+			this.isSearchAuthorized(txModelOptions, reject);
 			const search = this.obtainSearchExpression(data, txModelOptions);
-			console.log("search " + JSON.stringify(search));
 			this.Model.find(search, txModelOptions.projection,
 			 { sort: '-createdAt', lean: true }).populate(txModelOptions.population)
 			.exec((err, foundObjs) => {
@@ -153,9 +136,7 @@ export abstract class BaseService<T extends BaseDto> {
 	findOneById(id: string, newOptions: ModelOptions = {}): Promise<T> {
 		const txModelOptions = this.obtainTransactionModelOptions(newOptions);
 		return new Promise<T>((resolve: Function, reject: Function) => {
-			if (txModelOptions.requireAuthorization) {
-				this.isSearchAuthorized(txModelOptions.authorization, reject);
-			}
+			this.isSearchAuthorized(txModelOptions, reject);
 			this.Model.findById(id, txModelOptions.projection, { lean: true }).populate(txModelOptions.population)
 			.exec((err, foundObj) => {
 				if (err) {
@@ -174,11 +155,9 @@ export abstract class BaseService<T extends BaseDto> {
 	exist(data: T, newOptions: ModelOptions = {}): Promise<boolean> {
 		const txModelOptions = this.obtainTransactionModelOptionsAndAddData(data, newOptions);
 		return new Promise<boolean>((resolve: Function, reject: Function) => {
-			
 			if (Object.keys(data).length < 1) {
 				reject(new Error('At least one filter value should be specified'));
 			}
-			
 			this.Model.findOne(ObjectUtil.createFilter(data, false), null, { sort: '-createdAt', lean: true })
 			.exec((err, foundObj) => {
 				if (err) {
@@ -193,9 +172,7 @@ export abstract class BaseService<T extends BaseDto> {
 	findOne(data: T, newOptions: ModelOptions = {}): Promise<T[]> {
 		const txModelOptions = this.obtainTransactionModelOptionsAndAddData(data, newOptions);
 		return new Promise<T[]>((resolve: Function, reject: Function) => {
-			if (txModelOptions.requireAuthorization) {
-				this.isSearchAuthorized(txModelOptions.authorization, reject);
-			}			
+			this.isSearchAuthorized(txModelOptions, reject);			
 			const search = this.obtainSearchExpression(data, txModelOptions);
 			if (Object.keys(search).length < 1) {
 				reject(new Error('At least one filter value should be specified'));
@@ -219,9 +196,7 @@ export abstract class BaseService<T extends BaseDto> {
 	findDistinct(data: T, newOptions: ModelOptions = {}): Promise<string[]> {
 		const txModelOptions = this.obtainTransactionModelOptionsAndAddData(data, newOptions);
 		return new Promise<string[]>((resolve: Function, reject: Function) => {
-			if (txModelOptions.requireAuthorization) {
-				this.isSearchAuthorized(txModelOptions.authorization, reject);
-			}
+			this.isSearchAuthorized(txModelOptions, reject);
 			const search = this.obtainSearchExpression(data);
 			this.Model.find(search).distinct(txModelOptions.distinct)
 			.exec((err, foundObjs) => {
@@ -238,7 +213,6 @@ export abstract class BaseService<T extends BaseDto> {
 		const transactionOptions: ModelOptions = {};
 		ObjectUtil.merge(transactionOptions, this.options); 
 		ObjectUtil.merge(transactionOptions, newOptions);
-		console.log("transaccion options " + JSON.stringify(transactionOptions));
 		return transactionOptions;
 	}
 	
@@ -246,7 +220,6 @@ export abstract class BaseService<T extends BaseDto> {
 		const transactionOptions: ModelOptions = this.obtainTransactionModelOptions(newOptions);
 		ObjectUtil.merge(data, transactionOptions.additionalData); // Adds additionalData if specified
 		this.copySignificantAuthorizationData(data, transactionOptions);
-		
 		return transactionOptions;
 	}
 	
@@ -264,58 +237,62 @@ export abstract class BaseService<T extends BaseDto> {
 	}
 	
 	protected copySignificantAuthorizationData(data: T, modelOptions: ModelOptions = {}): void {
-		console.log("copying authorization data in baseservice");
 	}
 	
 	protected isCreateAuthorized(modelOptions: ModelOptions = {}, reject: Function, data?: T): void {
-		console.log("evaluating authorization for create");
-		
-		if (this.existUser(modelOptions.authorization)) {
-			reject(new Error("Unauthorized user"));
+		if (modelOptions.requireAuthorization) {
+			if (!this.existUser(modelOptions.authorization)) {
+				reject(new Error("Unauthorized user"));
+			}
 		}
-		return;
 	}
 	
 	protected isUpdateAuthorized(modelOptions: ModelOptions = {}, reject: Function, data?: T): void {
-		console.log("evaluating authorization for update");
-		
-		if (this.existUser(modelOptions.authorization)) {
-			reject(new Error("Unauthorized user"));
+		if (modelOptions.requireAuthorization) {
+			if (!this.existUser(modelOptions.authorization)) {
+				reject(new Error("Unauthorized user"));
+			}
 		}
-		return;
 	}
 	
 	protected isRemoveAuthorized(modelOptions: ModelOptions = {}, reject: Function, data?: T): void {
-		console.log("evaluating authorization for remove");
-	
-		if (this.existUser(modelOptions.authorization)) {
-			reject(new Error("Unauthorized user"));
+		if (modelOptions.requireAuthorization) {
+			if (!this.existUser(modelOptions.authorization)) {
+				reject(new Error("Unauthorized user"));
+			}
 		}
-		return;
 	}
 	
 	protected isSearchAuthorized(modelOptions: ModelOptions = {}, reject: Function, data?: T): void {
-		console.log("evaluating authorization for search");
-		
-		if (this.existUser(modelOptions.authorization)) {
-			reject(new Error("Unauthorized user"));
+		if (modelOptions.requireAuthorization) {
+			if (!this.existUser(modelOptions.authorization)) {
+				reject(new Error("Unauthorized user"));
+			}
 		}
-		return;
 	}
 		
 	protected isUpdateAuthorizedExecution(modelOptions: ModelOptions = {}, reject: Function, data?: T): void {
-		console.log("evaluating authorization for update execution");
-		return;
 	}
 	
 	protected isRemoveAuthorizedExecution(modelOptions: ModelOptions = {}, reject: Function, data?: T): void {
-		console.log("evaluating authorization for remove execution");
-		return;
 	}
 	
-	private existUser(authorization: AuthorizationData): boolean {
-		if (ObjectUtil.isBlank(authorization) || ObjectUtil.isBlank(authorization.organizationMember) || 
-			ObjectUtil.isBlank(authorization.organizationMember.user)) {
+	protected existUser(authorization: AuthorizationData): boolean {
+		if (ObjectUtil.isBlank(authorization) || ObjectUtil.isBlank(authorization.user)) {
+			return false;
+		}
+		return true;
+	}
+	
+	protected existOrganizationMember(authorization: AuthorizationData): boolean {
+		if (ObjectUtil.isBlank(authorization) || ObjectUtil.isBlank(authorization.organizationMember)) {
+			return false;
+		}
+		return true;
+	}
+	
+	protected existLeadMember(authorization: AuthorizationData): boolean {
+		if (ObjectUtil.isBlank(authorization) || ObjectUtil.isBlank(authorization.leadMember)) {
 			return false;
 		}
 		return true;

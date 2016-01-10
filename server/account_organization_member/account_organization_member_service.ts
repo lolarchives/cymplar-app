@@ -10,13 +10,15 @@ export class AccountOrganizationMemberService extends BaseService<AccountOrganiz
 	}
 		
 	copySignificantAuthorizationData(data: AccountOrganizationMember, modelOptions: ModelOptions = {}): void {
-		const authorization: AuthorizationData = modelOptions.authorization;
-		if (ObjectUtil.isPresent(authorization) && ObjectUtil.isPresent(authorization.organizationMember)) {
+		if (!modelOptions.copyAuthorizationData) {
+			return;
+		}
+		const authorization: AuthorizationData = modelOptions.authorization; 
+		if (ObjectUtil.isPresent(authorization) && ObjectUtil.isPresent(authorization.user)) {
 			if (modelOptions.copyAuthorizationData) {
-				data.user = authorization.organizationMember.user;	
+				data.user = authorization.user;	
 			}
 		}
-		return;
 	}
 	
 	protected obtainComplexAuthorizationSearchExpression(data: AccountOrganizationMember, authorization: AuthorizationData = {}): any {
@@ -24,31 +26,39 @@ export class AccountOrganizationMemberService extends BaseService<AccountOrganiz
 			createdBy: { $exists: true },
 			_id: {$ne: authorization.organizationMember._id}
 		};
-			 
 		return complexSearch;	
 	}
 	
-	isUpdateAuthorized(authorization: AuthorizationData, reject: Function) {
-		super.isUpdateAuthorized(authorization, reject);
-		if (ObjectUtil.isBlank(authorization.organizationMember.role)) {
+	isUpdateAuthorized(modelOptions: ModelOptions = {}, reject: Function) {
+		if (!modelOptions.requireAuthorization) {
+			return;
+		}
+		const authorization: AuthorizationData = modelOptions.authorization;
+		super.isUpdateAuthorized(modelOptions, reject);
+		if (ObjectUtil.isBlank(authorization.organizationMember) && ObjectUtil.isBlank(authorization.organizationMember.role)) {
 			reject(new Error("Unauthorized user aoms"));
 		}
 		return;
 	}
 	
-	isSearchAuthorized(authorization: AuthorizationData, reject: Function) {
-		super.isSearchAuthorized(authorization, reject);
-		if (ObjectUtil.isBlank(authorization.organizationMember.role)) {
+	isSearchAuthorized(modelOptions: ModelOptions = {}, reject: Function) {
+		if (!modelOptions.requireAuthorization) {
+			return;
+		}
+		const authorization: AuthorizationData = modelOptions.authorization;
+		super.isSearchAuthorized(modelOptions, reject);
+		if (ObjectUtil.isBlank(authorization.organizationMember) && ObjectUtil.isBlank(authorization.organizationMember.role)) {
 			reject(new Error("Unauthorized user aoms"));
 		}
 		return;
 	}
 	
 	protected isUpdateAuthorizedExecution(modelOptions: ModelOptions = {}, reject: Function, data?: AccountOrganizationMember): void {
+		if (!modelOptions.requireAuthorization) {
+			return;
+		}
 		const authorization: AuthorizationData = modelOptions.authorization;
-		
-		if (authorization.organizationMember._id === data._id ||
-			(ObjectUtil.isPresent(authorization.organizationMember.role) && authorization.organizationMember.role['grantUpdate'])) {
+		if (authorization.organizationMember._id === data._id && authorization.organizationMember.role['grantUpdate']) {
 			return;
 		}
 		
@@ -56,10 +66,11 @@ export class AccountOrganizationMemberService extends BaseService<AccountOrganiz
 	}
 	
 	protected isRemoveAuthorizedExecution(modelOptions: ModelOptions = {}, reject: Function, data?: AccountOrganizationMember): void {
+		if (!modelOptions.requireAuthorization) {
+			return;
+		}
 		const authorization: AuthorizationData = modelOptions.authorization;
-		
-		if (authorization.organizationMember._id === data._id ||
-			(ObjectUtil.isBlank(authorization.organizationMember.role) && authorization.organizationMember.role['grantDelete'])) {
+		if (authorization.organizationMember._id === data._id && authorization.organizationMember.role['grantDelete']) {
 			return;
 		}
 		

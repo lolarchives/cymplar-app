@@ -121,6 +121,7 @@ export interface SignUp extends BaseDto {
 export interface LogIn extends BaseDto {
   username: string;
   password: string;
+  organization: string;
 }
 
 export interface AuthenticationResponse {
@@ -168,6 +169,7 @@ export interface SalesLeadOrganizationMember extends BaseDto {
 }
 
 export interface AuthorizationData {
+  user?: AccountUser;
   organizationMember?: AccountOrganizationMember;
   leadMember?: SalesLeadOrganizationMember;
 }
@@ -182,6 +184,7 @@ export interface ModelOptions {
   authorization?: AuthorizationData;
   requireAuthorization?: boolean;
   copyAuthorizationData?: boolean;
+  copyOptionalAuthorizationData?: boolean;
   specialAuthorizationDataSearch?: boolean;
 }
 

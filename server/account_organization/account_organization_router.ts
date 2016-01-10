@@ -8,8 +8,7 @@ const router = express.Router();
 
 router.post('/', (req, res) => {
   const modelOptions: ModelOptions = {
-    authorization: getAuthorizationData(req),
-    copyAuthorizationData: true
+    authorization: getAuthorizationData(req)
   };
   accountOrganizationService.createOneWithMember(req.body, modelOptions)
     .then((organization: AccountOrganization) => formatSend(res, organization), (err) => sendError(res, err));

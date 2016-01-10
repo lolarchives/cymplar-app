@@ -21,20 +21,17 @@ export class SalesLeadService extends BaseService<SalesLead> {
 		return new Promise<SalesLead>((fulfill: Function, reject: Function) => {
 			super.createOne(data, newOptions)
 			.then((salesLead: SalesLead) => {
-				console.log("sales lead craeated" + JSON.stringify(salesLead));
 				createdSalesLead = salesLead;
 				const chainCreationModelOptions: ModelOptions = {
 					requireAuthorization: false, // As it is a creation in chain the authorization validation can be skipped
 					authorization: newOptions.authorization
 				};
-				
 				const toAssociate: any = [this.associateOrganization(createdSalesLead, chainCreationModelOptions), 
 							   this.associateContact(createdSalesLead, chainCreationModelOptions, data.contact)];
 							   
 				return Promise.all(toAssociate); 
 			})
 			.then((results: any) => {
-				console.log("sales lead results" + JSON.stringify(results));
 				const leadOrganization: SalesLeadOrganization = results[0];
 				const leadContact: SalesLeadContact = results[1];
 				const membersCreationModelOptions: ModelOptions = {
@@ -47,7 +44,6 @@ export class SalesLeadService extends BaseService<SalesLead> {
 				fulfill(createdSalesLead); 
 			})
 			.catch((err) => {
-				console.log("sales lead error" + JSON.stringify(err));
 				if (ObjectUtil.isPresent(createdSalesLead._id)) {
 					this.removeOneById(createdSalesLead._id);
 				} 
@@ -63,11 +59,8 @@ export class SalesLeadService extends BaseService<SalesLead> {
 				lead: data,
 				organization: options.authorization.organizationMember.organization
 			};
-			
 			salesLeadOrganizationService.createOne(leadOrganization, options)
-			.then((createdLeadOrganization: SalesLeadOrganization) => { 	
-				
-			console.log("organization" + JSON.stringify(createdLeadOrganization));	
+			.then((createdLeadOrganization: SalesLeadOrganization) => { 
 				fulfill(createdLeadOrganization); 
 			})
 			.catch((err) => {

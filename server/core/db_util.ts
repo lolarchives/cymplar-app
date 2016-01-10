@@ -36,7 +36,6 @@ export class DatabaseObjectUtil {
 			
 			Promise.all(promises)
 			.then((results: any) => {
-				console.log(" removing array " + JSON.stringify(data));
 				resolve(results);
 			})
 			.catch((err: any) => {

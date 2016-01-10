@@ -308,6 +308,23 @@ schemas.accountUser.pre('remove', function(next: Function) {
   });
 });
 
+schemas.accountUser.pre('remove', function(next: Function) {
+  const obj: Document = this;
+  AddressBookGroupModel.find({ createdBy: obj['_id'] })
+	.exec((err: any, removedObjs: any) => {
+    if (err) {
+        next(err);
+    }
+    DatabaseObjectUtil.removeArrayPromise(removedObjs)
+    .then((results: Document[]) => {
+      next();
+    })
+    .catch((err: Error) => {
+      next(err);
+    });
+  });
+});
+
 schemas.accountOrganizationMember.pre('save', function(next: Function) {
   const obj: Document = this;
   
@@ -332,7 +349,6 @@ schemas.accountOrganizationMember.pre('save', function(next: Function) {
 
 schemas.accountOrganizationMember.pre('remove', function(next: Function) {
   const obj: Document = this;
-  
   // Checks in which leads this member is participating
   const query = {
       member: obj['_id'] 
@@ -355,12 +371,11 @@ schemas.accountOrganizationMember.pre('remove', function(next: Function) {
 
 schemas.accountOrganizationMember.pre('remove', function(next: Function) {
   const obj: Document = this;
-  
   if (obj['role']['grantDelete'] && ObjectUtil.isPresent(obj['organization']['_id'])) {
   
   const query = {
       organization: obj['organization'], 
-      'role.delete': true,
+      'role.grantDelete': true,
       _id: { $ne: obj['_id'] } 
     };
     
@@ -443,7 +458,6 @@ schemas.salesLead.pre('remove', function(next: Function) {
     if (err) {
         next(err);
     }
-    
     DatabaseObjectUtil.removeArrayPromise(removedObjs, [{name: 'triggeredByParent', value: true}])
     .then((results: Document[]) => {
       next();
@@ -471,7 +485,6 @@ schemas.salesLeadOrganization.pre('remove', function(next: Function) {
 
 schemas.salesLeadContact.pre('remove', function(next: Function) {
   const obj = this;
-  
   if (ObjectUtil.isPresent(obj['triggeredByParent']) && obj['triggeredByParent'] === true) {
     next();  
   } 
@@ -496,14 +509,13 @@ schemas.salesLeadContact.pre('remove', function(next: Function) {
 });
 
 schemas.salesLeadContact.pre('remove', function(next: Function) {
-  const obj = this;  
+  const obj = this;
   AddressBookContactModel.find(obj.contact).populate('group')
-  .exec((err: any, foundDoc: any) => {
+  .exec((err: any, foundDoc: Document) => {
     if (err) {
       next(err);
     }
-    
-    if (ObjectUtil.isBlank(foundDoc.group)) {
+    if (ObjectUtil.isBlank(foundDoc['group'])) {
       foundDoc.remove((err: Error) => {
           if (err) {
             next(err);
@@ -519,14 +531,14 @@ schemas.salesLeadContact.pre('remove', function(next: Function) {
 schemas.salesLeadOrganizationMember.pre('remove', function(next: Function) {
   const obj: Document = this;
   
-  if (obj['role']['delete'] === false) {
+  if (obj['role']['grantDelete'] === false) {
     next();
   }
   
   // Check whether there are more members participating as owners
   const query = {
       member: { $ne: obj['_id'] },
-      'role.delete': true,
+      'role.grantDelete': true,
       'organizationlead.organization': obj['organization'] 
   };
     
