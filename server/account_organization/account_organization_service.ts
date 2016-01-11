@@ -22,7 +22,7 @@ export class AccountOrganizationService extends BaseService<AccountOrganization>
 				if (idOrg.indexOf(id) < 0) {
 					reject(new Error("This user does not have access to this organization"));
 				}
-				return this.findOneById(id, newOptions);
+				return super.findOneById(id, newOptions);
 			})
 			.then((accountOrganization: AccountOrganization) => {
 				resolve(accountOrganization);
