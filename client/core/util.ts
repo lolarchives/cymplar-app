@@ -29,7 +29,7 @@ export class ObjectUtil {
 	static isBlank(data: any): boolean {
 		return data === undefined || data === null;
 	}
-	
+
 	static createFilter(data = {}, regExp = true): any {
 		
 		//TODO Consult if it should be moved to the server folder in order to use mongoose types
@@ -38,14 +38,18 @@ export class ObjectUtil {
 		
 		// Regular expresion to simplify the search
 		for (const entry in data) {
-		    if (ObjectUtil.isPresent(data[entry])) {
+
+		    if (ObjectUtil.isPresent(data[entry]) && entry !== 'ido' && entry !== 'idl') {
 		    	if (regExp && typeof data[entry] === 'string' && !regObjId.test(data[entry])) {
 					filters[entry] = new RegExp(data[entry], 'i');
-		    	} else {
-		    		filters[entry] = data[entry];
-		    	}
-		    } 
+				} else {
+					filters[entry] = data[entry];
+				}
+			}
 		}
+		
 		return filters;
 	}
+
 }
+

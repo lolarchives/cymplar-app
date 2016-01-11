@@ -8,60 +8,38 @@ import {ObjectUtil} from '../../client/core/util';
 import {loginService} from '../login/login_service';
 import {accountUserService} from '../account_user/account_user_service';
 import {accountOrganizationService} from '../account_organization/account_organization_service';
-import {accountOrganizationMemberService} from '../account_organization_member/account_organization_member_service';
-import {SignUp, AccountUser, AccountOrganization, AccountOrganizationMember} from '../../client/core/dto';
+import {SignUp, AccountUser, AccountOrganization, ModelOptions} from '../../client/core/dto';
 
 
 export class SignupService {
 
-	createOne(data: SignUp = {}): Promise<string> {
-
-		let creationHistory: any = {};
-
+	createOne(data: SignUp = {}, options: ModelOptions = {}): Promise<string> {
+		
 		return new Promise<string>((fulfill: Function, reject: Function) => {
-	
-		accountUserService.createOne(data.user)
+
+		options.requireAuthorization = false; // As it doesn't need authorization validation it can be skipped
+				
+		accountUserService.createOne(data.user, options)
 		.then((accountUser: AccountUser) => {
-								creationHistory.user = accountUser;
-								data.organization.createdBy = creationHistory.user._id;
-								return accountOrganizationService.createOne(data.organization); 
-								})
+			data.organization.createdBy = accountUser;
+			data.organizationMember.user = accountUser;
+			return accountOrganizationService.createOneWithMember(data, options); 
+		})
 		.then((accountOrganization: AccountOrganization) => { 
-												creationHistory.organization = accountOrganization;
-												return this.createOrganizationMember(accountOrganization, data.organizationMember, 
-																			creationHistory.user); })
-		.then((accountMember: AccountOrganizationMember) => { creationHistory.member = accountMember;
-										const response = { 
-											init: creationHistory.organization._id,
-											token: loginService.getToken(creationHistory.user)
-										};
-										
-										fulfill(response); 
-									})
+			const response = { 
+				init: accountOrganization._id,
+				token: loginService.getToken(data.organization.createdBy)
+			};
+			fulfill(response); 
+		})
 		.catch((err) => {
-							if (creationHistory.member) {
-							accountOrganizationMemberService.removeOneById(creationHistory.member._id);
-							}
-	
-							if (creationHistory.organization) {
-							accountOrganizationService.removeOneById(creationHistory.organization._id);
-							} 
-	
-							if (creationHistory.user) {
-							accountUserService.removeOneById(creationHistory.user._id);
-							} 
-						reject(err); 
-						});
+			if (ObjectUtil.isPresent(data.organization.createdBy)) {
+				accountUserService.removeOneById(data.organization.createdBy._id, options);
+			} 
+			reject(err); 
+			});
 		});
 	}
-	
-	private createOrganizationMember(organization: AccountOrganization, 
-		member: AccountOrganizationMember, user: AccountUser): Promise<AccountOrganizationMember> {
-		member.user = user._id;
-		member.organization = organization._id;
-		return accountOrganizationMemberService.createOne(member);
-	}
-
 }
  
 export const signupService = new SignupService();

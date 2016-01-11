@@ -16,6 +16,9 @@ import * as ts from 'gulp-typescript';
 import * as sourcemaps from 'gulp-sourcemaps';
 import * as ngAnnotate from 'gulp-ng-annotate';
 import * as rename from 'gulp-rename';
+import autoPrefixer = require('gulp-autoprefixer');
+
+//autoPrefixer;
 
 import {PATH, APP_BASE, LIVE_RELOAD_PORT} from './tools/config';
 import {
@@ -57,6 +60,13 @@ gulp.task('csslib.build', () =>
     .pipe(gulp.dest(PATH.dest.app.lib))
 );
 
+
+gulp.task('css.watch', ['css.build'], () =>
+  gulp.watch(PATH.src.css, (evt) =>
+    runSequence('css.build', () => notifyLiveReload([evt.path]))
+  )
+);
+
 gulp.task('font.build', () =>
   gulp.src(PATH.src.font)
     .pipe(gulp.dest(PATH.dest.app.font))
@@ -71,12 +81,30 @@ gulp.task('jslib.build', () => {
 gulp.task('css.build', () =>
   gulp.src(PATH.src.css)
     .pipe(sass().on('error', sass.logError))
+        .pipe(autoPrefixer({
+			browsers: ['last 2 versions'],
+			cascade: false
+		}))
     .pipe(gulp.dest(PATH.dest.app.client))
 );
 
 gulp.task('css.watch', ['css.build'], () =>
   gulp.watch(PATH.src.css, (evt) =>
     runSequence('css.build', () => notifyLiveReload([evt.path]))
+  )
+);
+
+
+
+
+gulp.task('img.build', () =>
+  gulp.src(PATH.src.img)
+    .pipe(gulp.dest(PATH.dest.app.img))
+);
+
+gulp.task('img.watch', ['img.build'], () =>
+  gulp.watch(PATH.src.img, (evt) =>
+    runSequence('img.build', () => notifyLiveReload([evt.path]))
   )
 );
 
@@ -147,7 +175,9 @@ gulp.task('build', ['clean'], (done: gulp.TaskCallback) =>
       'csslib.build',
       'font.build',
       'jslib.build',
+     
       'css.build',
+      'img.build',
       'tpl.build',
       'jslint',
       'js.build'
@@ -162,7 +192,9 @@ gulp.task('build.watch', ['clean'], (done: gulp.TaskCallback) =>
       'csslib.build',
       'font.build',
       'jslib.build',
+ 
       'css.watch',
+      'img.watch',
       'tpl.watch',
       'jslint.watch',
       'js.watch',
