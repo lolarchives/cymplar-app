@@ -7,6 +7,7 @@ import './components/login/login';
 import './components/login/login.service';
 import './components/helper/helper';
 import './components/helper/progressBar';
+import './components/auth/auth.service'
 
 declare var moment: moment.MomentStatic;
 
@@ -31,7 +32,7 @@ namespace app {
         }
 
       }
-      console.log(AuthToken.isLoggedIn());
+      
     });
     
     // It's very handy to add references to $state and $stateParams to the $rootScope
@@ -69,8 +70,23 @@ namespace app {
         controller: 'MainController',
         controllerAs: 'main',
         resolve: {
-          user: function($http: angular.IHttpService){
-            return {};
+          user: function($http: angular.IHttpService, AuthToken: any) {
+            return $http.get('/api/account-user/_find').then(function(response) {
+             
+              return response.data; 
+            });
+          },
+          organization: function($http: angular.IHttpService, AuthToken: any) {
+            return $http.get('/api/account-organization/' + AuthToken.getIdO()).then(function(response) {
+         
+              return response.data; 
+            });
+          },
+          organization_member: function($http: angular.IHttpService, AuthToken: any) {
+            return $http.get('/api/account-organization-member/_find?ido=' + AuthToken.getIdO()).then(function(response) {
+              
+              return response.data; 
+            });
           }
         }
       });

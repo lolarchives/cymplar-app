@@ -14,12 +14,12 @@ namespace progressBar {
 			}) ;
 			
 			$scope.$on('$stateChangeSuccess', (event: any, toState: any, toParams: any, fromState: any, fromParams: any) => {
-				console.log('success',toState);
+			
 				this.progressValue = 100;
 				this.type = 'success';
-				$timeout(() =>{
+				$timeout(() => {
 						this.loading = false;
-				},700)
+				}, 700);
 			}) ;
 			$scope.$on('$stateChangeError', (event: any, toState: any, toParams: any, fromState: any, fromParams: any) => {
 				this.progressValue = 50;

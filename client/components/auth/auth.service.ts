@@ -21,7 +21,7 @@ namespace AuthServices {
 				this.$cookies.remove('ido');
 			}
 		}
-		getIdoO(): any {
+		getIdO(): any {
 			return this.$cookies.get('ido');
 		}
 		isLoggedIn(): boolean {
@@ -35,7 +35,7 @@ namespace AuthServices {
 		AuthInterceptorFactory["request"] = (config: any): any => {
 			let token = AuthToken.getToken();
 			if (token) {
-				config.headers['Authentication'] = token;
+				config.headers['Authorization'] = "Bearer "+token;
 			};
 			return config;
 		}
