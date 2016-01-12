@@ -54,7 +54,7 @@ router.get('/_login', (req, res) => {
     regularExpresion: false,
     projection: '_id',
     requireAuthorization: false
-  };
+};
   accountOrganizationService.findOne(req.query, modelOptions)
     .then((organization: AccountOrganization) => formatSend(res, organization), (err) => sendError(res, err));
 });

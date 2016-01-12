@@ -1,4 +1,4 @@
-﻿import {AddressBookGroup, AddressBookContact, AccountUser, ModelOptions, AuthorizationData} from '../../client/core/dto';
+import {AddressBookGroup, AddressBookContact, AccountUser, ModelOptions, AuthorizationData} from '../../client/core/dto';
 import {AddressBookGroupModel} from '../core/model';
 import {BaseService} from '../core/base_service';
 import {addressBookContactService} from '../address_book_contact/address_book_contact_service';

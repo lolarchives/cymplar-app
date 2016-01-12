@@ -46,6 +46,7 @@ export class ObjectUtil {
 				}
 			}
 		}
+		
 		return filters;
 	}
 

@@ -1,0 +1,117 @@
+<div class="margin-b-xl">
+	<h3 class="margin-n"><strong>Sign up</strong></h3>
+	<p class="margin-b-n">Final step</p>
+</div>
+
+<div class="progress margin-b-xl">
+	<div class="progress-bar" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: 99%;">3/3</div>
+</div>
+
+<p class="margin-b-l"><strong class="text-danger">*</strong> required fields</p>
+
+<form class="form-horizontal" name="finalStepForm" ng-submit="suCtrl.submitFinalSep(finalStepForm)">
+	<div class="form-group">
+		<div class="col-md-5 control-label">
+			<label for="organizationIndustry" class="margin-b-n"><strong class="text-danger">*</strong> Organisation Industry</label>
+		</div>
+		<div class="col-md-7">
+			<select class="form-control" id="organizationIndustry" name="organizationIndustry" ng-options="industry._id as industry.description for industry in suCtrl.industries" ng-model="suCtrl.signUpDetails.industryType" required>
+				<option value=""></option>
+			</select>
+		</div>
+	</div>
+	<!--form-group-->
+	<div class="form-group">
+		<div class="col-md-5 control-label">
+			<label for="companyDescription" class="margin-b-n"><strong class="text-danger">*</strong> Company Description</label>
+		</div>
+		<div class="col-md-7">
+			<input type="text" class="form-control" id="companyDescription" name="companyDescription" ng-model="suCtrl.signUpDetails.description">
+		</div>
+	</div>
+	<!--form-group-->
+	<div class="form-group">
+		<div class="col-md-5 control-label">
+			<label for="team" class="margin-b-n">How big is your team?</label>
+		</div>
+		<div class="col-md-7">
+			<input type="number" class="form-control" id="team" name="team" ng-model="suCtrl.signUpDetails.team">
+		</div>
+	</div>
+	
+
+	<!--form-group-->
+	<div class="form-group">
+		<div class="col-md-5 control-label">
+			<label for="web" class="margin-b-n">Website</label>
+		</div>
+		<div class="col-md-7">
+			<input type="text" class="form-control" id="web" name="web" ng-model="suCtrl.signUpDetails.web">
+		</div>
+	</div>
+	<!--form-group-->
+	<div class="form-group">
+		<div class="col-md-5 control-label">
+			<label for="facebook" class="margin-b-n">Facebook</label>
+		</div>
+		<div class="col-md-7">
+			<input type="text" class="form-control" id="facebook" name="facebook"  ng-model="suCtrl.signUpDetails.facebook">
+		</div>
+	</div>
+	<!--form-group-->
+	<div class="form-group">
+		<div class="col-md-5 control-label">
+			<label for="linkedin" class="margin-b-n">Linkedin</label>
+		</div>
+		<div class="col-md-7">
+			<input type="text" class="form-control" id="linkedin" name="linkedin" ng-model="suCtrl.signUpDetails.linkedin">
+		</div>
+	</div>
+	<!--form-group-->
+	<div class="form-group">
+		<div class="col-md-5 control-label">
+			<label for="twitter" class="margin-b-n">Twitter</label>
+		</div>
+		<div class="col-md-7">
+			<input type="text" class="form-control" id="twitter" name="twitter" ng-model="suCtrl.signUpDetails.twitter">
+		</div>
+	</div>
+	<!--form-group-->
+	<div class="form-group">
+		<div class="col-md-5 control-label">
+			<label for="plus" class="margin-b-n">Plus</label>
+		</div>
+		<div class="col-md-7">
+			<input type="text" class="form-control" id="plus" name="plus" ng-model="suCtrl.signUpDetails.plus">
+		</div>
+	</div>
+	<!--form-group-->
+	<div class="form-group">
+		<div class="col-md-5 control-label">
+			<label for="pinterest" class="margin-b-n">Pinterest</label>
+		</div>
+		<div class="col-md-7">
+			<input type="text" class="form-control" id="pinterest" name="pinterest" ng-model="suCtrl.signUpDetails.pinterest">
+		</div>
+	</div>
+	<!--form-group-->
+	<div class="form-group">
+		<div class="col-md-5 control-label">
+			<label for="dribble" class="margin-b-n">Dribble</label>
+		</div>
+		<div class="col-md-7">
+			<input type="text" class="form-control" id="dribble" name="dribble" ng-model="suCtrl.signUpDetails.dribble">
+		</div>
+	</div>
+	<!--form-group-->
+
+	<div class="row margin-b-xl">
+		<div class="col-xs-6">
+			<button type="button" class="btn btn-default" ng-click="suCtrl.back()">Back</button>
+		</div>
+		<div class="col-xs-6 text-right">
+			<button type="submit" class="btn btn-primary">Done</button>
+		</div>
+	</div>
+
+</form>

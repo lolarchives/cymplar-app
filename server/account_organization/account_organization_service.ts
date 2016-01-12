@@ -9,7 +9,7 @@ export class AccountOrganizationService extends BaseService<AccountOrganization>
 	constructor() {
 		super(AccountOrganizationModel);
 	}
-	
+
 	createOneWithMember(data: SignUp = {}, options: ModelOptions = {}): Promise<AccountOrganization> {
 		return new Promise<AccountOrganization>((fulfill: Function, reject: Function) => {
 		let createdAccountOrganization: AccountOrganization = {};	
@@ -71,7 +71,6 @@ export class AccountOrganizationService extends BaseService<AccountOrganization>
 		member.organization = organization._id;
 		return accountOrganizationMemberService.createOne(member, options);
 	}
-	
 }
 
 export const accountOrganizationService = new AccountOrganizationService();

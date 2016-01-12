@@ -50,6 +50,7 @@ export const PATH = {
       `${CLIENT_SRC_BASE}/system.config.js`,
       slash(resolve('moment/moment.js')),
       slash(resolve(`angular/angular.js`)),
+      slash(resolve(`angular-resource/angular-resource.js`)),
       `${BC}/angular-bootstrap/ui-bootstrap.js`,
       `${BC}/angular-bootstrap/ui-bootstrap-tpls.js`,
       slash(resolve(`angular-ui-router/build/angular-ui-router.js`)),
@@ -74,7 +75,10 @@ export const PATH = {
       slash(resolve('bootstrap/dist/fonts/glyphicons-halflings-regular.svg')),
       slash(resolve('bootstrap/dist/fonts/glyphicons-halflings-regular.ttf')),
       slash(resolve('bootstrap/dist/fonts/glyphicons-halflings-regular.woff')),
-      slash(resolve('bootstrap/dist/fonts/glyphicons-halflings-regular.woff2'))
+      slash(resolve('bootstrap/dist/fonts/glyphicons-halflings-regular.woff2')),
+    ],
+    img: [
+      `${CLIENT_SRC_BASE}/assets/img/**/*.*`,
     ],
     index: `${CLIENT_SRC_BASE}/index.html`,
     tpl: [
@@ -90,6 +94,7 @@ export const PATH = {
       base: DIST_BASE,
       lib: `${DIST_BASE}/lib`,
       font: `${DIST_BASE}/fonts`,
+      img: `${DIST_BASE}/img`,
       client: `${CLIENT_DEST_BASE}`
     },
     test: 'test',
