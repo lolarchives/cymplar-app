@@ -17,7 +17,7 @@ export class AddressBookGroupService extends BaseService<AddressBookGroup> {
 			.then((groups: AddressBookGroup[]) => {
 				const promises: Promise<AddressBookGroup>[] = [];
 				for (let i = 0; i < groups.length; i++) {
-					promises.push(this.loadGroup(groups[i]));
+					promises.push(this.loadGroup(groups[i], options));
 				}
 				return Promise.all(promises);
 			})
@@ -37,13 +37,19 @@ export class AddressBookGroupService extends BaseService<AddressBookGroup> {
 		}
 	}
 	
-	private loadGroup(data: AddressBookGroup): Promise<AddressBookGroup> {
+	private loadGroup(data: AddressBookGroup,  modelOptions: ModelOptions = {}): Promise<AddressBookGroup> {
 		const groupToSend: AddressBookGroup = data;
 		return new Promise<AddressBookGroup>((fulfill: Function, reject: Function) => {
-			const modelOptions: ModelOptions = { requireAuthorization: false };
-			addressBookContactService.find({ group: groupToSend._id }, modelOptions)
-			.then((contacts: AddressBookContact[]) => {
-				groupToSend.contacts = contacts;
+			const childrenModelOptions: ModelOptions = {
+				requireAuthorization: false,
+				authorization: modelOptions.authorization
+			};
+			const toLoad: any = [countryService.findOneById(groupToSend.city.country, childrenModelOptions), 
+							   addressBookContactService.find({ group: groupToSend._id }, childrenModelOptions)];
+			Promise.all(toLoad)
+			.then((results: any) => {
+				groupToSend.city.country = results[0];
+				groupToSend.contacts = results[1];
 				fulfill(groupToSend);
 			})
 			.catch((err: any) => {

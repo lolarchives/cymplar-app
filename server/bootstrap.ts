@@ -20,12 +20,6 @@ import * as accountUserRouter from './account_user/account_user_router';
 import * as accountOrganizationRouter from './account_organization/account_organization_router';
 import * as accountOrganizationMemberRouter from './account_organization_member/account_organization_member_router';
 import * as accountMemberRoleRouter from './account_member_role/account_member_role_router';
-import * as salesLeadRouter from './sales_lead/sales_lead_router';
-import * as salesLeadOrganizationRouter from './sales_lead_organization/sales_lead_organization_router';
-import * as salesLeadOrganizationMemberRouter from './sales_lead_organization_member/sales_lead_organization_member_router';
-import * as salesLeadMemberRoleRouter from './sales_lead_member_role/sales_lead_member_role_router';
-import * as salesLeadContactRouter from './sales_lead_contact/sales_lead_contact_router';
-import * as salesLeadStatusRouter from './sales_lead_status/sales_lead_status_router';
 
 const INDEX_DEST_PATH = resolve(PATH.cwd, PATH.dest.app.base, 'index.html');
 
@@ -55,12 +49,6 @@ server.use('/api/account-user', accountUserRouter);
 server.use('/api/account-organization', accountOrganizationRouter);
 server.use('/api/account-organization-member', accountOrganizationMemberRouter);
 server.use('/api/account-organization-member-role', accountMemberRoleRouter);
-server.use('/api/sales-lead', salesLeadRouter);
-server.use('/api/sales-lead-organization', salesLeadOrganizationRouter);
-server.use('/api/sales-lead-organization-member', salesLeadOrganizationMemberRouter);
-server.use('/api/sales-lead-organization-member-role', salesLeadMemberRoleRouter);
-server.use('/api/sales-lead-contact', salesLeadContactRouter);
-server.use('/api/sales-lead-status', salesLeadStatusRouter);
 
 server.all(APP_BASE + '*', (req, res) =>
   res.sendFile(INDEX_DEST_PATH)

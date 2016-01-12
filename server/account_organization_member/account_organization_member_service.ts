@@ -28,52 +28,46 @@ export class AccountOrganizationMemberService extends BaseService<AccountOrganiz
 		};
 		return complexSearch;	
 	}
-	
-	isUpdateAuthorized(modelOptions: ModelOptions = {}, reject: Function) {
-		if (!modelOptions.requireAuthorization) {
-			return;
-		}
+
+	protected evaluateUpdateAuthorization(modelOptions: ModelOptions = {}, reject: Function, data?: AccountOrganizationMember) {
+		super.evaluateUpdateAuthorization(modelOptions, reject);
 		const authorization: AuthorizationData = modelOptions.authorization;
-		super.isUpdateAuthorized(modelOptions, reject);
-		if (ObjectUtil.isBlank(authorization.organizationMember) && ObjectUtil.isBlank(authorization.organizationMember.role)) {
+		if (!this.existsOrganizationMember(authorization) || ObjectUtil.isBlank(authorization.organizationMember.role)) {
 			reject(new Error("Unauthorized user aoms"));
 		}
 		return;
 	}
 	
-	isSearchAuthorized(modelOptions: ModelOptions = {}, reject: Function) {
-		if (!modelOptions.requireAuthorization) {
-			return;
-		}
+
+	protected evaluateSearchAuthorization(modelOptions: ModelOptions = {}, reject: Function, data?: AccountOrganizationMember) {
+		super.evaluateSearchAuthorization(modelOptions, reject);
 		const authorization: AuthorizationData = modelOptions.authorization;
-		super.isSearchAuthorized(modelOptions, reject);
-		if (ObjectUtil.isBlank(authorization.organizationMember) && ObjectUtil.isBlank(authorization.organizationMember.role)) {
+		if (!this.existsOrganizationMember(authorization) || ObjectUtil.isBlank(authorization.organizationMember.role)) {
 			reject(new Error("Unauthorized user aoms"));
 		}
-		return;
 	}
 	
-	protected isUpdateAuthorizedExecution(modelOptions: ModelOptions = {}, reject: Function, data?: AccountOrganizationMember): void {
-		if (!modelOptions.requireAuthorization) {
-			return;
-		}
+	protected evaluateUpdateExecutionAuthorization(modelOptions: ModelOptions = {}, reject: Function, data?: AccountOrganizationMember): void {
 		const authorization: AuthorizationData = modelOptions.authorization;
-		if (authorization.organizationMember._id === data._id && authorization.organizationMember.role['grantUpdate']) {
+		if (!this.existsOrganizationMember(authorization)) {
+			reject(new Error("Unauthorized user in this organization"));	
+		}
+		if (authorization.organizationMember._id === data._id ||
+		 (authorization.organizationMember.role['grantUpdate'])) {
 			return;
 		}
-		
 		reject(new Error("Unauthorized user"));
 	}
 	
-	protected isRemoveAuthorizedExecution(modelOptions: ModelOptions = {}, reject: Function, data?: AccountOrganizationMember): void {
-		if (!modelOptions.requireAuthorization) {
-			return;
-		}
+	protected evaluateRemoveExecutionAuthorization(modelOptions: ModelOptions = {}, reject: Function, data?: AccountOrganizationMember): void {
 		const authorization: AuthorizationData = modelOptions.authorization;
-		if (authorization.organizationMember._id === data._id && authorization.organizationMember.role['grantDelete']) {
+		if (!this.existsOrganizationMember(authorization)) {
+			reject(new Error("Unauthorized user in this organization"));	
+		}
+		if (authorization.organizationMember._id === data._id ||
+		 (authorization.organizationMember.role['grantDelete'])) {
 			return;
 		}
-		
 		reject(new Error("Unauthorized user"));
 	}
 }

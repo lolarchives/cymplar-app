@@ -5,8 +5,7 @@ import * as bcrypt from 'bcrypt';
 import {sendError} from '../core/web_util';
 import {ObjectUtil} from '../../client/core/util';
 import {accountOrganizationMemberService} from '../account_organization_member/account_organization_member_service';
-import {AccountUser, AccountOrganizationMember, SalesLeadOrganizationMember, ModelOptions} from '../../client/core/dto';
-import {salesLeadOrganizationMemberService} from '../sales_lead_organization_member/sales_lead_organization_member_service';
+import {AccountUser, AccountOrganizationMember, ModelOptions} from '../../client/core/dto';
 import {accountUserService} from '../account_user/account_user_service';
 import {AuthorizationData} from '../../client/core/dto';
 
@@ -49,8 +48,7 @@ export class Authentication {
 			
 			//query id_organization (ido), id_lead (idl)
 			const idSessionParams = {
-				ido: (req.query.ido ? req.query.ido : req.body.ido),
-				idl: (req.query.idl ? req.query.idl : req.body.idl)
+				ido: (req.query.ido ? req.query.ido : req.body.ido)
 			};
 			
 			const accountUserModelOptions: ModelOptions = {
@@ -80,33 +78,11 @@ export class Authentication {
 				if (ObjectUtil.isPresent(organizationMember._id)) {
 					req.body.cymplarRole.organizationMember = organizationMember;	
 				}
-				
-				if (ObjectUtil.isPresent(organizationMember._id) && ObjectUtil.isPresent(idSessionParams.idl)) {
-					const leadMemberModelOptions: ModelOptions = {
-						projection: 'role leardOrganization',
-						population: 'role leadOrganization',
-						complexSearch: {
-							'member': organizationMember._id,
-							'leadOrganization.organization': organizationMember.organization,
-							'leadOrganization.lead': idSessionParams.idl
-						},
-						requireAuthorization: false
-					};
-					return salesLeadOrganizationMemberService.findOne({}, leadMemberModelOptions);
-				} else {
-					return Promise.resolve({});
-				}
-			})
-			.then((leadMember: SalesLeadOrganizationMember) => {
-				if (leadMember._id) {
-					req.body.cymplarRole.leadMember = leadMember;	
-				}
 				return next();
 			})
 			.catch((err) => {
 				return next(err);
 			});
-			
 		} catch (err) {
 			return next(new Error("Token could not be verified"));
 		}

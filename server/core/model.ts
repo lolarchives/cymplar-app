@@ -242,36 +242,16 @@ export const SalesLeadMemberRoleModel = db.model('salesLeadMemberRole', schemas.
 
 schemas.addressBookGroup.pre('remove', function(next: Function) {
   const obj: Document = this;
-  
-  const query = {
-      'contact.group': obj['_id']
+    
+  const queryAddressBook = {
+    group: obj['_id'] 
   };
   
-  SalesLeadContactModel.find({}).populate({ path: 'contact', match: { group: obj['_id'] }}) // Retrieves contacts per lead
-  .exec((err: any, foundObjs: any) => {
+  AddressBookContactModel.find(queryAddressBook).remove((err: any, removedObjs: any) => {
     if (err) {
       next(err);
     }
-    
-    const ids: string[] = [];
-    for (let foundObj in foundObjs) {
-      ids.push(foundObj['contact._id']);
-    }
-    
-    const queryAddressBook = {
-      group: obj['_id'] 
-    };
-    
-    if (ids.length > 0) {
-      queryAddressBook['_id'] = { $ne: ids }; // Every contact that is not in a lead can be removed
-    }
-    
-    AddressBookContactModel.find(queryAddressBook).remove((err: any, removedObjs: any) => {
-      if (err) {
-        next(err);
-      }
-      next();
-    });
+    next();
   });
 });
 
@@ -349,28 +329,6 @@ schemas.accountOrganizationMember.pre('save', function(next: Function) {
 
 schemas.accountOrganizationMember.pre('remove', function(next: Function) {
   const obj: Document = this;
-  // Checks in which leads this member is participating
-  const query = {
-      member: obj['_id'] 
-    };
-    
-  SalesLeadOrganizationMemberModel.find(query).populate('role organizationlead member') 
-  .exec((err: any, foundMembers: any) => {
-    if (err) {
-      next(err);
-    }
-    DatabaseObjectUtil.removeArrayPromise(foundMembers)
-    .then((results: Document[]) => {
-      next();
-    })
-    .catch((err: Error) => {
-      next(err);
-    });  
-  });
-});
-
-schemas.accountOrganizationMember.pre('remove', function(next: Function) {
-  const obj: Document = this;
   if (obj['role']['grantDelete'] && ObjectUtil.isPresent(obj['organization']['_id'])) {
   
   const query = {
@@ -409,153 +367,4 @@ schemas.accountOrganization.pre('remove', function(next: Function) {
     }
     next();
   }); 
-});
-
-schemas.salesLead.pre('save', function(next: Function) {
-  
-  const obj = this;
-  if (obj.isNew && ObjectUtil.isBlank(obj.status)) {    
-    SalesLeadStatusModel.findOne({ code: 'OPP' })
-    .lean().exec((err: any, found: any) => {
-      if (err) {
-        next(err);
-      }
-      
-      if (ObjectUtil.isBlank(found._id)) {
-        next("A status should be specified for this lead");
-      }
-
-      obj['status'] = found._id;
-      next();
-    }); 
-  } else {
-    next(); 
-  }
-});
-
-schemas.salesLead.pre('remove', function(next: Function) {
-  const obj = this;
-  SalesLeadOrganizationModel.find({ lead: obj._id })
-	.exec((err: any, removedObjs: any) => {
-    if (err) {
-        next(err);
-    }
-                
-    DatabaseObjectUtil.removeArrayPromise(removedObjs, [{name: 'triggeredByParent', value: true}])
-    .then((results: Document[]) => {
-      next();
-    })
-    .catch((err: Error) => {
-      next(err);
-    });
-  });
-});
-
-schemas.salesLead.pre('remove', function(next: Function) {
-  const obj = this;
-  SalesLeadContactModel.find({ lead: obj._id })
-	.exec((err: any, removedObjs: any) => {
-    if (err) {
-        next(err);
-    }
-    DatabaseObjectUtil.removeArrayPromise(removedObjs, [{name: 'triggeredByParent', value: true}])
-    .then((results: Document[]) => {
-      next();
-    })
-    .catch((err: Error) => {
-      next(err);
-    });
-  });
-});
-
-schemas.salesLeadOrganization.pre('remove', function(next: Function) {
-  const obj = this;
-  if (ObjectUtil.isPresent(obj['triggeredByParent']) && obj['triggeredByParent'] === true) {
-    next();  
-  }
-  
-  SalesLeadOrganizationMemberModel.find({ leadOrganization: obj._id })
-	.remove((err: any, removedObjs: any) => {
-    if (err) {
-        next(err);
-    }
-    next();
-  });
-});
-
-schemas.salesLeadContact.pre('remove', function(next: Function) {
-  const obj = this;
-  if (ObjectUtil.isPresent(obj['triggeredByParent']) && obj['triggeredByParent'] === true) {
-    next();  
-  } 
-  
-  const query = {
-    lead: obj['lead'],
-    _id: { $ne: obj['_id'] } 
-  };
-    
-  SalesLeadContactModel.find(query).lean()
-  .exec((err: any, foundDocs: any) => {
-    if (err) {
-      next(err);
-    }
-    
-    if (foundDocs.length > 0) {
-      next(new Error("There should be another contact for the lead in order to delete this contact"));
-    } else {
-      next(); 
-    }
-  });
-});
-
-schemas.salesLeadContact.pre('remove', function(next: Function) {
-  const obj = this;
-  AddressBookContactModel.find(obj.contact).populate('group')
-  .exec((err: any, foundDoc: Document) => {
-    if (err) {
-      next(err);
-    }
-    if (ObjectUtil.isBlank(foundDoc['group'])) {
-      foundDoc.remove((err: Error) => {
-          if (err) {
-            next(err);
-          }
-          next();
-        });
-    } else {
-      next(); 
-    }
-    });  
-});
-
-schemas.salesLeadOrganizationMember.pre('remove', function(next: Function) {
-  const obj: Document = this;
-  
-  if (obj['role']['grantDelete'] === false) {
-    next();
-  }
-  
-  // Check whether there are more members participating as owners
-  const query = {
-      member: { $ne: obj['_id'] },
-      'role.grantDelete': true,
-      'organizationlead.organization': obj['organization'] 
-  };
-    
-  SalesLeadOrganizationMemberModel.find(query).populate('role organizationlead')
-  .exec((err: any, foundMembers: any) => {
-    if (err) {
-      next(err);
-    }
-    if (foundMembers.length < 1) {
-      obj['organizationlead'].remove((err: Error) => {
-          if (err) {
-            next(err);
-          }
-          next();
-      });
-    } else {
-      next();  
-    }
-  });
 });
