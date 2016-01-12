@@ -1,31 +1,31 @@
 namespace AuthServices {
 
 	export class AuthToken {
-		constructor(private $cookies: any) {
+		constructor(private $cookies: any, private $window: any) {
 			
 		}
 		setToken(token: any) {
 			if (token) {
-				this.$cookies.put('token', token);
+				this.$window.localStorage.set('token', token);
 			} else {
-				this.$cookies.remove('token');
+				this.$window.localStorage.remove('token');
 			}
 		}
 		getToken(): any {
-			return this.$cookies.get('token');
+			return this.$window.localStorage.get('token');
 		}
 		setIdO(ido: any) {
 			if (ido) {
-				this.$cookies.put('ido', ido);
+				this.$window.localStorage.put('ido', ido);
 			} else {
-				this.$cookies.remove('ido');
+				this.$window.localStorage.remove('ido');
 			}
 		}
 		getIdO(): any {
-			return this.$cookies.get('ido');
+			return this.$window.localStorage.get('ido');
 		}
 		isLoggedIn(): boolean {
-			return (this.$cookies.get('token') !== undefined) && (this.$cookies.get('ido') !== undefined) ;
+			return (this.$window.localStorage.get('token') !== undefined) && (this.$window.localStorage.get('ido') !== undefined) ;
 		}
 	}
 
@@ -46,8 +46,8 @@ namespace AuthServices {
 		return AuthInterceptorFactory;
 	}
 	/** @ngInject */
-	function getAuthTokenInstance($cookies: any) {
-		return new AuthToken($cookies);
+	function getAuthTokenInstance($cookies: any, $window: any) {
+		return new AuthToken($cookies, $window);
 	}
 	
 	/** @ngInject */

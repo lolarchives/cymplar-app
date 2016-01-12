@@ -37,8 +37,6 @@ export class AccountOrganizationMemberService extends BaseService<AccountOrganiz
 		}
 		return;
 	}
-	
-
 	protected evaluateSearchAuthorization(modelOptions: ModelOptions = {}, reject: Function, data?: AccountOrganizationMember) {
 		super.evaluateSearchAuthorization(modelOptions, reject);
 		const authorization: AuthorizationData = modelOptions.authorization;
