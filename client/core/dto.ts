@@ -88,7 +88,27 @@ export interface AccountOrganization extends BaseDto {
   pinterest?: string;
 }
 
-
+export interface SignUpDetails {
+		organizationName: string;
+		username: string;
+		email: string;
+		password: string;
+		passwordConfirm: string;
+		country: string;
+		city: string;
+		suburb?: string;
+		postcode?: number;
+		industryType: string;
+		description: string;
+		team?: number;
+    web?: string;
+		facebook?: string;
+		linkedin?: string;
+		twitter?: string;
+		plus?: string;
+		dribble?: string;
+		pinterest?: string;
+	}
 
 export interface AccountOrganizationMember extends BaseDto {
   name?: string;
@@ -121,6 +141,7 @@ export interface SignUp extends BaseDto {
 export interface LogIn extends BaseDto {
   username: string;
   password: string;
+  organization: string;
 }
 
 export interface AuthenticationResponse {
@@ -128,48 +149,9 @@ export interface AuthenticationResponse {
   init?: any;
 }
 
-export interface SalesLeadStatus extends BaseDto {
-  code?: string;
-  name?: string;
-}
-
-export interface SalesLead extends BaseDto {
-  name?: string;
-  status?: any;
-  contract?: string;
-  amount?: number;
-  contact?: any;
-}
-
-export interface SalesLeadContact extends BaseDto {
-  lead?: any;
-  contact?: any;
-}
-
-export interface SalesLeadOrganization extends BaseDto {
-  lead?: any;
-  organization?: any;
-}
-
-export interface SalesLeadMemberRole extends BaseDto {
-  code?: string;
-  name?: string;
-  description?: string;
-  grantDelete?: boolean;
-  grantUpdate?: boolean;
-  grantCreate?: boolean;
-  grantRead?: boolean;
-  grantInvitation?: boolean;
-}
-
-export interface SalesLeadOrganizationMember extends BaseDto {
-  leadOrganization?: any;
-  member?: any;
-}
-
 export interface AuthorizationData {
+  user?: AccountUser;
   organizationMember?: AccountOrganizationMember;
-  leadMember?: SalesLeadOrganizationMember;
 }
 
 export interface ModelOptions {
@@ -182,6 +164,7 @@ export interface ModelOptions {
   authorization?: AuthorizationData;
   requireAuthorization?: boolean;
   copyAuthorizationData?: boolean;
+  copyOptionalAuthorizationData?: boolean;
   specialAuthorizationDataSearch?: boolean;
 }
 

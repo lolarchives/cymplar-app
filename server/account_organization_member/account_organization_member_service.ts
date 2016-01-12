@@ -10,13 +10,15 @@ export class AccountOrganizationMemberService extends BaseService<AccountOrganiz
 	}
 		
 	copySignificantAuthorizationData(data: AccountOrganizationMember, modelOptions: ModelOptions = {}): void {
-		const authorization: AuthorizationData = modelOptions.authorization;
-		if (ObjectUtil.isPresent(authorization) && ObjectUtil.isPresent(authorization.organizationMember)) {
+		if (!modelOptions.copyAuthorizationData) {
+			return;
+		}
+		const authorization: AuthorizationData = modelOptions.authorization; 
+		if (ObjectUtil.isPresent(authorization) && ObjectUtil.isPresent(authorization.user)) {
 			if (modelOptions.copyAuthorizationData) {
-				data.user = authorization.organizationMember.user;	
+				data.user = authorization.user;	
 			}
 		}
-		return;
 	}
 	
 	protected obtainComplexAuthorizationSearchExpression(data: AccountOrganizationMember, authorization: AuthorizationData = {}): any {
@@ -24,45 +26,47 @@ export class AccountOrganizationMemberService extends BaseService<AccountOrganiz
 			createdBy: { $exists: true },
 			_id: {$ne: authorization.organizationMember._id}
 		};
-			 
 		return complexSearch;	
 	}
 	
-	isUpdateAuthorized(authorization: AuthorizationData, reject: Function) {
-		super.isUpdateAuthorized(authorization, reject);
-		if (ObjectUtil.isBlank(authorization.organizationMember.role)) {
-			reject(new Error("Unauthorized user aoms"));
-		}
-		return;
-	}
-	
-	isSearchAuthorized(authorization: AuthorizationData, reject: Function) {
-		super.isSearchAuthorized(authorization, reject);
-		if (ObjectUtil.isBlank(authorization.organizationMember.role)) {
-			reject(new Error("Unauthorized user aoms"));
-		}
-		return;
-	}
-	
-	protected isUpdateAuthorizedExecution(modelOptions: ModelOptions = {}, reject: Function, data?: AccountOrganizationMember): void {
+	protected evaluateUpdateAuthorization(modelOptions: ModelOptions = {}, reject: Function, data?: AccountOrganizationMember) {
+		super.evaluateUpdateAuthorization(modelOptions, reject);
 		const authorization: AuthorizationData = modelOptions.authorization;
-		
+		if (!this.existsOrganizationMember(authorization) || ObjectUtil.isBlank(authorization.organizationMember.role)) {
+			reject(new Error("Unauthorized user aoms"));
+		}
+		return;
+	}
+	
+	protected evaluateSearchAuthorization(modelOptions: ModelOptions = {}, reject: Function, data?: AccountOrganizationMember) {
+		super.evaluateSearchAuthorization(modelOptions, reject);
+		const authorization: AuthorizationData = modelOptions.authorization;
+		if (!this.existsOrganizationMember(authorization) || ObjectUtil.isBlank(authorization.organizationMember.role)) {
+			reject(new Error("Unauthorized user aoms"));
+		}
+	}
+	
+	protected evaluateUpdateExecutionAuthorization(modelOptions: ModelOptions = {}, reject: Function, data?: AccountOrganizationMember): void {
+		const authorization: AuthorizationData = modelOptions.authorization;
+		if (!this.existsOrganizationMember(authorization)) {
+			reject(new Error("Unauthorized user in this organization"));	
+		}
 		if (authorization.organizationMember._id === data._id ||
-			(ObjectUtil.isPresent(authorization.organizationMember.role) && authorization.organizationMember.role['grantUpdate'])) {
+		 (authorization.organizationMember.role['grantUpdate'])) {
 			return;
 		}
-		
 		reject(new Error("Unauthorized user"));
 	}
 	
-	protected isRemoveAuthorizedExecution(modelOptions: ModelOptions = {}, reject: Function, data?: AccountOrganizationMember): void {
+	protected evaluateRemoveExecutionAuthorization(modelOptions: ModelOptions = {}, reject: Function, data?: AccountOrganizationMember): void {
 		const authorization: AuthorizationData = modelOptions.authorization;
-		
+		if (!this.existsOrganizationMember(authorization)) {
+			reject(new Error("Unauthorized user in this organization"));	
+		}
 		if (authorization.organizationMember._id === data._id ||
-			(ObjectUtil.isBlank(authorization.organizationMember.role) && authorization.organizationMember.role['grantDelete'])) {
+		 (authorization.organizationMember.role['grantDelete'])) {
 			return;
 		}
-		
 		reject(new Error("Unauthorized user"));
 	}
 }

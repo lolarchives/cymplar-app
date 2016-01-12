@@ -5,8 +5,9 @@ import * as bcrypt from 'bcrypt';
 import {sendError} from '../core/web_util';
 import {ObjectUtil} from '../../client/core/util';
 import {accountOrganizationMemberService} from '../account_organization_member/account_organization_member_service';
-import {AccountOrganizationMember, SalesLeadOrganizationMember, ModelOptions} from '../../client/core/dto';
-import {salesLeadOrganizationMemberService} from '../sales_lead_organization_member/sales_lead_organization_member_service';
+import {AccountUser, AccountOrganizationMember, ModelOptions} from '../../client/core/dto';
+import {accountUserService} from '../account_user/account_user_service';
+import {AuthorizationData} from '../../client/core/dto';
 
 
 const NON_SECURED_URL: string[] = ['/api/account-user/_exist', 
@@ -47,67 +48,41 @@ export class Authentication {
 			
 			//query id_organization (ido), id_lead (idl)
 			const idSessionParams = {
-				ido: (req.query.ido ? req.query.ido : req.body.ido),
-				idl: (req.query.idl ? req.query.idl : req.body.idl)
+				ido: (req.query.ido ? req.query.ido : req.body.ido)
 			};
 			
-			const orgMemberSearchParams = {
-				user: decoded.sub
-			};
-			
-			if (ObjectUtil.isPresent(idSessionParams.ido)) {
-				orgMemberSearchParams['organization'] = idSessionParams.ido;
-			}
-				
-			const orgMemberModelOptions: ModelOptions = {
-				projection: 'user role organization',
-				population: 'role',
-				requireAuthorization: false
+			const accountUserModelOptions: ModelOptions = {
+				requireAuthorization: false,
+				projection: '_id'
 			}; 
-						
-			accountOrganizationMemberService.findOne(orgMemberSearchParams, orgMemberModelOptions)
-			.then((organizationMember: AccountOrganizationMember) => {
-			
-				if (ObjectUtil.isBlank(idSessionParams.ido)) {
-					delete organizationMember._id;
-					delete organizationMember.organization;
-					delete organizationMember.role;
-				}
-				
-				if (ObjectUtil.isPresent(organizationMember)) {
-					req.body.cymplarRole.organizationMember = organizationMember;	
-				} 
-				
-				if (ObjectUtil.isPresent(idSessionParams.ido) && ObjectUtil.isPresent(idSessionParams.idl)) {
 					
-					const leadMemberModelOptions: ModelOptions = {
-						projection: 'role leardOrganization',
-						population: 'role leadOrganization',
-						complexSearch: {
-							'member': req.body.cymplarRole.organizationMember._id,
-							'leadOrganization.organization': req.body.cymplarRole.organizationMember.organization,
-							'leadOrganization.lead': idSessionParams.idl
-						},
+			accountUserService.findOneById(decoded.sub, accountUserModelOptions)
+			.then((user: AccountUser) => {
+				if (user._id) {
+					req.body.cymplarRole.user = user;	
+				}
+				
+				if (ObjectUtil.isPresent(user._id) && ObjectUtil.isPresent(idSessionParams.ido)) {
+					const orgMemberModelOptions: ModelOptions = {
+						projection: 'user role organization',
+						population: 'role',
 						requireAuthorization: false
-					};
-						
-					return salesLeadOrganizationMemberService.findOne({}, leadMemberModelOptions);
-				} else {
+					}; 		
+					
+					return accountOrganizationMemberService.findOne({user: user._id, organization: idSessionParams.ido}, orgMemberModelOptions);
+				} else { 
 					return Promise.resolve({});
-				}
+				};
 			})
-			.then((leadMember: SalesLeadOrganizationMember) => {
-			
-				if (ObjectUtil.isPresent(leadMember) && ObjectUtil.isPresent(leadMember._id)) {
-					req.body.cymplarRole.leadMember = leadMember;
+			.then((organizationMember: AccountOrganizationMember) => {
+				if (ObjectUtil.isPresent(organizationMember._id)) {
+					req.body.cymplarRole.organizationMember = organizationMember;	
 				}
-	
 				return next();
 			})
 			.catch((err) => {
-				return next(new Error("This user could not be found, therefore no authorization can be granted"));
+				return next(err);
 			});
-			
 		} catch (err) {
 			return next(new Error("Token could not be verified"));
 		}

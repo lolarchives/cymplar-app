@@ -25,7 +25,8 @@ router.delete('/:id', (req, res) => {
 router.get('/_find', (req: express.Request, res: express.Response) => {
   const modelOptions: ModelOptions = {
     authorization: getAuthorizationData(req),
-    regularExpresion: true
+    regularExpresion: true,
+    requireAuthorization: false
   };
   countryService.find(req.query, modelOptions)
     .then((countrys: Country[]) => formatSend(res, countrys), (err: any) => sendError(res, err));

@@ -10,7 +10,7 @@ router.post('/', (req, res) => {
   const modelOptions: ModelOptions = {
     authorization: getAuthorizationData(req)
   };
-  addressBookContactService.createOne(req.body)
+  addressBookContactService.createOne(req.body, modelOptions)
     .then((contact: AddressBookContact) => formatSend(res, contact), (err) => sendError(res, err));
 });
 
@@ -19,7 +19,7 @@ router.put('/:id', (req, res) => {
     authorization: getAuthorizationData(req),
     additionalData: {_id: req.params.id}
   };
-  addressBookContactService.updateOne(req.body)
+  addressBookContactService.updateOne(req.body, modelOptions)
     .then((contact: AddressBookContact) => formatSend(res, contact), (err) => sendError(res, err));
 });
 
@@ -27,7 +27,7 @@ router.delete('/:id', (req, res) => {
   const modelOptions: ModelOptions = {
     authorization: getAuthorizationData(req)
   };
-  addressBookContactService.removeOneById(req.params.id)
+  addressBookContactService.removeOneById(req.params.id, modelOptions)
     .then((contact: AddressBookContact) => formatSend(res, contact), (err) => sendError(res, err));
 });
 
@@ -35,7 +35,7 @@ router.get('/_find', (req: express.Request, res: express.Response) => {
   const modelOptions: ModelOptions = {
     authorization: getAuthorizationData(req)
   };
-  addressBookContactService.find(req.query)
+  addressBookContactService.find(req.query, modelOptions)
     .then((contacts: AddressBookContact[]) => formatSend(res, contacts), (err: any) => sendError(res, err));
 });
 
@@ -43,7 +43,7 @@ router.get('/:id', (req: express.Request, res: express.Response) => {
   const modelOptions: ModelOptions = {
     authorization: getAuthorizationData(req)
   };
-  addressBookContactService.findOneById(req.params.id)
+  addressBookContactService.findOneById(req.params.id, modelOptions)
     .then((contact: AddressBookContact) => formatSend(res, contact), (err: any) => sendError(res, err));
 });
 
