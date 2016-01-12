@@ -6,26 +6,26 @@ namespace AuthServices {
 		}
 		setToken(token: any) {
 			if (token) {
-				this.$window.localStorage.set('token', token);
+				this.$window.localStorage.setItem('token', token);
 			} else {
-				this.$window.localStorage.remove('token');
+				this.$window.localStorage.removeItem('token');
 			}
 		}
 		getToken(): any {
-			return this.$window.localStorage.get('token');
+			return this.$window.localStorage.getItem('token') || undefined;
 		}
 		setIdO(ido: any) {
 			if (ido) {
-				this.$window.localStorage.put('ido', ido);
+				this.$window.localStorage.setItem('ido', ido);
 			} else {
-				this.$window.localStorage.remove('ido');
+				this.$window.localStorage.removeItem('ido');
 			}
 		}
 		getIdO(): any {
-			return this.$window.localStorage.get('ido');
+			return this.$window.localStorage.getItem('ido') || undefined;
 		}
 		isLoggedIn(): boolean {
-			return (this.$window.localStorage.get('token') !== undefined) && (this.$window.localStorage.get('ido') !== undefined) ;
+			return (this.$window.localStorage.getItem('token') !== null) && (this.$window.localStorage.getItem('ido') !== null) ;
 		}
 	}
 
