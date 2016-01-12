@@ -35,14 +35,14 @@ namespace AuthServices {
 		AuthInterceptorFactory["request"] = (config: any): any => {
 			let token = AuthToken.getToken();
 			if (token) {
-				config.headers['Authorization'] = "Bearer "+token;
+				config.headers['Authorization'] = "Bearer " + token;
 			};
 			return config;
-		}
+		};
 		AuthInterceptorFactory["responseError"] = (response: any) => {
 
 			return $q.reject(response);
-		}
+		};
 		return AuthInterceptorFactory;
 	}
 	/** @ngInject */
@@ -54,7 +54,7 @@ namespace AuthServices {
 	
 
 	angular
-		.module('app.auth',[])
+		.module('app.auth', [])
 		.factory('AuthToken', getAuthTokenInstance)
 		.factory('AuthInterceptor', AuthInterceptor);
 }

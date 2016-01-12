@@ -7,7 +7,7 @@ import './components/login/login';
 import './components/login/login.service';
 import './components/helper/helper';
 import './components/helper/progressBar';
-import './components/auth/auth.service'
+import './components/auth/auth.service';  
 
 declare var moment: moment.MomentStatic;
 

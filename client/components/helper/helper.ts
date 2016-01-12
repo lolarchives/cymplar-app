@@ -30,7 +30,7 @@ namespace HelperServices {
 			 * Using custom promise and $q to DRY up some of the code ,
 			 *  everything will be handle in the success call in controller 
 			 * with more descriptive error message
-			*/
+			 */
 			resource[method](params, (response: any) => {
 				if (loading) {
 					this.loadingModal.close();
@@ -42,9 +42,9 @@ namespace HelperServices {
 					this.loadingModal.close();
 				error.data.status = error.status;
 				}
-				error.data.statusText = error.statusText
+				error.data.statusText = error.statusText;
 				deferred.resolve(error.data);
-			})
+			});
 
 			return deferred.promise;
 		}

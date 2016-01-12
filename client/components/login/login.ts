@@ -1,5 +1,5 @@
 import '../helper/helper';
-import '../auth/auth.service'
+import '../auth/auth.service';
 import {LogIn} from "../../core/dto.ts";
 
 namespace Login {
@@ -24,7 +24,8 @@ namespace Login {
 		private loginError: boolean;
 		private errorMessage: string;
 		/** @ngInject */
-		constructor(private $LoginRESTService: any, private $cookies: any, private $SignUpRESTService: any, private AuthToken: any, private $state: any) {
+		constructor(private $LoginRESTService: any, private $cookies: any, 
+			private $SignUpRESTService: any, private AuthToken: any, private $state: any) {
 			
 		};
 		submitDomain() {
