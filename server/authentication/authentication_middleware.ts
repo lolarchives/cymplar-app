@@ -36,18 +36,18 @@ export class Authentication {
 			|| (req.headers['authorization'] && req.headers['authorization'].split(' ')[1]))) || '';
 		
 		if (ObjectUtil.isBlank(token)) { 
-			return sendError(res, new Error('Token is required'));
+			return sendError(res, new Error('Token is required'), { token: false });
 		}
 		
 		try {	
 			const decoded = decode(token, process.env.CYMPLAR_SECRET);
 		
 			if (ObjectUtil.isBlank(decoded.sub)) {
-				return sendError(res, new Error('Invalid Token'));
+				return sendError(res, new Error('Invalid Token'), { token: false });
 			}
 			
 			if (decoded.exp <= Date.now()) {
-				return sendError(res, new Error('Token expired'));
+				return sendError(res, new Error('Token expired'), { token: false });
 			}
 			
 			//query id_organization (ido), id_lead (idl)
@@ -85,10 +85,10 @@ export class Authentication {
 				return next();
 			})
 			.catch((err: Error) => {
-				return sendError(res, err);
+				return sendError(res, err, { token: false });
 			});
 		} catch (err) {
-			return sendError(res, err);
+			return sendError(res, err, { token: false });
 		}
 	}
 }
