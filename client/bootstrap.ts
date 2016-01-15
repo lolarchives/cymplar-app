@@ -109,6 +109,7 @@ namespace app {
         template: 'Dashboard',
       })
       .state('main.addressBook', {
+        abstract:true,
         url: '/address_book',
         template: 'Addressbook',
       });
