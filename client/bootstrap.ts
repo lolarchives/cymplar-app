@@ -82,8 +82,8 @@ namespace app {
               
               return response.data; 
             }, function(error) {
-              if (error.data.token == false) {
-                $rootScope.$broadcast('badToken',{data: 'Illegal token access'});
+              if (error.data.token === false) {
+                $rootScope.$broadcast('badToken', {data: 'Illegal token access'});
               }
             
             });
