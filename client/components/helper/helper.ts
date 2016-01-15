@@ -3,8 +3,8 @@ namespace HelperServices {
 	export class $resourceHelper {
 		private loadingModal: any;
 		/** @ngInject */
-		constructor(private $q: any, private $uibModal: any) {
-
+		constructor(private $q: any, private $uibModal: any,private $rootScope: any) {
+		
 		}
 		/**
 		 * Definition: this method is created to DRY up the repeatitive process of calling 
@@ -13,14 +13,14 @@ namespace HelperServices {
 		 * 		  method is the method defined inside that resource object. Params is extra params that needs to be passed in the $resouce call
 		 */
 		resourceRESTCall(resource: angular.resource.IResourceClass<any>, method: string, params: any, loading: boolean): angular.IPromise<any> {
-		
+			
 			let deferred = this.$q.defer();
 			/** provide a way to show loading progress while querying the server
 			 * quick and universal, considering moving to tailored solution later
 			 */
 			if (loading) {
 				this.loadingModal = this.$uibModal.open({
-					backdrop: 'static', 
+					backdrop: 'static',
 					animation: true,
 					size: 'sm',
 					template: '<div class="text-center"><h1>Loading <i class="fa fa-spinner fa-spin"></i></h1></div>'
@@ -36,11 +36,14 @@ namespace HelperServices {
 					this.loadingModal.close();
 				}
 				deferred.resolve(response);
-				
 			}, (error: any) => {
 				if (loading) {
 					this.loadingModal.close();
-				error.data.status = error.status;
+					error.data.status = error.status;
+				}
+	
+				if (error.token === false) {
+					this.$rootScope.$broadcast('badToken',{data: 'Illegal token access'});
 				}
 				error.data.statusText = error.statusText;
 				deferred.resolve(error.data);

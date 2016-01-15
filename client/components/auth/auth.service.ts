@@ -27,6 +27,10 @@ namespace AuthServices {
 		isLoggedIn(): boolean {
 			return (this.$window.localStorage.getItem('token') !== null) && (this.$window.localStorage.getItem('ido') !== null) ;
 		}
+		logout() {
+			this.$window.localStorage.removeItem('token');
+			this.$window.localStorage.removeItem('ido');
+		}
 	}
 
 	function AuthInterceptor(AuthToken: any, $q: any): any {

@@ -35,6 +35,13 @@ namespace app {
       
     });
     
+    $rootScope.$on('badToken', (event: any, data: any) => {
+      console.log(data);
+      AuthToken.logout();
+      $state.go('login', {}, { reload: true });
+
+    });
+    
     // It's very handy to add references to $state and $stateParams to the $rootScope
     // so that you can access them from any scope within your applications. For example,
     // <li ng-class="{ active: $state.includes('contacts.list') }"> will set the <li>
@@ -70,10 +77,15 @@ namespace app {
         controller: 'MainController',
         controllerAs: 'main',
         resolve: {
-          user: function($http: angular.IHttpService, AuthToken: any) {
+          user: function($http: angular.IHttpService, AuthToken: any, $rootScope: any) {
             return $http.get('/api/account-user/_find').then(function(response) {
-             
+              
               return response.data; 
+            }, function(error) {
+              if (error.data.token == false) {
+                $rootScope.$broadcast('badToken',{data: 'Illegal token access'});
+              }
+            
             });
           },
           organization: function($http: angular.IHttpService, AuthToken: any) {
