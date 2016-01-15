@@ -2,39 +2,46 @@
 <html lang="en">
 
 <head>
-  <meta charset="utf-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <title ng-bind="$state.current.name + ' | Cymplar 2'">Cymplar 2</title>
-  <base href="<%= APP_BASE %>">
-  <meta name="description" content="">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
-  <!-- csslib:css -->
-  <!-- endinject -->
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<title ng-bind="$state.current.name + ' | Cymplar 2'">Cymplar 2</title>
+	<base href="<%= APP_BASE %>">
+	<meta name="description" content="">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
+	<!-- csslib:css -->
+	<!-- endinject -->
 
-  <!-- inject:css -->
-  <!-- endinject -->
+	<!-- inject:css -->
+	<!-- endinject -->
 
 </head>
 
 <body data-app-version="<%= APP_VERSION %>">
-  <div ng-controller="ProgressBarController as pbCtrl">
-     <uib-progressbar ng-show="pbCtrl.loading" class="progress-striped active custom-progress" value="pbCtrl.progressValue" type="{{pbCtrl.type}}"></uib-progressbar>
-  </div>
- 
+	<div ng-controller="ProgressBarController as pbCtrl">
+		<uib-progressbar ng-show="pbCtrl.loading" class="progress-striped active custom-progress" value="pbCtrl.progressValue" type="{{pbCtrl.type}}"></uib-progressbar>
+	</div>
 
-  <div ui-view class="main-container"></div>
 
-  <!-- jslib:js -->
-  <!-- endinject -->
+	<div ui-view class="main-container"></div>
 
-  <script>
-    System.import('bootstrap')
+	<!-- jslib:js -->
+	<!-- endinject -->
+
+	<script>
+		System.import('bootstrap')
       .catch(function (e) {
         console.error(e);
       });
-  </script>
+      
+     $('.filter').tinyNav({
+		active: 'selected'
+	});
+	
+	</script>
 
 </body>
+
+
 
 </html>

@@ -1,20 +1,255 @@
-<nav class="navbar navbar-default navbar-fixed-top">
-  <div class="container-fluid">
-    <!-- Brand and toggle get grouped for better mobile display -->
-    <div class="navbar-header">
-      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#main_navbar" aria-expanded="false">
-        <span class="sr-only">Toggle navigation</span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-      </button>
-      <a ui-sref="main" class="navbar-brand">Home</a>
+<div class="grid-frame vertical">
+  <div class="top-panel">
+
+    <div class="nav-btn left-panel-btn">
+      <span></span>
+      <span></span>
+      <span></span>
     </div>
-    <!-- Collect the nav links, forms, and other content for toggling -->
-    <div class="collapse navbar-collapse" id="main_navbar">
-      <ul class="nav navbar-nav">
-        <li ng-class="{active: $state.includes('contacts')}"><a ui-sref="contacts.list">Contacts</a></li>
-        <li ui-sref-active="active"><a ui-sref="signup">Sign up</a></li>
-      </ul>
+
+    <a href="#" class="logo">
+      <img src="img/logo-white.png">
+    </a>
+
+    <span class="right-panel-btn">Info</span>
+
+  </div>
+  <!--top-bar-->
+
+  <div class="grid-block">
+    <div class="side-panel left-panel">
+      <div class="search-bar-wrap">
+        <form class="search-bar">
+          <input type="text" class="field" placeholder="Search">
+          <label for="submit-btn" class="label-submit-btn">
+            <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
+          </label>
+          <input id="submit-btn" type="submit" value="">
+        </form>
+      </div>
+      <!--search-bar-wrap-->
+
+      <div class="dropdown margin-b user-area">
+        <div class="user" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          <div class="user-photo">
+            <img src="img/user-photo.jpg">
+          </div>
+          <!--user-photo"-->
+          John Lastname
+          <span class="caret"></span>
+        </div>
+        <ul class="dropdown-menu full-width" aria-labelledby="dLabel">
+          <li class="current check"><a href="">John Lastname</a></li>
+          <li><a href="">Company Profile</a></li>
+          <li class="divider"></li>
+          <li><a href="">Settings</a></li>
+          <li><a href="">Help</a></li>
+          <li class="divider"></li>
+          <li><a href="login.html">Logout</a></li>
+        </ul>
+      </div>
+      <!--dropdown-->
+
+      <div class="aside-block">
+
+        <h5 class="uppercase title">
+                    <span class="glyphicon glyphicon-star left-icon" aria-hidden="true"></span> 
+                    <strong>Sales</strong>
+                </h5>
+
+        <h5 class="sub-title sub-title notification" data-toggle="collapse" data-target="#collapse1">
+                    <span class="glyphicon glyphicon-chevron-down left-icon" aria-hidden="true"></span>
+                    My leads
+                    <a href="" class="create-btn" title="create new">
+                        <span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span>
+                    </a>
+                    <div class="dropdown">
+                        <span class="glyphicon glyphicon-option-horizontal" aria-hidden="true" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></span>
+                        <ul class="dropdown-menu dropdown-menu-right">
+                            <li class="current"><a href="#">All</a></li>
+                            <li><a href="#">Overdue</a></li>
+                            <li><a href="#">Upcoming</a></li>
+                            <li><a href="#">Unread Changes</a></li>
+                        </ul>
+                    </div>
+                </h5>
+        <div class="collapse" id="collapse1">
+          <ul class="main-nav">
+            <li><a class="sub-title notificationred" href="">Ford-training</a></li>
+            <li><a href="">Slim-Solutions</a></li>
+            <li><a href="">Neuli-Website</a></li>
+            <li><a href="">Costco-mufirtc</a></li>
+          </ul>
+        </div>
+        <!--collapse-->
+
+        <h5 class="sub-title" data-toggle="collapse" data-target="#collapse2">
+                    <span class="glyphicon glyphicon-chevron-down left-icon" aria-hidden="true"></span>
+                    My Opportunities
+                    <a href="" class="create-btn" title="create new">
+                        <span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span>
+                    </a>
+                    <div class="dropdown">
+                        <span class="glyphicon glyphicon-option-horizontal" aria-hidden="true" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></span>
+                        <ul class="dropdown-menu dropdown-menu-right">
+                            <li class="current"><a href="#">All</a></li>
+                            <li><a href="#">Overdue</a></li>
+                            <li><a href="#">Upcoming</a></li>
+                            <li><a href="#">Unread Changes</a></li>
+                        </ul>
+                    </div>
+                </h5>
+        <div class="collapse" id="collapse2">
+          <ul class="main-nav">
+            <li><a href="">Ford-training</a></li>
+            <li><a href="">Slim-Solutions</a></li>
+          </ul>
+        </div>
+        <!--collapse-->
+
+        <h5 class="sub-title" data-toggle="collapse" data-target="#collapse3">
+                    <span class="glyphicon glyphicon-chevron-down left-icon" aria-hidden="true"></span>
+                    My Signed Contracts
+                </h5>
+        <div class="collapse" id="collapse3">
+          <ul class="main-nav">
+            <li><a href="">Ford-training</a></li>
+            <li><a href="">Slim-Solutions</a></li>
+          </ul>
+        </div>
+        <!--collapse-->
+
+        <h5 class="sub-title" data-toggle="collapse" data-target="#collapse4">
+                    <span class="glyphicon glyphicon-chevron-down left-icon" aria-hidden="true"></span>
+                    My Lost/Inacative
+                </h5>
+        <div class="collapse" id="collapse4">
+          <ul class="main-nav">
+            <li><a href="">Ford-training</a></li>
+            <li><a href="">Slim-Solutions</a></li>
+          </ul>
+        </div>
+        <!--collapse-->
+      </div>
+      <!--aside-block-->
+
+      <div class="aside-block">
+        <h5 class="uppercase title">
+                    <span class="glyphicon glyphicon-comment left-icon" aria-hidden="true"></span>
+                    <strong>Chat</strong>
+                </h5>
+
+        <h5 class="sub-title" data-toggle="collapse" data-target="#collapse5">
+                    <span class="glyphicon glyphicon-chevron-down left-icon" aria-hidden="true"></span>
+                    My Leads chat
+                    <a href="" class="create-btn" title="create new">
+                        <span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span>
+                    </a>
+                    <div class="dropdown">
+                        <span class="glyphicon glyphicon-option-horizontal" aria-hidden="true" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></span>
+                        <ul class="dropdown-menu dropdown-menu-right">
+                            <li class="current"><a href="#">All</a></li>
+                            <li><a href="#">Latest Comments</a></li>
+                            <li><a href="#">A-Z</a></li>
+                            <li><a href="#">Z-A</a></li>
+                        </ul>
+                    </div>
+                </h5>
+        <div class="collapse" id="collapse5">
+          <ul class="main-nav">
+            <li><a href="">Slim-Solutions</a></li>
+            <li><a href="">Neuli-Website  <span class="badge white">12</span></a></li>
+            <li><a href="">Costco-mufirtc  <span class="badge white">4</span></a></li>
+          </ul>
+        </div>
+        <!--collapse-->
+
+        <h5 class="sub-title notificationgreen" data-toggle="collapse" data-target="#collapse6">
+                    <span class="glyphicon glyphicon-chevron-down left-icon" aria-hidden="true"></span>
+                    My Opportunities chat 
+                    <a href="" class="create-btn" title="create new">
+                        <span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span>
+                    </a>
+                    <div class="dropdown">
+                        <span class="glyphicon glyphicon-option-horizontal" aria-hidden="true" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></span>
+                        <ul class="dropdown-menu dropdown-menu-right">
+                           <li class="current"><a href="#">All</a></li>
+                            <li><a href="#">Latest Comments</a></li>
+                            <li><a href="#">A-Z</a></li>
+                            <li><a href="#">Z-A</a></li>
+                        </ul>
+                    </div>
+                </h5>
+        <div class="collapse" id="collapse6">
+          <ul class="main-nav">
+            <li><a class="sub-title notificationgreen" href="">Ford-training <span class="badge white">12</span></a></li>
+          </ul>
+        </div>
+        <!--collapse-->
+
+
+        <h5 class="sub-title" data-toggle="collapse" data-target="#collapse7">
+                    <span class="glyphicon glyphicon-chevron-down left-icon" aria-hidden="true"></span>
+                    My Team chat
+                    <a href="" class="create-btn" title="create new">
+                        <span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span>
+                    </a>
+
+                    <div class="dropdown">
+                        <span class="glyphicon glyphicon-option-horizontal" aria-hidden="true" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></span>
+                        <ul class="dropdown-menu dropdown-menu-right">
+                            <li class="current"><a href="#">All</a></li>
+                            <li><a href="#">Latest Comments</a></li>
+                            <li><a href="#">A-Z</a></li>
+                            <li><a href="#">Z-A</a></li>
+                        </ul>
+                    </div>
+                </h5>
+        <div class="collapse" id="collapse7">
+          <ul class="main-nav">
+            <li><a href="">Tim <span class="badge white">12</span></a></li>
+            <li><a href="">Jo <span class="badge white">4</span></a></li>
+            <li><a href="">George <span class="badge white">4</span></a></li>
+            <li class="current"><a href="">Steven  <span class="badge white">2</span></a></li>
+          </ul>
+        </div>
+        <!--collapse-->
+      </div>
+      <!--aside-block-->
+      <div class="aside-block">
+        <h5 class="uppercase title">
+                    <span class="glyphicon glyphicon-book left-icon" aria-hidden="true"></span>
+                    <strong>My Address book</strong>
+                </h5>
+        <h5 class="sub-title" data-toggle="collapse" data-target="#collapse8">
+                    <span class="glyphicon glyphicon-chevron-down left-icon" aria-hidden="true"></span>
+                    Companies/Groups
+                    <a href="" class="create-btn" title="create new">
+                        <span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span>
+                    </a>
+                    <div class="dropdown">
+                        <span class="glyphicon glyphicon-option-horizontal" aria-hidden="true" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></span>
+                        <ul class="dropdown-menu dropdown-menu-right">
+                            <li class="current"><a href="#">All</a></li>
+                            <li><a href="#">Overdue</a></li>
+                            <li><a href="#">Upcoming</a></li>
+                            <li><a href="#">Unread Changes</a></li>
+                        </ul>
+                    </div>
+                </h5>
+        <div class="collapse in" id="collapse8">
+          <ul class="main-nav">
+            <li class="current"><a href="">Holdem </a></li>
+            <li><a href="">Toyota </a></li>
+            <li><a href="">Neuli </a></li>
+            <li><a href="">Stark  </a></li>
+          </ul>
+        </div>
+        <!--collapse-->
+      </div>
+      <!--aside-block-->
     </div>
-</nav>
+    <!--left panel-->
+    <div ng-transclude="" class="grid-block vertical"></div>
+  </div>
+</div>

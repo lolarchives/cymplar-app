@@ -9,6 +9,7 @@ export function mainNavbar(): angular.IDirective {
     templateUrl: 'components/navbar/navbar.html',
     controller: NavbarController,
     controllerAs: 'vm',
+    transclude:true,
     bindToController: true
   };
 

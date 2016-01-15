@@ -72,7 +72,8 @@ namespace app {
   function routerConfig($stateProvider: angular.ui.IStateProvider, $urlRouterProvider: angular.ui.IUrlRouterProvider) {
     $stateProvider
       .state('main', {
-        url: '/',
+        url: '/main',
+        abstract:true,
         templateUrl: 'components/main/main.html',
         controller: 'MainController',
         controllerAs: 'main',
@@ -101,9 +102,18 @@ namespace app {
             });
           }
         }
+      })
+      .state('main.dashboard', {
+        url: '/dashboard',
+
+        template: 'Dashboard',
+      })
+      .state('main.addressBook', {
+        url: '/address_book',
+        template: 'Addressbook',
       });
 
-    $urlRouterProvider.otherwise('/');
+    $urlRouterProvider.otherwise('/main/dashboard');
 
 
   }

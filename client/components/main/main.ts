@@ -9,6 +9,9 @@ export class MainController {
     this.userBeautified = JSON.stringify(this.user, null, 4);
     this.organizationBeautified = JSON.stringify(this.organization, null, 4);
     this.organizationMemberBeautified = JSON.stringify(this.organization_member, null, 4);
+    
+    
+
   }
 
   showToastr() {
@@ -20,5 +23,6 @@ export class MainController {
     this.AuthToken.setIdO();
     this.$state.go('login');
   }
+  
   
 }
