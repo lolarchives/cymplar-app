@@ -50,6 +50,7 @@ export const PATH = {
       `${CLIENT_SRC_BASE}/system.config.js`,
       slash(resolve('moment/moment.js')),
       `${BC}/jquery/dist/jquery.min.js`,
+       slash(resolve('bootstrap/dist/js/bootstrap.min.js')),
       `${BC}/tinynav/tinynav.min.js`,
       `${BC}/bootstrap-datetimepicker/build/js/bootstrap-datetimepicker.min.js`,
       slash(resolve(`angular/angular.js`)),

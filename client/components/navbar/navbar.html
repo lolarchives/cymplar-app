@@ -1,23 +1,23 @@
 <div class="grid-frame vertical">
   <div class="top-panel">
 
-    <div class="nav-btn left-panel-btn">
+    <div class="nav-btn left-panel-btn" ng-class="{'active':navCtrl.leftPanelOpen}" ng-click="navCtrl.leftPanelOpen = !navCtrl.leftPanelOpen">
       <span></span>
       <span></span>
       <span></span>
     </div>
 
-    <a href="#" class="logo">
+    <a ui-sref="main.dashboard" class="logo">
       <img src="img/logo-white.png">
     </a>
 
-    <span class="right-panel-btn">Info</span>
+    <span class="right-panel-btn" ng-show="navCtrl.displayInfo" ng-click="navCtrl.leftPanelOpen = false; navCtrl.rightPanelOpen = ! navCtrl.rightPanelOpen">Info</span>
 
   </div>
   <!--top-bar-->
 
   <div class="grid-block">
-    <div class="side-panel left-panel">
+    <div class="side-panel left-panel" ng-class="{'visible':navCtrl.leftPanelOpen}">
       <div class="search-bar-wrap">
         <form class="search-bar">
           <input type="text" class="field" placeholder="Search">
@@ -32,10 +32,10 @@
       <div class="dropdown margin-b user-area">
         <div class="user" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
           <div class="user-photo">
-            <img src="img/user-photo.jpg">
+            <img style="max-height:40px" src="img/default_user.jpg">
           </div>
           <!--user-photo"-->
-          John Lastname
+          John Lastname 
           <span class="caret"></span>
         </div>
         <ul class="dropdown-menu full-width" aria-labelledby="dLabel">
@@ -45,7 +45,7 @@
           <li><a href="">Settings</a></li>
           <li><a href="">Help</a></li>
           <li class="divider"></li>
-          <li><a href="login.html">Logout</a></li>
+          <li><a ng-click="navCtrl.logout()">Logout</a></li>
         </ul>
       </div>
       <!--dropdown-->
@@ -224,7 +224,7 @@
         <h5 class="sub-title" data-toggle="collapse" data-target="#collapse8">
                     <span class="glyphicon glyphicon-chevron-down left-icon" aria-hidden="true"></span>
                     Companies/Groups
-                    <a href="" class="create-btn" title="create new">
+                    <a href="" class="create-btn" title="Create new companies/group" ui-sref="main.addressBook.newCompany">
                         <span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span>
                     </a>
                     <div class="dropdown">
@@ -250,6 +250,11 @@
       <!--aside-block-->
     </div>
     <!--left panel-->
+    <!-- ui view here-->
     <div ng-transclude="" class="grid-block vertical"></div>
   </div>
 </div>
+
+
+<div class="blackout left" ng-class="{'show-black-out':navCtrl.leftPanelOpen || navCtrl.rightPanelOpen}"></div>
+<div class="blackout right"></div>

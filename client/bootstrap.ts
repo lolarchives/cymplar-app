@@ -8,7 +8,7 @@ import './components/login/login.service';
 import './components/helper/helper';
 import './components/helper/progressBar';
 import './components/auth/auth.service';  
-
+import './components/address-book/addressBook';  
 declare var moment: moment.MomentStatic;
 
 namespace app {
@@ -28,7 +28,7 @@ namespace app {
       } else { // should not be logged in
         if (AuthToken.isLoggedIn()) { // prevent double log in
           event.preventDefault();
-          $state.go('main', {}, { reload: true });
+          $state.go('main.dashboard', {}, { reload: true });
         }
 
       }
@@ -72,11 +72,10 @@ namespace app {
   function routerConfig($stateProvider: angular.ui.IStateProvider, $urlRouterProvider: angular.ui.IUrlRouterProvider) {
     $stateProvider
       .state('main', {
-        url: '/main',
-        abstract:true,
+        abstract: true,
         templateUrl: 'components/main/main.html',
         controller: 'MainController',
-        controllerAs: 'main',
+        controllerAs: 'mainCtrl',
         resolve: {
           user: function($http: angular.IHttpService, AuthToken: any, $rootScope: any) {
             return $http.get('/api/account-user/_find').then(function(response) {
@@ -95,7 +94,7 @@ namespace app {
               return response.data; 
             });
           },
-          organization_member: function($http: angular.IHttpService, AuthToken: any) {
+          organizationMember: function($http: angular.IHttpService, AuthToken: any) {
             return $http.get('/api/account-organization-member/_find?ido=' + AuthToken.getIdO()).then(function(response) {
               
               return response.data; 
@@ -105,16 +104,11 @@ namespace app {
       })
       .state('main.dashboard', {
         url: '/dashboard',
-
-        template: 'Dashboard',
-      })
-      .state('main.addressBook', {
-        abstract:true,
-        url: '/address_book',
-        template: 'Addressbook',
+        
+        template: '{{mainCtrl.user}}<br>{{navCtrl.user}}',
       });
 
-    $urlRouterProvider.otherwise('/main/dashboard');
+    $urlRouterProvider.otherwise('/dashboard');
 
 
   }
@@ -133,6 +127,7 @@ namespace app {
     'app.auth',
     'app.signup',
     'app.login',
+    'app.addressBook',
     'app.helper',
     'app.ui.helper',
 
