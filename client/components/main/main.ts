@@ -9,7 +9,7 @@ export class MainController {
     this.userBeautified = JSON.stringify(this.user, null, 4);
     this.organizationBeautified = JSON.stringify(this.organization, null, 4);
     this.organizationMemberBeautified = JSON.stringify(this.organizationMember, null, 4);
-    
+    console.log(user,organizationMember,organization);
     
 
   }

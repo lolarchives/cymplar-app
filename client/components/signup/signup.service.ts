@@ -77,7 +77,7 @@ namespace SignUpServices {
 			return this.$resourceHelper.resourceRESTCall(this.$SignUpRESTResource, "isAccountOrganizationExisted", {domain: organizationName });
 		};
 		signUp = (signUpDetails: SignUp) => {
-			return this.$resourceHelper.resourceRESTCall(this.$SignUpRESTResource, "signUp", signUpDetails);
+			return this.$resourceHelper.resourceRESTCall(this.$SignUpRESTResource, "signUp", signUpDetails, true);
 		};
 
 	};

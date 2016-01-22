@@ -1,11 +1,15 @@
 
 import '../helper/helper';
+import '../auth/auth.service'
 import {SignUp, AccountUser, AccountOrganization, AccountOrganizationMember, City, Industry, Country} from "../../core/dto.ts";
 
 namespace SignUp {
 	export interface SignUpDetails {
 		organizationName: string;
 		username: string;
+		firstName: string;
+		middleName: string;
+		lastName: string;
 		email: string;
 		password: string;
 		passwordConfirm: string;
@@ -93,8 +97,10 @@ namespace SignUp {
 
 			let accountUser: AccountUser = {
 				username: details.username,
-				password: details.password
-
+				password: details.password,
+				firstName: details.firstName,
+				middleName: details.middleName,
+				lastName: details.lastName,
 			};
 
 			let organization: AccountOrganization = {
@@ -150,7 +156,9 @@ namespace SignUp {
 		
 		/* @ngInject */
 		constructor(private $scope: any, private $http: angular.IHttpBackendService, private $log: angular.ILogService,
-			private $SignUpRESTService: any, private countries: any, private industries: any) {
+			private $SignUpRESTService: any, private countries: any, private industries: any,
+			private AuthToken: any,private $state: any) {
+				console.log(this.AuthToken);
 			this.firstStep = true;
 			this.secondStep = false;
 			this.finalStep = false;
@@ -160,12 +168,10 @@ namespace SignUp {
 		
 		//TODO: add in email check from server, check organization name from server, username check from server
 		submitStep1(step1Form: any) {
-
 			this.errors = [];
 			if (this.signUpDetails.password !== this.passwordConfirmation) {
 				this.errors.push("Passwords does not match");
 			}
-
 			if (this.errors.length === 0 && this.availableEmail && this.availableOrganizationName && this.availableUsername) {
 				this.firstStep = false;
 				this.secondStep = true;
@@ -181,12 +187,16 @@ namespace SignUp {
 		submitFinalSep(finalStepForm: any) {
 			this.$log.info('signup details ', this.signUpDetails);
 			this.errors = [];
+		
+			this.$SignUpRESTService.signUp(this.mapFormToDto(this.signUpDetails)).then((response: any) => {
+				if (response.success){
+					this.AuthToken.setToken(response.data.token);
+					this.AuthToken.setIdO(response.data.init)
+					alert("Successfully sign up");
+					this.$state.go('main.dashboard');
+				}
 			
-			// TODO: rearranged the object here according to the backend schema
-			this.$SignUpRESTService.signUp(this.mapFormToDto(this.signUpDetails)).then(function(response: any) {
-				console.log('success:', response);
-				alert("Successfully sign up");
-
+				
 			}, function(error: any) {
 				console.log('error', error);
 			});
