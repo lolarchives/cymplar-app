@@ -1,3 +1,4 @@
+
 import {AddressBookGroup, AddressBookContact, AccountUser, ModelOptions, AuthorizationData} from '../../client/core/dto';
 import {AddressBookGroupModel} from '../core/model';
 import {BaseService} from '../core/base_service';
@@ -50,7 +51,6 @@ export class AddressBookGroupService extends BaseService<AddressBookGroup> {
 			.then((results: any) => {
 				groupToSend.city.country = results[0];
 				groupToSend.contacts = results[1];
-
 				fulfill(groupToSend);
 			})
 			.catch((err: any) => {

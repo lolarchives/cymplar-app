@@ -1,1 +1,14 @@
 @import "assets/styles/styles";
+
+.text-danger {
+	color: #a94442;
+}
+.custom-progress {
+	height: 7px;
+	z-index: 100;
+	position: relative;
+	margin-bottom: 0px;
+}
+.show-black-out {
+	display: block;
+}

@@ -10,29 +10,6 @@ export class AccountOrganizationService extends BaseService<AccountOrganization>
 		super(AccountOrganizationModel);
 	}
 
-	findOneById(id: string, newOptions: ModelOptions = {}): Promise<AccountOrganization> {
-		return new Promise<AccountOrganization>((resolve: Function, reject: Function) => {
-			const organizationMemberOptions: ModelOptions = { 
-				authorization: newOptions.authorization,
-				distinct: 'organization',
-				requireAuthorization: false
-			};
-			accountOrganizationMemberService.findDistinct({}, organizationMemberOptions)
-			.then((idOrg: string[]) => {				
-				if (idOrg.indexOf(id) < 0) {
-					reject(new Error("This user does not have access to this organization"));
-				}
-				return this.findOneById(id, newOptions);
-			})
-			.then((accountOrganization: AccountOrganization) => {
-				resolve(accountOrganization);
-			})
-			.catch((err) => { 
-				reject(err); 
-			});
-		});
-	}
-	
 	createOneWithMember(data: SignUp = {}, options: ModelOptions = {}): Promise<AccountOrganization> {
 		return new Promise<AccountOrganization>((fulfill: Function, reject: Function) => {
 		let createdAccountOrganization: AccountOrganization = {};	
@@ -94,7 +71,6 @@ export class AccountOrganizationService extends BaseService<AccountOrganization>
 		member.organization = organization._id;
 		return accountOrganizationMemberService.createOne(member, options);
 	}
-	
 }
 
 export const accountOrganizationService = new AccountOrganizationService();

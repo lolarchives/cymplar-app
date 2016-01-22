@@ -1,40 +1,31 @@
 import './signup';
-import {BACK_END_ROUTE} from '../../core/dto';
+import {BACK_END_ROUTE, SignUp} from '../../core/dto';
+
 
 namespace SignUpServices {
 
-	const SAMPLE_URL = "http://jsonplaceholder.typicode.com";
+	
 	
 	/** @ngInject */
     function $SignUpRESTResource($resource: angular.resource.IResourceService): angular.resource.IResourceClass<any> {
 		let url = "/api/signup";
 		
-		// TODO: fix this once have the real api
 		let resources: angular.resource.IResourceClass<any> = $resource(url, {}, {
-			'getSampleJson': {
-				method: 'GET',
-				isArray: true,
-				url: SAMPLE_URL + '/users',
-				params: { text: 'sample text' }
-			},
+
 			'getIndustries': {
 				method: 'GET',
-				isArray: true,
 				url: BACK_END_ROUTE + '/industry/_find'
 			},
 			'getCountries': {
 				method: 'GET',
-				isArray: true,
 				url: BACK_END_ROUTE + '/country/_find'
 			},
 			'getCities': {
 				method: 'GET',
-				isArray: true,
 				url: BACK_END_ROUTE + '/city/_find'
 			},
 			'getRoles': {
 				method: 'GET',
-				isArray: false,
 				url: BACK_END_ROUTE + '/account-member-role/_find'	
 			},
 			'isAccountUserExisted': {
@@ -48,6 +39,10 @@ namespace SignUpServices {
 			'isAccountOrganizationMemberExisted': {
 				method: 'GET',
 				url: BACK_END_ROUTE + '/account-organization-member/_exist'
+			},
+			'signUp': {
+				method: 'POST',
+				url: BACK_END_ROUTE + '/signup'
 			}
 
 		});
@@ -60,14 +55,6 @@ namespace SignUpServices {
 		constructor(private $http: angular.IHttpService, private $SignUpRESTResource: any, private $q: any, private $resourceHelper: any) {
 
 		}
-
-		getSampleJson = () => {
-			let result: angular.IPromise<any> = this.$http.get(SAMPLE_URL + '/users', {});
-			return result;
-		};
-		getSampleJsonFromResource = (params: any) => {
-			return this.$resourceHelper.resourceRESTCall(this.$SignUpRESTResource, "getSampleJson", params);
-		};
 		getCountries = (params: any) => {
 			return this.$resourceHelper.resourceRESTCall(this.$SignUpRESTResource, "getCountries", params);
 		};
@@ -83,11 +70,14 @@ namespace SignUpServices {
 		isAccountUserExisted = (username: string) => {
 			return this.$resourceHelper.resourceRESTCall(this.$SignUpRESTResource, "isAccountUserExisted", {username: username});
 		};
-		isAccountOrganizatioMemberExisted = (params: any) => {
-			return this.$resourceHelper.resourceRESTCall(this.$SignUpRESTResource, "isAccountOrganizationMemberExisted", params);
+		isAccountOrganizatioMemberExisted = (email: string) => {
+			return this.$resourceHelper.resourceRESTCall(this.$SignUpRESTResource, "isAccountOrganizationMemberExisted", {email: email});
 		};
 		isAccountOrganizationExisted = (organizationName: string) => {
 			return this.$resourceHelper.resourceRESTCall(this.$SignUpRESTResource, "isAccountOrganizationExisted", {domain: organizationName });
+		};
+		signUp = (signUpDetails: SignUp) => {
+			return this.$resourceHelper.resourceRESTCall(this.$SignUpRESTResource, "signUp", signUpDetails);
 		};
 
 	};

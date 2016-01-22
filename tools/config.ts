@@ -49,8 +49,13 @@ export const PATH = {
       slash(resolve('systemjs/dist/system.src.js')),
       `${CLIENT_SRC_BASE}/system.config.js`,
       slash(resolve('moment/moment.js')),
+      `${BC}/jquery/dist/jquery.min.js`,
+       slash(resolve('bootstrap/dist/js/bootstrap.min.js')),
+      `${BC}/tinynav/tinynav.min.js`,
+      `${BC}/bootstrap-datetimepicker/build/js/bootstrap-datetimepicker.min.js`,
       slash(resolve(`angular/angular.js`)),
       slash(resolve(`angular-resource/angular-resource.js`)),
+      slash(resolve(`angular-cookies/angular-cookies.js`)),
       `${BC}/angular-bootstrap/ui-bootstrap.js`,
       `${BC}/angular-bootstrap/ui-bootstrap-tpls.js`,
       slash(resolve(`angular-ui-router/build/angular-ui-router.js`)),
@@ -68,6 +73,7 @@ export const PATH = {
     csslib: [
       slash(resolve('bootstrap/dist/css/bootstrap.min.css')),
       slash(resolve('bootstrap/dist/css/bootstrap.css.map')),
+      `${BC}/bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.min.css`,
       slash(resolve('angular-toastr/dist/angular-toastr.css'))
     ],
     font: [
