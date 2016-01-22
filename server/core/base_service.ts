@@ -1,14 +1,16 @@
 import {Model, Document} from 'mongoose';
 
-import {BaseDto, AccountOrganizationMember, SalesLeadOrganizationMember, ModelOptions, AuthorizationData} from '../../client/core/dto';
+import {BaseDto, ModelOptions, AuthorizationData} from '../../client/core/dto';
 import {ObjectUtil} from '../../client/core/util';
 import {DatabaseObjectUtil} from './db_util';
+import {BaseAuthorizationService} from './base_authorization_service';
 
-export abstract class BaseService<T extends BaseDto> {
+export abstract class BaseService<T extends BaseDto> extends BaseAuthorizationService<T> {
 	
 	private options: ModelOptions;
 	
 	constructor(public Model: Model<Document>, options: ModelOptions = {})  {
+		super();
 		this.options = { 
 			additionalData: {},
 			complexSearch: {},
@@ -237,64 +239,5 @@ export abstract class BaseService<T extends BaseDto> {
 	}
 	
 	protected copySignificantAuthorizationData(data: T, modelOptions: ModelOptions = {}): void {
-	}
-	
-	protected isCreateAuthorized(modelOptions: ModelOptions = {}, reject: Function, data?: T): void {
-		if (modelOptions.requireAuthorization) {
-			if (!this.existUser(modelOptions.authorization)) {
-				reject(new Error("Unauthorized user"));
-			}
-		}
-	}
-	
-	protected isUpdateAuthorized(modelOptions: ModelOptions = {}, reject: Function, data?: T): void {
-		if (modelOptions.requireAuthorization) {
-			if (!this.existUser(modelOptions.authorization)) {
-				reject(new Error("Unauthorized user"));
-			}
-		}
-	}
-	
-	protected isRemoveAuthorized(modelOptions: ModelOptions = {}, reject: Function, data?: T): void {
-		if (modelOptions.requireAuthorization) {
-			if (!this.existUser(modelOptions.authorization)) {
-				reject(new Error("Unauthorized user"));
-			}
-		}
-	}
-	
-	protected isSearchAuthorized(modelOptions: ModelOptions = {}, reject: Function, data?: T): void {
-		if (modelOptions.requireAuthorization) {
-			if (!this.existUser(modelOptions.authorization)) {
-				reject(new Error("Unauthorized user"));
-			}
-		}
-	}
-		
-	protected isUpdateAuthorizedExecution(modelOptions: ModelOptions = {}, reject: Function, data?: T): void {
-	}
-	
-	protected isRemoveAuthorizedExecution(modelOptions: ModelOptions = {}, reject: Function, data?: T): void {
-	}
-	
-	protected existUser(authorization: AuthorizationData): boolean {
-		if (ObjectUtil.isBlank(authorization) || ObjectUtil.isBlank(authorization.user)) {
-			return false;
-		}
-		return true;
-	}
-	
-	protected existOrganizationMember(authorization: AuthorizationData): boolean {
-		if (ObjectUtil.isBlank(authorization) || ObjectUtil.isBlank(authorization.organizationMember)) {
-			return false;
-		}
-		return true;
-	}
-	
-	protected existLeadMember(authorization: AuthorizationData): boolean {
-		if (ObjectUtil.isBlank(authorization) || ObjectUtil.isBlank(authorization.leadMember)) {
-			return false;
-		}
-		return true;
 	}
 }

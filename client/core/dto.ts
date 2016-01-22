@@ -149,49 +149,9 @@ export interface AuthenticationResponse {
   init?: any;
 }
 
-export interface SalesLeadStatus extends BaseDto {
-  code?: string;
-  name?: string;
-}
-
-export interface SalesLead extends BaseDto {
-  name?: string;
-  status?: any;
-  contract?: string;
-  amount?: number;
-  contact?: any;
-}
-
-export interface SalesLeadContact extends BaseDto {
-  lead?: any;
-  contact?: any;
-}
-
-export interface SalesLeadOrganization extends BaseDto {
-  lead?: any;
-  organization?: any;
-}
-
-export interface SalesLeadMemberRole extends BaseDto {
-  code?: string;
-  name?: string;
-  description?: string;
-  grantDelete?: boolean;
-  grantUpdate?: boolean;
-  grantCreate?: boolean;
-  grantRead?: boolean;
-  grantInvitation?: boolean;
-}
-
-export interface SalesLeadOrganizationMember extends BaseDto {
-  leadOrganization?: any;
-  member?: any;
-}
-
 export interface AuthorizationData {
   user?: AccountUser;
   organizationMember?: AccountOrganizationMember;
-  leadMember?: SalesLeadOrganizationMember;
 }
 
 export interface ModelOptions {
