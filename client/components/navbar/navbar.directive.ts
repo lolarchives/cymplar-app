@@ -40,6 +40,7 @@ export class NavbarController {
       // make sure panel is closed
       this.leftPanelOpen = false;
       this.rightPanelOpen = false;
+
     });
     if (this.STATE_WITH_RIGHT_PANEL.indexOf($state.current.name) !== -1) {
       this.displayInfo = true;

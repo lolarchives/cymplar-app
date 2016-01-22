@@ -35,11 +35,11 @@
             <img style="max-height:40px" src="img/default_user.jpg">
           </div>
           <!--user-photo"-->
-          John Lastname 
+          {{navCtrl.user.firstName + " " +navCtrl.user.lastName}}
           <span class="caret"></span>
         </div>
         <ul class="dropdown-menu full-width" aria-labelledby="dLabel">
-          <li class="current check"><a href="">John Lastname</a></li>
+          <li class="current check"><a href="">{{navCtrl.user.firstName + " " +navCtrl.user.lastName}}</a></li>
           <li><a href="">Company Profile</a></li>
           <li class="divider"></li>
           <li><a href="">Settings</a></li>
@@ -218,9 +218,9 @@
       <!--aside-block-->
       <div class="aside-block">
         <h5 class="uppercase title">
-                    <span class="glyphicon glyphicon-book left-icon" aria-hidden="true"></span>
-                    <strong>My Address book</strong>
-                </h5>
+          <span class="glyphicon glyphicon-book left-icon" aria-hidden="true"></span>
+          <strong>My Address book</strong>
+        </h5>
         <h5 class="sub-title" data-toggle="collapse" data-target="#collapse8">
                     <span class="glyphicon glyphicon-chevron-down left-icon" aria-hidden="true"></span>
                     Companies/Groups
@@ -239,10 +239,6 @@
                 </h5>
         <div class="collapse in" id="collapse8">
           <ul class="main-nav">
-            <li class="current"><a href="">Holdem </a></li>
-            <li><a href="">Toyota </a></li>
-            <li><a href="">Neuli </a></li>
-            <li><a href="">Stark  </a></li>
           </ul>
         </div>
         <!--collapse-->

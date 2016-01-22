@@ -7,8 +7,10 @@ import './components/login/login';
 import './components/login/login.service';
 import './components/helper/helper';
 import './components/helper/progressBar';
-import './components/auth/auth.service';  
-import './components/address-book/addressBook';  
+import './components/auth/auth.service';
+import './components/address-book/addressBook';
+import './components/address-book/addressBook.service';
+import './components/helper/account.service';
 declare var moment: moment.MomentStatic;
 
 namespace app {
@@ -32,9 +34,9 @@ namespace app {
         }
 
       }
-      
+
     });
-    
+
     $rootScope.$on('badToken', (event: any, data: any) => {
       console.log(data);
       AuthToken.logout();
@@ -77,34 +79,43 @@ namespace app {
         controller: 'MainController',
         controllerAs: 'mainCtrl',
         resolve: {
-          user: function($http: angular.IHttpService, AuthToken: any, $rootScope: any) {
-            return $http.get('/api/account-user/_find').then(function(response) {
-              
-              return response.data; 
-            }, function(error) {
-              if (error.data.token === false) {
-                $rootScope.$broadcast('badToken', {data: 'Illegal token access'});
+          user: function($http: angular.IHttpService, AuthToken: any, $rootScope: any, $AccountRESTService: any) {
+
+            return $AccountRESTService.accountUser().then(function(response: any) {
+              if (response.success) {
+                return response.data[0];
               }
-            
+
             });
           },
-          organization: function($http: angular.IHttpService, AuthToken: any) {
-            return $http.get('/api/account-organization/' + AuthToken.getIdO()).then(function(response) {
-         
-              return response.data; 
+          organization: function($http: angular.IHttpService, $AccountRESTService: any) {
+            return $AccountRESTService.accountOrganization().then(function(response: any) {
+              if (response.success) {
+                return response.data;
+              }
+
             });
           },
-          organizationMember: function($http: angular.IHttpService, AuthToken: any) {
-            return $http.get('/api/account-organization-member/_find?ido=' + AuthToken.getIdO()).then(function(response) {
-              
-              return response.data; 
+          organizationMember: function($http: angular.IHttpService, $AccountRESTService: any) {
+            return $AccountRESTService.accountOrganizationMember().then(function(response: any) {
+              if (response.success) {
+                return response.data[0];
+              }
+
+            });
+          },
+          companies: function($http: angular.IHttpService, $AddressBookRESTService: any) {
+            return $AddressBookRESTService.allCompanies().then(function(response: any) {
+              if (response.success) {
+                return response.data;
+              }
+
             });
           }
         }
       })
       .state('main.dashboard', {
         url: '/dashboard',
-        
         template: '{{mainCtrl.user}}<br>{{navCtrl.user}}',
       });
 
@@ -125,6 +136,7 @@ namespace app {
     'ngCookies',
     'app.contacts',
     'app.auth',
+    'app.account',
     'app.signup',
     'app.login',
     'app.addressBook',

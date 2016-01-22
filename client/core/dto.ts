@@ -91,6 +91,9 @@ export interface AccountOrganization extends BaseDto {
 export interface SignUpDetails {
 		organizationName: string;
 		username: string;
+    firstName: string;
+    middleName: string;
+    lastName: string;
 		email: string;
 		password: string;
 		passwordConfirm: string;
