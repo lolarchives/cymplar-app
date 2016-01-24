@@ -240,7 +240,7 @@
         <div class="collapse in" id="collapse8">
           <ul class="main-nav">
             <li ng-repeat="company in navCtrl.companies" ng-class="{'current': navCtrl.$state.params.id == company._id && navCtrl.$state.current.name == 'main.addressBook.selectedCompany'}">
-              <a  ng-click="navCtrl.$state.go('main.addressBook.selectedCompany',{id: company._id, company: company});navCtrl.$AddressBookRESTService.selectedCompany = company" href="">{{company.name}}</a>
+              <a  ng-click="navCtrl.$state.go('main.addressBook.selectedCompany',{id: company._id, company: company});navCtrl.$AddressBookRESTService.selectedCompany = company;navCtrl.console.log(navCtrl.$AddressBookRESTService.selectedCompany,navCtrl.$AddressBookRESTService.allCompaniesCached)" href="">{{company.name}}</a>
              </li>
           </ul>
         </div>

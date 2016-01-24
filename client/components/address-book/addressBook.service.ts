@@ -11,29 +11,41 @@ namespace AddressBookServices {
 			'allCompanies': {
 				method: 'GET',
 				url: BACK_END_ROUTE + '/address-book-group/_find'
+			},
+			'editCompany': {
+				method: 'PUT',
+				url: BACK_END_ROUTE + '/address-book-group/:id',
+				params: {
+					id: '@_id',
+				}
 			}
 		});
 		return resources;
 	}
 	export class $AddressBookRESTService {
-		private allCompaniesCached: any[] = [];
-		private selectedCompany: any;
-		constructor(private $http: angular.IHttpService, private $AddressBookRESTResource: any, private $q: any, private $resourceHelper: any) {
-
-		}
 		newCompany = (company: any) => {
 			return this.$resourceHelper.resourceRESTCall(this.$AddressBookRESTResource, "newCompany", company, true);
 		};
 		allCompanies = () => {
-			return this.$resourceHelper.resourceRESTCall(this.$AddressBookRESTResource, "allCompanies").then((response) => {
+			return this.$resourceHelper.resourceRESTCall(this.$AddressBookRESTResource, "allCompanies").then((response: any) => {
 				
-				if (response.success){
+				if (response.success) {
 					this.allCompaniesCached = response.data;
 					return this.allCompaniesCached;
-				}
+				};
 				
-			})
+			});
 		};
+		editCompany = (company: any) => {
+			return this.$resourceHelper.resourceRESTCall(this.$AddressBookRESTResource, "editCompany", company, true);
+		};
+		private allCompaniesCached: any[] = [];
+		private selectedCompany: any;
+		
+		constructor(private $http: angular.IHttpService, private $AddressBookRESTResource: any, private $q: any, private $resourceHelper: any) {
+
+		}
+		
 	}
 	
 	function get$AddressBookRESTServiceInstance($http: angular.IHttpService, $AddressBookRESTResource: any, $q: any, $resourceHelper: any) {
@@ -44,5 +56,5 @@ namespace AddressBookServices {
 	angular
 		.module('app.addressBook')
 		.factory('$AddressBookRESTResource', $AddressBookRESTResource)
-		.factory('$AddressBookRESTService', get$AddressBookRESTServiceInstance)
+		.factory('$AddressBookRESTService', get$AddressBookRESTServiceInstance);
 }
