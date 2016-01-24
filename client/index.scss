@@ -6,7 +6,9 @@
 .custom-progress {
 	height: 7px;
 	z-index: 100;
-	position: relative;
+	position: fixed;
+	top: 0px;
+	width: 100%;
 	margin-bottom: 0px;
 }
 .show-black-out {
