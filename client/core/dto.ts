@@ -1,4 +1,5 @@
 export const BACK_END_ROUTE = '/api';
+
 export interface BaseDto {
   _id?: any;
   createdBy?: any;
@@ -24,10 +25,16 @@ export interface Country extends BaseDto {
   name?: string;
 }
 
-export interface City extends BaseDto {
+export interface State extends BaseDto {
   code?: string;
   name?: string;
   country?: any;
+}
+
+export interface City extends BaseDto {
+  code?: string;
+  name?: string;
+  state?: any;
 }
 
 export interface Industry extends BaseDto {
@@ -40,11 +47,11 @@ export interface AddressBookGroup extends BaseDto {
   description?: string;
   city?: any;
   postcode?: any;
+  suburb?: string;
   streetName?: string;
   industry?: any;
   website?: string;
   bussinessNumber?: string;
-  owner?: any;
   contacts?: any;
 }
 
@@ -56,6 +63,11 @@ export interface AddressBookContact extends BaseDto {
   altContactNumber?: string;
   email?: string;
   website?: string;
+  city?: any;
+  postcode?: any;
+  suburb?: string;
+  streetName?: string;
+  office?: string;
   group?: any;
 }
 

@@ -1,5 +1,5 @@
 ﻿import {SignUp, AccountOrganization, AccountOrganizationMember, AuthorizationData, ModelOptions} from '../../client/core/dto';
-import {AccountOrganizationModel} from '../core/model';
+import {AccountOrganizationModel, CountryModel, StateModel} from '../core/model';
 import {BaseService} from '../core/base_service';
 import {ObjectUtil} from '../../client/core/util';
 import {accountOrganizationMemberService} from '../account_organization_member/account_organization_member_service';
@@ -7,7 +7,21 @@ import {accountOrganizationMemberService} from '../account_organization_member/a
 export class AccountOrganizationService extends BaseService<AccountOrganization> {
 
 	constructor() {
-		super(AccountOrganizationModel);
+		const modelOptions: ModelOptions = {
+			population: [
+				{path: 'city',
+					populate: {
+						path: 'state', 
+						model: StateModel,
+						populate: {
+							path: 'country', 
+							model: CountryModel
+						}
+					}
+				}
+			]
+		};
+		super(AccountOrganizationModel, modelOptions);
 	}
 
 	createOneWithMember(data: SignUp = {}, options: ModelOptions = {}): Promise<AccountOrganization> {

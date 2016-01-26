@@ -1,15 +1,29 @@
 
 import {AddressBookGroup, AddressBookContact, AccountUser, ModelOptions, AuthorizationData} from '../../client/core/dto';
-import {AddressBookGroupModel} from '../core/model';
+import {AddressBookGroupModel, StateModel, CountryModel} from '../core/model';
 import {BaseService} from '../core/base_service';
 import {addressBookContactService} from '../address_book_contact/address_book_contact_service';
-import {countryService} from '../country/country_service';
 import {ObjectUtil} from '../../client/core/util';
 
 export class AddressBookGroupService extends BaseService<AddressBookGroup> {
 
 	constructor() {
-		super(AddressBookGroupModel);
+		const modelOptions: ModelOptions = {
+			population: [
+				{path: 'industry', select: 'code description'},
+				{path: 'city',
+					populate: {
+						path: 'state', 
+						model: StateModel,
+						populate: {
+							path: 'country', 
+							model: CountryModel
+						}
+					}
+				}
+			]
+		}
+		super(AddressBookGroupModel, modelOptions);
 	}
 	
 	findGroup(data: AddressBookGroup, options: ModelOptions = {}): Promise<AddressBookGroup[]> {
@@ -45,12 +59,10 @@ export class AddressBookGroupService extends BaseService<AddressBookGroup> {
 				requireAuthorization: false,
 				authorization: modelOptions.authorization
 			};
-			const toLoad: any = [countryService.findOneById(groupToSend.city.country, childrenModelOptions), 
-							   addressBookContactService.find({ group: groupToSend._id }, childrenModelOptions)];
+			const toLoad: any = [addressBookContactService.find({ group: groupToSend._id }, childrenModelOptions)];
 			Promise.all(toLoad)
 			.then((results: any) => {
-				groupToSend.city.country = results[0];
-				groupToSend.contacts = results[1];
+				groupToSend.contacts = results[0];
 				fulfill(groupToSend);
 			})
 			.catch((err: any) => {
