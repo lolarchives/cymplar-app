@@ -42,7 +42,7 @@ namespace HelperServices {
 					error.data.status = error.status;
 				}
 	
-				if (error.token === false) {
+				if (error.data.token === false) {
 					this.$rootScope.$broadcast('badToken',{data: 'Illegal token access'});
 				}
 				error.data.statusText = error.statusText;

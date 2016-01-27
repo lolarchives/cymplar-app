@@ -105,12 +105,7 @@ namespace app {
             });
           },
           companies: function($http: angular.IHttpService, $AddressBookRESTService: any) {
-            return $AddressBookRESTService.allCompanies().then(function(response: any) {
-              if (response.success) {
-                return response.data;
-              }
-
-            });
+            return $AddressBookRESTService.allCompanies();
           }
         }
       })

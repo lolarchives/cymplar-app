@@ -10,6 +10,7 @@ import {authentication} from './authentication/authentication_middleware';
 import * as contactRouter from './contact/contact_router';
 
 import * as countryRouter from './country/country_router';
+import * as stateRouter from './state/state_router';
 import * as cityRouter from './city/city_router';
 import * as industryRouter from './industry/industry_router';
 import * as addressBookGroupRouter from './address_book_group/address_book_group_router';
@@ -38,6 +39,7 @@ server.all('/api/*', authentication.validate);
 server.use('/api/contact', contactRouter);
 
 server.use('/api/country', countryRouter);
+server.use('/api/state', stateRouter);
 server.use('/api/city', cityRouter);
 server.use('/api/industry', industryRouter);
 server.use('/api/address-book-group', addressBookGroupRouter);

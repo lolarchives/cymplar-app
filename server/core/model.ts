@@ -59,10 +59,17 @@ const schemas = {
     createdAt: { type: Number },
     updatedAt: { type: Number }
   }),
-  city: new Schema({
+  state: new Schema({
     code: { type: String, required: true },
     name: { type: String, required: true },
     country: { type: ObjectId, ref: 'country', required: true },
+    createdAt: { type: Number },
+    updatedAt: { type: Number }
+  }),
+  city: new Schema({
+    code: { type: String, required: true },
+    name: { type: String, required: true },
+    state: { type: ObjectId, ref: 'state', required: true },
     createdAt: { type: Number },
     updatedAt: { type: Number }
   }),
@@ -80,6 +87,11 @@ const schemas = {
     altContactNumber: { type: String },
     email: { type: String, required: true },
     website: { type: String },
+    city: { type: ObjectId, ref: 'city'},
+    postcode: { type: String },
+    suburb: { type: String },
+    streetName: { type: String },
+    office: { type: String },
     group: { type: ObjectId, ref: 'addressBookGroup', required: true, index: true },
     createdBy: { type: ObjectId, ref: 'accountUser' },
     createdAt: { type: Number },
@@ -90,6 +102,7 @@ const schemas = {
     description: { type: String },
     city: { type: ObjectId, ref: 'city', required: true },
     postcode: { type: String },
+    suburb: { type: String },
     streetName: { type: String },
     industry: { type: ObjectId, ref: 'industry', required: true },
     website: { type: String },
@@ -104,8 +117,15 @@ const schemas = {
     firstName: { type: String },
     middleName: { type: String },
     lastName: { type: String },
+    locale: { type: String, required: true },
+    picture: { type: String },
     alias: { type: String },
-    birthday: { type: Date }
+    birthday: { type: Date },
+    timezone: { type: Number },
+    gender: { type: String },
+    verified: { type: Number },
+    status: { type: Number, default: 1, required: true, index: true },
+    lastLoginDate: { type: Date }
   }),
   accountOrganization: new Schema({
     name: { type: String, required: true, index: true },
@@ -114,6 +134,7 @@ const schemas = {
     city: { type: ObjectId, ref: 'city', index: true },
     postcode: { type: String },
     suburb: { type: String },
+    streetName: { type: String },
     industry: { type: ObjectId, ref: 'industry' },
     bussinessNumber: { type: String },
     team: { type: Number },
@@ -195,7 +216,8 @@ const schemas = {
 };
 
 
-schemas.city.index({ code: 1, country: 1 }, { unique: true });
+schemas.city.index({ code: 1, state: 1 }, { unique: true });
+schemas.state.index({ code: 1, country: 1 }, { unique: true });
 schemas.addressBookContact.index({ email: 1, group: 1 }, { unique: true });
 schemas.addressBookGroup.index({ name: 1, createdBy: 1 }, { unique: true });
 schemas.accountOrganizationMember.index({ email: 1, organization: 1 }, { unique: true });
@@ -224,6 +246,7 @@ export const UserModel = db.model('user', schemas.user);
 export const CompanyModel = db.model('company', schemas.company);
 export const ContactModel = db.model('contact', schemas.contact);
 export const CountryModel = db.model('country', schemas.country);
+export const StateModel = db.model('state', schemas.state);
 export const CityModel = db.model('city', schemas.city);
 export const IndustryModel = db.model('industry', schemas.industry);
 export const AddressBookContactModel = db.model('addressBookContact', schemas.addressBookContact);

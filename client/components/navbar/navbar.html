@@ -223,11 +223,11 @@
         </h5>
         <h5 class="sub-title" data-toggle="collapse" data-target="#collapse8">
                     <span class="glyphicon glyphicon-chevron-down left-icon" aria-hidden="true"></span>
-                    Companies/Groups
+                    Companies/Groups 
                     <a href="" class="create-btn" title="Create new companies/group" ui-sref="main.addressBook.newCompany">
                         <span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span>
                     </a>
-                    <div class="dropdown">
+                    <!--<div class="dropdown">
                         <span class="glyphicon glyphicon-option-horizontal" aria-hidden="true" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></span>
                         <ul class="dropdown-menu dropdown-menu-right">
                             <li class="current"><a href="#">All</a></li>
@@ -235,10 +235,13 @@
                             <li><a href="#">Upcoming</a></li>
                             <li><a href="#">Unread Changes</a></li>
                         </ul>
-                    </div>
+                    </div>-->
                 </h5>
         <div class="collapse in" id="collapse8">
           <ul class="main-nav">
+            <li ng-repeat="company in navCtrl.companies" ng-class="{'current': navCtrl.$state.params.id == company._id && navCtrl.$state.current.name == 'main.addressBook.selectedCompany'}">
+              <a  ng-click="navCtrl.$state.go('main.addressBook.selectedCompany',{id: company._id, company: company});navCtrl.$AddressBookRESTService.selectedCompany = company" href="">{{company.name}}</a>
+             </li>
           </ul>
         </div>
         <!--collapse-->

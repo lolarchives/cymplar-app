@@ -33,11 +33,7 @@ router.delete('/:id', (req, res) => {
 
 router.get('/_find', (req: express.Request, res: express.Response) => {
   const modelOptions: ModelOptions = {
-    authorization: getAuthorizationData(req),
-    population: [
-					{ path: 'industry', select: 'code description' },
-					{ path: 'city', select: 'code name country' }
-				]
+    authorization: getAuthorizationData(req)
   };
   addressBookGroupService.findGroup(req.query, modelOptions)
     .then((groups: AddressBookGroup[]) => formatSend(res, groups), (err: any) => sendError(res, err));
