@@ -19,7 +19,7 @@ const schemas = {
     email: { type: String, unique: true, required: true },
     password: { type: String, required: true },
     name: { type: String, required: true },
-    locale: { type: String, required: true },
+    locale: { type: String },
     picture: { type: String },
     countryCode: { type: String },
     timezone: { type: Number },
