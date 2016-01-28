@@ -20,7 +20,7 @@ const schemas = {
     password: { type: String, required: true },
     name: { type: String, required: true },
     locale: { type: String },
-    picture: { type: String },
+    picture: { type: String, default: 'eng' },
     countryCode: { type: String },
     timezone: { type: Number },
     gender: { type: String },
