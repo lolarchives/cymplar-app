@@ -167,9 +167,8 @@ namespace SignUp {
 		constructor(private $scope: any, private $http: angular.IHttpBackendService, private $log: angular.ILogService,
 			private $SignUpRESTService: any, private countries: any, private industries: any,
 			private AuthToken: any, private $state: any) {
-			console.log(this.AuthToken);
-			this.firstStep = false;
-			this.secondStep = true;
+			this.firstStep = true;
+			this.secondStep = false;
 			this.finalStep = false;
 		};
 		
