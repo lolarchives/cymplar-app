@@ -106,7 +106,7 @@ const schemas = {
     streetName: { type: String },
     industry: { type: ObjectId, ref: 'industry', required: true },
     website: { type: String },
-    bussinessNumber: { type: String },
+    businessNumber: { type: String },
     createdBy: { type: ObjectId, ref: 'accountUser', required: true, index: true },
     createdAt: { type: Number },
     updatedAt: { type: Number }
@@ -136,7 +136,7 @@ const schemas = {
     suburb: { type: String },
     streetName: { type: String },
     industry: { type: ObjectId, ref: 'industry' },
-    bussinessNumber: { type: String },
+    businessNumber: { type: String },
     team: { type: Number },
     web: { type: String },
     facebook: { type: String },
