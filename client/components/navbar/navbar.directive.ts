@@ -36,7 +36,7 @@ export class NavbarController {
   constructor(moment: moment.MomentStatic, private $state: any, 
     private $scope: angular.IScope, private AuthToken: any,
     private $AddressBookRESTService: any) {
-   
+    this.console = console; 
     $scope.$on('$stateChangeSuccess', (event, toState, toParams, fromState, fromParams) => {
       if (this.STATE_WITH_RIGHT_PANEL.indexOf(toState.name) !== -1) {
         this.displayInfo = false;

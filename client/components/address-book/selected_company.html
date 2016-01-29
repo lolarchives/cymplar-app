@@ -4,93 +4,99 @@
 		<div class="padding-box">
 			<div class="row">
 				<div class="col-lg-6">
-					<h3>Organisation details {{abCtrl.editing}}</h3>
+					<h3>Organisation details</h3>
 					
-					<form class="form-horizontal" ng-submit="abCtrl.createCompany(abCtrl.newCompany)">
-						<div class="form-group">
+					<form class="form-horizontal" ng-submit="abCtrl.submitEditing()">
+						<div class="form-group display-company">
 							<label for="input1" class="col-md-3 control-label"><strong class="text-danger">*</strong>Name</label>
 							<div class="col-md-9">
-								<input type="text" class="form-control"  ng-disabled="!abCtrl.editing" ng-model="abCtrl.$AddressBookRESTService.selectedCompany.name" required>
+								<input type="text" class="form-control"  ng-hide="!abCtrl.editing" ng-model="abCtrl.editingCompany.name" required>
+								<h5 ng-show="!abCtrl.editing"  > {{abCtrl.$AddressBookRESTService.selectedCompany.name}}</h5>
 							</div>
 						</div>
 						<!--form-group-->
-						<div class="form-group">
+						<div class="form-group display-company">
 							<label for="input1" class="col-md-3 control-label">Business number</label>
 							<div class="col-md-9">
-								<input type="text" class="form-control" ng-disabled="!abCtrl.editing" ng-model="abCtrl.$AddressBookRESTService.selectedCompany.businessNumber">
+								<input type="text" class="form-control" ng-hide="!abCtrl.editing" ng-model="abCtrl.editingCompany.businessNumber">
+								<h5 ng-show="!abCtrl.editing"  > {{abCtrl.$AddressBookRESTService.selectedCompany.businessNumber}}</h5>
 							</div>
 						</div>
-						<div class="form-group">
+						<div class="form-group display-company">
 							<label for="input1" class="col-md-3 control-label">Description</label>
 							<div class="col-md-9">
-								<input type="text" class="form-control" ng-disabled="!abCtrl.editing" ng-model="abCtrl.$AddressBookRESTService.selectedCompany.description">
+								<input type="text" class="form-control" ng-hide="!abCtrl.editing" ng-model="abCtrl.editingCompany.description">
+								<h5 ng-show="!abCtrl.editing"  > {{abCtrl.$AddressBookRESTService.selectedCompany.description}}</h5>
 							</div>
 						</div>
 						<!--form-group-->
-						<div class="form-group">
+						<div class="form-group display-company">
 							<label for="input2" class="col-md-3 control-label"><strong class="text-danger">*</strong>Industry</label>
 							<div class="col-md-9">
-								<select ng-show="abCtrl.editing" class="form-control" id="organizationIndustry" name="organizationIndustry"  ng-model="abCtrl.$AddressBookRESTService.selectedCompany.industry"  ng-options="industry as industry.description for industry in abCtrl.industries"
+								<select ng-if="abCtrl.editing" class="form-control" id="organizationIndustry" name="organizationIndustry"  ng-model="abCtrl.editingCompany.industry"  ng-options="industry as industry.description for industry in abCtrl.industries"
 								required>
 									<option></option>
 								</select>
-								<input ng-show="!abCtrl.editing"  type="text" class="form-control" id="input3" ng-disabled="!abCtrl.editing" ng-model="abCtrl.$AddressBookRESTService.selectedCompany.industry.description">
+								<h5 ng-show="!abCtrl.editing"  > {{abCtrl.$AddressBookRESTService.selectedCompany.industry.description}}</h5>
 							</div>
 						</div>
 						<!--form-group-->
-						<div class="form-group">
+						<div class="form-group display-company">
 							<label for="input3" class="col-md-3 control-label">Website</label>
 							<div class="col-md-9">
-								<input type="text" class="form-control" id="input3" ng-disabled="!abCtrl.editing" ng-model="abCtrl.$AddressBookRESTService.selectedCompany.website">
+								<input type="text" class="form-control" id="input3" ng-hide="!abCtrl.editing" ng-model="abCtrl.editingCompany.website">
+								<h5 ng-show="!abCtrl.editing"  > {{abCtrl.$AddressBookRESTService.selectedCompany.website}}</h5>
 							</div>
 						</div>
 						<!--form-group-->
-						<div class="form-group">
+						<div class="form-group display-company">
 							<label for="input4" class="col-md-3 control-label"><strong class="text-danger">*</strong>Country</label>
 							<div class="col-md-9">
 								<select class="form-control" id="country" name="country" required ng-options="country._id as country.name for country in abCtrl.countries"
-								ng-hide="!abCtrl.editing" ng-model="abCtrl.$AddressBookRESTService.selectedCompany.country" ng-change="abCtrl.countryChanged(abCtrl.$AddressBookRESTService.selectedCompany)">
+								ng-hide="!abCtrl.editing" ng-model="abCtrl.editingCompany.country" ng-change="abCtrl.countryChanged(abCtrl.editingCompany)">
 									<option></option>
 								</select>
-								<input type="text" class="form-control" id="input3" disabled ng-show="!abCtrl.editing" ng-model="abCtrl.$AddressBookRESTService.selectedCompany.city.country.name">
+								<h5 ng-show="!abCtrl.editing"  > {{abCtrl.$AddressBookRESTService.selectedCompany.city.country.name}}</h5>
 							</div>
 						</div>
 						<!--form-group-->
-						<div class="form-group">
+						<div class="form-group display-company">
 							<label for="input5" class="col-md-3 control-label">
 								<strong class="text-danger">*</strong>City
-								<i class="fa fa-spinner pull-right fa-lg fa-spin" ng-show="abCtrl.$AddressBookRESTService.selectedCompany.queryingCity"></i>
+								<i class="fa fa-spinner pull-right fa-lg fa-spin" ng-show="abCtrl.editingCompany.queryingCity"></i>
 							</label>
 
 							<div class="col-md-9">
-								<select class="form-control" ng-disabled="abCtrl.$AddressBookRESTService.selectedCompany.disableCity" id="city" name="city" ng-options="city._id as city.name for city in abCtrl.$AddressBookRESTService.selectedCompany.availableCities"
-								ng-show="abCtrl.editing" ng-model="abCtrl.$AddressBookRESTService.selectedCompany.city" ng-required="abCtrl.$AddressBookRESTService.selectedCompany.availableCities.length > 0">
+								<select class="form-control" ng-disabled="abCtrl.editingCompany.disableCity" id="city" name="city" ng-options="city._id as city.name for city in abCtrl.editingCompany.availableCities"
+								ng-show="abCtrl.editing" ng-model="abCtrl.editingCompany.city" ng-required="abCtrl.editingCompany.availableCities.length > 0">
 									<option value=""></option>
 								</select>
-								<input type="text" class="form-control" id="input3" disabled ng-show="!abCtrl.editing" ng-model="abCtrl.$AddressBookRESTService.selectedCompany.city.name">
+								<h5 ng-show="!abCtrl.editing"  > {{abCtrl.$AddressBookRESTService.selectedCompany.city.name}}</h5>
 							</div>
 						</div>
 
 						<!--form-group-->
-						<div class="form-group">
+						<div class="form-group display-company">
 							<label for="input5" class="col-md-3 control-label">Suburb</label>
 							<div class="col-md-9">
-								<input type="text" class="form-control" id="suburb" ng-disabled="!abCtrl.editing" ng-model="abCtrl.$AddressBookRESTService.selectedCompany.suburb"
-								>
+								<input type="text" class="form-control" id="suburb" ng-hide="!abCtrl.editing" ng-model="abCtrl.editingCompany.suburb">
+								<h5 ng-show="!abCtrl.editing" > {{abCtrl.$AddressBookRESTService.selectedCompany.suburb}}</h5>
 							</div>
 						</div>
 						<!--form-group-->
 						<div class="form-group">
 							<label for="input5" class="col-md-3 control-label">Postcode</label>
 							<div class="col-md-9">
-								<input type="text" class="form-control" id="postcode" ng-disabled="!abCtrl.editing" ng-model="abCtrl.$AddressBookRESTService.selectedCompany.postcode">
+								<input type="text" class="form-control" id="postcode" ng-hide="!abCtrl.editing" ng-model="abCtrl.editingCompany.postcode">
+								<h5 ng-show="!abCtrl.editing"> {{abCtrl.$AddressBookRESTService.selectedCompany.postcode}}</h5>
 							</div>
 						</div>
 						<!--form-group-->
 						<div class="row" style="margin: 0px">
-							<button type="button" ng-show="!abCtrl.editing" class="btn btn-primary pull-right" ng-click="abCtrl.startEditing()">Edit</button>
-							<button type="button" ng-show="abCtrl.editing" class="btn btn-danger pull-left" ng-click="abCtrl.cancelEditing()">Cancel</button>
-							<button type="button" ng-show="abCtrl.editing" class="btn btn-primary pull-right" ng-click="abCtrl.cancelEditing()">Submit</button>
+							<button type="button" ng-show="!abCtrl.editing" class="btn btn-primary pull-right" ng-click="abCtrl.startEditing()">Change details</button>
+							<button type="button" ng-show="abCtrl.editing" class="btn btn-danger pull-left" ng-click="abCtrl.editing = false">Cancel</button>
+
+							<button type="submit" ng-show="abCtrl.editing" class="btn btn-primary pull-right" >Save Details</button>
 						</div>
 				</div>
 				<!--col-lg-6-->
@@ -112,8 +118,8 @@
 								<div class="panel-body">
 
 									<ul class="nav nav-tabs" role="tablist">
-										<li role="presentation" class="active"><a href="#tab1" role="tab" data-toggle="tab">Info</a></li>
-										<li role="presentation"><a href="#tab2" role="tab" data-toggle="tab">Address</a></li>
+										<li role="presentation" class="active"><a role="tab" data-toggle="tab">Info</a></li>
+										<li role="presentation"><a role="tab" data-toggle="tab">Address</a></li>
 									</ul>
 									<!--nav-->
 

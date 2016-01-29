@@ -51,7 +51,7 @@ export interface AddressBookGroup extends BaseDto {
   streetName?: string;
   industry?: any;
   website?: string;
-  bussinessNumber?: string;
+  businessNumber?: string;
   contacts?: any;
 }
 
@@ -63,11 +63,7 @@ export interface AddressBookContact extends BaseDto {
   altContactNumber?: string;
   email?: string;
   website?: string;
-  city?: any;
-  postcode?: any;
-  suburb?: string;
-  streetName?: string;
-  office?: string;
+  alternativeAddress?: string;
   group?: any;
 }
 
@@ -89,7 +85,7 @@ export interface AccountOrganization extends BaseDto {
   postcode?: any;
   suburb?: string;
   industry?: any;
-  bussinessNumber?: string;
+  businessNumber?: string;
   team?: number;
   web?: string;
   facebook?: string;

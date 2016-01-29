@@ -22,7 +22,7 @@ export class AddressBookGroupService extends BaseService<AddressBookGroup> {
 					}
 				}
 			]
-		}
+		};
 		super(AddressBookGroupModel, modelOptions);
 	}
 	
