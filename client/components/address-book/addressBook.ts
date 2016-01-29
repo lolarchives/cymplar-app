@@ -69,10 +69,12 @@ namespace AddressBook {
         private console: any;
         private sampleContact: any;
         private matching:boolean = false;
+        private modal: any;
         /** @ngInject */
         constructor(private $state: any, private countries: any,
             private $SignUpRESTService: any, private industries: any,
-            private $AddressBookRESTService: any, private toastr: any, private $scope: any) {
+            private $AddressBookRESTService: any, private toastr: any, private $scope: any,
+            private $uibModal: any) {
             this.console = console;
             $scope.$on('$stateChangeSuccess', () => {
                 this.editing = false
@@ -127,10 +129,27 @@ namespace AddressBook {
 
 
         }
-
+        remove(){
+            console.log(this.$AddressBookRESTService.selectedCompany);
+            let result: boolean = confirm("Are you sure. All the contact belong to this group will be lost?");
+            if (result) {
+                this.$AddressBookRESTService.deleteCompany(this.$AddressBookRESTService.selectedCompany._id).then( (response: any) => {
+                     if (response.success) {
+                        let index = this.$AddressBookRESTService.allCompaniesCached.indexOf(this.$AddressBookRESTService.selectedCompany);
+                        this.$AddressBookRESTService.allCompaniesCached.splice(index,1);
+                        this.$AddressBookRESTService.selectedCompany = undefined;
+                        this.$state.go('main.dashboard');
+                    } else {
+                        this.toastr.error(response.msg);
+                    }
+                })
+                
+            }
+            
+        }
         stateChanged(subject: any) {
             // implement cac(hing for higher network efficiency
-              console.log('state changed');
+        
             if (subject.state === undefined || subject.state === null) {
                 subject.disableCity = true;
                 subject.queryingCity = false;
@@ -238,7 +257,6 @@ namespace AddressBook {
         submitEditing() {
             if (!(this.editingCompany.queryingCity || this.editingCompany.disableCity)) {
                 this.$AddressBookRESTService.editCompany(this.editingCompany).then((response: any) => {
-                    console.log(response);
                     if (response.success) {
                         let index = this.$AddressBookRESTService.allCompaniesCached.indexOf(this.$AddressBookRESTService.selectedCompany);
                         this.$AddressBookRESTService.allCompaniesCached[index] = response.data;

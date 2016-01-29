@@ -170,6 +170,7 @@ namespace SignUp {
 			this.firstStep = true;
 			this.secondStep = false;
 			this.finalStep = false;
+			this.signUpDetails = <SignUpDetails>{};
 		};
 		
 		
@@ -223,8 +224,10 @@ namespace SignUp {
 		}
 		countryChanged() {
 			// implement caching for higher network efficiency
-
-			if (this.signUpDetails.country === undefined) {
+			this.disableCity = true;
+			this.signUpDetails.city = undefined;
+			this.queryingCity = false;
+			if (this.signUpDetails.country === undefined || this.signUpDetails.country === null) {
 				this.disableState = true;
 				this.signUpDetails.state = undefined;
 				this.queryingState = false;
@@ -246,8 +249,8 @@ namespace SignUp {
 			}
 		}
 		stateChanged() {
-			if (this.signUpDetails.state === undefined) {
-				
+			if (this.signUpDetails.state === undefined || this.signUpDetails.state === null) {
+
 				this.disableCity = true;
 				this.signUpDetails.city = undefined;
 				this.queryingCity = false;
@@ -257,7 +260,7 @@ namespace SignUp {
 					this.disableCity = true;
 					this.$SignUpRESTService.getCities(this.signUpDetails.state).then((response: any) => {
 						this.cachedCities[this.signUpDetails.state] = response;
-						
+
 						this.queryingCity = false;
 						this.disableCity = false;
 						this.availableCities = response.data;

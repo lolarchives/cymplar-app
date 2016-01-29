@@ -117,6 +117,7 @@
 						</div>
 						<!--form-group-->
 						<div class="row" style="margin: 0px">
+							<button type="button" ng-show="!abCtrl.editing" class="btn btn-danger pull-left" ng-disabled="abCtrl.matching" ng-click="abCtrl.remove()">Remove this company</button>
 							<button type="button" ng-show="!abCtrl.editing" class="btn btn-primary pull-right" ng-disabled="abCtrl.matching" ng-click="abCtrl.startEditing()">Change details</button>
 							<button type="button" ng-show="abCtrl.editing" class="btn btn-danger pull-left" ng-click="abCtrl.editing = false">Cancel</button>
 

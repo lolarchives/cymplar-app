@@ -18,6 +18,11 @@ namespace AddressBookServices {
 				params: {
 					id: '@_id',
 				}
+			},
+			'deleteCompany': {
+				method: 'DELETE',
+				url: BACK_END_ROUTE + '/address-book-group/:id',
+		
 			}
 		});
 		return resources;
@@ -38,6 +43,9 @@ namespace AddressBookServices {
 		};
 		editCompany = (company: any) => {
 			return this.$resourceHelper.resourceRESTCall(this.$AddressBookRESTResource, "editCompany", company, true);
+		};
+		deleteCompany = (companyId: string) => {
+			return this.$resourceHelper.resourceRESTCall(this.$AddressBookRESTResource, "deleteCompany", {id:companyId}, true);
 		};
 		private allCompaniesCached: any[] = [];
 		private selectedCompany: any;
