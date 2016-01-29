@@ -60,6 +60,7 @@ namespace AddressBook {
 
         private disableCity: boolean;
         private cachedCities: any[] = [];
+        private cachedStates: any[] = [];
         private newCompany: any;
         private queryingCity: boolean;
         private availableCities: any[] = [];
@@ -67,6 +68,7 @@ namespace AddressBook {
         private editingCompany: any;
         private console: any;
         private sampleContact: any;
+        private matching:boolean = false;
         /** @ngInject */
         constructor(private $state: any, private countries: any,
             private $SignUpRESTService: any, private industries: any,
@@ -90,39 +92,147 @@ namespace AddressBook {
 
         countryChanged(subject: any) {
             // implement caching for higher network efficiency
-            console.log(subject);
-            if (subject.country === undefined) {
-                subject.disableCity = true;
-                if (subject._id === undefined) { // this is the new company
-                    this.newCompany.city = undefined;
+          
+            if (subject._id === undefined) { // this is the new company
+                this.newCompany.city = undefined;
+            } else {
+                this.editingCompany.city = undefined;
+            }
+            subject.disableCity = true;
+            subject.queryingCity = false;
+            if (subject.country === undefined || subject.country === null) {
+                subject.disableState = true;
+                subject.queryingState = false;
+                if (subject._id === undefined) { // subject is the new company
+                    this.newCompany.state = undefined;
                 } else {
-                    this.$AddressBookRESTService.selectedCompany.city = undefined;
+                    this.editingCompany.state = undefined;
                 }
 
             } else {
-                if (this.cachedCities[subject.country] === undefined) {
+                if (this.cachedStates[subject.country] === undefined) {
+                    subject.disableState = true;
+                    subject.queryingState = true;
+                    this.$SignUpRESTService.getStates(subject.country).then((response: any) => {
+                        this.cachedStates[subject.country] = response.data;
+                        subject.disableState = false;
+                        subject.queryingState = false;
+                        subject.availableStates = response.data;
+                    });
+                } else {
+                    subject.disableState = false;
+                    subject.availableStates = this.cachedStates[subject.country];
+                }
+            }
+
+
+        }
+
+        stateChanged(subject: any) {
+            // implement cac(hing for higher network efficiency
+              console.log('state changed');
+            if (subject.state === undefined || subject.state === null) {
+                subject.disableCity = true;
+                subject.queryingCity = false;
+                if (subject._id === undefined) { // this is the new company
+                    this.newCompany.city = undefined;
+                } else {
+                    this.editingCompany.city = undefined;
+                }
+
+            } else {
+                if (this.cachedCities[subject.state] === undefined) {
                     subject.disableCity = true;
                     subject.queryingCity = true;
-                    this.$SignUpRESTService.getCities(subject.country).then((response: any) => {
-                        this.cachedCities[subject.country] = response;
+                    this.$SignUpRESTService.getCities(subject.state).then((response: any) => {
+                        this.cachedCities[subject.country] = response.data;
                         subject.disableCity = false;
                         subject.queryingCity = false;
                         subject.availableCities = response.data;
-
                     });
                 } else {
                     subject.disableCity = false;
-                    subject.availableCities = this.cachedCities[this.newCompany.country];
+                    subject.availableCities = this.cachedCities[subject.state];
                 }
             }
         }
+
         startEditing() {
-            this.editing = true;
+            this.matching = true;
             // pass by memory
-    
+        
             this.editingCompany = angular.copy(this.$AddressBookRESTService.selectedCompany);
             //this.editingCompany.country = angular.copy(this.$AddressBookRESTService.selectedCompany.city.country.id);
-           
+            this.editingCompany.refCity = angular.copy(this.editingCompany.city)
+            // match industries
+            console.log(this.editingCompany.industry._id);
+            for (let i = 0; i < this.industries.length; i++) {
+                if (this.industries[i]._id === this.editingCompany.industry._id) {
+                    this.editingCompany.industry = this.industries[i];
+                    break;
+                }
+            }
+            // match country
+            for (let i = 0; i < this.countries.length; i++) {
+                if (this.countries[i]._id === this.editingCompany.refCity.state.country._id) {
+                    this.editingCompany.country = this.countries[i]._id;
+                    break;
+                }
+            }
+
+
+            if (this.cachedStates[this.editingCompany.city.state.country._id] === undefined) {
+                this.editingCompany.disableState = true;
+                this.editingCompany.queryingState = true;
+                this.$SignUpRESTService.getStates(this.editingCompany.city.state.country._id).then((response: any) => {
+                    this.cachedStates[this.editingCompany.city.state.country._id] = response.data;
+                    this.editingCompany.disableState = false;
+                    this.editingCompany.queryingState = false;
+                    this.editingCompany.availableStates = response.data;
+                    this.matchState();
+                });
+            } else {
+                this.editingCompany.disableState = false;
+                this.editingCompany.availableStates = this.cachedStates[this.editingCompany.city.state.country._id];
+                this.matchState();
+            }
+        }
+
+        matchState() {
+            if (this.cachedCities[this.editingCompany.city.state._id] === undefined) {
+                this.editingCompany.disableCity = true;
+                this.editingCompany.queryingCiy = true;
+                this.$SignUpRESTService.getCities(this.editingCompany.refCity.state._id).then((response: any) => {
+                    this.cachedCities[this.editingCompany.refCity.state._id] = response.data;
+                    this.editingCompany.disableCity = false;
+                    this.editingCompany.queryingCiy = false;
+                    this.editingCompany.availableCities = response.data;
+                    this.matchCity();
+                });
+            } else {
+                this.editingCompany.disableCity = false;
+                this.editingCompany.availableCities = this.cachedCities[this.editingCompany.city.state._id]
+                this.matchCity();
+            } 
+             
+            for (let i = 0; i < this.editingCompany.availableStates.length; i++) {
+                if (this.editingCompany.availableStates[i]._id === this.editingCompany.refCity.state._id) {
+              
+                    this.editingCompany.state = this.editingCompany.availableStates[i]._id;
+                    break;
+                }
+            }
+        }
+        matchCity() {
+            for (let i = 0; i < this.editingCompany.availableCities.length; i++) {
+                if (this.editingCompany.availableCities[i]._id === this.editingCompany.refCity._id) {
+                    this.editingCompany.city = this.editingCompany.availableCities[i]._id;
+                    break;
+                }
+                
+            }
+            this.matching = false;
+            this.editing = true;
         }
 
         submitEditing() {
