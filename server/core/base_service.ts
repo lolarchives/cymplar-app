@@ -42,7 +42,7 @@ export abstract class BaseService<T extends BaseDto> extends BaseAuthorizationSe
 						reject(err);
 						return;
 					}
-					resolve(populatedObj);
+					resolve(populatedObj.toObject());
 					return;
 				});
 			});	
@@ -67,12 +67,20 @@ export abstract class BaseService<T extends BaseDto> extends BaseAuthorizationSe
 				for (let prop in data) {
 					foundDoc[prop] = data[prop];
 				}
+				
 				foundDoc.save((err: Error, savedDoc: any) => {
 					if (err) {
 						reject(err);
 						return;
 					}
-					resolve(savedDoc.toObject());
+					savedDoc.populate(txModelOptions.population, (err: Error, populatedObj: any) => {
+						if (err) {
+							reject(err);
+							return;
+						}
+						resolve(populatedObj.toObject());
+						return;
+					});
 				});
 			});
 		});
