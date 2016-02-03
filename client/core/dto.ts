@@ -63,11 +63,7 @@ export interface AddressBookContact extends BaseDto {
   altContactNumber?: string;
   email?: string;
   website?: string;
-  city?: any;
-  postcode?: any;
-  suburb?: string;
-  streetName?: string;
-  office?: string;
+  alternativeAddress?: string;
   group?: any;
 }
 
