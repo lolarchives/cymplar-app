@@ -1,0 +1,56 @@
+<div class="container container-small">
+	<img src="img/logo-red.jpg" alt="Cymplar" class="margin-b-xl">
+	<div class="margin-b-xl">
+		<h3 class="margin-n"><strong>Login</strong> <small ng-show="liCtrl.domainExist">To {{liCtrl.domain}}@cymplar.com</small></h3>
+	</div>
+
+	<form name="domainSubmitForm" ng-submit="liCtrl.submitDomain()" ng-hide="liCtrl.domainExist">
+
+
+		<div class="input-group margin-b">
+			<input type="text" class="form-control" required placeholder="Your domain" autofocus ng-model="liCtrl.domain" ng-blur="liCtrl.domainChanged()">
+			<div class="input-group-addon">cymplar.com</div>
+		</div>
+		<div class="form-group text-center" ng-show="liCtrl.domainExist == false">
+			<p class="text-danger">Organization does not exist</p>
+		</div>
+		<input type="submit" value="Submit" class="btn btn-block btn-primary margin-b-l">
+
+		<p><strong>Not a member yet? <a ui-sref="signup">Register now</a></strong></p>
+
+	</form>
+
+	<form class="form-horizontal" ng-submit="liCtrl.login()" ng-show="liCtrl.domainExist">
+		<div class="form-group">
+			<div class="col-md-5 control-label">
+				<label for="username" class="margin-b-n"><strong class="text-danger">*</strong> Username</label>
+				<i class="fa fa-spinner pull-right fa-lg fa-spin" ng-show="suCtrl.checkingUsername"></i>
+				<i class="fa fa-check pull-right fa-lg" ng-show="suCtrl.availableUsername"></i>
+			</div>
+			<div class="col-md-7">
+				<input type="text" class="form-control" id="username" name="username" ng-model="liCtrl.loginDetails.username" required>
+			</div>
+		</div>
+
+		<!--form-group-->
+		<div class="form-group">
+			<div class="col-md-5 control-label">
+				<label for="password" class="margin-b-n"><strong class="text-danger">*</strong> Password</label>
+			</div>
+			<div class="col-md-7">
+				<input type="password" class="form-control" id="password" min="6" max="20" name="password" required ng-model="liCtrl.loginDetails.password">
+			</div>
+		</div>
+
+		<div class="form-group text-center" ng-show="liCtrl.loginError">
+			<p class="text-danger">{{liCtrl.errorMessage}}</p>
+		</div>
+			
+		<button class="btn btn-primary btn-block margin-b-l"  type="submit">Login</button>
+			
+		<p><strong><a ng-click="liCtrl.switchDomain()">Switch organization</a></strong></p>
+
+
+	</form>
+
+</div>

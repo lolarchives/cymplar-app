@@ -4,20 +4,14 @@ import {BACK_END_ROUTE, SignUp} from '../../core/dto';
 
 namespace SignUpServices {
 
-	const SAMPLE_URL = "http://jsonplaceholder.typicode.com";
+	
 	
 	/** @ngInject */
     function $SignUpRESTResource($resource: angular.resource.IResourceService): angular.resource.IResourceClass<any> {
 		let url = "/api/signup";
 		
-		// TODO: fix this once have the real api
 		let resources: angular.resource.IResourceClass<any> = $resource(url, {}, {
-			'getSampleJson': {
-				method: 'GET',
-				isArray: true,
-				url: SAMPLE_URL + '/users',
-				params: { text: 'sample text' }
-			},
+
 			'getIndustries': {
 				method: 'GET',
 				url: BACK_END_ROUTE + '/industry/_find'
@@ -46,7 +40,7 @@ namespace SignUpServices {
 				method: 'GET',
 				url: BACK_END_ROUTE + '/account-organization-member/_exist'
 			},
-			'signUp':{
+			'signUp': {
 				method: 'POST',
 				url: BACK_END_ROUTE + '/signup'
 			}
@@ -61,14 +55,6 @@ namespace SignUpServices {
 		constructor(private $http: angular.IHttpService, private $SignUpRESTResource: any, private $q: any, private $resourceHelper: any) {
 
 		}
-
-		getSampleJson = () => {
-			let result: angular.IPromise<any> = this.$http.get(SAMPLE_URL + '/users', {});
-			return result;
-		};
-		getSampleJsonFromResource = (params: any) => {
-			return this.$resourceHelper.resourceRESTCall(this.$SignUpRESTResource, "getSampleJson", params);
-		};
 		getCountries = (params: any) => {
 			return this.$resourceHelper.resourceRESTCall(this.$SignUpRESTResource, "getCountries", params);
 		};
@@ -91,8 +77,8 @@ namespace SignUpServices {
 			return this.$resourceHelper.resourceRESTCall(this.$SignUpRESTResource, "isAccountOrganizationExisted", {domain: organizationName });
 		};
 		signUp = (signUpDetails: SignUp) => {
-			return this.$resourceHelper.resourceRESTCall(this.$SignUpRESTResource, "signUp",signUpDetails)
-		}
+			return this.$resourceHelper.resourceRESTCall(this.$SignUpRESTResource, "signUp", signUpDetails);
+		};
 
 	};
 

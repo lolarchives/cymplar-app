@@ -51,6 +51,7 @@ export const PATH = {
       slash(resolve('moment/moment.js')),
       slash(resolve(`angular/angular.js`)),
       slash(resolve(`angular-resource/angular-resource.js`)),
+      slash(resolve(`angular-cookies/angular-cookies.js`)),
       `${BC}/angular-bootstrap/ui-bootstrap.js`,
       `${BC}/angular-bootstrap/ui-bootstrap-tpls.js`,
       slash(resolve(`angular-ui-router/build/angular-ui-router.js`)),

@@ -1,5 +1,19 @@
-<div class="container">
-  
-  <button ng-click="main.showToastr()" class="btn btn-lg btn-success" type="button">Splendid Toastr</button>
-  
+<div class="page-header">
+
+  <h1>Main page</h1>
 </div>
+
+<hr>
+<h3>User:</h3>
+<pre>{{main.userBeautified}}</pre>
+<hr>
+
+<h3>Organization:</h3>
+<pre>{{main.organizationBeautified}}</pre>
+<hr>
+
+<h3>Organization member:</h3>
+<pre>{{main.organizationMemberBeautified}}</pre>
+<hr>
+
+<button class="btn btn-danger" ng-click="main.logout()">Log out</button>

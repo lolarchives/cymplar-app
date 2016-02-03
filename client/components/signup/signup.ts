@@ -55,7 +55,7 @@ namespace SignUp {
 
 			this.checkingOrganization = true;
 			this.availableOrganizationName = undefined;
-			if (this.signUpDetails.organizationName != undefined && this.signUpDetails.organizationName.trim() != '') {
+			if (this.signUpDetails.organizationName !== undefined && this.signUpDetails.organizationName.trim() !== '') {
 				this.$SignUpRESTService.isAccountOrganizationExisted(this.signUpDetails.organizationName).then((response: any) => {
 					this.checkingOrganization = false;
 					this.availableOrganizationName = !response.data.exist;
@@ -66,7 +66,7 @@ namespace SignUp {
 		usernameChanged = () => {
 			this.checkingUsername = true;
 			this.availableUsername = undefined;
-			if (this.signUpDetails.username != undefined && this.signUpDetails.username.trim() != '') {
+			if (this.signUpDetails.username !== undefined && this.signUpDetails.username.trim() !== '') {
 				this.$SignUpRESTService.isAccountUserExisted(this.signUpDetails.username).then((response: any) => {
 					this.checkingUsername = false;
 					this.availableUsername = !response.data.exist;
@@ -78,7 +78,7 @@ namespace SignUp {
 		emailChanged = () => {
 			this.checkingEmail = true;
 			this.availableEmail = undefined;
-			if (this.signUpDetails.email != undefined && this.signUpDetails.email.trim() != '') {
+			if (this.signUpDetails.email !== undefined && this.signUpDetails.email.trim() !== '') {
 				this.$SignUpRESTService.isAccountOrganizatioMemberExisted(this.signUpDetails.email).then((response: any) => {
 					this.checkingEmail = false;
 					this.availableEmail = !response.data.exist;
