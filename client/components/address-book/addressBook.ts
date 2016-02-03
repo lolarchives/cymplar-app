@@ -184,7 +184,7 @@ namespace AddressBook {
             //this.editingCompany.country = angular.copy(this.$AddressBookRESTService.selectedCompany.city.country.id);
             this.editingCompany.refCity = angular.copy(this.editingCompany.city)
             // match industries
-            console.log(this.editingCompany.industry._id);
+   
             for (let i = 0; i < this.industries.length; i++) {
                 if (this.industries[i]._id === this.editingCompany.industry._id) {
                     this.editingCompany.industry = this.industries[i];

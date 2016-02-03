@@ -33,12 +33,10 @@ namespace AddressBookServices {
 		};
 		allCompanies = () => {
 			return this.$resourceHelper.resourceRESTCall(this.$AddressBookRESTResource, "allCompanies").then((response: any) => {
-				
 				if (response.success) {
 					this.allCompaniesCached = response.data;
 					return this.allCompaniesCached;
 				};
-				
 			});
 		};
 		editCompany = (company: any) => {
