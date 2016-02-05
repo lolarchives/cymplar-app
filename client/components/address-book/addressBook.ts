@@ -1,6 +1,6 @@
 import '../helper/helper';
 import '../auth/auth.service';
-
+import {AddressBookContact} from '../../core/dto';
 namespace AddressBook {
     /** @ngInject */
     function config($stateProvider: any) {
@@ -45,7 +45,7 @@ namespace AddressBook {
                     if (availableCompanyId.indexOf($stateParams.id) === -1) {
                         $state.go('main.dashboard');
                     } else {
-                        if ($stateParams.company == '@') { // first load page
+                        if ($stateParams.company === '@') { // first load page
                             $stateParams.company = $AddressBookRESTService.allCompaniesCached[index];
                             $AddressBookRESTService.selectedCompany = $stateParams.company;
                         }
@@ -68,8 +68,12 @@ namespace AddressBook {
         private editingCompany: any;
         private console: any;
         private sampleContact: any;
-        private matching:boolean = false;
+        private matching: boolean = false;
         private modal: any;
+        private newContact: AddressBookContact;
+        private creatingContact: boolean = false;
+        private contactEditing: any = {};
+        private backupContacts: any = {};
         /** @ngInject */
         constructor(private $state: any, private countries: any,
             private $SignUpRESTService: any, private industries: any,
@@ -77,8 +81,10 @@ namespace AddressBook {
             private $uibModal: any) {
             this.console = console;
             $scope.$on('$stateChangeSuccess', () => {
-                this.editing = false
-            })
+                this.editing = false;
+                this.creatingContact = false;
+                this.newContact = {};
+            });
             this.sampleContact = {
                 "name": "new Contac",
                 "description": "The w",
@@ -90,6 +96,19 @@ namespace AddressBook {
                 "group": "56972b823381acc03c678293",
                 "_id": "56972c1e3381acc03c678294"
             };
+        }
+        createContact() {
+            this.newContact.group = this.$AddressBookRESTService.selectedCompany._id;
+            console.log(this.newContact);
+            this.$AddressBookRESTService.newContact(this.newContact).then((response: any) => {
+                if (response.success) {
+                    this.$AddressBookRESTService.selectedCompany.contacts.unshift(response.data);
+                    this.newContact = {};
+
+                } else {
+                    this.toastr.error(response.msg);
+                }
+            });
         }
 
         countryChanged(subject: any) {
@@ -126,26 +145,23 @@ namespace AddressBook {
                     subject.availableStates = this.cachedStates[subject.country];
                 }
             }
-
-
         }
-        remove(){
-            console.log(this.$AddressBookRESTService.selectedCompany);
+        remove() {
+
             let result: boolean = confirm("Are you sure. All the contact belong to this group will be lost?");
             if (result) {
-                this.$AddressBookRESTService.deleteCompany(this.$AddressBookRESTService.selectedCompany._id).then( (response: any) => {
-                     if (response.success) {
+                this.$AddressBookRESTService.deleteCompany(this.$AddressBookRESTService.selectedCompany._id).then((response: any) => {
+                    if (response.success) {
                         let index = this.$AddressBookRESTService.allCompaniesCached.indexOf(this.$AddressBookRESTService.selectedCompany);
-                        this.$AddressBookRESTService.allCompaniesCached.splice(index,1);
+                        this.$AddressBookRESTService.allCompaniesCached.splice(index, 1);
                         this.$AddressBookRESTService.selectedCompany = undefined;
                         this.$state.go('main.dashboard');
                     } else {
                         this.toastr.error(response.msg);
                     }
-                })
-                
-            }
-            
+                });
+            };
+
         }
         stateChanged(subject: any) {
             // implement cac(hing for higher network efficiency
@@ -182,7 +198,7 @@ namespace AddressBook {
         
             this.editingCompany = angular.copy(this.$AddressBookRESTService.selectedCompany);
             //this.editingCompany.country = angular.copy(this.$AddressBookRESTService.selectedCompany.city.country.id);
-            this.editingCompany.refCity = angular.copy(this.editingCompany.city)
+            this.editingCompany.refCity = angular.copy(this.editingCompany.city);
             // match industries
    
             for (let i = 0; i < this.industries.length; i++) {
@@ -230,13 +246,13 @@ namespace AddressBook {
                 });
             } else {
                 this.editingCompany.disableCity = false;
-                this.editingCompany.availableCities = this.cachedCities[this.editingCompany.city.state._id]
+                this.editingCompany.availableCities = this.cachedCities[this.editingCompany.city.state._id];
                 this.matchCity();
-            } 
-             
+            }
+
             for (let i = 0; i < this.editingCompany.availableStates.length; i++) {
                 if (this.editingCompany.availableStates[i]._id === this.editingCompany.refCity.state._id) {
-              
+
                     this.editingCompany.state = this.editingCompany.availableStates[i]._id;
                     break;
                 }
@@ -248,7 +264,7 @@ namespace AddressBook {
                     this.editingCompany.city = this.editingCompany.availableCities[i]._id;
                     break;
                 }
-                
+
             }
             this.matching = false;
             this.editing = true;
@@ -274,12 +290,13 @@ namespace AddressBook {
             if (!(newCompany.queryingCity || newCompany.disableCity)) {
                 this.$AddressBookRESTService.newCompany(newCompany).then((response: any) => {
                     if (response.success) {
+                        response.data.contacts = [];
                         this.$AddressBookRESTService.allCompaniesCached.unshift(response.data);
                         this.$AddressBookRESTService.selectedCompany = response.data;
                         this.$state.go('main.addressBook.selectedCompany', { id: response.data._id, company: response.data });
                     } else {
                         if (response.msg.substring(0, 6) === 'E11000') {
-                            this.toastr.error('This company already in your address book')
+                            this.toastr.error('This company already in your address book');
                         } else {
                             this.toastr.error(response.msg);
                         }
@@ -287,6 +304,46 @@ namespace AddressBook {
                 });
             }
         }
+        updateContact(contact: any) {
+            console.log('updating', contact);
+            this.$AddressBookRESTService.editContact(this.backupContacts[contact._id]).then((response: any) => {
+                if (response.success) {
+                    let index = this.$AddressBookRESTService.selectedCompany.contacts.indexOf(contact);
+                    this.$AddressBookRESTService.selectedCompany.contacts[index] = response.data;
+                   this.contactEditing[contact._id] = false;
+                } else {
+                  this.toastr.error(response.msg);
+                }
+            });
+        }
+        removeContact(contact: any) {
+           
+              let result: boolean = confirm("Are you sure? Once deleted the contact data can't be restore");
+            if (result) {
+                this.$AddressBookRESTService.deleteContact(contact).then((response: any) => {
+                    if (response.success) {
+                        let index = this.$AddressBookRESTService.selectedCompany.contacts.indexOf(contact);
+                        this.$AddressBookRESTService.selectedCompany.contacts.splice(index, 1);
+
+                    } else {
+                        this.toastr.error(response.msg);
+                    }
+                });
+            };
+        }
+        startEditContact(contact: any) {
+
+            this.contactEditing[contact._id] = true;
+            this.backupContacts[contact._id] = angular.copy(contact);
+            console.log('start edit', contact);
+        }
+        cancelEditContact(contact: any) {
+
+            this.contactEditing[contact._id] = false;
+            console.log('end edit', contact);
+        }
+
+
     }
 
     angular
