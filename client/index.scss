@@ -22,3 +22,13 @@
 		margin-top: 5px;
 	}
 }
+.left-panel {
+	.title {
+		a {
+			color:#7a93ab;
+			&:hover{
+				color:#9cb5cd;
+			} 
+		}
+	}
+}

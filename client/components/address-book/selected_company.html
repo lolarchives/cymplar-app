@@ -211,9 +211,9 @@
 									</div>
 								</div>
 
-								
 
-								<div class="form-group" >
+
+								<div class="form-group">
 									<div class="col-md-3 control-label">
 										<label for="input14" class="margin-b-n">Alternative address</label>
 									</div>
@@ -242,7 +242,8 @@
 										<label for="input13" class="margin-b-n"><strong class="text-danger">*</strong> Name</label>
 									</div>
 									<div class="col-md-9">
-										<input type="text" ng-show="abCtrl.contactEditing[contact._id]" class="form-control" id="contact{{$index}}Name" ng-model="abCtrl.backupContacts[contact._id].name" required>
+										<input type="text" ng-show="abCtrl.contactEditing[contact._id]" class="form-control" id="contact{{$index}}Name" ng-model="abCtrl.backupContacts[contact._id].name"
+										required>
 										<h5 ng-hide="abCtrl.contactEditing[contact._id]"> {{contact.name}}</h5>
 									</div>
 								</div>
@@ -274,8 +275,8 @@
 										<label for="input14" class="margin-b-n"><strong class="text-danger">*</strong>Contact number</label>
 									</div>
 									<div class="col-md-9">
-										<input type="text" ng-show="abCtrl.contactEditing[contact._id]" class="form-control" id="contact{{$index}}Number" required title="Please enter a valid phone number" pattern="^\+?[0-9]{3}-?[0-9]{6,12}$"
-										ng-model="abCtrl.backupContacts[contact._id].contactNumber">
+										<input type="text" ng-show="abCtrl.contactEditing[contact._id]" class="form-control" id="contact{{$index}}Number" required
+										title="Please enter a valid phone number" pattern="^\+?[0-9]{3}-?[0-9]{6,12}$" ng-model="abCtrl.backupContacts[contact._id].contactNumber">
 										<h5 ng-hide="abCtrl.contactEditing[contact._id]"> {{contact.contactNumber}}</h5>
 									</div>
 								</div>
@@ -285,7 +286,8 @@
 										<label for="input14" class="margin-b-n">Alternative contact number</label>
 									</div>
 									<div class="col-md-9">
-										<input type="text" ng-show="abCtrl.contactEditing[contact._id]" class="form-control" id="contact{{$index}}alternativeContactNumber" ng-model="abCtrl.backupContacts[contact._id].altContactNumber">
+										<input type="text" ng-show="abCtrl.contactEditing[contact._id]" class="form-control" id="contact{{$index}}alternativeContactNumber"
+										ng-model="abCtrl.backupContacts[contact._id].altContactNumber">
 										<h5 ng-hide="abCtrl.contactEditing[contact._id]"> {{contact.altContactNumber}}</h5>
 									</div>
 								</div>
@@ -310,7 +312,7 @@
 									</div>
 								</div>
 
-								
+
 
 								<div class="form-group">
 									<div class="col-md-3 control-label">
@@ -329,7 +331,7 @@
 								<div class="pull-left">
 									<input type="button" value="Cancel" ng-show="abCtrl.contactEditing[contact._id]" class="btn btn-danger" ng-click="abCtrl.cancelEditContact(contact)">
 								</div>
-								
+
 								<div class="pull-right">
 									<input type="button" value="Edit details" ng-hide="abCtrl.contactEditing[contact._id]" class="btn btn-primary" ng-click="abCtrl.startEditContact(contact)">
 								</div>
@@ -344,8 +346,9 @@
 			</div>
 			<!--row-->
 
-			<br>
-			<br>
 		</div>
+
+		<!--right panel-->
 	</div>
+
 </div>

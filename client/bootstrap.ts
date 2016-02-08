@@ -111,7 +111,14 @@ namespace app {
       })
       .state('main.dashboard', {
         url: '/dashboard',
-        template: '{{mainCtrl.user}}<br>{{navCtrl.user}}',
+        views: {
+          'main': {
+            template: '{{mainCtrl.user}}<br>{{navCtrl.user}}',
+            controller: 'MainController',
+            controllerAs: 'mainCtrl',
+          }
+
+        },
       });
 
     $urlRouterProvider.otherwise('/dashboard');
@@ -127,6 +134,7 @@ namespace app {
     'ngResource',
     'ui.router',
     'ui.bootstrap',
+    'angular-multiple-transclusion',
     'toastr',
     'ngCookies',
     'app.contacts',

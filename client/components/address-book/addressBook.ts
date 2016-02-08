@@ -8,9 +8,19 @@ namespace AddressBook {
             .state('main.addressBook', {
                 url: '/address_book',
                 abstract: true,
-                controller: 'AddressBookController',
-                controllerAs: 'abCtrl',
-                template: '<ui-view class="grid-block vertical"></ui-view>',
+                views: {
+                    'main': {
+                        template: '<ui-view class="grid-block vertical"></ui-view>',
+                        controller: 'AddressBookController',
+                        controllerAs: 'abCtrl',
+                    },
+                    'right-bar': {
+                        templateUrl: 'components/address-book/right_bar.html',
+                        controller: 'AddressBookController',
+                        controllerAs: 'abCtrl',
+                    },
+
+                },
                 resolve: {
                     countries: ($SignUpRESTService: any) => {
                         return $SignUpRESTService.getCountries().then((response: any) => {
@@ -27,7 +37,10 @@ namespace AddressBook {
             .state('main.addressBook.newCompany', {
                 url: '/new_company',
                 templateUrl: 'components/address-book/new_company.html',
-
+            })
+            .state('main.addressBook.allCompanies', {
+                url: '/all_companies',
+                templateUrl: 'components/address-book/all_companies.html',
             })
             .state('main.addressBook.selectedCompany', {
                 url: '/:id',
@@ -74,28 +87,20 @@ namespace AddressBook {
         private creatingContact: boolean = false;
         private contactEditing: any = {};
         private backupContacts: any = {};
+        private count: number = 0;
         /** @ngInject */
         constructor(private $state: any, private countries: any,
             private $SignUpRESTService: any, private industries: any,
             private $AddressBookRESTService: any, private toastr: any, private $scope: any,
             private $uibModal: any) {
             this.console = console;
+            console.log('count',this.count);
+            this.count+=1 ;
             $scope.$on('$stateChangeSuccess', () => {
                 this.editing = false;
                 this.creatingContact = false;
                 this.newContact = {};
             });
-            this.sampleContact = {
-                "name": "new Contac",
-                "description": "The w",
-                "position": "Accountant",
-                "contactNumber": "11311111",
-                "altContactNumber": "",
-                "email": "newc@gmail.com",
-                "website": "lin website",
-                "group": "56972b823381acc03c678293",
-                "_id": "56972c1e3381acc03c678294"
-            };
         }
         createContact() {
             this.newContact.group = this.$AddressBookRESTService.selectedCompany._id;
@@ -310,15 +315,15 @@ namespace AddressBook {
                 if (response.success) {
                     let index = this.$AddressBookRESTService.selectedCompany.contacts.indexOf(contact);
                     this.$AddressBookRESTService.selectedCompany.contacts[index] = response.data;
-                   this.contactEditing[contact._id] = false;
+                    this.contactEditing[contact._id] = false;
                 } else {
-                  this.toastr.error(response.msg);
+                    this.toastr.error(response.msg);
                 }
             });
         }
         removeContact(contact: any) {
-           
-              let result: boolean = confirm("Are you sure? Once deleted the contact data can't be restore");
+
+            let result: boolean = confirm("Are you sure? Once deleted the contact data can't be restore");
             if (result) {
                 this.$AddressBookRESTService.deleteContact(contact).then((response: any) => {
                     if (response.success) {

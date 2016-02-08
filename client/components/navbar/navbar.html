@@ -18,9 +18,9 @@
 
   <div class="grid-block">
     <div class="side-panel left-panel" ng-class="{'visible':navCtrl.leftPanelOpen}">
-      <div class="search-bar-wrap">
-        <form class="search-bar" name="searchBarForm">
-          <input type="text" class="field" placeholder="Search">
+      <div class="search-bar-wrap" ng-if="navCtrl.displaySearchBar">
+        <form class="search-bar" name="searchBarForm" ng-submit="navCtrl.submitQuery()">
+          <input type="text" class="field" placeholder="Search" ng-model="navCtrl.queryString">
           <label for="submit-btn" class="label-submit-btn">
             <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
           </label>
@@ -219,11 +219,11 @@
       <div class="aside-block">
         <h5 class="uppercase title">
           <span class="glyphicon glyphicon-book left-icon" aria-hidden="true"></span>
-          <strong>My Address book</strong>
+          <strong><a href="" ui-sref="main.addressBook.allCompanies"> My Address book <a/> </strong>
         </h5>
         <h5 class="sub-title" data-toggle="collapse" data-target="#collapse8">
                     <span class="glyphicon glyphicon-chevron-down left-icon" aria-hidden="true"></span>
-                    Companies/Groups 
+                    Companies/Groups
                     <a href="" class="create-btn" title="Create new companies/group" ui-sref="main.addressBook.newCompany">
                         <span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span>
                     </a>
@@ -240,8 +240,9 @@
         <div class="collapse in" id="collapse8">
           <ul class="main-nav">
             <li ng-repeat="company in navCtrl.companies" ng-class="{'current': navCtrl.$state.params.id == company._id && navCtrl.$state.current.name == 'main.addressBook.selectedCompany'}">
-              <a  ng-click="navCtrl.$state.go('main.addressBook.selectedCompany',{id: company._id, company: company});navCtrl.$AddressBookRESTService.selectedCompany = company;navCtrl.console.log(navCtrl.$AddressBookRESTService.selectedCompany,navCtrl.$AddressBookRESTService.allCompaniesCached)" href="">{{company.name}}</a>
-             </li>
+              <a ng-click="navCtrl.$state.go('main.addressBook.selectedCompany',{id: company._id, company: company});navCtrl.$AddressBookRESTService.selectedCompany = company;navCtrl.console.log(navCtrl.$AddressBookRESTService.selectedCompany,navCtrl.$AddressBookRESTService.allCompaniesCached)"
+              href="">{{company.name}}</a>
+            </li>
           </ul>
         </div>
         <!--collapse-->
@@ -250,7 +251,9 @@
     </div>
     <!--left panel-->
     <!-- ui view here-->
-    <div ng-transclude="" class="grid-block vertical"></div>
+
+    <div ng-transclude="" transclude-from="main" class="grid-block vertical"></div>
+    <div ng-transclude="" ng-show="navCtrl.displayInfo" ng-class="{'visible':navCtrl.rightPanelOpen}" transclude-from="right" class="side-panel right-panel">
   </div>
 </div>
 
