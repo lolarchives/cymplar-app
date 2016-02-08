@@ -5,7 +5,7 @@ namespace Lead {
 	function config($stateProvider: any) {
 		$stateProvider
             .state('main.lead', {
-				url: '/address_book',
+				url: '/lead',
                 abstract: true,
                 views: {
                     'main': {
@@ -25,8 +25,8 @@ namespace Lead {
                 templateUrl: 'components/lead/new_lead.html',
             })
             .state('main.lead.allLeads', {
-                url: '/all_lead',
-                templateUrl: 'components/lead/all_lead.html',
+                url: '/all_leads',
+                templateUrl: 'components/lead/all_leads.html',
             })
             .state('main.lead.selectedLead', {
                 url: '/:id',

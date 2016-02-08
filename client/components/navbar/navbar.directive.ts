@@ -32,7 +32,7 @@ export class NavbarController {
   private displayInfo:boolean = false; 
   private displaySearchBar: boolean = false;
   private console: Console;
-  private STATE_WITH_RIGHT_PANEL = ['main.dashboard', 'main.addressBook.newCompany', 'main.addressBook.selectedCompany'];
+  private STATE_WITH_RIGHT_PANEL = ['main.dashboard', 'main.addressBook.selectedCompany','main.lead.selectedLead'];
   private STATE_WITH_SEARCH_BAR = ['main.dashboard', 'main.addressBook.allCompanies'];
   private queryString: string;
   

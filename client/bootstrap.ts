@@ -10,6 +10,8 @@ import './components/helper/progressBar';
 import './components/auth/auth.service';
 import './components/address-book/addressBook';
 import './components/address-book/addressBook.service';
+import './components/lead/lead';
+import './components/lead/lead.service';
 import './components/helper/account.service';
 declare var moment: moment.MomentStatic;
 
@@ -145,7 +147,7 @@ namespace app {
     'app.addressBook',
     'app.helper',
     'app.ui.helper',
-
+    'app.lead'
   ])
     .config(config)
     .config(routerConfig)
