@@ -14,6 +14,7 @@ namespace SignUp {
 		password: string;
 		passwordConfirm: string;
 		country: string;
+		state: string;
 		city: string;
 		suburb?: string;
 		postcode?: number;
@@ -65,6 +66,8 @@ namespace SignUp {
 					this.availableOrganizationName = !response.data.exist;
 
 				});
+			} else {
+				this.checkingOrganization = false;
 			}
 		};
 		usernameChanged = () => {
@@ -76,6 +79,8 @@ namespace SignUp {
 					this.availableUsername = !response.data.exist;
 
 				});
+			} else {
+				this.checkingUsername = false;
 			}
 		};
 
@@ -88,6 +93,8 @@ namespace SignUp {
 					this.availableEmail = !response.data.exist;
 
 				});
+			} else {
+				this.checkingEmail = false;
 			}
 
 		};
@@ -150,18 +157,20 @@ namespace SignUp {
 		private queryingCity: boolean;
 		private availableCities: any = [];
 		private disableCity: boolean = true;
-		
-		
+		private cachedStates: any[] = [];
+		private availableStates: any[] = [];
+		private disableState: boolean = true;
+		private queryingState: boolean;
 		
 		
 		/* @ngInject */
 		constructor(private $scope: any, private $http: angular.IHttpBackendService, private $log: angular.ILogService,
 			private $SignUpRESTService: any, private countries: any, private industries: any,
-			private AuthToken: any,private $state: any) {
-				console.log(this.AuthToken);
+			private AuthToken: any, private $state: any) {
 			this.firstStep = true;
 			this.secondStep = false;
 			this.finalStep = false;
+			this.signUpDetails = <SignUpDetails>{};
 		};
 		
 		
@@ -187,16 +196,16 @@ namespace SignUp {
 		submitFinalSep(finalStepForm: any) {
 			this.$log.info('signup details ', this.signUpDetails);
 			this.errors = [];
-		
+
 			this.$SignUpRESTService.signUp(this.mapFormToDto(this.signUpDetails)).then((response: any) => {
-				if (response.success){
+				if (response.success) {
 					this.AuthToken.setToken(response.data.token);
 					this.AuthToken.setIdO(response.data.init)
 					alert("Successfully sign up");
 					this.$state.go('main.dashboard');
 				}
-			
-				
+
+
 			}, function(error: any) {
 				console.log('error', error);
 			});
@@ -215,18 +224,45 @@ namespace SignUp {
 		}
 		countryChanged() {
 			// implement caching for higher network efficiency
+			this.disableCity = true;
+			this.signUpDetails.city = undefined;
+			this.queryingCity = false;
+			if (this.signUpDetails.country === undefined || this.signUpDetails.country === null) {
+				this.disableState = true;
+				this.signUpDetails.state = undefined;
+				this.queryingState = false;
+			} else {
+				if (this.cachedStates[this.signUpDetails.country] === undefined) {
+					this.queryingState = true;
+					this.disableState = true;
+					this.$SignUpRESTService.getStates(this.signUpDetails.country).then((response: any) => {
+						this.cachedStates[this.signUpDetails.country] = response;
+						this.queryingState = false;
+						this.disableState = false;
+						this.availableStates = response.data;
 
-			if (this.signUpDetails.country === undefined) {
+					});
+				} else {
+					this.disableState = false;
+					this.availableStates = this.cachedCities[this.signUpDetails.country];
+				}
+			}
+		}
+		stateChanged() {
+			if (this.signUpDetails.state === undefined || this.signUpDetails.state === null) {
+
 				this.disableCity = true;
 				this.signUpDetails.city = undefined;
+				this.queryingCity = false;
 			} else {
-				if (this.cachedCities[this.signUpDetails.country] === undefined) {
-					this.disableCity = true;
+				if (this.cachedCities[this.signUpDetails.state] === undefined) {
 					this.queryingCity = true;
-					this.$SignUpRESTService.getCities(this.signUpDetails.country).then((response: any) => {
-						this.cachedCities[this.signUpDetails.country] = response;
-						this.disableCity = false;
+					this.disableCity = true;
+					this.$SignUpRESTService.getCities(this.signUpDetails.state).then((response: any) => {
+						this.cachedCities[this.signUpDetails.state] = response;
+
 						this.queryingCity = false;
+						this.disableCity = false;
 						this.availableCities = response.data;
 
 					});

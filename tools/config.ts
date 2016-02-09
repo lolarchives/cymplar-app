@@ -57,6 +57,7 @@ export const PATH = {
       slash(resolve(`angular-resource/angular-resource.js`)),
       slash(resolve(`angular-cookies/angular-cookies.js`)),
       `${BC}/angular-bootstrap/ui-bootstrap.js`,
+      `${BC}/angular-multiple-transclusion/dist/angular-multiple-transclusion.min.js`,
       `${BC}/angular-bootstrap/ui-bootstrap-tpls.js`,
       slash(resolve(`angular-ui-router/build/angular-ui-router.js`)),
       slash(resolve('angular-sanitize/angular-sanitize.js')),    

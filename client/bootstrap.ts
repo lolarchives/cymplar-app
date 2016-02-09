@@ -10,6 +10,8 @@ import './components/helper/progressBar';
 import './components/auth/auth.service';
 import './components/address-book/addressBook';
 import './components/address-book/addressBook.service';
+import './components/lead/lead';
+import './components/lead/lead.service';
 import './components/helper/account.service';
 declare var moment: moment.MomentStatic;
 
@@ -111,7 +113,14 @@ namespace app {
       })
       .state('main.dashboard', {
         url: '/dashboard',
-        template: '{{mainCtrl.user}}<br>{{navCtrl.user}}',
+        views: {
+          'main': {
+            template: '{{mainCtrl.user}}<br>{{navCtrl.user}}',
+            controller: 'MainController',
+            controllerAs: 'mainCtrl',
+          }
+
+        },
       });
 
     $urlRouterProvider.otherwise('/dashboard');
@@ -127,6 +136,7 @@ namespace app {
     'ngResource',
     'ui.router',
     'ui.bootstrap',
+    'angular-multiple-transclusion',
     'toastr',
     'ngCookies',
     'app.contacts',
@@ -137,7 +147,7 @@ namespace app {
     'app.addressBook',
     'app.helper',
     'app.ui.helper',
-
+    'app.lead'
   ])
     .config(config)
     .config(routerConfig)

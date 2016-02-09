@@ -13,11 +13,12 @@
     "test"
   ],
   "dependencies": {
-    "angular-bootstrap": "~1.1.0",
+    "angular-bootstrap": "~1.1.1",
     "angular-cookies": "~1.4.8",
     "tinynav": "*",
     "jquery": "~2.2.0",
-    "bootstrap-datetimepicker": "~0.0.11"
+    "bootstrap-datetimepicker": "~0.0.11",
+    "angular-multiple-transclusion": "~1.0.0"
   },
   "resolutions": {
     "angular-bootstrap": "~1.0.3",

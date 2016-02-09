@@ -14,13 +14,13 @@
 					<div class="form-group">
 						<label for="input1" class="col-md-3 control-label">Business number</label>
 						<div class="col-md-9">
-							<input type="text" class="form-control" id="input1" ng-model="abCtrl.newCompany.description">
+							<input type="text" class="form-control" id="input1" ng-model="abCtrl.newCompany.businessNumber">
 						</div>
 					</div>
 					<div class="form-group">
 						<label for="input1" class="col-md-3 control-label">Description</label>
 						<div class="col-md-9">
-							<input type="text" class="form-control" id="input1" ng-model="abCtrl.newCompany.businessNumber">
+							<input type="text" class="form-control" id="input1" ng-model="abCtrl.newCompany.description">
 						</div>
 					</div>
 					<!--form-group-->
@@ -40,21 +40,45 @@
 							<input type="text" class="form-control" id="input3" ng-model="abCtrl.newCompany.website">
 						</div>
 					</div>
+					
+					<div class="form-group">
+						<label for="input1" class="col-md-3 control-label">Street Address</label>
+						<div class="col-md-9">
+							<input type="text" class="form-control" id="input1" ng-model="abCtrl.newCompany.streetName">
+						</div>
+					</div>
+					
 					<!--form-group-->
 					<div class="form-group">
 						<label for="input4" class="col-md-3 control-label"><strong class="text-danger">*</strong>Country</label>
 						<div class="col-md-9">
-							<select class="form-control" id="country" name="country" required ng-options="country._id as country.name for country in abCtrl.countries"
+							<select class="form-control" ng-disabled="abCtrl.newCompany.queryingCity || abCtrl.newCompany.queryingState" id="country" name="country" required ng-options="country._id as country.name for country in abCtrl.countries"
 							ng-model="abCtrl.newCompany.country" ng-change="abCtrl.countryChanged(abCtrl.newCompany)">
 								<option></option>
 							</select>
 						</div>
 					</div>
+					
+					<!--form-group-->
+					<div class="form-group">
+						<label for="input5" class="col-md-3 control-label">
+							<strong class="text-danger">*</strong>State
+							<i class="fa fa-spinner pull-right fa-lg" ng-class="{'fa-spin':abCtrl.newCompany.queryingState}" ng-show="abCtrl.newCompany.queryingState"></i>
+						</label>
+
+						<div class="col-md-9">
+							<select class="form-control" ng-disabled="abCtrl.newCompany.disableState || abCtrl.newCompany.queryingCity" id="state" name="state" ng-options="state._id as state.name for state in abCtrl.newCompany.availableStates"
+							ng-model="abCtrl.newCompany.state" ng-required="abCtrl.availableStates.length > 0" ng-change="abCtrl.stateChanged(abCtrl.newCompany)">
+								<option value=""></option>
+							</select>
+						</div>
+					</div>
+					
 					<!--form-group-->
 					<div class="form-group">
 						<label for="input5" class="col-md-3 control-label">
 							<strong class="text-danger">*</strong>City
-							<i class="fa fa-spinner pull-right fa-lg fa-spin" ng-show="abCtrl.newCompany.queryingCity"></i>
+							<i class="fa fa-spinner pull-right fa-lg " ng-class="{'fa-spin':abCtrl.newCompany.queryingCity}" ng-show="abCtrl.newCompany.queryingCity"></i>
 						</label>
 
 						<div class="col-md-9">
@@ -81,7 +105,7 @@
 					</div>
 					<!--form-group-->
 					<div class="text-right">
-						<input type="submit" value="Create" class="btn btn-primary">
+						<input type="submit" value="Create" class="btn btn-primary" ng-disabled="abCtrl.newCompany.queryingCity || abCtrl.newCompany.queryingState">
 					</div>
 				</form>
 			</div>

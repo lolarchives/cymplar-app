@@ -1,6 +1,10 @@
-<main-navbar user="mainCtrl.user" 
-	organization-member="mainCtrl.organizationMember" 
-	organization="mainCtrl.organization"
-	companies="mainCtrl.companies">
-	<ui-view class="grid-block vertical"></ui-view>
+<main-navbar user="mainCtrl.user" organization-member="mainCtrl.organizationMember" organization="mainCtrl.organization"
+companies="mainCtrl.companies">
+	<div transclude-to="main" class="grid-block vertical" style="height:100%">
+		<div ui-view="main" class="grid-block vertical"></div>
+	</div>
+	<div transclude-to="right" class="grid-block vertical">
+		<div ui-view="right-bar" class="grid-block vertical"></div>
+	</div>
+
 </main-navbar>

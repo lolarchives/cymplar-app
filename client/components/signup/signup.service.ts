@@ -24,6 +24,10 @@ namespace SignUpServices {
 				method: 'GET',
 				url: BACK_END_ROUTE + '/city/_find'
 			},
+			'getStates': {
+				method: 'GET',
+				url: BACK_END_ROUTE + '/state/_find'
+			},
 			'getRoles': {
 				method: 'GET',
 				url: BACK_END_ROUTE + '/account-member-role/_find'	
@@ -61,8 +65,11 @@ namespace SignUpServices {
 		getIndustries = (params: any) => {
 			return this.$resourceHelper.resourceRESTCall(this.$SignUpRESTResource, "getIndustries", params);
 		};
-		getCities = (country: any) => {
-			return this.$resourceHelper.resourceRESTCall(this.$SignUpRESTResource, "getCities", {country: country});
+		getStates = (country: any) => {
+			return this.$resourceHelper.resourceRESTCall(this.$SignUpRESTResource, "getStates", {country: country});
+		};
+		getCities = (state: any) => {
+			return this.$resourceHelper.resourceRESTCall(this.$SignUpRESTResource, "getCities", {state: state});
 		};
 		getRoles = (params: any) => {
 			return this.$resourceHelper.resourceRESTCall(this.$SignUpRESTResource, "getRoles", params );

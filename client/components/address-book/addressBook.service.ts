@@ -18,6 +18,29 @@ namespace AddressBookServices {
 				params: {
 					id: '@_id',
 				}
+			},
+			'deleteCompany': {
+				method: 'DELETE',
+				url: BACK_END_ROUTE + '/address-book-group/:id',
+
+			},
+			'newContact': {
+				method: 'POST',
+				url: BACK_END_ROUTE + '/address-book-contact'
+			},
+			'editContact': {
+				method: 'PUT',
+				url: BACK_END_ROUTE + '/address-book-contact/:id',
+				params: {
+					id: '@_id',
+				}
+			},
+			'deleteContact': {
+				method: 'DELETE',
+				url: BACK_END_ROUTE + '/address-book-contact/:_id',
+				params: {
+					id: '@_id',
+				}
 			}
 		});
 		return resources;
@@ -28,31 +51,41 @@ namespace AddressBookServices {
 		};
 		allCompanies = () => {
 			return this.$resourceHelper.resourceRESTCall(this.$AddressBookRESTResource, "allCompanies").then((response: any) => {
-				
 				if (response.success) {
 					this.allCompaniesCached = response.data;
 					return this.allCompaniesCached;
 				};
-				
 			});
 		};
 		editCompany = (company: any) => {
 			return this.$resourceHelper.resourceRESTCall(this.$AddressBookRESTResource, "editCompany", company, true);
 		};
+		deleteCompany = (companyId: string) => {
+			return this.$resourceHelper.resourceRESTCall(this.$AddressBookRESTResource, "deleteCompany", { id: companyId }, true);
+		};
+		newContact = (contact: any) => {
+			return this.$resourceHelper.resourceRESTCall(this.$AddressBookRESTResource, "newContact", contact, true);
+		};
+		deleteContact = (contact: any) => {
+			return this.$resourceHelper.resourceRESTCall(this.$AddressBookRESTResource, "deleteContact", {_id:contact._id}, true);
+		};
+		editContact = (contact: any) => {
+			return this.$resourceHelper.resourceRESTCall(this.$AddressBookRESTResource, "editContact", contact, true);
+		};
 		private allCompaniesCached: any[] = [];
 		private selectedCompany: any;
-		
-		constructor(private $http: angular.IHttpService, private $AddressBookRESTResource: any, private $q: any, private $resourceHelper: any) {
 
+		constructor(private $http: angular.IHttpService, private $AddressBookRESTResource: any, private $q: any, private $resourceHelper: any) {
+			
 		}
-		
+
 	}
-	
+
 	function get$AddressBookRESTServiceInstance($http: angular.IHttpService, $AddressBookRESTResource: any, $q: any, $resourceHelper: any) {
         return new $AddressBookRESTService($http, $AddressBookRESTResource, $q, $resourceHelper);
     }
 
-	
+
 	angular
 		.module('app.addressBook')
 		.factory('$AddressBookRESTResource', $AddressBookRESTResource)
