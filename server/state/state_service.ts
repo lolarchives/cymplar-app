@@ -5,7 +5,7 @@ import {BaseService} from '../core/base_service';
 export class StateService extends BaseService<State> {
 
 	constructor() {
-		super(StateModel);
+		super(StateModel, { copyAuthorizationData: '' });
 	}
 
 }

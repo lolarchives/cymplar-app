@@ -1,0 +1,163 @@
+﻿import {SalesLeadContact, ModelOptions, AuthorizationResponse, AddressBookContact} from '../../client/core/dto';
+import {SalesLeadContactModel, AddressBookContactModel} from '../core/model';
+import {BaseService} from '../core/base_service';
+import {addressBookContactService} from '../address_book_contact/address_book_contact_service';
+
+export class SalesLeadContactService extends BaseService<SalesLeadContact> {
+
+	constructor() {
+		const defaultModelOptions: ModelOptions = {
+			population: [
+				{ path: 'contact' }
+			]
+		};
+		super(SalesLeadContactModel, defaultModelOptions);
+	}
+
+	//Returns the contacts that are part of the lead
+	findContactsPerLead(newOptions: ModelOptions = {}): Promise<string[]> {
+		return new Promise<string[]>((resolve: Function, reject: Function) => {
+			const salesLeadModelOptions: ModelOptions = {
+				authorization: newOptions.authorization,
+				population: {
+					path: 'contact -id'
+				},
+				distinct: 'contact',
+				copyAuthorizationData: 'lead'
+			};
+		
+			this.findDistinct({}, salesLeadModelOptions)
+			.then((contacts: string[]) => {
+				resolve(contacts);
+			})
+			.catch((err) => { 
+				reject(err);
+				return;
+			});
+		});
+	}
+	
+	findCurrentLeadContacts(data: AddressBookContact, newOptions: ModelOptions = {}): Promise<AddressBookContact[]> {
+		return new Promise<AddressBookContact[]>((resolve: Function, reject: Function) => {
+			this.findContactsPerLead(newOptions)
+			.then((leadContacts: string[]) => {		
+				newOptions.additionalData = {
+					_id: { $in: leadContacts }
+				};
+				newOptions.copyAuthorizationData = '';
+				
+				return addressBookContactService.find(data, newOptions);
+			})
+			.then((leadContacts: AddressBookContact[]) => {
+				resolve(leadContacts);
+			})
+			.catch((err) => { 
+				reject(err);
+				return;
+			});
+		});
+	}
+	
+	findContactsToAddPerLead(data: AddressBookContact, newOptions: ModelOptions = {}): Promise<AddressBookContact[]> {
+		return new Promise<AddressBookContact[]>((resolve: Function, reject: Function) => {
+			const salesLeadModelOptions: ModelOptions = {
+				authorization: newOptions.authorization,
+				population: 'contact',
+				projection: 'contact -_id',
+				copyAuthorizationData: 'lead'
+			};
+		
+			this.find({}, salesLeadModelOptions)
+			.then((leadContacts: AddressBookContact[]) => {
+				
+				const groups: string[] = [];
+				const contacts: string[] = [];
+				
+				for (let i = 0; i < leadContacts.length; i++ ) {
+					const current: AddressBookContact = leadContacts[i]['contact'];
+					contacts.push(current._id);
+					if (groups.indexOf(current.group) < 0) {
+						groups.push(current.group);
+					}
+				}
+			
+				newOptions.additionalData = {
+					_id: { $nin: contacts },
+					group: { $in: groups } 
+				};
+				newOptions.copyAuthorizationData = '';
+				return addressBookContactService.find(data, newOptions);
+			})
+			.then((leadContacts: AddressBookContact[]) => {
+				resolve(leadContacts);
+			})
+			.catch((err) => { 
+				reject(err);
+				return;
+			});
+		});
+	}
+	
+	protected addAuthorizationDataInCreate(modelOptions: ModelOptions = {}) {
+		switch (modelOptions.copyAuthorizationData) {
+			case 'lead':
+				modelOptions.additionalData['lead'] = modelOptions.authorization.leadMember.lead;
+				modelOptions.additionalData['createdBy'] = modelOptions.authorization.leadMember._id;
+				break;
+			default:
+				break;
+		}
+	}
+	
+	protected addAuthorizationDataPreSearch(modelOptions: ModelOptions = {}) {
+		switch (modelOptions.copyAuthorizationData) {
+			case 'lead':
+				modelOptions.additionalData['lead'] = modelOptions.authorization.leadMember.lead;
+				break;
+			default:
+				break;
+		}
+	}
+	
+	protected authorizationEntity(modelOptions: ModelOptions = {}, roles: string[] = []): AuthorizationResponse {
+		if (modelOptions.requireAuthorization) {
+			
+			if (!this.existsOrganizationMember(modelOptions.authorization)) {
+				return this.createAuthorizationResponse("Sales lead: Unauthorized organization contact");
+			}
+			
+			if (modelOptions.onlyValidateParentAuthorization) {
+				return this.createAuthorizationResponse();
+			}
+
+			if (roles.length > 0 && roles.indexOf(modelOptions.authorization.organizationMember.role.code) < 0) {
+				return this.createAuthorizationResponse("Sales lead contact: Unauthorized contact role");
+			}
+		}
+
+		return this.createAuthorizationResponse();
+	}
+	
+	protected validateAuthDataPostSearchUpdate(modelOptions: ModelOptions = {}, 
+		data?: SalesLeadContact): AuthorizationResponse {
+		const isLeadMember =  modelOptions.authorization.leadMember.lead === data.lead;
+		if (isLeadMember) {
+			return this.createAuthorizationResponse('');
+		}
+		return this.createAuthorizationResponse('Unauthorized document update');
+	}
+	
+	protected validateAuthDataPostSearchRemove(modelOptions: ModelOptions = {}, 
+		data?: SalesLeadContact): AuthorizationResponse {
+		const authRoles = ['OWNER'];
+		const isOrgOwner = authRoles.indexOf(modelOptions.authorization.organizationMember.role.code) < 0;
+		const isLeadMember =  modelOptions.authorization.leadMember.lead === data.lead;
+		if (isOrgOwner || isLeadMember) {
+			return this.createAuthorizationResponse('');
+		}
+		return this.createAuthorizationResponse('Unauthorized document remove');
+	}
+}
+
+export const salesLeadContactService = new SalesLeadContactService();
+

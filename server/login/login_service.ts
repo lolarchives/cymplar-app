@@ -35,7 +35,7 @@ export class LoginService {
 	}
 
 	getToken(accountUser: AccountUser) {
-		const days = 1; // 1 day
+		const days = 30; // 1 day
 		const expires = (Date.now() + (days * 24 * 60 * 60 * 1000));
 
 		const payload = { 
@@ -54,8 +54,9 @@ export class LoginService {
 				population: {
 					path: 'user',
 					match: { username: data.username }
-					},
-				copyAuthorizationData: false
+				},
+				copyAuthorizationData: '',
+				validatePostSearchAuthData: false
 			};
 			accountOrganizationMemberService.findOne({ organization: data.organization }, accountUserModelOptions)
 			.then((accountOrganizationMember: AccountOrganizationMember) => {

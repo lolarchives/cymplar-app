@@ -19,7 +19,7 @@ const schemas = {
     email: { type: String, unique: true, required: true },
     password: { type: String, required: true },
     name: { type: String, required: true },
-    locale: { type: String},
+    locale: { type: String },
     picture: { type: String },
     countryCode: { type: String },
     timezone: { type: Number },
@@ -125,7 +125,7 @@ const schemas = {
   }),
   accountOrganization: new Schema({
     name: { type: String, required: true, index: true },
-    domain: { type: String, required: true, unique: true },
+    domain: { type: String, required: true, unique: true, lowercase: true, trim: true },
     description: { type: String },
     city: { type: ObjectId, ref: 'city', index: true },
     postcode: { type: String },
@@ -173,7 +173,7 @@ const schemas = {
     status: { type: ObjectId, ref: 'salesLeadStatus' },
     contract: { type: String },
     amount: { type: Number },
-    createdBy: { type: ObjectId, ref: 'accountOrganizationMember' },
+    createdBy: { type: ObjectId, ref: 'accountUser' },
     createdAt: { type: Number },
     updatedAt: { type: Number }
   }),
@@ -184,27 +184,20 @@ const schemas = {
     createdAt: { type: Number },
     updatedAt: { type: Number }
   }),
-  salesLeadOrganization: new Schema({
-    lead: { type: ObjectId, ref: 'salesLead', required: true },
-    organization: { type: ObjectId, ref: 'accountOrganization', required: true },
-    createdBy: { type: ObjectId, ref: 'accountOrganizationMember' },
-    createdAt: { type: Number },
-    updatedAt: { type: Number }
-  }),
   salesLeadMemberRole: new Schema({
     code: { type: String, required: true },
     name: { type: String, required: true },
     description: { type: String, required: true },
-    grantCreate: {type: Boolean, required: true },
-    grantDelete: {type: Boolean, required: true }, 
-    grantUpdate: {type: Boolean, required: true },
-    grantRead: {type: Boolean, required: true },
-    grantInvitation: {type: Boolean, required: true }
+    grantCreate: { type: Boolean, required: true },
+    grantDelete: { type: Boolean, required: true }, 
+    grantUpdate: { type: Boolean, required: true },
+    grantRead: { type: Boolean, required: true },
+    grantInvitation: { type: Boolean, required: true }
   }),
   salesLeadOrganizationMember: new Schema({
+    lead: { type: ObjectId, ref: 'salesLead', required: true },
     role: { type: ObjectId, ref: 'salesLeadMemberRole' },
     member: { type: ObjectId, ref: 'accountOrganizationMember', required: true },
-    leadOrganization: { type: ObjectId, ref: 'salesLeadOrganization', required: true },
     createdBy: { type: ObjectId, ref: 'accountOrganizationMember' },
     createdAt: { type: Number },
     updatedAt: { type: Number }
@@ -216,12 +209,11 @@ schemas.city.index({ code: 1, state: 1 }, { unique: true });
 schemas.state.index({ code: 1, country: 1 }, { unique: true });
 schemas.addressBookContact.index({ email: 1, group: 1 }, { unique: true });
 schemas.addressBookGroup.index({ name: 1, createdBy: 1 }, { unique: true });
-schemas.accountOrganizationMember.index({ email: 1, organization: 1 }, { unique: true });
+schemas.accountOrganizationMember.index({ organization: 1, user: 1 }, { unique: true });
 schemas.accountMemberRole.index({ code: 1, name: 1 }, { unique: true });
 schemas.salesLead.index({ name: 1, organization: 1 }, { unique: true });
-schemas.salesLeadContact.index({ leadGroup: 1, contact: 1 }, { unique: true });
-schemas.salesLeadOrganization.index({ organization: 1, lead: 1 }, { unique: true });
-schemas.salesLeadOrganizationMember.index({ member: 1, leadOrganization: 1 }, { unique: true });
+schemas.salesLeadContact.index({ lead: 1, contact: 1 }, { unique: true });
+schemas.salesLeadOrganizationMember.index({ member: 1, lead: 1 }, { unique: true });
 
 
 for (let prop in schemas) {
@@ -254,7 +246,6 @@ export const AccountMemberRoleModel = db.model('accountMemberRole', schemas.acco
 export const SalesLeadStatusModel = db.model('salesLeadStatus', schemas.salesLeadStatus);
 export const SalesLeadModel = db.model('salesLead', schemas.salesLead);
 export const SalesLeadContactModel = db.model('salesLeadContact', schemas.salesLeadContact);
-export const SalesLeadOrganizationModel = db.model('salesLeadOrganization', schemas.salesLeadOrganization);
 export const SalesLeadOrganizationMemberModel = db.model('salesLeadOrganizationMember', schemas.salesLeadOrganizationMember);
 export const SalesLeadMemberRoleModel = db.model('salesLeadMemberRole', schemas.salesLeadMemberRole);
 
@@ -387,4 +378,6 @@ schemas.accountOrganization.pre('remove', function(next: Function) {
     next();
   }); 
 });
+
+
 

@@ -16,9 +16,9 @@ router.post('/', (req, res) => {
 
 router.put('/:id', (req, res) => {
   const modelOptions: ModelOptions = {
-    authorization: getAuthorizationData(req),
-    additionalData: {_id: req.params.id}
+    authorization: getAuthorizationData(req)
   };
+  req.body._id = req.params.id;
   accountUserService.updateOne(req.body, modelOptions)
     .then((user: AccountUser) => formatSend(res, user), (err) => sendError(res, err));
 });
