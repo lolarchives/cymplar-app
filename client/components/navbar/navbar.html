@@ -54,13 +54,13 @@
 
         <h5 class="uppercase title">
                     <span class="glyphicon glyphicon-star left-icon" aria-hidden="true"></span> 
-                    <strong>Sales</strong>
+                    <a href="" ui-sref="main.lead.allLeads"><strong>Sales</strong></a>
                 </h5>
 
         <h5 class="sub-title sub-title notification" data-toggle="collapse" data-target="#collapse1">
-                    <span class="glyphicon glyphicon-chevron-down left-icon" aria-hidden="true"></span>
+                    <span class="glyphicon glyphicon-chevron-down left-icon" aria-hidden="true" ></span>
                     My leads
-                    <a href="" class="create-btn" title="create new">
+                    <a href="" class="create-btn" title="create new" ui-sref="main.lead.newLead({status:'lead'})">
                         <span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span>
                     </a>
                     <div class="dropdown">
@@ -75,7 +75,7 @@
                 </h5>
         <div class="collapse" id="collapse1">
           <ul class="main-nav">
-            <li><a class="sub-title notificationred" href="">Ford-training</a></li>
+            <li><a class="sub-title notificationred" href="" ui-sref="main.lead.selectedLead({lead: {id: 123}})">Ford-training</a></li>
             <li><a href="">Slim-Solutions</a></li>
             <li><a href="">Neuli-Website</a></li>
             <li><a href="">Costco-mufirtc</a></li>
@@ -86,8 +86,8 @@
         <h5 class="sub-title" data-toggle="collapse" data-target="#collapse2">
                     <span class="glyphicon glyphicon-chevron-down left-icon" aria-hidden="true"></span>
                     My Opportunities
-                    <a href="" class="create-btn" title="create new">
-                        <span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span>
+                    <a href="" class="create-btn" title="create new" ui-sref="main.lead.newLead({status:'opporturnity'})">
+                        <span class="glyphicon glyphicon-plus-sign" aria-hidden="true" ></span>
                     </a>
                     <div class="dropdown">
                         <span class="glyphicon glyphicon-option-horizontal" aria-hidden="true" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></span>

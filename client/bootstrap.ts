@@ -108,6 +108,9 @@ namespace app {
           },
           companies: function($http: angular.IHttpService, $AddressBookRESTService: any) {
             return $AddressBookRESTService.allCompanies();
+          },
+          leads: function($http: angular.IHttpService, $LeadRESTService: any) {
+            return $LeadRESTService.allLeads();
           }
         }
       })

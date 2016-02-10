@@ -1,28 +1,40 @@
 import '../helper/helper';
-
+import './lead.service'
 import {AddressBookContact} from '../../core/dto';
 namespace Lead {
-	function config($stateProvider: any) {
-		$stateProvider
+    function config($stateProvider: any) {
+        $stateProvider
             .state('main.lead', {
-				url: '/lead',
+                url: '/lead',
                 abstract: true,
                 views: {
                     'main': {
                         template: '<ui-view class="grid-block vertical"></ui-view>',
-                        controller: 'LeadController',
-                        controllerAs: 'lCtrl',
+
                     },
                     'right-bar': {
                         templateUrl: 'components/lead/right_bar.html',
-                        controller: 'LeadController',
-                        controllerAs: 'lCtrl',
                     },
                 },
-			})
-			.state('main.lead.newLead', {
-                url: '/new_lead',
+                resolve : {
+                    statuses: ($LeadRESTService: any) => {
+                        return $LeadRESTService.allLeadStatuses().then((response: any) => {
+                            return response.data;
+                        });
+                    },
+                }
+            })
+            .state('main.lead.newLead', {
+                url: '/new_lead/:status',
                 templateUrl: 'components/lead/new_lead.html',
+                controller:'NewLeadController',
+                controllerAs:'nlCtrl',
+                params: {
+                    status: '@',
+                },
+                onEnter: function($stateParams: any, $state: any) {
+                    console.log($stateParams);
+                }
             })
             .state('main.lead.allLeads', {
                 url: '/all_leads',
@@ -52,19 +64,26 @@ namespace Lead {
                     }*/
                 }
             });
-		
-	}
-	export class LeadController {
-		private helloWorld: string = "Hello world";
-		constructor(){
-			
-		}
-	}
-	angular
-		.module('app.lead',[
-			'ui.router',
-			'app.helper'
-		])
-		.config(config)
-		.controller('LeadController',LeadController)
+
+    }
+    export class LeadController {
+        private helloWorld: string = "Hello world";
+        constructor(private $stateParams: any) {
+            alert('hi');
+        }
+    }
+    export class NewLeadController {
+        
+        constructor(private $stateParams: any) {
+          
+        }
+    }
+    angular
+        .module('app.lead', [
+            'ui.router',
+            'app.helper'
+        ])
+        .config(config)
+        .controller('LeadController', LeadController)
+        .controller('NewLeadController',NewLeadController)
 }
