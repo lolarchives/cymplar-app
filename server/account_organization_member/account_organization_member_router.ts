@@ -56,7 +56,8 @@ router.get('/_find_team', (req: express.Request, res: express.Response) => {
 router.get('/_exist', (req, res) => {
   const modelOptions: ModelOptions = {
     authorization: getAuthorizationData(req),
-    requireAuthorization: false
+    requireAuthorization: false,
+    copyAuthorizationData: ''
   };
   accountOrganizationMemberService.exist(req.query, modelOptions)
     .then((exist: boolean) => formatSend(res, {exist: exist}), (err: any) => sendError(res, err));

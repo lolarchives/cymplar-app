@@ -51,7 +51,8 @@ router.get('/_find_from_members', (req: express.Request, res: express.Response) 
 router.get('/_exist', (req, res) => {
   const modelOptions: ModelOptions = {
     authorization: getAuthorizationData(req),
-    requireAuthorization: false
+    requireAuthorization: false,
+    copyAuthorizationData: ''
   };
   accountOrganizationService.exist(req.query, modelOptions)
     .then((exist: boolean) => formatSend(res, {exist: exist}), (err: any) => sendError(res, err));
@@ -62,7 +63,8 @@ router.get('/_login', (req, res) => {
     authorization: getAuthorizationData(req),
     regularExpresion: false,
     projection: '_id',
-    requireAuthorization: false
+    requireAuthorization: false,
+    copyAuthorizationData: ''
   };
 
   accountOrganizationService.findOne(req.query, modelOptions)

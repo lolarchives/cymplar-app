@@ -42,7 +42,8 @@ router.get('/_find', (req, res) => {
 router.get('/_exist', (req, res) => {
   const modelOptions: ModelOptions = {
     authorization: getAuthorizationData(req),
-    requireAuthorization: false
+    requireAuthorization: false,
+    copyAuthorizationData: ''
   };
   accountUserService.exist(req.query, modelOptions)
     .then((exist: boolean) => formatSend(res, {exist: exist}), (err: any) => sendError(res, err));
