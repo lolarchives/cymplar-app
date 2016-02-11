@@ -10,7 +10,7 @@ namespace AddressBookServices {
 			},
 			'allCompanies': {
 				method: 'GET',
-				url: BACK_END_ROUTE + '/address-book-group/_find'
+				url: BACK_END_ROUTE + '/address-book-group/_find_contacts'
 			},
 			'editCompany': {
 				method: 'PUT',

@@ -5,7 +5,7 @@ import {BaseService} from '../core/base_service';
 export class SalesLeadStatusService extends BaseService<SalesLeadStatus> {
 
 	constructor() {
-		super(SalesLeadStatusModel);
+		super(SalesLeadStatusModel, { copyAuthorizationData: '' });
 	}
 
 }

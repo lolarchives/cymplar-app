@@ -20,21 +20,21 @@ export class AccountUserService extends BaseService<AccountUser> {
 	}
 	
 	protected validateAuthDataPostSearchUpdate(modelOptions: ModelOptions = {}, data?: AccountUser): AuthorizationResponse {
-		if (data._id !== modelOptions.authorization.user._id) {
+		if (data._id.toString() !== modelOptions.authorization.user._id.toString()) {
 			return this.createAuthorizationResponse('The user cannot perform this action');
 		}
 		return this.createAuthorizationResponse();
 	}
 	
 	protected validateAuthDataPostSearchRemove(modelOptions: ModelOptions = {}, data?: AccountUser): AuthorizationResponse {
-		if (data._id !== modelOptions.authorization.user._id) {
+		if (data._id.toString() !== modelOptions.authorization.user._id.toString()) {
 			return this.createAuthorizationResponse('The user cannot perform this action');
 		}
 		return this.createAuthorizationResponse();
 	}
 	
 	protected validateAuthDataPostSearch(modelOptions: ModelOptions = {}, data?: AccountUser): AuthorizationResponse {
-		if (data._id !== modelOptions.authorization.user._id) {
+		if (data._id.toString() !== modelOptions.authorization.user._id.toString()) {
 			return this.createAuthorizationResponse('The user cannot perform this action');
 		}
 		return this.createAuthorizationResponse();
