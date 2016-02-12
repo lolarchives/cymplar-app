@@ -16,24 +16,30 @@ namespace Lead {
                         templateUrl: 'components/lead/right_bar.html',
                     },
                 },
-                resolve : {
+                resolve: {
                     statuses: ($LeadRESTService: any) => {
                         return $LeadRESTService.allLeadStatuses().then((response: any) => {
-                            return response.data;
+                            if (response.success)
+                                return response.data;
+                            else
+                                return {}
                         });
-                    },
+                    }
                 }
             })
             .state('main.lead.newLead', {
                 url: '/new_lead/:status',
                 templateUrl: 'components/lead/new_lead.html',
-                controller:'NewLeadController',
-                controllerAs:'nlCtrl',
+                controller: 'NewLeadController',
+                controllerAs: 'nlCtrl',
                 params: {
                     status: '@',
                 },
                 onEnter: function($stateParams: any, $state: any) {
-                    console.log($stateParams);
+                    console.log($stateParams)
+                    if ($stateParams.status !== 'lead' && $stateParams.status !== 'opportunity') {
+                        $state.go('main.lead.allLeads');
+                    }
                 }
             })
             .state('main.lead.allLeads', {
@@ -71,19 +77,44 @@ namespace Lead {
         constructor(private $stateParams: any) {
             alert('hi');
         }
+
     }
+
+    export interface SalesLead {
+        name?: string;
+        status?: any;
+        contract?: string;
+        amount?: number;
+        contact?: any;
+        members?: any;
+    }
+
     export class NewLeadController {
+        private newLead: SalesLead;
+        private coldStatusIndex: number;
+        private opportunityStatusIndex: number;
         
-        constructor(private $stateParams: any) {
-          
+        constructor(private $stateParams: any, private $AddressBookRESTService: any, private statuses: any,private $LeadRESTService: any) {
+            for (let i = 0; i< statuses.length;i++) {
+                if (statuses[i].code === "COLD") {this.coldStatusIndex = i;}
+                if (statuses[i].code === "OPP") {this.opportunityStatusIndex = i;}
+            }
+        }
+        createLead(newLead: SalesLead) {
+            if (this.$stateParams.status === "opportunity") { newLead.status = this.statuses[this.opportunityStatusIndex];}
+            if (this.$stateParams.status === "lead") { newLead.status = this.statuses[this.coldStatusIndex];}
+            this.$LeadRESTService.newLead(newLead).then((response: any){
+                
+            })
         }
     }
     angular
         .module('app.lead', [
             'ui.router',
-            'app.helper'
+            'app.helper',
+            'app.addressBook'
         ])
         .config(config)
         .controller('LeadController', LeadController)
-        .controller('NewLeadController',NewLeadController)
+        .controller('NewLeadController', NewLeadController)
 }

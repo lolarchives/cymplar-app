@@ -1,2 +1,74 @@
-{{nlCtrl.$stateParams}}
-{{lCtrl.helloWorld}}
+<div class="grid-content center-panel">
+	<div class="padding-box">
+		<div class="row">
+			<div class="col-lg-12">
+				<h3>New Lead details </h3>
+				<form class="form-horizontal" ng-submit="nlCtrl.createLead(nlCtrl.newLead)">
+					<!--<div class="form-group">
+						<label for="input2" class="col-md-3 control-label"><strong class="text-danger">*</strong>Grou[/Company</label>
+						<div class="col-md-9">
+							<select class="form-control" id="company" name="company" ng-options="company._id as company.name for company in nlCtrl.$AddressBookRESTService.allCompaniesCached"
+							ng-model="nlCtrl.newLead.group" required ng-change="nlCtrl.groupChanged()">
+								<option value=""></option>
+							</select>
+						</div>
+					</div>-->
+
+					<div class="form-group">
+						<label for="input1" class="col-md-3 control-label"><strong class="text-danger">*</strong>Name</label>
+						<div class="col-md-9">
+							<input type="text" class="form-control" id="input1" ng-model="nlCtrl.newLead.name" required>
+						</div>
+					</div>
+					<!--form-group-->
+					<div class="form-group">
+						<label for="input1" class="col-md-3 control-label">Estimate value</label>
+						<div class="col-md-9">
+							<input type="number" class="form-control" step="0.01" id="input1" ng-model="nlCtrl.newLead.amount" >
+						</div>
+					</div>
+					<!--form-group-->
+					
+
+					<div class="form-group">
+						<label for="input1" class="col-md-3 control-label">Description</label>
+						<div class="col-md-9">
+							<input type="text" class="form-control" id="input1" ng-model="nlCtrl.newLead.contract">
+						</div>
+					</div>
+					<!--form-group-->
+
+					
+					
+					<div class="form-group">
+						<label for="input2" class="col-md-3 control-label"><strong class="text-danger">*</strong>Group/Company</label>
+						<div class="col-md-9">
+							<select class="form-control" id="company" name="company" ng-options="company as company.name for company in nlCtrl.$AddressBookRESTService.allCompaniesCached"
+							ng-model="nlCtrl.newLead.group" required ng-change="nlCtrl.groupChanged()">
+								<option value=""></option>
+							</select>
+						</div>
+					</div>
+					
+					<div class="form-group">
+						<label for="input2" class="col-md-3 control-label"><strong class="text-danger">*</strong>Main contact</label>
+						<div class="col-md-9">
+							<select class="form-control" id="company" name="company" ng-options="contact._id as contact.name for contact in nlCtrl.newLead.group.contacts"
+							ng-model="nlCtrl.newLead.contact">
+								<option value=""></option>
+							</select>
+						</div>
+					</div>
+					
+					
+					<!--form-group-->
+					<div class="text-right">
+						<input type="submit" value="Create" class="btn btn-primary" ng-disabled="nlCtrl.newLead.queryingCity || nlCtrl.newLead.queryingState">
+					</div>
+				</form>
+			</div>
+			<!--col-lg-6-->
+		</div>
+	</div>
+	
+</div>
