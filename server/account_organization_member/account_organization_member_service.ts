@@ -62,7 +62,7 @@ export class AccountOrganizationMemberService extends BaseService<AccountOrganiz
 	protected validateAuthDataPostSearchUpdate(modelOptions: ModelOptions = {}, 
 		data?: AccountOrganizationMember): AuthorizationResponse {
 		
-		const isUser =  modelOptions.authorization.organizationMember.user._id === data.user;
+		const isUser =  modelOptions.authorization.organizationMember.user._id.toString() === data.user.toString();
 		if (isUser) {
 			return this.createAuthorizationResponse('');
 		}
@@ -74,7 +74,7 @@ export class AccountOrganizationMemberService extends BaseService<AccountOrganiz
 		
 		const authRoles = ['OWNER'];
 		const isOrgOwner = authRoles.indexOf(modelOptions.authorization.organizationMember.role.code) < 0;
-		const isUser =  modelOptions.authorization.organizationMember.user._id === data.user;
+		const isUser =  modelOptions.authorization.organizationMember.user._id.toString() === data.user.toString();
 		if (isOrgOwner || isUser) {
 			return this.createAuthorizationResponse('');
 		}

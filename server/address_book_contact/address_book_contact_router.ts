@@ -37,7 +37,7 @@ router.get('/_find', (req: express.Request, res: express.Response) => {
     authorization: getAuthorizationData(req),
     copyAuthorizationData: 'createdBy'
   };
-  addressBookContactService.find(req.query, modelOptions)
+  addressBookContactService.findAll(req.query, modelOptions)
     .then((contacts: AddressBookContact[]) => formatSend(res, contacts), (err: any) => sendError(res, err));
 });
 

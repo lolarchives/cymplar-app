@@ -48,7 +48,7 @@ export class AddressBookContactService extends BaseService<AddressBookContact> {
 		});
 	}
 	
-	find(data: AddressBookContact, newOptions: ModelOptions = {}): Promise<AddressBookContact[]> {
+	findAll(data: AddressBookContact, newOptions: ModelOptions = {}): Promise<AddressBookContact[]> {
 		return new Promise<AddressBookContact[]>((resolve: Function, reject: Function) => {
 
 			const groupModelOptions: ModelOptions = {
@@ -74,21 +74,21 @@ export class AddressBookContactService extends BaseService<AddressBookContact> {
 	}
 	
 	protected validateAuthDataPostSearchUpdate(modelOptions: ModelOptions = {}, data?: AddressBookContact): AuthorizationResponse {
-		if (data.createdBy !== modelOptions.authorization.user._id) {
+		if (data.createdBy.toString() !== modelOptions.authorization.user._id.toString()) {
 			return this.createAuthorizationResponse('The user cannot perform this action');
 		}
 		return this.createAuthorizationResponse();
 	}
 	
 	protected validateAuthDataPostSearchRemove(modelOptions: ModelOptions = {}, data?: AddressBookContact): AuthorizationResponse {
-		if (data.createdBy !== modelOptions.authorization.user._id) {
+		if (data.createdBy.toString() !== modelOptions.authorization.user._id.toString()) {
 			return this.createAuthorizationResponse('The user cannot perform this action');
 		}
 		return this.createAuthorizationResponse();
 	}
 	
 	protected validateAuthDataPostSearch(modelOptions: ModelOptions = {}, data?: AddressBookContact): AuthorizationResponse {
-		if (data.createdBy !== modelOptions.authorization.user._id) {
+		if (data.createdBy.toString() !== modelOptions.authorization.user._id.toString()) {
 			return this.createAuthorizationResponse('The user cannot perform this action');
 		}
 		return this.createAuthorizationResponse();
