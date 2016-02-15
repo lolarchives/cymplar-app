@@ -26,7 +26,8 @@ export class SalesLeadService extends BaseService<SalesLead> {
 				const leadMemberCreationModelOptions: ModelOptions = {
 					authorization: newOptions.authorization,
 					requireAuthorization: false,
-					validatePostSearchAuthData: false
+					validatePostSearchAuthData: false,
+					copyAuthorizationData: ''
 				};	   
 				return this.associateOrganizationMembers(createdSalesLead, leadMemberCreationModelOptions); 
 			})
@@ -65,7 +66,6 @@ export class SalesLeadService extends BaseService<SalesLead> {
 			};
 			salesLeadOrganizationMemberService.findLeadsPerOrganization(salesLeadOrgMembOptions)
 			.then((salesLeads: string[]) => {
-				console.log("leads per organization -----------> " + JSON.stringify(salesLeads));
 				newOptions.additionalData = { _id: { $in: salesLeads }};
 				newOptions.requireAuthorization = false;
 				return super.find(data, newOptions); 
@@ -87,7 +87,6 @@ export class SalesLeadService extends BaseService<SalesLead> {
 			};
 			salesLeadOrganizationMemberService.findLeadsPerOrganization(salesLeadOrgMembOptions)
 			.then((salesLeads: string[]) => {
-				console.log("leads per user -----------> " + JSON.stringify(salesLeads));
 				newOptions.additionalData = { _id: { $in: salesLeads }};
 				newOptions.requireAuthorization = false;
 				return super.find(data, newOptions); 

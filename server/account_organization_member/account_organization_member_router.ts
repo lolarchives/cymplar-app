@@ -30,7 +30,7 @@ router.delete('/:id', (req, res) => {
     authorization: getAuthorizationData(req),
     population: 'role organization'
   };
-  accountOrganizationMemberService.removeOneById(req.params.id, modelOptions)
+  accountOrganizationMemberService.removeOneByIdWithValidation(req.params.id, modelOptions)
     .then((member: AccountOrganizationMember) => formatSend(res, member), (err) => sendError(res, err));
 });
 

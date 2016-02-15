@@ -106,8 +106,113 @@ export abstract class BaseService<T extends BaseDto> extends BaseAuthorizationSe
 			});
 		});
 	}
+	
+	updateOneFilter(data: T, newOptions: ModelOptions = {}): Promise<T> {	
+		return new Promise<T>((resolve: Function, reject: Function) => {
+			const txModelOptions = this.obtainTransactionModelOptions(newOptions);
+			const authorizationResponse = this.isUpdateAuthorized(txModelOptions);
+			if (!authorizationResponse.isAuthorized) {
+				reject(new Error(authorizationResponse.errorMessage));
+				return;
+			}
+			this.Model.find(data, txModelOptions.projection)
+			.exec((err: Error, foundObj: any) => {
+				if (err) {
+					reject(err);
+					return;
+				}
+			
+				if (ObjectUtil.isBlank(foundObj)) {
+					reject(new Error("Object could not be found"));
+					return;
+				}
+				
+				
+				if (txModelOptions.validatePostSearchAuthData) {
+					const authorizationResponse = this.validateAuthDataPostSearchUpdate(txModelOptions, foundObj);
+					if (!authorizationResponse.isAuthorized) {
+						reject(new Error(authorizationResponse.errorMessage));
+						return;
+					}	
+				}
+					
+				for (let prop in data) {
+					foundObj[prop] = data[prop];
+				}
+				
+				foundObj.save((err: Error, savedDoc: any) => {
+					if (err) {
+						reject(err);
+						return;
+					}
+					savedDoc.populate(txModelOptions.population, (err: Error, populatedObj: any) => {
+						if (err) {
+							reject(err);
+							return;
+						}
+						resolve(populatedObj.toObject());
+						return;
+					});
+				});
+			});
+		});
+	}
 
-	removeOneById(id: string, newOptions: ModelOptions = {}): Promise<T> {
+	preRemoveOne(data: T, newOptions: ModelOptions = {}): Promise<T> {
+		return new Promise<T>((resolve: Function, reject: Function) => {	
+			const txModelOptions = this.obtainTransactionModelOptions(newOptions);
+			const authorizationResponse = this.isRemoveAuthorized(txModelOptions);
+			if (!authorizationResponse.isAuthorized) {
+				reject(new Error(authorizationResponse.errorMessage));
+				return;
+			}
+			this.addAuthorizationDataPreSearch(txModelOptions);	
+			this.transactionModelOptionsAddData(data, txModelOptions);	
+			const search = this.obtainSearchExpression(data, txModelOptions);
+			this.Model.findOne(search).populate(txModelOptions.population).exec((err: Error, foundDoc: any) => {
+				if (err) {
+					reject(err);
+					return;
+				}
+				if (ObjectUtil.isBlank(foundDoc)) {
+					reject(new Error("Object could not be found"));
+					return;
+				}
+				
+				if (txModelOptions.validatePostSearchAuthData) {
+					const authorizationResponse = this.validateAuthDataPostSearchRemove(txModelOptions, foundDoc);
+					if (!authorizationResponse.isAuthorized) {
+						reject(new Error(authorizationResponse.errorMessage));
+						return;
+					}	
+				}
+				
+				resolve(foundDoc);
+			});
+		});
+	}
+	
+	removeOne(data: T, newOptions: ModelOptions = {}): Promise<T> {
+		return new Promise<T>((resolve: Function, reject: Function) => {	
+			this.preRemoveOne(data, newOptions)
+			.then((objectToRemove: any) => {
+				objectToRemove.remove((err: Error) => {
+					if (err) {
+						reject(err);
+						return;
+					}
+					resolve(objectToRemove.toObject());
+					return;
+				});
+			})
+			.catch((err) => { 
+				reject(err);
+				return;
+			});
+		});
+	}
+	
+	preRemoveOneById(id: string, newOptions: ModelOptions = {}): Promise<T> {
 		return new Promise<T>((resolve: Function, reject: Function) => {	
 			const txModelOptions = this.obtainTransactionModelOptions(newOptions);
 			const authorizationResponse = this.isRemoveAuthorized(txModelOptions);
@@ -133,18 +238,31 @@ export abstract class BaseService<T extends BaseDto> extends BaseAuthorizationSe
 					}	
 				}
 					
-				foundDoc.remove((err: Error) => {
+				resolve(foundDoc);
+			});
+		});
+	}
+	
+	removeOneById(id: string, newOptions: ModelOptions = {}): Promise<T> {
+		return new Promise<T>((resolve: Function, reject: Function) => {	
+			this.preRemoveOneById(id, newOptions)
+			.then((objectToRemove: any) => {
+				objectToRemove.remove((err: Error) => {
 					if (err) {
 						reject(err);
 						return;
 					}
-					resolve(foundDoc.toObject());
+					resolve(objectToRemove.toObject());
 					return;
 				});
+			})
+			.catch((err) => { 
+				reject(err);
+				return;
 			});
 		});
 	}
-
+	
 	removeByFilter(data: T, newOptions: ModelOptions = {}): Promise<T[]> {
 		return new Promise<T[]>((resolve: Function, reject: Function) => {
 			const txModelOptions = this.obtainTransactionModelOptions(newOptions);
@@ -187,7 +305,6 @@ export abstract class BaseService<T extends BaseDto> extends BaseAuthorizationSe
 			this.addAuthorizationDataPreSearch(txModelOptions);	
 			this.transactionModelOptionsAddData(data, txModelOptions);	
 			const search = this.obtainSearchExpression(data, txModelOptions);
-			console.log('search exp: ' + JSON.stringify(search));
 			this.Model.find(search, txModelOptions.projection,
 			 { sort: '-createdAt', lean: true }).populate(txModelOptions.population)
 			.exec((err, foundObjs) => {
@@ -305,7 +422,6 @@ export abstract class BaseService<T extends BaseDto> extends BaseAuthorizationSe
 			this.addAuthorizationDataPreSearch(txModelOptions);	
 			this.transactionModelOptionsAddData(data, txModelOptions);	
 			const search = this.obtainSearchExpression(data, txModelOptions);
-			console.log('search exp: ' + JSON.stringify(search));
 			this.Model.find(search).distinct(txModelOptions.distinct)
 			.exec((err, foundObjs) => {
 				if (err) {

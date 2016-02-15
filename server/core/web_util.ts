@@ -25,7 +25,6 @@ export function formatSend(res: express.Response, result: any, additionalData?: 
 export function getAuthorizationData(req: express.Request): AuthorizationData {
   const authorization: AuthorizationData = req.body.cymplarRole;
   delete req.body.cymplarRole;
-  console.log('auth object: ' + JSON.stringify(authorization));
   return authorization;
 }
 

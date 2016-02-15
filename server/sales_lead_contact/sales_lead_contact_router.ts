@@ -8,7 +8,8 @@ const router = express.Router();
 
 router.post('/', (req, res) => {
   const modelOptions: ModelOptions = {
-    authorization: getAuthorizationData(req)
+    authorization: getAuthorizationData(req),
+    copyAuthorizationData: 'lead'
   };
   salesLeadContactService.createOne(req.body, modelOptions)
     .then((member: SalesLeadContact) => formatSend(res, member), (err) => sendError(res, err));
@@ -16,25 +17,28 @@ router.post('/', (req, res) => {
 
 router.put('/:id', (req, res) => {
   const modelOptions: ModelOptions = {
-    authorization: getAuthorizationData(req)
+    authorization: getAuthorizationData(req),
+    copyAuthorizationData: 'lead'
   };
-  req.body._id = req.params.id;
-  salesLeadContactService.updateOne(req.body)
+  req.body.contact = req.params.id;
+  salesLeadContactService.updateOneFilter(req.body, modelOptions)
     .then((member: SalesLeadContact) => formatSend(res, member), (err) => sendError(res, err));
 });
 
 router.delete('/:id', (req, res) => {
   const modelOptions: ModelOptions = {
     authorization: getAuthorizationData(req),
-    additionalData: {_id: req.params.id}
+    additionalData: {contact: req.params.id},
+    copyAuthorizationData: 'lead'
   };
-  salesLeadContactService.removeOneById(req.params.id, modelOptions)
+  salesLeadContactService.removeOne({}, modelOptions)
     .then((member: SalesLeadContact) => formatSend(res, member), (err) => sendError(res, err));
 });
 
 router.get('/_find', (req: express.Request, res: express.Response) => {
   const modelOptions: ModelOptions = {
-    authorization: getAuthorizationData(req)
+    authorization: getAuthorizationData(req),
+    copyAuthorizationData: 'lead'
   };
   salesLeadContactService.findCurrentLeadContacts(req.query, modelOptions)
     .then((members: SalesLeadContact[]) => formatSend(res, members), (err: any) => sendError(res, err));
@@ -58,9 +62,11 @@ router.get('/_exist', (req, res) => {
 
 router.get('/:id', (req: express.Request, res: express.Response) => {
   const modelOptions: ModelOptions = {
-    authorization: getAuthorizationData(req)
+    authorization: getAuthorizationData(req),
+    additionalData: { contact: req.param },
+    copyAuthorizationData: 'lead'
   };
-  salesLeadContactService.findOneById(req.params.id, modelOptions)
+  salesLeadContactService.findOne({}, modelOptions)
     .then((member: SalesLeadContact) => formatSend(res, member), (err: any) => sendError(res, err));
 });
 

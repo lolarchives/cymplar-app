@@ -8,7 +8,8 @@ const router = express.Router();
 
 router.post('/', (req, res) => {
    const modelOptions: ModelOptions = {
-    authorization: getAuthorizationData(req)
+    authorization: getAuthorizationData(req),
+    copyAuthorizationData: 'createdBy'
   };
   salesLeadOrganizationMemberService.createOne(req.body, modelOptions)
     .then((member: SalesLeadOrganizationMember) => formatSend(res, member), (err) => sendError(res, err));
@@ -16,18 +17,29 @@ router.post('/', (req, res) => {
 
 router.put('/:id', (req, res) => {
   const modelOptions: ModelOptions = {
-    authorization: getAuthorizationData(req)
+    authorization: getAuthorizationData(req),
+    copyAuthorizationData: ''
   };
   req.body._id = req.params.id;
-  salesLeadOrganizationMemberService.updateOne(req.body)
+  salesLeadOrganizationMemberService.updateOne(req.body, modelOptions)
     .then((member: SalesLeadOrganizationMember) => formatSend(res, member), (err) => sendError(res, err));
 });
 
 router.delete('/:id', (req, res) => {
   const modelOptions: ModelOptions = {
-    authorization: getAuthorizationData(req)
+    authorization: getAuthorizationData(req),
+    copyAuthorizationData: '',
+    population: [
+      {	path: 'role' },
+      {   path: 'member',
+          populate: {
+            path: 'role',
+            model: 'accountMemberRole'
+          } 
+      }
+    ]
   };
-  salesLeadOrganizationMemberService.removeOneById(req.params.id)
+  salesLeadOrganizationMemberService.removeOneByIdWithValidation(req.params.id, modelOptions)
     .then((member: SalesLeadOrganizationMember) => formatSend(res, member), (err) => sendError(res, err));
 });
 
@@ -35,7 +47,7 @@ router.get('/_find', (req: express.Request, res: express.Response) => {
   const modelOptions: ModelOptions = {
     authorization: getAuthorizationData(req)
   };
-  salesLeadOrganizationMemberService.findCurrentLeadMembers(req.query, modelOptions)
+  salesLeadOrganizationMemberService.findCurrentLeadMembersPopulated(req.query, modelOptions)
     .then((members: SalesLeadOrganizationMember[]) => formatSend(res, members), (err: any) => sendError(res, err));
 });
 
@@ -68,9 +80,10 @@ router.get('/_exist', (req, res) => {
 
 router.get('/:id', (req: express.Request, res: express.Response) => {
   const modelOptions: ModelOptions = {
-    authorization: getAuthorizationData(req)
+    authorization: getAuthorizationData(req),
+    copyAuthorizationData: ''
   };
-  salesLeadOrganizationMemberService.findOneById(req.params.id)
+  salesLeadOrganizationMemberService.findOneById(req.params.id, modelOptions)
     .then((member: SalesLeadOrganizationMember) => formatSend(res, member), (err: any) => sendError(res, err));
 });
 

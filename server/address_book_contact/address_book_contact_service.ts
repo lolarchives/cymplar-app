@@ -50,15 +50,7 @@ export class AddressBookContactService extends BaseService<AddressBookContact> {
 	
 	findAll(data: AddressBookContact, newOptions: ModelOptions = {}): Promise<AddressBookContact[]> {
 		return new Promise<AddressBookContact[]>((resolve: Function, reject: Function) => {
-
-			const groupModelOptions: ModelOptions = {
-				authorization: newOptions.authorization,
-				distinct: '_id',
-				population: '',
-				copyAuthorizationData: 'createdBy'
-			};
-			
-			addressBookGroupService.findDistinct({}, groupModelOptions)
+			this.getUsersGroups(data, newOptions)
 			.then((idGroups: string[]) => {
 				newOptions.additionalData = { group: { $in: idGroups }};
 				return super.find(data, newOptions);
@@ -94,6 +86,29 @@ export class AddressBookContactService extends BaseService<AddressBookContact> {
 		return this.createAuthorizationResponse();
 	}
 
+	private getUsersGroups(data: AddressBookContact, newOptions: ModelOptions = {}): Promise<string[]> {
+		return new Promise<string[]>((resolve: Function, reject: Function) => {
+			const groupModelOptions: ModelOptions = {
+				authorization: newOptions.authorization,
+				distinct: '_id',
+				population: '',
+				copyAuthorizationData: 'createdBy'
+			};
+			
+			if (ObjectUtil.isPresent(data.group)) {
+				resolve([data.group]);
+			} else {
+				addressBookGroupService.findDistinct({}, groupModelOptions)
+				.then((idGroups: string[]) => {
+					resolve(idGroups);
+				})
+				.catch((err) => { 
+					reject(err);
+					return;
+				});	
+			}
+		});
+	}
 }
 
 export const addressBookContactService = new AddressBookContactService();
