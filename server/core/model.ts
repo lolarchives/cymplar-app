@@ -13,6 +13,12 @@ const db = createConnection(process.env.CYMPLAR_MONGO_URI);
 db.on('error', () => console.error('Error connecting to Database:', process.env.CYMPLAR_MONGO_URI));
 db.once('open', () => console.log('%s: Connected to MongoDb on %s', new Date(), process.env.CYMPLAR_MONGO_URI));
 
+const subDocumentSchemas = {
+  leadStatus: new Schema({
+    label: { type: String, required: true },
+    value: { type: String, required: true }
+  }, { _id : false })
+};
 
 const schemas = {
   user: new Schema({
@@ -141,7 +147,8 @@ const schemas = {
     plus: { type: String },
     dribble: { type: String },
     pinterest: { type: String },
-    createdBy: { type: ObjectId, ref: 'accountUser' }
+    createdBy: { type: ObjectId, ref: 'accountUser' },
+    projectDefaultStatuses: [subDocumentSchemas.leadStatus]
   }),
   accountOrganizationMember: new Schema({
     name: { type: String },
@@ -173,6 +180,8 @@ const schemas = {
     status: { type: ObjectId, ref: 'salesLeadStatus' },
     contract: { type: String },
     amount: { type: Number },
+    leadStatuses: [subDocumentSchemas.leadStatus],
+    currentStatus: subDocumentSchemas.leadStatus,
     createdBy: { type: ObjectId, ref: 'accountUser' },
     createdAt: { type: Number },
     updatedAt: { type: Number }
@@ -251,7 +260,6 @@ export const SalesLeadMemberRoleModel = db.model('salesLeadMemberRole', schemas.
 
 
 schemas.addressBookGroup.post('remove', function() {
-  console.log('postremove addressBookGroup');
   const obj: Document = this;
   AddressBookContactModel.find({group: obj['_id'] }).distinct('_id')
   .exec((err: Error, foundContactsPerGroup: string[]) => {
@@ -275,7 +283,6 @@ schemas.addressBookGroup.post('remove', function() {
 });
 
 schemas.addressBookContact.pre('remove', function(next: Function) {
-  console.log('preremove addressBookContact');
   const obj: Document = this;
   SalesLeadContactModel.find({ contact: obj['_id']})
   .exec((err: Error, foundObjs: Document[]) => {
@@ -331,7 +338,6 @@ schemas.accountUser.post('remove', function() {
   const obj: Document = this;
   AddressBookGroupModel.find({ createdBy: obj['_id'] })
   .exec((err: Error, removedObjs: Document[]) => {
-    console.log('remove groups');
     if (err) {
         return;
     }
@@ -391,8 +397,6 @@ schemas.accountOrganizationMember.pre('remove', function(next: Function) {
 
 schemas.accountOrganizationMember.post('remove', function() {
   const obj: Document = this;
-  console.log("");
-  console.log('postremove 1 accountOrganizationMember REMOVED ' + JSON.stringify(obj));
   const isUserTransaction = ObjectUtil.isPresent(obj['role']['code']);
   const isOwner = obj['role']['code'] === 'OWNER';
   if ( isUserTransaction && isOwner) {
@@ -411,10 +415,7 @@ schemas.accountOrganizationMember.post('remove', function() {
           membersOnCharge.push(foundMembers[i]['_id']);
         } 
       }
-      /*console.log("");
-      console.log('postremove 2 accountOrganizationMember members on charge' + JSON.stringify(membersOnCharge));
-      */
-      if (membersOnCharge.length < 1) {
+     if (membersOnCharge.length < 1) {
         obj['organization'].remove((err: Error) => {
           if (err) {
             return;
@@ -428,7 +429,6 @@ schemas.accountOrganizationMember.post('remove', function() {
 });
 
 schemas.accountOrganization.pre('remove', function(next: Function) {
-  //console.log('preremove 1 accountOrganization');
   const obj = this;
   AccountOrganizationMemberModel.find({ organization: obj['_id'] })
   .exec((err: Error, foundObjs: Document[]) => {
@@ -448,7 +448,6 @@ schemas.accountOrganization.pre('remove', function(next: Function) {
 });
 
 schemas.salesLeadContact.post('remove', function() {
-  console.log('preremove 1 sales lead contact ');
   const obj: Document = this;
   if (ObjectUtil.isPresent(obj['contact']['_id']) && ObjectUtil.isBlank(obj['contact']['group'])) { 
     const contactQuery = {
@@ -479,8 +478,6 @@ schemas.salesLeadContact.post('remove', function() {
 
 schemas.salesLeadOrganizationMember.post('remove', function() {
   const obj: Document = this;
-  console.log('postremove 1 salesLeadOrganizationMember miembro REMOVED: ' + JSON.stringify(obj));
-  
   SalesLeadMemberRoleModel.find({ code: 'OWNER' }).distinct('_id')
   .exec((err: Error, roles: string[]) => {
     if (err) {
@@ -495,14 +492,11 @@ schemas.salesLeadOrganizationMember.post('remove', function() {
     
     SalesLeadOrganizationMemberModel.find(orgQuery) // check whether there are more members or not
     .exec((err: any, foundMembers: any) => {
-      console.log('postremove 1 salesLeadOrganizationMember miembros encontrados: ' + JSON.stringify(foundMembers));
       if (err) {
         return;
       }
       
       if (foundMembers.length < 1) {
-        console.log('removing lead: ' + JSON.stringify(foundMembers));
-        console.log(' lead: ' + JSON.stringify( obj['lead']));
         obj['lead'].remove((err: Error) => {
             if (err) {
               return;
@@ -514,8 +508,8 @@ schemas.salesLeadOrganizationMember.post('remove', function() {
   });
 });
 
+
 schemas.salesLead.pre('remove', function(next: Function) {
-  console.log('preremove 1 salesLead contacts');
   const obj: Document = this;
   const contactPopulation = {	 
       path: 'contact',
@@ -533,7 +527,6 @@ schemas.salesLead.pre('remove', function(next: Function) {
     }
     DatabaseObjectUtil.removeArrayPromise(foundObjs)
     .then((removedObj: Document[]) => {
-      console.log('preremove 2 salesLead members'); 
       SalesLeadOrganizationMemberModel.find({lead: obj['_id']})
       .remove((err: Error, foundObjs: Document[]) => {
         if (err) {

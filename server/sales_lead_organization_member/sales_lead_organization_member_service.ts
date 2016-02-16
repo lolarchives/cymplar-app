@@ -209,11 +209,9 @@ export class SalesLeadOrganizationMemberService extends BaseService<SalesLeadOrg
 		return new Promise<SalesLeadOrganizationMember>((resolve: Function, reject: Function) => {
 			this.preRemoveOneById(id, newOptions)
 			.then((salesLeadOrganizationMember: any) => {
-				console.log('salesLeadOrganizationMember ' + JSON.stringify(salesLeadOrganizationMember));
 				return this.removeOneValidation(salesLeadOrganizationMember, newOptions);
 			})
 			.then((salesLeadOrganizationMember: any) => {
-				console.log('removeOneValidation ' + JSON.stringify(salesLeadOrganizationMember));
 				salesLeadOrganizationMember.remove((err: Error) => {
 					if (err) {
 						reject(err);
@@ -224,7 +222,6 @@ export class SalesLeadOrganizationMemberService extends BaseService<SalesLeadOrg
 				});
 			})
 			.catch((err) => { 
-				console.log('error ' + JSON.stringify(err));
 				reject(err);
 				return;
 			});	
@@ -291,8 +288,6 @@ export class SalesLeadOrganizationMemberService extends BaseService<SalesLeadOrg
 							owners++;
 						}
 					}
-					console.log('members' + JSON.stringify(otherMembers));
-					console.log('owners' + owners);
 					if (owners > 0) {
 						response = this.createAuthorizationResponse('The lead should have at least one owner');
 					} else {
@@ -313,14 +308,8 @@ export class SalesLeadOrganizationMemberService extends BaseService<SalesLeadOrg
 					
 	removeOneValidation(data: any, newOptions: ModelOptions = {}): Promise<any> {
 		return new Promise<any>((resolve: Function, reject: Function) => {
-			console.log(' ');
-			console.log('removeOneValidation salesleadOrg');
-			console.log('removeOneValidation salesleadOrg' + JSON.stringify(newOptions));
 			this.getRemoveLeadMemeberValidation(data, newOptions)
 			.then((authorizationResponse: AuthorizationResponse) => {
-				console.log(' ');
-				console.log('removeOneValidation authorizationResponse');
-				console.log('removeOneValidation authorizationResponse' + JSON.stringify(authorizationResponse));
 				if (!authorizationResponse.isAuthorized) {
 					return this.getRemoveOrgMemeberValidation(data, newOptions);
 				} else {
@@ -344,12 +333,8 @@ export class SalesLeadOrganizationMemberService extends BaseService<SalesLeadOrg
 	
 	getLeadOrganizationMembersToValidate(newOptions: ModelOptions = {}): Promise<AuthorizationResponse> {
 		return new Promise<AuthorizationResponse>((resolve: Function, reject: Function) => {
-			console.log(' ');
-			console.log('getLeadOrganizationMembersToValidate ');
 			this.find({}, newOptions)
 			.then((salesLeadOrganizationMembers: SalesLeadOrganizationMember[]) => {
-				console.log(' ');
-				console.log('getLeadOrganizationMembersToValidate return  ' + JSON.stringify(salesLeadOrganizationMembers));	
 				const promises: Promise<any>[] = [];
 				for (let i = 0; i < salesLeadOrganizationMembers.length; i++) {
 					promises.push(this.removeOneValidation(salesLeadOrganizationMembers[i], newOptions));
@@ -357,9 +342,6 @@ export class SalesLeadOrganizationMemberService extends BaseService<SalesLeadOrg
 				return Promise.all(promises);
 			})
 			.then((results: any) => {
-				console.log(' ');
-				console.log('org member service removeOneValidation return  ' + JSON.stringify(results));
-				//console.log('members ' + JSON.stringify(newOptions));
 				const response = this.createAuthorizationResponse();
 				resolve(response);
 			})
@@ -433,9 +415,6 @@ export class SalesLeadOrganizationMemberService extends BaseService<SalesLeadOrg
 		const authRoles = ['OWNER'];
 		const isOrgOwner = authRoles.indexOf(modelOptions.authorization.organizationMember.role.code) >= 0;
 		const isTheLeadMember =  modelOptions.authorization.leadMember._id.toString() === data._id.toString();
-		console.log("the data" + JSON.stringify(data));
-		console.log("the isOrgOwner" + JSON.stringify(isOrgOwner));
-		console.log("the isTheLeadMember" + JSON.stringify(isTheLeadMember));
 		if (isOrgOwner || isTheLeadMember) {
 			return this.createAuthorizationResponse();
 		}

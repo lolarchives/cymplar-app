@@ -41,6 +41,22 @@ router.get('/_find', (req: express.Request, res: express.Response) => {
     .then((contacts: AddressBookContact[]) => formatSend(res, contacts), (err: any) => sendError(res, err));
 });
 
+router.get('/_find_lead_status', (req: express.Request, res: express.Response) => {
+  const modelOptions: ModelOptions = {
+    authorization: getAuthorizationData(req)
+  };
+  addressBookContactService.getLeadStatusPerContact(req.query, modelOptions)
+    .then((contacts: AddressBookContact[]) => formatSend(res, contacts), (err: any) => sendError(res, err));
+});
+
+router.get('/_find_lead_status_group', (req: express.Request, res: express.Response) => {
+  const modelOptions: ModelOptions = {
+    authorization: getAuthorizationData(req)
+  };
+  addressBookContactService.getLeadStatusPerGroup(req.query, modelOptions)
+    .then((contacts: AddressBookContact[]) => formatSend(res, contacts), (err: any) => sendError(res, err));
+});
+
 router.get('/:id', (req: express.Request, res: express.Response) => {
   const modelOptions: ModelOptions = {
     authorization: getAuthorizationData(req)

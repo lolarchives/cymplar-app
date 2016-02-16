@@ -59,6 +59,42 @@ export class SalesLeadService extends BaseService<SalesLead> {
 		});
 	}
 	
+	updateOne(data: SalesLead, newOptions: ModelOptions = {}): Promise<SalesLead> {	
+		return new Promise<SalesLead>((resolve: Function, reject: Function) => {
+			const txModelOptions = this.obtainTransactionModelOptions(newOptions);			
+			this.preUpdateOne(data, txModelOptions)
+			.then((objectToUpdate: any) => {
+				
+				// TO DO: report log of status change
+				/*if (ObjectUtil.isPresent(data['currentStatus']) && (objectToUpdate['currentStatus'] !== data['currentStatus'])) {
+				}*/	
+					
+				for (let prop in data) {
+					objectToUpdate[prop] = data[prop];
+				}
+				
+				objectToUpdate.save((err: Error, savedDoc: any) => {
+					if (err) {
+						reject(err);
+						return;
+					}
+					savedDoc.populate(txModelOptions.population, (err: Error, populatedObj: any) => {
+						if (err) {
+							reject(err);
+							return;
+						}
+						resolve(populatedObj.toObject());
+						return;
+					});
+				});
+			})
+			.catch((err) => { 
+				reject(err);
+				return;
+			});
+		});
+	}
+	
 	findPerOrganization(data: SalesLead, newOptions: ModelOptions = {}): Promise<SalesLead[]> {
 		return new Promise<SalesLead>((fulfill: Function, reject: Function) => {
 			const salesLeadOrgMembOptions: ModelOptions = {
@@ -93,6 +129,40 @@ export class SalesLeadService extends BaseService<SalesLead> {
 			})
 			.then((leads: SalesLead[]) => {	
 				fulfill(leads); 
+			})
+			.catch((err) => {
+				reject(err);
+				return;
+			});
+		});
+	}
+
+	getStatusAggregationPerContact(contactId: string[]): Promise<SalesLead[]> {
+		return new Promise<SalesLead>((fulfill: Function, reject: Function) => {
+			const salesContactModelOptions: ModelOptions = {
+				requireAuthorization: false,
+				copyAuthorizationData: '',
+				validatePostSearchAuthData: false,
+				distinct: 'lead'
+			};
+			
+			salesLeadContactService.findDistinct({ contact: { $in: contactId }}, salesContactModelOptions)
+			.then((leads: string[]) => {	
+							
+				const aggregationCondition = [
+					{ $match: { _id: { $in: leads } } },
+					{ $group: { _id: '$currentStatus.label' , amount: { $sum: 1 } } }
+				];
+				
+				this.Model.aggregate(aggregationCondition).exec((err, results) => {
+					if (err) {
+						reject(err);
+						return;
+					}
+
+					fulfill(results);
+					return;
+				});
 			})
 			.catch((err) => {
 				reject(err);
@@ -182,6 +252,7 @@ export class SalesLeadService extends BaseService<SalesLead> {
 				const members: AccountOrganizationMember[] = results[0];
 				const leadRole = results[1];
 				const promises: Promise<SalesLeadOrganizationMember>[] = [];
+				
 				const leadMemberModelOptions: ModelOptions = {
 					authorization: options.authorization,
 					requireAuthorization: false

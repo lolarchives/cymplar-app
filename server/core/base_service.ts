@@ -56,15 +56,14 @@ export abstract class BaseService<T extends BaseDto> extends BaseAuthorizationSe
 		});		
 	}
 
-	updateOne(data: T, newOptions: ModelOptions = {}): Promise<T> {	
+	preUpdateOne(data: T, newOptions: ModelOptions = {}): Promise<T> {	
 		return new Promise<T>((resolve: Function, reject: Function) => {
-			const txModelOptions = this.obtainTransactionModelOptions(newOptions);
-			const authorizationResponse = this.isUpdateAuthorized(txModelOptions);
+			const authorizationResponse = this.isUpdateAuthorized(newOptions);
 			if (!authorizationResponse.isAuthorized) {
 				reject(new Error(authorizationResponse.errorMessage));
 				return;
 			}
-			this.Model.findById(data._id, txModelOptions.projection)
+			this.Model.findById(data._id, newOptions.projection)
 			.exec((err: Error, foundObj: any) => {
 				if (err) {
 					reject(err);
@@ -77,19 +76,30 @@ export abstract class BaseService<T extends BaseDto> extends BaseAuthorizationSe
 				}
 				
 				
-				if (txModelOptions.validatePostSearchAuthData) {
-					const authorizationResponse = this.validateAuthDataPostSearchUpdate(txModelOptions, foundObj);
+				if (newOptions.validatePostSearchAuthData) {
+					const authorizationResponse = this.validateAuthDataPostSearchUpdate(newOptions, foundObj);
 					if (!authorizationResponse.isAuthorized) {
 						reject(new Error(authorizationResponse.errorMessage));
 						return;
 					}	
 				}
 					
+				resolve(foundObj);
+			});
+		});
+	}
+	
+	updateOne(data: T, newOptions: ModelOptions = {}): Promise<T> {	
+		return new Promise<T>((resolve: Function, reject: Function) => {
+			const txModelOptions = this.obtainTransactionModelOptions(newOptions);			
+			this.preUpdateOne(data, txModelOptions)
+			.then((objectToUpdate: any) => {
+								
 				for (let prop in data) {
-					foundObj[prop] = data[prop];
+					objectToUpdate[prop] = data[prop];
 				}
 				
-				foundObj.save((err: Error, savedDoc: any) => {
+				objectToUpdate.save((err: Error, savedDoc: any) => {
 					if (err) {
 						reject(err);
 						return;
@@ -103,9 +113,14 @@ export abstract class BaseService<T extends BaseDto> extends BaseAuthorizationSe
 						return;
 					});
 				});
+			})
+			.catch((err) => { 
+				reject(err);
+				return;
 			});
 		});
 	}
+	
 	
 	updateOneFilter(data: T, newOptions: ModelOptions = {}): Promise<T> {	
 		return new Promise<T>((resolve: Function, reject: Function) => {
