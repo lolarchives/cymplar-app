@@ -3,7 +3,7 @@ import {BACK_END_ROUTE} from '../../core/dto';
 
 namespace AddressBookServices {
 	function $AddressBookRESTResource($resource: angular.resource.IResourceService): angular.resource.IResourceClass<any> {
-		let resources: angular.resource.IResourceClass<any> = $resource("", {}, {
+		let resources: angular.resource.IResourceClass<any> = $resource('', {}, {
 			'newCompany': {
 				method: 'POST',
 				url: BACK_END_ROUTE + '/address-book-group'
@@ -47,10 +47,10 @@ namespace AddressBookServices {
 	}
 	export class $AddressBookRESTService {
 		newCompany = (company: any) => {
-			return this.$resourceHelper.resourceRESTCall(this.$AddressBookRESTResource, "newCompany", company, true);
+			return this.$resourceHelper.resourceRESTCall(this.$AddressBookRESTResource, 'newCompany', company, true);
 		};
 		allCompanies = () => {
-			return this.$resourceHelper.resourceRESTCall(this.$AddressBookRESTResource, "allCompanies").then((response: any) => {
+			return this.$resourceHelper.resourceRESTCall(this.$AddressBookRESTResource, 'allCompanies').then((response: any) => {
 				if (response.success) {
 					this.allCompaniesCached = response.data;
 					return this.allCompaniesCached;
@@ -58,19 +58,19 @@ namespace AddressBookServices {
 			});
 		};
 		editCompany = (company: any) => {
-			return this.$resourceHelper.resourceRESTCall(this.$AddressBookRESTResource, "editCompany", company, true);
+			return this.$resourceHelper.resourceRESTCall(this.$AddressBookRESTResource, 'editCompany', company, true);
 		};
 		deleteCompany = (companyId: string) => {
-			return this.$resourceHelper.resourceRESTCall(this.$AddressBookRESTResource, "deleteCompany", { id: companyId }, true);
+			return this.$resourceHelper.resourceRESTCall(this.$AddressBookRESTResource, 'deleteCompany', { id: companyId }, true);
 		};
 		newContact = (contact: any) => {
-			return this.$resourceHelper.resourceRESTCall(this.$AddressBookRESTResource, "newContact", contact, true);
+			return this.$resourceHelper.resourceRESTCall(this.$AddressBookRESTResource, 'newContact', contact, true);
 		};
 		deleteContact = (contact: any) => {
-			return this.$resourceHelper.resourceRESTCall(this.$AddressBookRESTResource, "deleteContact", {_id:contact._id}, true);
+			return this.$resourceHelper.resourceRESTCall(this.$AddressBookRESTResource, 'deleteContact', {_id: contact._id}, true);
 		};
 		editContact = (contact: any) => {
-			return this.$resourceHelper.resourceRESTCall(this.$AddressBookRESTResource, "editContact", contact, true);
+			return this.$resourceHelper.resourceRESTCall(this.$AddressBookRESTResource, 'editContact', contact, true);
 		};
 		private allCompaniesCached: any[] = [];
 		private selectedCompany: any;

@@ -362,7 +362,7 @@ schemas.accountOrganizationMember.pre('save', function(next: Function) {
       }
       
       if (ObjectUtil.isBlank(found['_id'])) {
-        next("A role should be specified for this member ");
+        next('A role should be specified for this member ');
       }
 
       obj['role'] = found['_id'];

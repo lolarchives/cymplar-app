@@ -71,7 +71,7 @@ export abstract class BaseService<T extends BaseDto> extends BaseAuthorizationSe
 				}
 			
 				if (ObjectUtil.isBlank(foundObj)) {
-					reject(new Error("Object could not be found"));
+					reject(new Error('Object could not be found'));
 					return;
 				}
 				
@@ -138,7 +138,7 @@ export abstract class BaseService<T extends BaseDto> extends BaseAuthorizationSe
 				}
 			
 				if (ObjectUtil.isBlank(foundObj)) {
-					reject(new Error("Object could not be found"));
+					reject(new Error('Object could not be found'));
 					return;
 				}
 				
@@ -190,7 +190,7 @@ export abstract class BaseService<T extends BaseDto> extends BaseAuthorizationSe
 					return;
 				}
 				if (ObjectUtil.isBlank(foundDoc)) {
-					reject(new Error("Object could not be found"));
+					reject(new Error('Object could not be found'));
 					return;
 				}
 				
@@ -241,7 +241,7 @@ export abstract class BaseService<T extends BaseDto> extends BaseAuthorizationSe
 					return;
 				}
 				if (ObjectUtil.isBlank(foundDoc)) {
-					reject(new Error("Object could not be found"));
+					reject(new Error('Object could not be found'));
 					return;
 				}
 				
@@ -348,7 +348,7 @@ export abstract class BaseService<T extends BaseDto> extends BaseAuthorizationSe
 					return;
 				}
 				if (ObjectUtil.isBlank(foundObj)) {
-					reject(new Error("Object not found"));
+					reject(new Error('Object not found'));
 					return;
 				}
 				
@@ -408,7 +408,7 @@ export abstract class BaseService<T extends BaseDto> extends BaseAuthorizationSe
 					return;
 				}
 				if (ObjectUtil.isBlank(foundObj)) {
-					reject(new Error("Object not found"));
+					reject(new Error('Object not found'));
 					return;
 				}
 				

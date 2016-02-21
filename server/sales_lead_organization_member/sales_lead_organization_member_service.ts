@@ -23,7 +23,7 @@ export class SalesLeadOrganizationMemberService extends BaseService<SalesLeadOrg
 	createOne(data: SalesLeadOrganizationMember, newOptions: ModelOptions = {}): Promise<SalesLeadOrganizationMember> {	
 		return new Promise<SalesLeadOrganizationMember>((resolve: Function, reject: Function) => {
 			if (ObjectUtil.isBlank(data.role)) {
-				reject(new Error("A role should be specified"));
+				reject(new Error('A role should be specified'));
 				return;
 			}
 			super.createOne(data, newOptions)
@@ -383,7 +383,7 @@ export class SalesLeadOrganizationMemberService extends BaseService<SalesLeadOrg
 		if (modelOptions.requireAuthorization) {
 			
 			if (!this.existsOrganizationMember(modelOptions.authorization)) {
-				return this.createAuthorizationResponse("Sales lead member: Unauthorized organization member");
+				return this.createAuthorizationResponse('Sales lead member: Unauthorized organization member');
 			}
 			
 			if (modelOptions.onlyValidateParentAuthorization) {
@@ -391,7 +391,7 @@ export class SalesLeadOrganizationMemberService extends BaseService<SalesLeadOrg
 			}
 
 			if (roles.length > 0 && roles.indexOf(modelOptions.authorization.organizationMember.role.code) < 0) {
-				return this.createAuthorizationResponse("Sales lead member: Unauthorized member role");
+				return this.createAuthorizationResponse('Sales lead member: Unauthorized member role');
 			}
 		}
 

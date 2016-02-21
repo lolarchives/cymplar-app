@@ -3,7 +3,7 @@ namespace HelperServices {
 	export class $resourceHelper {
 		private loadingModal: any;
 		/** @ngInject */
-		constructor(private $q: any, private $uibModal: any,private $rootScope: any) {
+		constructor(private $q: any, private $uibModal: any, private $rootScope: any) {
 		
 		}
 		/**
@@ -43,7 +43,7 @@ namespace HelperServices {
 				}
 	
 				if (error.data.token === false) {
-					this.$rootScope.$broadcast('badToken',{data: 'Illegal token access'});
+					this.$rootScope.$broadcast('badToken', {data: 'Illegal token access'});
 				}
 				error.data.statusText = error.statusText;
 				deferred.resolve(error.data);

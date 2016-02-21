@@ -55,16 +55,16 @@ namespace Lead {
 		
 	}
 	export class LeadController {
-		private helloWorld: string = "Hello world";
-		constructor(){
+		private helloWorld: string = 'Hello world';
+		constructor() {
 			
 		}
 	}
 	angular
-		.module('app.lead',[
+		.module('app.lead', [
 			'ui.router',
 			'app.helper'
 		])
 		.config(config)
-		.controller('LeadController',LeadController)
+		.controller('LeadController', LeadController);
 }

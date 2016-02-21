@@ -199,7 +199,7 @@ export class SalesLeadService extends BaseService<SalesLead> {
 		if (modelOptions.requireAuthorization) {
 
 			if (!this.existsOrganizationMember(modelOptions.authorization)) {
-				return this.createAuthorizationResponse("Sales lead: Unauthorized organization member");
+				return this.createAuthorizationResponse('Sales lead: Unauthorized organization member');
 			}
 			
 			if (modelOptions.onlyValidateParentAuthorization) {
@@ -207,7 +207,7 @@ export class SalesLeadService extends BaseService<SalesLead> {
 			}
 
 			if (roles.length > 0 && roles.indexOf(modelOptions.authorization.organizationMember.role.code) < 0) {
-				return this.createAuthorizationResponse("Sales lead member: Unauthorized member role");
+				return this.createAuthorizationResponse('Sales lead member: Unauthorized member role');
 			}
 		}
 		return this.createAuthorizationResponse();

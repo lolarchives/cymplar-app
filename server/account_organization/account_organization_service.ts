@@ -229,11 +229,11 @@ export class AccountOrganizationService extends BaseService<AccountOrganization>
 			}
 			
 			if (!this.existsOrganizationMember(modelOptions.authorization)) {
-				return this.createAuthorizationResponse("Organization: Unauthorized member");
+				return this.createAuthorizationResponse('Organization: Unauthorized member');
 			}
 			
 			if (roles.length > 0 && roles.indexOf(modelOptions.authorization.organizationMember.role.code) < 0) {
-				return this.createAuthorizationResponse("Organization: Unauthorized member role");
+				return this.createAuthorizationResponse('Organization: Unauthorized member role');
 			}
 		}
 		return this.createAuthorizationResponse();
