@@ -94,8 +94,8 @@ namespace AddressBook {
             private $AddressBookRESTService: any, private toastr: any, private $scope: any,
             private $uibModal: any) {
             this.console = console;
-            console.log('count',this.count);
-            this.count+=1 ;
+            console.log('count', this.count);
+            this.count += 1 ;
             $scope.$on('$stateChangeSuccess', () => {
                 this.editing = false;
                 this.creatingContact = false;

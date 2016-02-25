@@ -19,10 +19,12 @@ namespace Lead {
                 resolve: {
                     statuses: ($LeadRESTService: any) => {
                         return $LeadRESTService.allLeadStatuses().then((response: any) => {
-                            if (response.success)
+                            if (response.success) {
                                 return response.data;
-                            else
+                            } else {
                                 return {}
+                            }
+                                
                         });
                     }
                 }
@@ -70,7 +72,6 @@ namespace Lead {
                     }*/
                 }
             });
-
     }
     export class LeadController {
         private helloWorld: string = "Hello world";
@@ -101,9 +102,9 @@ namespace Lead {
             }
         }
         createLead(newLead: SalesLead) {
-            if (this.$stateParams.status === "opportunity") { newLead.status = this.statuses[this.opportunityStatusIndex];}
+            if (this.$stateParams.status === "opportunity") { newLead.status = this.statuses[this.opportunityStatusIndex]; }
             if (this.$stateParams.status === "lead") { newLead.status = this.statuses[this.coldStatusIndex];}
-            this.$LeadRESTService.newLead(newLead).then((response: any){
+            this.$LeadRESTService.newLead(newLead).then((response: any) => {
                 
             })
         }

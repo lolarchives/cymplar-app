@@ -69,7 +69,6 @@ export class Authentication {
 				if (ObjectUtil.isPresent(user._id)) {
 					req.body.cymplarRole.user = user;	
 				}
-				
 				if (ObjectUtil.isPresent(user._id) && ObjectUtil.isPresent(idSessionParams.ido)) {
 					const orgMemberModelOptions: ModelOptions = {
 						projection: 'role organization',

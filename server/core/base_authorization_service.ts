@@ -25,7 +25,7 @@ export class BaseAuthorizationService<T extends BaseDto>{
 	protected authorizationEntity(modelOptions: ModelOptions = {}, roles: string[] = []): AuthorizationResponse {
 		if (modelOptions.requireAuthorization) {
 			if (!this.existsUser(modelOptions.authorization)) {
-				return this.createAuthorizationResponse("Base Authorization: Unauthorized user");
+				return this.createAuthorizationResponse('Base Authorization: Unauthorized user');
 			}
 		}
 		return this.createAuthorizationResponse();

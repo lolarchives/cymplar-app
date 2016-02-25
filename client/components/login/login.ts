@@ -1,6 +1,6 @@
 import '../helper/helper';
 import '../auth/auth.service';
-import {LogIn} from "../../core/dto.ts";
+import {LogIn} from '../../core/dto.ts';
 
 namespace Login {
 	/** @ngInject */

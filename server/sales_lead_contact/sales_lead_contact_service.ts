@@ -8,7 +8,13 @@ export class SalesLeadContactService extends BaseService<SalesLeadContact> {
 	constructor() {
 		const defaultModelOptions: ModelOptions = {
 			population: [
-				{ path: 'contact' }
+				{ 
+					path: 'contact',
+					populate: {
+						path: 'group',
+						model: 'addressBookGroup'
+					}
+				}
 			]
 		};
 		super(SalesLeadContactModel, defaultModelOptions);
@@ -70,22 +76,24 @@ export class SalesLeadContactService extends BaseService<SalesLeadContact> {
 			this.find({}, salesLeadModelOptions)
 			.then((leadContacts: AddressBookContact[]) => {
 				
-				const groups: string[] = [];
-				const contacts: string[] = [];
-				
-				for (let i = 0; i < leadContacts.length; i++ ) {
-					const current: AddressBookContact = leadContacts[i]['contact'];
-					contacts.push(current._id);
-					if (groups.indexOf(current.group) < 0) {
-						groups.push(current.group);
+				if (leadContacts.length > 0) {
+					const groups: string[] = [];
+					const contacts: string[] = [];
+					
+					for (let i = 0; i < leadContacts.length; i++ ) {
+						const current: AddressBookContact = leadContacts[i]['contact'];
+						contacts.push(current._id);
+						if (groups.indexOf(current.group) < 0) {
+							groups.push(current.group);
+						}
 					}
+				
+					newOptions.additionalData = {
+						_id: { $nin: contacts }
+					};					
 				}
-			
-				newOptions.additionalData = {
-					_id: { $nin: contacts },
-					group: { $in: groups } 
-				};
-				newOptions.copyAuthorizationData = '';
+
+				newOptions.copyAuthorizationData = 'createdBy';
 				return addressBookContactService.find(data, newOptions);
 			})
 			.then((leadContacts: AddressBookContact[]) => {
@@ -123,7 +131,7 @@ export class SalesLeadContactService extends BaseService<SalesLeadContact> {
 		if (modelOptions.requireAuthorization) {
 			
 			if (!this.existsOrganizationMember(modelOptions.authorization)) {
-				return this.createAuthorizationResponse("Sales lead: Unauthorized organization contact");
+				return this.createAuthorizationResponse('Sales lead: Unauthorized organization contact');
 			}
 			
 			if (modelOptions.onlyValidateParentAuthorization) {
@@ -131,7 +139,7 @@ export class SalesLeadContactService extends BaseService<SalesLeadContact> {
 			}
 
 			if (roles.length > 0 && roles.indexOf(modelOptions.authorization.organizationMember.role.code) < 0) {
-				return this.createAuthorizationResponse("Sales lead contact: Unauthorized contact role");
+				return this.createAuthorizationResponse('Sales lead contact: Unauthorized contact role');
 			}
 		}
 
@@ -142,7 +150,7 @@ export class SalesLeadContactService extends BaseService<SalesLeadContact> {
 		data?: SalesLeadContact): AuthorizationResponse {
 		const isLeadMember =  modelOptions.authorization.leadMember.lead === data.lead;
 		if (isLeadMember) {
-			return this.createAuthorizationResponse('');
+			return this.createAuthorizationResponse();
 		}
 		return this.createAuthorizationResponse('Unauthorized document update');
 	}
@@ -150,10 +158,10 @@ export class SalesLeadContactService extends BaseService<SalesLeadContact> {
 	protected validateAuthDataPostSearchRemove(modelOptions: ModelOptions = {}, 
 		data?: SalesLeadContact): AuthorizationResponse {
 		const authRoles = ['OWNER'];
-		const isOrgOwner = authRoles.indexOf(modelOptions.authorization.organizationMember.role.code) < 0;
+		const isOrgOwner = authRoles.indexOf(modelOptions.authorization.organizationMember.role.code) >= 0;
 		const isLeadMember =  modelOptions.authorization.leadMember.lead === data.lead;
 		if (isOrgOwner || isLeadMember) {
-			return this.createAuthorizationResponse('');
+			return this.createAuthorizationResponse();
 		}
 		return this.createAuthorizationResponse('Unauthorized document remove');
 	}

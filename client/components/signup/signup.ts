@@ -1,7 +1,7 @@
 
 import '../helper/helper';
-import '../auth/auth.service'
-import {SignUp, AccountUser, AccountOrganization, AccountOrganizationMember, City, Industry, Country} from "../../core/dto.ts";
+import '../auth/auth.service';
+import {SignUp, AccountUser, AccountOrganization, AccountOrganizationMember, City, Industry, Country} from '../../core/dto.ts';
 
 namespace SignUp {
 	export interface SignUpDetails {
@@ -179,7 +179,7 @@ namespace SignUp {
 		submitStep1(step1Form: any) {
 			this.errors = [];
 			if (this.signUpDetails.password !== this.passwordConfirmation) {
-				this.errors.push("Passwords does not match");
+				this.errors.push('Passwords does not match');
 			}
 			if (this.errors.length === 0 && this.availableEmail && this.availableOrganizationName && this.availableUsername) {
 				this.firstStep = false;
@@ -200,8 +200,8 @@ namespace SignUp {
 			this.$SignUpRESTService.signUp(this.mapFormToDto(this.signUpDetails)).then((response: any) => {
 				if (response.success) {
 					this.AuthToken.setToken(response.data.token);
-					this.AuthToken.setIdO(response.data.init)
-					alert("Successfully sign up");
+					this.AuthToken.setIdO(response.data.init);
+					alert('Successfully sign up');
 					this.$state.go('main.dashboard');
 				}
 

@@ -39,8 +39,6 @@ export class AddressBookGroupService extends BaseService<AddressBookGroup> {
 					authorization: options.authorization,
 					copyAuthorizationData: 'createdBy'
 				};
-				console.log('');
-				console.log('groups ' + JSON.stringify(groups));
 				const promises: Promise<AddressBookGroup>[] = [];
 				for (let i = 0; i < groups.length; i++) {
 					promises.push(this.loadGroup(groups[i], childrenModelOptions));
@@ -61,8 +59,6 @@ export class AddressBookGroupService extends BaseService<AddressBookGroup> {
 	private loadGroup(data: AddressBookGroup,  childrenModelOptions: ModelOptions = {}): Promise<AddressBookGroup> {
 		const groupToSend: AddressBookGroup = data;
 		return new Promise<AddressBookGroup>((fulfill: Function, reject: Function) => {
-			console.log('');
-			console.log('Searching per contacts for: ' + JSON.stringify(groupToSend));
 			const toLoad: any = [addressBookContactService.find({ group: groupToSend._id }, childrenModelOptions)];
 			Promise.all(toLoad)
 			.then((results: any) => {

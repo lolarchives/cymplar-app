@@ -3,7 +3,7 @@ import '../auth/auth.service';
 namespace AccountService {
 
 	function $AccountRESTResource($resource: angular.resource.IResourceService, AuthToken: any): angular.resource.IResourceClass<any> {
-		let resources: angular.resource.IResourceClass<any> = $resource("", {}, {
+		let resources: angular.resource.IResourceClass<any> = $resource('', {}, {
 			'accountUser': {
 				method: 'GET',
 				url: BACK_END_ROUTE + '/account-user/_find'
@@ -19,19 +19,19 @@ namespace AccountService {
 		});
 		return resources;
 	}
-
+	
 	export class $AccountRESTService {
 		constructor(private $http: angular.IHttpService, private $AccountRESTResource: any, private $q: any, 
 			private $resourceHelper: any,private AuthToken: any) {
 		}
 		accountUser = () => {
-			return this.$resourceHelper.resourceRESTCall(this.$AccountRESTResource, "accountUser");
+			return this.$resourceHelper.resourceRESTCall(this.$AccountRESTResource, 'accountUser');
 		};
 		accountOrganization = () => {
 			return this.$resourceHelper.resourceRESTCall(this.$AccountRESTResource, "accountOrganization",{ido: this.AuthToken.getIdO()});
 		};
 		accountOrganizationMember = () => {
-			return this.$resourceHelper.resourceRESTCall(this.$AccountRESTResource, "accountOrganizationMember");
+			return this.$resourceHelper.resourceRESTCall(this.$AccountRESTResource, 'accountOrganizationMember');
 		};
 	}
 
@@ -40,7 +40,7 @@ namespace AccountService {
         return new $AccountRESTService($http, $AccountRESTResource, $q, $resourceHelper, AuthToken);
     }
 	angular
-		.module('app.account',[])
+		.module('app.account', [])
 		.factory('$AccountRESTResource', $AccountRESTResource)
 		.factory('$AccountRESTService', get$AccountRESTServiceInstance);
 }

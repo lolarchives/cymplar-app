@@ -10,7 +10,7 @@ namespace progressBar {
 				this.progressValue = 50;
 				this.loading = true;
 				
-				this.type = "info";
+				this.type = 'info';
 			}) ;
 			
 			$scope.$on('$stateChangeSuccess', (event: any, toState: any, toParams: any, fromState: any, fromParams: any) => {

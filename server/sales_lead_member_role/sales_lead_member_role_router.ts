@@ -23,7 +23,10 @@ router.delete('/:id', (req, res) => {
 });
 
 router.get('/_find', (req: express.Request, res: express.Response) => {
-  salesLeadMemberRoleService.find(req.query)
+  const modelOptions: ModelOptions = {
+    authorization: getAuthorizationData(req)
+  };
+  salesLeadMemberRoleService.find(req.query, modelOptions)
     .then((members: SalesLeadMemberRole[]) => res.send(members), (err: any) => sendError(res, err));
 });
 

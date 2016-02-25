@@ -62,7 +62,7 @@ export const PATH = {
       `${BC}/angular-bootstrap/ui-bootstrap.js`,
       `${BC}/angular-multiple-transclusion/dist/angular-multiple-transclusion.min.js`,
       `${BC}/angular-bootstrap/ui-bootstrap-tpls.js`,
-      slash(resolve(`angular-ui-router/build/angular-ui-router.js`)),
+      slash(resolve(`angular-ui-router/release/angular-ui-router.js`)),
       slash(resolve('angular-sanitize/angular-sanitize.js')),    
       slash(resolve('angular-animate/angular-animate.js')),    
       slash(resolve('angular-touch/angular-touch.js')),    

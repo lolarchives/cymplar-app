@@ -4,7 +4,7 @@ import {BACK_END_ROUTE, LogIn} from '../../core/dto';
 namespace LoginServices {
 
 	function $LoginRESTResource($resource: angular.resource.IResourceService): angular.resource.IResourceClass<any> {
-		let resources: angular.resource.IResourceClass<any> = $resource("", {}, {
+		let resources: angular.resource.IResourceClass<any> = $resource('', {}, {
 			'accountOrganizationLogin': {
 				method: 'GET',
 				url: BACK_END_ROUTE + '/account-organization/_login'
@@ -22,10 +22,10 @@ namespace LoginServices {
 
 		}
 		accountOrganizationLogin = (domain: string) => {
-			return this.$resourceHelper.resourceRESTCall(this.$LoginRESTResource, "accountOrganizationLogin", {domain: domain}, true);
+			return this.$resourceHelper.resourceRESTCall(this.$LoginRESTResource, 'accountOrganizationLogin', {domain: domain}, true);
 		};
 		accountLogin = (login: LogIn) => {
-			return this.$resourceHelper.resourceRESTCall(this.$LoginRESTResource, "accountLogin", login, true);
+			return this.$resourceHelper.resourceRESTCall(this.$LoginRESTResource, 'accountLogin', login, true);
 		};
 	}
 	

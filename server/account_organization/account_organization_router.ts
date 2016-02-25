@@ -28,7 +28,7 @@ router.delete('/:id', (req, res) => {
   const modelOptions: ModelOptions = {
     authorization: getAuthorizationData(req)
   };
-  accountOrganizationService.removeOneById(req.params.id, modelOptions)
+  accountOrganizationService.removeOneByIdWithValidation(req.params.id, modelOptions)
     .then((organization: AccountOrganization) => formatSend(res, organization), (err) => sendError(res, err));
 });
 
