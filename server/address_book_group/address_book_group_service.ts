@@ -1,63 +1,77 @@
 
-import {AddressBookGroup, AddressBookContact, AccountUser, ModelOptions, AuthorizationData} from '../../client/core/dto';
+import {AddressBookGroup, AddressBookContact, AccountUser, ModelOptions, AuthorizationData,
+	AuthorizationResponse} from '../../client/core/dto';
 import {AddressBookGroupModel} from '../core/model';
 import {BaseService} from '../core/base_service';
 import {addressBookContactService} from '../address_book_contact/address_book_contact_service';
-import {countryService} from '../country/country_service';
 import {ObjectUtil} from '../../client/core/util';
+import {salesLeadContactService} from '../sales_lead_contact/sales_lead_contact_service';
+
 
 export class AddressBookGroupService extends BaseService<AddressBookGroup> {
 
 	constructor() {
-		super(AddressBookGroupModel);
+		const modelOptions: ModelOptions = {
+			population: [
+				{	path: 'industry', select: 'code description' },
+				{
+					path: 'city',
+					populate: {
+						path: 'state', 
+						model: 'state',
+						populate: {
+							path: 'country', 
+							model: 'country'
+						}
+					}
+				}
+			]
+		};
+		super(AddressBookGroupModel, modelOptions);
 	}
 	
-	findGroup(data: AddressBookGroup, options: ModelOptions = {}): Promise<AddressBookGroup[]> {
-		return new Promise<AddressBookGroup[]>((fulfill: Function, reject: Function) => {			
-			this.find(data, options)
+	findGroupContacts(data: AddressBookGroup, options: ModelOptions = {}): Promise<AddressBookGroup[]> {
+		return new Promise<AddressBookGroup[]>((fulfill: Function, reject: Function) => {
+			this.find(data, options)		
 			.then((groups: AddressBookGroup[]) => {
+				
+				const childrenModelOptions: ModelOptions = {
+					authorization: options.authorization,
+					copyAuthorizationData: 'createdBy'
+				};
 				const promises: Promise<AddressBookGroup>[] = [];
 				for (let i = 0; i < groups.length; i++) {
-					promises.push(this.loadGroup(groups[i], options));
+					promises.push(this.loadGroup(groups[i], childrenModelOptions));
 				}
-				return Promise.all(promises);
+				
+				return Promise.all(promises);	
 			})
 			.then((results: any) => {
 				fulfill(results);
 			})
 			.catch((err: any) => {
 				reject(err);
+				return;
 			});
 		});
 	}
 	
-	copySignificantAuthorizationData(data: AccountUser, modelOptions: ModelOptions = {}): void {
-		const authorization = modelOptions.authorization;
-		if (ObjectUtil.isPresent(authorization) && ObjectUtil.isPresent(authorization.user)) {
-			data.createdBy = authorization.user;
-		}
-	}
-	
-	private loadGroup(data: AddressBookGroup,  modelOptions: ModelOptions = {}): Promise<AddressBookGroup> {
+	private loadGroup(data: AddressBookGroup,  childrenModelOptions: ModelOptions = {}): Promise<AddressBookGroup> {
 		const groupToSend: AddressBookGroup = data;
 		return new Promise<AddressBookGroup>((fulfill: Function, reject: Function) => {
-			const childrenModelOptions: ModelOptions = {
-				requireAuthorization: false,
-				authorization: modelOptions.authorization
-			};
-			const toLoad: any = [countryService.findOneById(groupToSend.city.country, childrenModelOptions), 
-							   addressBookContactService.find({ group: groupToSend._id }, childrenModelOptions)];
+			const toLoad: any = [addressBookContactService.find({ group: groupToSend._id }, childrenModelOptions)];
 			Promise.all(toLoad)
 			.then((results: any) => {
-				groupToSend.city.country = results[0];
-				groupToSend.contacts = results[1];
+				groupToSend.contacts = results[0];
 				fulfill(groupToSend);
 			})
 			.catch((err: any) => {
 				reject(err);
+				return;
 			});
 		});
 	}
+	
 }
 
 export const addressBookGroupService = new AddressBookGroupService();

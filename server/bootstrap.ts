@@ -10,6 +10,7 @@ import {authentication} from './authentication/authentication_middleware';
 import * as contactRouter from './contact/contact_router';
 
 import * as countryRouter from './country/country_router';
+import * as stateRouter from './state/state_router';
 import * as cityRouter from './city/city_router';
 import * as industryRouter from './industry/industry_router';
 import * as addressBookGroupRouter from './address_book_group/address_book_group_router';
@@ -20,6 +21,11 @@ import * as accountUserRouter from './account_user/account_user_router';
 import * as accountOrganizationRouter from './account_organization/account_organization_router';
 import * as accountOrganizationMemberRouter from './account_organization_member/account_organization_member_router';
 import * as accountMemberRoleRouter from './account_member_role/account_member_role_router';
+import * as salesLeadRouter from './sales_lead/sales_lead_router';
+import * as salesLeadOrganizationMemberRouter from './sales_lead_organization_member/sales_lead_organization_member_router';
+import * as salesLeadMemberRoleRouter from './sales_lead_member_role/sales_lead_member_role_router';
+import * as salesLeadContactRouter from './sales_lead_contact/sales_lead_contact_router';
+import * as salesLeadStatusRouter from './sales_lead_status/sales_lead_status_router';
 
 const INDEX_DEST_PATH = resolve(PATH.cwd, PATH.dest.app.base, 'index.html');
 
@@ -38,6 +44,7 @@ server.all('/api/*', authentication.validate);
 server.use('/api/contact', contactRouter);
 
 server.use('/api/country', countryRouter);
+server.use('/api/state', stateRouter);
 server.use('/api/city', cityRouter);
 server.use('/api/industry', industryRouter);
 server.use('/api/address-book-group', addressBookGroupRouter);
@@ -49,6 +56,12 @@ server.use('/api/account-user', accountUserRouter);
 server.use('/api/account-organization', accountOrganizationRouter);
 server.use('/api/account-organization-member', accountOrganizationMemberRouter);
 server.use('/api/account-organization-member-role', accountMemberRoleRouter);
+
+server.use('/api/sales-lead', salesLeadRouter);
+server.use('/api/sales-lead-organization-member', salesLeadOrganizationMemberRouter);
+server.use('/api/sales-lead-member-role', salesLeadMemberRoleRouter);
+server.use('/api/sales-lead-contact', salesLeadContactRouter);
+server.use('/api/sales-lead-status', salesLeadStatusRouter);
 
 server.all(APP_BASE + '*', (req, res) =>
   res.sendFile(INDEX_DEST_PATH)

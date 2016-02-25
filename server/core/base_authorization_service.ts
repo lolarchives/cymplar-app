@@ -1,89 +1,104 @@
 import {Model, Document} from 'mongoose';
 
-import {BaseDto, ModelOptions, AuthorizationData} from '../../client/core/dto';
+import {BaseDto, ModelOptions, AuthorizationData, AuthorizationResponse} from '../../client/core/dto';
 import {ObjectUtil} from '../../client/core/util';
 import {DatabaseObjectUtil} from './db_util';
 
 export class BaseAuthorizationService<T extends BaseDto>{
 	
-	protected isCreateAuthorized(modelOptions: ModelOptions = {}, reject: Function, data?: T): void {
+	protected isCreateAuthorized(modelOptions: ModelOptions): AuthorizationResponse {
+		return this.authorizationEntity(modelOptions);
+	}
+	
+	protected isUpdateAuthorized(modelOptions: ModelOptions): AuthorizationResponse {
+		return this.authorizationEntity(modelOptions);
+	}
+	
+	protected isRemoveAuthorized(modelOptions: ModelOptions): AuthorizationResponse {
+		return this.authorizationEntity(modelOptions);
+	}
+	
+	protected isSearchAuthorized(modelOptions: ModelOptions): AuthorizationResponse {
+		return this.authorizationEntity(modelOptions);
+	}
+	
+	protected authorizationEntity(modelOptions: ModelOptions = {}, roles: string[] = []): AuthorizationResponse {
 		if (modelOptions.requireAuthorization) {
-			this.evaluateCreationAuthorization(modelOptions, reject, data);
+			if (!this.existsUser(modelOptions.authorization)) {
+				return this.createAuthorizationResponse('Base Authorization: Unauthorized user');
+			}
 		}
+		return this.createAuthorizationResponse();
 	}
 	
-	protected evaluateCreationAuthorization(modelOptions: ModelOptions = {}, reject: Function, data?: T): void {
-		if (!this.existsUser(modelOptions.authorization)) {
-			reject(new Error("Unauthorized user"));
+	protected createAuthorizationResponse(message?: string): AuthorizationResponse {
+		const authorizationResponse: AuthorizationResponse = { isAuthorized: true };
+		if (ObjectUtil.isPresent(message)) {
+			authorizationResponse['isAuthorized'] = false;
+			authorizationResponse['errorMessage'] = message;
 		}
-	}
-	
-	protected isUpdateAuthorized(modelOptions: ModelOptions = {}, reject: Function, data?: T): void {
-		if (modelOptions.requireAuthorization) {
-			this.evaluateUpdateAuthorization(modelOptions, reject, data);
-		}
-	}
-	
-	protected evaluateUpdateAuthorization(modelOptions: ModelOptions = {}, reject: Function, data?: T): void {
-		if (!this.existsUser(modelOptions.authorization)) {
-			reject(new Error("Unauthorized user"));
-		}
-	}
-	
-	protected isRemoveAuthorized(modelOptions: ModelOptions = {}, reject: Function, data?: T): void {
-		if (modelOptions.requireAuthorization) {
-			this.evaluateRemoveAuthorization(modelOptions, reject, data);
-		}
-	}
-	
-	protected evaluateRemoveAuthorization(modelOptions: ModelOptions = {}, reject: Function, data?: T): void {
-		if (!this.existsUser(modelOptions.authorization)) {
-			reject(new Error("Unauthorized user"));
-		}
-	}
-	
-	protected isSearchAuthorized(modelOptions: ModelOptions = {}, reject: Function, data?: T): void {
-		if (modelOptions.requireAuthorization) {
-			this.evaluateSearchAuthorization(modelOptions, reject, data);
-		}
-	}
-	
-	protected evaluateSearchAuthorization(modelOptions: ModelOptions = {}, reject: Function, data?: T): void {
-		if (!this.existsUser(modelOptions.authorization)) {
-			reject(new Error("Unauthorized user"));
-		}
-	}
-		
-	protected isUpdateAuthorizedExecution(modelOptions: ModelOptions = {}, reject: Function, data?: T): void {
-		if (!modelOptions.requireAuthorization) {
-			this.evaluateUpdateExecutionAuthorization(modelOptions, reject, data);
-		}
-	}
-	
-	protected evaluateUpdateExecutionAuthorization(modelOptions: ModelOptions = {}, reject: Function, data?: T): void {
-	}
-	
-	protected isRemoveAuthorizedExecution(modelOptions: ModelOptions = {}, reject: Function, data?: T): void {
-		if (!modelOptions.requireAuthorization) {
-			this.evaluateRemoveExecutionAuthorization(modelOptions, reject, data);
-		}
-	}
-	
-	protected evaluateRemoveExecutionAuthorization(modelOptions: ModelOptions = {}, reject: Function, data?: T): void {
+		return authorizationResponse;	
 	}
 	
 	protected existsUser(authorization: AuthorizationData): boolean {
 		if (ObjectUtil.isBlank(authorization) || ObjectUtil.isBlank(authorization.user)) {
-			return false;
+				return false;
 		}
 		return true;
 	}
 	
 	protected existsOrganizationMember(authorization: AuthorizationData): boolean {
-		if (ObjectUtil.isBlank(authorization) || ObjectUtil.isBlank(authorization.organizationMember)) {
+		if (ObjectUtil.isBlank(authorization) || ObjectUtil.isBlank(authorization.organizationMember) || 
+			ObjectUtil.isBlank(authorization.organizationMember.organization) || 
+			ObjectUtil.isBlank(authorization.organizationMember.role)) {
+			return false;
+		}
+		return true;
+	}
+	
+	protected existsLeadMember(authorization: AuthorizationData): boolean {
+		if (ObjectUtil.isBlank(authorization) || ObjectUtil.isBlank(authorization.leadMember) ||
+			ObjectUtil.isBlank(authorization.leadMember.lead) || ObjectUtil.isBlank(authorization.leadMember.role)) {
 			return false;
 		}
 		return true;
 	}
 
+	protected addAuthorizationDataInCreate(modelOptions: ModelOptions = {}, data?: T) {
+		switch (modelOptions.copyAuthorizationData) {
+			case 'user':
+				modelOptions.additionalData['user'] = modelOptions.authorization.user._id;
+				break;
+			case 'createdBy':
+				modelOptions.additionalData['createdBy'] = modelOptions.authorization.user._id;
+				break;
+			default:
+				break;
+		}
+	}
+	
+	protected addAuthorizationDataPreSearch(modelOptions: ModelOptions = {}, data?: T) {
+		switch (modelOptions.copyAuthorizationData) {
+			case 'user':
+				modelOptions.additionalData['user'] = modelOptions.authorization.user._id;
+				break;
+			case 'createdBy':
+				modelOptions.additionalData['createdBy'] = modelOptions.authorization.user._id;
+				break;
+			default:
+				break;
+		}
+	}
+	
+	protected validateAuthDataPostSearchUpdate(modelOptions: ModelOptions = {}, data?: T): AuthorizationResponse {
+		return this.createAuthorizationResponse();
+	}
+	
+	protected validateAuthDataPostSearchRemove(modelOptions: ModelOptions = {}, data?: T): AuthorizationResponse {
+		return this.createAuthorizationResponse();
+	}
+	
+	protected validateAuthDataPostSearch(modelOptions: ModelOptions = {}, data?: T): AuthorizationResponse {
+		return this.createAuthorizationResponse();
+	}
 }

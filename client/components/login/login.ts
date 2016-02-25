@@ -1,6 +1,6 @@
 import '../helper/helper';
 import '../auth/auth.service';
-import {LogIn} from "../../core/dto.ts";
+import {LogIn} from '../../core/dto.ts';
 
 namespace Login {
 	/** @ngInject */
@@ -49,7 +49,7 @@ namespace Login {
 				if (response.success) {
 					this.AuthToken.setToken(response.data.token);
 					this.AuthToken.setIdO(this.accountOrganizationId);
-					this.$state.transitionTo('main');
+					this.$state.transitionTo('main.dashboard');
 				}
 			});
 		}

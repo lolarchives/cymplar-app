@@ -8,7 +8,7 @@ namespace SignUpServices {
 	
 	/** @ngInject */
     function $SignUpRESTResource($resource: angular.resource.IResourceService): angular.resource.IResourceClass<any> {
-		let url = "/api/signup";
+		let url = '/api/signup';
 		
 		let resources: angular.resource.IResourceClass<any> = $resource(url, {}, {
 
@@ -23,6 +23,10 @@ namespace SignUpServices {
 			'getCities': {
 				method: 'GET',
 				url: BACK_END_ROUTE + '/city/_find'
+			},
+			'getStates': {
+				method: 'GET',
+				url: BACK_END_ROUTE + '/state/_find'
 			},
 			'getRoles': {
 				method: 'GET',
@@ -56,28 +60,31 @@ namespace SignUpServices {
 
 		}
 		getCountries = (params: any) => {
-			return this.$resourceHelper.resourceRESTCall(this.$SignUpRESTResource, "getCountries", params);
+			return this.$resourceHelper.resourceRESTCall(this.$SignUpRESTResource, 'getCountries', params);
 		};
 		getIndustries = (params: any) => {
-			return this.$resourceHelper.resourceRESTCall(this.$SignUpRESTResource, "getIndustries", params);
+			return this.$resourceHelper.resourceRESTCall(this.$SignUpRESTResource, 'getIndustries', params);
 		};
-		getCities = (country: any) => {
-			return this.$resourceHelper.resourceRESTCall(this.$SignUpRESTResource, "getCities", {country: country});
+		getStates = (country: any) => {
+			return this.$resourceHelper.resourceRESTCall(this.$SignUpRESTResource, 'getStates', {country: country});
+		};
+		getCities = (state: any) => {
+			return this.$resourceHelper.resourceRESTCall(this.$SignUpRESTResource, 'getCities', {state: state});
 		};
 		getRoles = (params: any) => {
-			return this.$resourceHelper.resourceRESTCall(this.$SignUpRESTResource, "getRoles", params );
+			return this.$resourceHelper.resourceRESTCall(this.$SignUpRESTResource, 'getRoles', params );
 		};
 		isAccountUserExisted = (username: string) => {
-			return this.$resourceHelper.resourceRESTCall(this.$SignUpRESTResource, "isAccountUserExisted", {username: username});
+			return this.$resourceHelper.resourceRESTCall(this.$SignUpRESTResource, 'isAccountUserExisted', {username: username});
 		};
 		isAccountOrganizatioMemberExisted = (email: string) => {
-			return this.$resourceHelper.resourceRESTCall(this.$SignUpRESTResource, "isAccountOrganizationMemberExisted", {email: email});
+			return this.$resourceHelper.resourceRESTCall(this.$SignUpRESTResource, 'isAccountOrganizationMemberExisted', {email: email});
 		};
 		isAccountOrganizationExisted = (organizationName: string) => {
-			return this.$resourceHelper.resourceRESTCall(this.$SignUpRESTResource, "isAccountOrganizationExisted", {domain: organizationName });
+			return this.$resourceHelper.resourceRESTCall(this.$SignUpRESTResource, 'isAccountOrganizationExisted', {domain: organizationName });
 		};
 		signUp = (signUpDetails: SignUp) => {
-			return this.$resourceHelper.resourceRESTCall(this.$SignUpRESTResource, "signUp", signUpDetails);
+			return this.$resourceHelper.resourceRESTCall(this.$SignUpRESTResource, 'signUp', signUpDetails, true);
 		};
 
 	};

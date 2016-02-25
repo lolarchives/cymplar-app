@@ -5,9 +5,10 @@ import * as bcrypt from 'bcrypt';
 import {sendError} from '../core/web_util';
 import {ObjectUtil} from '../../client/core/util';
 import {accountOrganizationMemberService} from '../account_organization_member/account_organization_member_service';
-import {AccountUser, AccountOrganizationMember, ModelOptions} from '../../client/core/dto';
+import {AccountUser, AccountOrganizationMember, SalesLeadOrganizationMember, ModelOptions} from '../../client/core/dto';
 import {accountUserService} from '../account_user/account_user_service';
 import {AuthorizationData} from '../../client/core/dto';
+import {salesLeadOrganizationMemberService} from '../sales_lead_organization_member/sales_lead_organization_member_service';
 
 
 const NON_SECURED_URL: string[] = ['/api/account-user/_exist', 
@@ -16,6 +17,7 @@ const NON_SECURED_URL: string[] = ['/api/account-user/_exist',
 		'/api/account-organization/_exist',
 		'/api/industry/_find',
 		'/api/country/_find',
+		'/api/state/_find',
 		'/api/city/_find',
 		'/api/account-member-role/_find',
 		'/api/signup',
@@ -52,28 +54,35 @@ export class Authentication {
 			
 			//query id_organization (ido), id_lead (idl)
 			const idSessionParams = {
-				ido: (req.query.ido ? req.query.ido : req.body.ido)
+				ido: (req.query.ido ? req.query.ido : req.body.ido),
+				idl: (req.query.idl ? req.query.idl : req.body.idl)
 			};
 			
 			const accountUserModelOptions: ModelOptions = {
 				requireAuthorization: false,
+				validatePostSearchAuthData: false,
 				projection: '_id'
 			}; 
 					
 			accountUserService.findOneById(decoded.sub, accountUserModelOptions)
 			.then((user: AccountUser) => {
-				if (user._id) {
+				if (ObjectUtil.isPresent(user._id)) {
 					req.body.cymplarRole.user = user;	
 				}
-				
 				if (ObjectUtil.isPresent(user._id) && ObjectUtil.isPresent(idSessionParams.ido)) {
 					const orgMemberModelOptions: ModelOptions = {
-						projection: 'user role organization',
+						projection: 'role organization',
 						population: 'role',
-						requireAuthorization: false
+						requireAuthorization: false,
+						validatePostSearchAuthData: false,
+						copyAuthorizationData: '',
+						additionalData: {
+							user: user._id,
+							organization: idSessionParams.ido
+						}
 					}; 		
 					
-					return accountOrganizationMemberService.findOne({user: user._id, organization: idSessionParams.ido}, orgMemberModelOptions);
+					return accountOrganizationMemberService.findOne({}, orgMemberModelOptions);
 				} else { 
 					return Promise.resolve({});
 				};
@@ -81,6 +90,29 @@ export class Authentication {
 			.then((organizationMember: AccountOrganizationMember) => {
 				if (ObjectUtil.isPresent(organizationMember._id)) {
 					req.body.cymplarRole.organizationMember = organizationMember;	
+				}
+
+				if (ObjectUtil.isPresent(organizationMember._id) && ObjectUtil.isPresent(idSessionParams.idl)) {
+					const leadMemberModelOptions: ModelOptions = {
+						projection: 'role lead',
+						population: 'role',
+						requireAuthorization: false,
+						validatePostSearchAuthData: false,
+						copyAuthorizationData: '',
+						additionalData: {
+							member: organizationMember._id,
+							lead: idSessionParams.idl
+						}
+					}; 		
+					
+					return salesLeadOrganizationMemberService.findOne({}, leadMemberModelOptions);
+				} else { 
+					return Promise.resolve({});
+				};
+			})
+			.then((leadMember: SalesLeadOrganizationMember) => {
+				if (ObjectUtil.isPresent(leadMember._id)) {
+					req.body.cymplarRole.leadMember = leadMember;	
 				}
 				return next();
 			})

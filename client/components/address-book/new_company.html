@@ -1,0 +1,115 @@
+<div class="grid-content center-panel">
+	<div class="padding-box">
+		<div class="row">
+			<div class="col-lg-12">
+				<h3>New Organisation details </h3>
+				<form class="form-horizontal" ng-submit="abCtrl.createCompany(abCtrl.newCompany)">
+					<div class="form-group">
+						<label for="input1" class="col-md-3 control-label"><strong class="text-danger">*</strong>Name</label>
+						<div class="col-md-9">
+							<input type="text" class="form-control" id="input1" ng-model="abCtrl.newCompany.name" required>
+						</div>
+					</div>
+					<!--form-group-->
+					<div class="form-group">
+						<label for="input1" class="col-md-3 control-label">Business number</label>
+						<div class="col-md-9">
+							<input type="text" class="form-control" id="input1" ng-model="abCtrl.newCompany.businessNumber">
+						</div>
+					</div>
+					<div class="form-group">
+						<label for="input1" class="col-md-3 control-label">Description</label>
+						<div class="col-md-9">
+							<input type="text" class="form-control" id="input1" ng-model="abCtrl.newCompany.description">
+						</div>
+					</div>
+					<!--form-group-->
+					<div class="form-group">
+						<label for="input2" class="col-md-3 control-label"><strong class="text-danger">*</strong>Industry</label>
+						<div class="col-md-9">
+							<select class="form-control" id="organizationIndustry" name="organizationIndustry" ng-options="industry._id as industry.description for industry in abCtrl.industries"
+							ng-model="abCtrl.newCompany.industry" required>
+								<option value=""></option>
+							</select>
+						</div>
+					</div>
+					<!--form-group-->
+					<div class="form-group">
+						<label for="input3" class="col-md-3 control-label">Website</label>
+						<div class="col-md-9">
+							<input type="text" class="form-control" id="input3" ng-model="abCtrl.newCompany.website">
+						</div>
+					</div>
+					
+					<div class="form-group">
+						<label for="input1" class="col-md-3 control-label">Street Address</label>
+						<div class="col-md-9">
+							<input type="text" class="form-control" id="input1" ng-model="abCtrl.newCompany.streetName">
+						</div>
+					</div>
+					
+					<!--form-group-->
+					<div class="form-group">
+						<label for="input4" class="col-md-3 control-label"><strong class="text-danger">*</strong>Country</label>
+						<div class="col-md-9">
+							<select class="form-control" ng-disabled="abCtrl.newCompany.queryingCity || abCtrl.newCompany.queryingState" id="country" name="country" required ng-options="country._id as country.name for country in abCtrl.countries"
+							ng-model="abCtrl.newCompany.country" ng-change="abCtrl.countryChanged(abCtrl.newCompany)">
+								<option></option>
+							</select>
+						</div>
+					</div>
+					
+					<!--form-group-->
+					<div class="form-group">
+						<label for="input5" class="col-md-3 control-label">
+							<strong class="text-danger">*</strong>State
+							<i class="fa fa-spinner pull-right fa-lg" ng-class="{'fa-spin':abCtrl.newCompany.queryingState}" ng-show="abCtrl.newCompany.queryingState"></i>
+						</label>
+
+						<div class="col-md-9">
+							<select class="form-control" ng-disabled="abCtrl.newCompany.disableState || abCtrl.newCompany.queryingCity" id="state" name="state" ng-options="state._id as state.name for state in abCtrl.newCompany.availableStates"
+							ng-model="abCtrl.newCompany.state" ng-required="abCtrl.availableStates.length > 0" ng-change="abCtrl.stateChanged(abCtrl.newCompany)">
+								<option value=""></option>
+							</select>
+						</div>
+					</div>
+					
+					<!--form-group-->
+					<div class="form-group">
+						<label for="input5" class="col-md-3 control-label">
+							<strong class="text-danger">*</strong>City
+							<i class="fa fa-spinner pull-right fa-lg " ng-class="{'fa-spin':abCtrl.newCompany.queryingCity}" ng-show="abCtrl.newCompany.queryingCity"></i>
+						</label>
+
+						<div class="col-md-9">
+							<select class="form-control" ng-disabled="abCtrl.newCompany.disableCity" id="city" name="city" ng-options="city._id as city.name for city in abCtrl.newCompany.availableCities"
+							ng-model="abCtrl.newCompany.city" ng-required="abCtrl.availableCities.length > 0">
+								<option value=""></option>
+							</select>
+						</div>
+					</div>
+
+					<!--form-group-->
+					<div class="form-group">
+						<label for="input5" class="col-md-3 control-label">Suburb</label>
+						<div class="col-md-9">
+							<input type="text" class="form-control" id="suburb" ng-model="abCtrl.newCompany.suburb">
+						</div>
+					</div>
+					<!--form-group-->
+					<div class="form-group">
+						<label for="input5" class="col-md-3 control-label">Postcode</label>
+						<div class="col-md-9">
+							<input type="text" class="form-control" id="postcode" ng-model="abCtrl.newCompany.postcode">
+						</div>
+					</div>
+					<!--form-group-->
+					<div class="text-right">
+						<input type="submit" value="Create" class="btn btn-primary" ng-disabled="abCtrl.newCompany.queryingCity || abCtrl.newCompany.queryingState">
+					</div>
+				</form>
+			</div>
+			<!--col-lg-6-->
+		</div>
+	</div>
+</div>

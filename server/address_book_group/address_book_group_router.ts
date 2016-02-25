@@ -8,7 +8,8 @@ const router = express.Router();
 
 router.post('/', (req, res) => {
   const modelOptions: ModelOptions = {
-    authorization: getAuthorizationData(req)
+    authorization: getAuthorizationData(req),
+    copyAuthorizationData: 'createdBy'
   };
   addressBookGroupService.createOne(req.body, modelOptions)
     .then((group: AddressBookGroup) => formatSend(res, group), (err) => sendError(res, err));
@@ -18,6 +19,7 @@ router.put('/:id', (req, res) => {
   const modelOptions: ModelOptions = {
     authorization: getAuthorizationData(req)
   };
+  req.body._id = req.params.id;
   addressBookGroupService.updateOne(req.body, modelOptions)
     .then((group: AddressBookGroup) => formatSend(res, group), (err) => sendError(res, err));
 });
@@ -34,12 +36,18 @@ router.delete('/:id', (req, res) => {
 router.get('/_find', (req: express.Request, res: express.Response) => {
   const modelOptions: ModelOptions = {
     authorization: getAuthorizationData(req),
-    population: [
-					{ path: 'industry', select: 'code description' },
-					{ path: 'city', select: 'code name country' }
-				]
+    copyAuthorizationData: 'createdBy'
   };
-  addressBookGroupService.findGroup(req.query, modelOptions)
+  addressBookGroupService.find(req.query, modelOptions)
+    .then((groups: AddressBookGroup[]) => formatSend(res, groups), (err: any) => sendError(res, err));
+});
+
+router.get('/_find_contacts', (req: express.Request, res: express.Response) => {
+  const modelOptions: ModelOptions = {
+    authorization: getAuthorizationData(req),
+    copyAuthorizationData: 'createdBy'
+  };
+  addressBookGroupService.findGroupContacts(req.query, modelOptions)
     .then((groups: AddressBookGroup[]) => formatSend(res, groups), (err: any) => sendError(res, err));
 });
 

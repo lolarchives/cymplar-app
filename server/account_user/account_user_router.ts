@@ -16,9 +16,9 @@ router.post('/', (req, res) => {
 
 router.put('/:id', (req, res) => {
   const modelOptions: ModelOptions = {
-    authorization: getAuthorizationData(req),
-    additionalData: {_id: req.params.id}
+    authorization: getAuthorizationData(req)
   };
+  req.body._id = req.params.id;
   accountUserService.updateOne(req.body, modelOptions)
     .then((user: AccountUser) => formatSend(res, user), (err) => sendError(res, err));
 });
@@ -42,7 +42,8 @@ router.get('/_find', (req, res) => {
 router.get('/_exist', (req, res) => {
   const modelOptions: ModelOptions = {
     authorization: getAuthorizationData(req),
-    requireAuthorization: false
+    requireAuthorization: false,
+    copyAuthorizationData: ''
   };
   accountUserService.exist(req.query, modelOptions)
     .then((exist: boolean) => formatSend(res, {exist: exist}), (err: any) => sendError(res, err));

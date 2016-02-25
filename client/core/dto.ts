@@ -1,4 +1,5 @@
 export const BACK_END_ROUTE = '/api';
+
 export interface BaseDto {
   _id?: any;
   createdBy?: any;
@@ -24,10 +25,16 @@ export interface Country extends BaseDto {
   name?: string;
 }
 
-export interface City extends BaseDto {
+export interface State extends BaseDto {
   code?: string;
   name?: string;
   country?: any;
+}
+
+export interface City extends BaseDto {
+  code?: string;
+  name?: string;
+  state?: any;
 }
 
 export interface Industry extends BaseDto {
@@ -40,11 +47,11 @@ export interface AddressBookGroup extends BaseDto {
   description?: string;
   city?: any;
   postcode?: any;
+  suburb?: string;
   streetName?: string;
   industry?: any;
   website?: string;
-  bussinessNumber?: string;
-  owner?: any;
+  businessNumber?: string;
   contacts?: any;
 }
 
@@ -56,6 +63,7 @@ export interface AddressBookContact extends BaseDto {
   altContactNumber?: string;
   email?: string;
   website?: string;
+  alternativeAddress?: string;
   group?: any;
 }
 
@@ -77,7 +85,7 @@ export interface AccountOrganization extends BaseDto {
   postcode?: any;
   suburb?: string;
   industry?: any;
-  bussinessNumber?: string;
+  businessNumber?: string;
   team?: number;
   web?: string;
   facebook?: string;
@@ -86,11 +94,16 @@ export interface AccountOrganization extends BaseDto {
   plus?: string;
   dribble?: string;
   pinterest?: string;
+  members?: any;
+  salesLeads?: any;
 }
 
 export interface SignUpDetails {
 		organizationName: string;
 		username: string;
+    firstName: string;
+    middleName: string;
+    lastName: string;
 		email: string;
 		password: string;
 		passwordConfirm: string;
@@ -152,6 +165,7 @@ export interface AuthenticationResponse {
 export interface AuthorizationData {
   user?: AccountUser;
   organizationMember?: AccountOrganizationMember;
+  leadMember?: SalesLeadOrganizationMember;
 }
 
 export interface ModelOptions {
@@ -163,8 +177,53 @@ export interface ModelOptions {
   distinct?: any;
   authorization?: AuthorizationData;
   requireAuthorization?: boolean;
-  copyAuthorizationData?: boolean;
-  copyOptionalAuthorizationData?: boolean;
-  specialAuthorizationDataSearch?: boolean;
+  copyAuthorizationData?: string;
+  onlyValidateParentAuthorization?: boolean;
+  validatePostSearchAuthData?: boolean;
 }
 
+export interface AuthorizationResponse {
+  isAuthorized: boolean;
+  errorMessage?: string;
+}
+
+export interface SalesLead extends BaseDto {
+  name?: string;
+  status?: any;
+  contract?: string;
+  amount?: number;
+  contact?: any;
+  members?: any;
+}
+
+export interface SalesLeadStatus extends BaseDto {
+  code?: string;
+  name?: string;
+}
+
+export interface SalesLeadContact extends BaseDto {
+  lead?: any;
+  contact?: any;
+}
+
+export interface SalesLeadMemberRole extends BaseDto {
+  code?: string;
+  name?: string;
+  description?: string;
+  grantDelete?: boolean;
+  grantUpdate?: boolean;
+  grantCreate?: boolean;
+  grantRead?: boolean;
+  grantInvitation?: boolean;
+}
+
+export interface SalesLeadOrganizationMember extends BaseDto {
+  lead?: any;
+  member?: any;
+  role?: any;
+}
+
+export interface Dashboard extends BaseDto {
+  organization?: any;
+  addressBook?: any;
+}

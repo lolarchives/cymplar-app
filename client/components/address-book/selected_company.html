@@ -1,0 +1,354 @@
+<div class="grid-block vertical">
+
+	<div class="grid-content center-panel">
+		<div class="padding-box">
+			<div class="row">
+				<div class="col-lg-6">
+					<h3>Organisation details</h3>
+
+					<form class="form-horizontal" ng-submit="abCtrl.submitEditing()">
+						<div class="form-group display-company">
+							<label for="input1" class="col-md-3 control-label"><strong class="text-danger">*</strong>Name</label>
+							<div class="col-md-9">
+								<input type="text" class="form-control" ng-hide="!abCtrl.editing" ng-model="abCtrl.editingCompany.name" required>
+								<h5 ng-show="!abCtrl.editing"> {{abCtrl.$AddressBookRESTService.selectedCompany.name}}</h5>
+							</div>
+						</div>
+						<!--form-group-->
+						<div class="form-group display-company">
+							<label for="input1" class="col-md-3 control-label">Business number</label>
+							<div class="col-md-9">
+								<input type="text" class="form-control" ng-hide="!abCtrl.editing" ng-model="abCtrl.editingCompany.businessNumber">
+								<h5 ng-show="!abCtrl.editing"> {{abCtrl.$AddressBookRESTService.selectedCompany.businessNumber}}</h5>
+							</div>
+						</div>
+						<div class="form-group display-company">
+							<label for="input1" class="col-md-3 control-label">Description</label>
+							<div class="col-md-9">
+								<input type="text" class="form-control" ng-hide="!abCtrl.editing" ng-model="abCtrl.editingCompany.description">
+								<h5 ng-show="!abCtrl.editing"> {{abCtrl.$AddressBookRESTService.selectedCompany.description}}</h5>
+							</div>
+						</div>
+						<!--form-group-->
+						<div class="form-group display-company">
+							<label for="input2" class="col-md-3 control-label"><strong class="text-danger">*</strong>Industry</label>
+							<div class="col-md-9">
+								<select ng-if="abCtrl.editing" class="form-control" id="organizationIndustry" name="organizationIndustry" ng-model="abCtrl.editingCompany.industry"
+								ng-options="industry as industry.description for industry in abCtrl.industries" required>
+									<option></option>
+								</select>
+								<h5 ng-show="!abCtrl.editing"> {{abCtrl.$AddressBookRESTService.selectedCompany.industry.description}}</h5>
+							</div>
+						</div>
+						<!--form-group-->
+						<div class="form-group display-company">
+							<label for="input3" class="col-md-3 control-label">Website</label>
+							<div class="col-md-9">
+								<input type="text" class="form-control" id="input3" ng-hide="!abCtrl.editing" ng-model="abCtrl.editingCompany.website">
+								<h5 ng-show="!abCtrl.editing"> {{abCtrl.$AddressBookRESTService.selectedCompany.website}}</h5>
+							</div>
+						</div>
+
+						<div class="form-group display-company">
+							<label for="input1" class="col-md-3 control-label">Street address</label>
+							<div class="col-md-9">
+								<input type="text" class="form-control" ng-hide="!abCtrl.editing" ng-model="abCtrl.editingCompany.streetName">
+								<h5 ng-show="!abCtrl.editing"> {{abCtrl.$AddressBookRESTService.selectedCompany.streetName}}</h5>
+							</div>
+						</div>
+
+						<!--form-group-->
+						<div class="form-group display-company">
+							<label for="input4" class="col-md-3 control-label"><strong class="text-danger">*</strong>Country</label>
+							<div class="col-md-9">
+								<select class="form-control" id="country" name="country" required ng-options="country._id as country.name for country in abCtrl.countries"
+								ng-hide="!abCtrl.editing" ng-model="abCtrl.editingCompany.country" ng-change="abCtrl.countryChanged(abCtrl.editingCompany)">
+									<option></option>
+								</select>
+								<h5 ng-show="!abCtrl.editing"> {{abCtrl.$AddressBookRESTService.selectedCompany.city.state.country.name}}</h5>
+							</div>
+						</div>
+						<!--form-group-->
+						<div class="form-group display-company">
+							<label for="input5" class="col-md-3 control-label">
+								<strong class="text-danger">*</strong>State
+								<i class="fa fa-spinner pull-right fa-lg " ng-class="{'fa-spin': abCtrl.editingCompany.queryingState}" ng-show="abCtrl.editingCompany.queryingState"></i>
+							</label>
+
+							<div class="col-md-9">
+								<select class="form-control" ng-disabled="abCtrl.editingCompany.disableState" id="state" name="state" ng-options="state._id as state.name for state in abCtrl.editingCompany.availableStates"
+								ng-show="abCtrl.editing" ng-model="abCtrl.editingCompany.state" ng-change="abCtrl.stateChanged(abCtrl.editingCompany)"
+								ng-required="abCtrl.editingCompany.availableStates.length > 0">
+									<option value=""></option>
+								</select>
+								<h5 ng-show="!abCtrl.editing"> {{abCtrl.$AddressBookRESTService.selectedCompany.city.state.name}}</h5>
+							</div>
+						</div>
+
+						<div class="form-group display-company">
+							<label for="input5" class="col-md-3 control-label">
+								<strong class="text-danger">*</strong>City
+								<i class="fa fa-spinner pull-right fa-lg" ng-class="{'fa-spin': abCtrl.editingCompany.queryingCity}" ng-show="abCtrl.editingCompany.queryingCity"></i>
+							</label>
+
+							<div class="col-md-9">
+								<select class="form-control" ng-disabled="abCtrl.editingCompany.disableCity" id="city" name="city" ng-options="city._id as city.name for city in abCtrl.editingCompany.availableCities"
+								ng-show="abCtrl.editing" ng-model="abCtrl.editingCompany.city" ng-required="abCtrl.editingCompany.availableCities.length > 0">
+									<option value=""></option>
+								</select>
+								<h5 ng-show="!abCtrl.editing"> {{abCtrl.$AddressBookRESTService.selectedCompany.city.name}}</h5>
+							</div>
+						</div>
+
+						<!--form-group-->
+						<div class="form-group display-company">
+							<label for="input5" class="col-md-3 control-label">Suburb</label>
+							<div class="col-md-9">
+								<input type="text" class="form-control" id="suburb" ng-hide="!abCtrl.editing" ng-model="abCtrl.editingCompany.suburb">
+								<h5 ng-show="!abCtrl.editing"> {{abCtrl.$AddressBookRESTService.selectedCompany.suburb}}</h5>
+							</div>
+						</div>
+						<!--form-group-->
+						<div class="form-group">
+							<label for="input5" class="col-md-3 control-label">Postcode</label>
+							<div class="col-md-9">
+								<input type="text" class="form-control" id="postcode" ng-hide="!abCtrl.editing" ng-model="abCtrl.editingCompany.postcode">
+								<h5 ng-show="!abCtrl.editing"> {{abCtrl.$AddressBookRESTService.selectedCompany.postcode}}</h5>
+							</div>
+						</div>
+						<!--form-group-->
+						<div class="row" style="margin: 0px">
+							<button type="button" ng-show="!abCtrl.editing" class="btn btn-danger pull-left" ng-disabled="abCtrl.matching" ng-click="abCtrl.remove()">Remove this company</button>
+							<button type="button" ng-show="!abCtrl.editing" class="btn btn-primary pull-right" ng-disabled="abCtrl.matching" ng-click="abCtrl.startEditing()">Change details</button>
+							<button type="button" ng-show="abCtrl.editing" class="btn btn-danger pull-left" ng-click="abCtrl.editing = false">Cancel</button>
+
+							<button type="submit" ng-show="abCtrl.editing" class="btn btn-primary pull-right">Save Details</button>
+						</div>
+					</form>
+				</div>
+
+				<!--col-lg-6-->
+
+				<div class="col-lg-6">
+					<h3>Contact <small><a href="" ng-click="abCtrl.creatingContact = true"><span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span>  New contact</a></small></h3>
+					<div class="panel panel-default" ng-show="abCtrl.creatingContact">
+						<div class="panel-heading" role="tab" id="headingTwo">
+							<h4 class="panel-title">
+                                  <!--<input type="checkbox" checked class="select-checkbox" data-toggle="tooltip" data-placement="top" title="Tooltip">-->
+                                    <div class="collapsed title" role="button" data-toggle="collapse" data-parent="#accordion" href="#contact1" aria-expanded="false" aria-controls="collapseTwo" >
+                                       <p><strong>New Contact</strong></p>
+                                    </div>
+                                  </h4>
+						</div>
+						<!--panel-heading--
+							<!--New contact panel-->
+						<div class="panel-body">
+
+							<form class="form-horizontal" name="newContactForm" ng-submit="abCtrl.createContact()">
+								<div class="form-group">
+									<div class="col-md-3 control-label">
+										<label for="input13" class="margin-b-n"><strong class="text-danger">*</strong> Name</label>
+									</div>
+									<div class="col-md-9">
+										<input type="text" class="form-control" id="newContactName" ng-model="abCtrl.newContact.name" required>
+									</div>
+								</div>
+								<!--form-group-->
+
+								<div class="form-group">
+									<div class="col-md-3 control-label">
+										<label for="input14" class="margin-b-n">Description</label>
+									</div>
+									<div class="col-md-9">
+										<input type="text" class="form-control" id="newContactDescription" ng-model="abCtrl.newContact.description">
+									</div>
+
+								</div>
+
+								<div class="form-group">
+									<div class="col-md-3 control-label">
+										<label for="input14" class="margin-b-n">Position</label>
+									</div>
+									<div class="col-md-9">
+										<input type="text" class="form-control" id="positions" ng-model="abCtrl.newContact.position">
+									</div>
+								</div>
+
+								<div class="form-group">
+									<div class="col-md-3 control-label">
+										<label for="input14" class="margin-b-n"><strong class="text-danger">*</strong>Contact number</label>
+									</div>
+									<div class="col-md-9">
+										<input type="text" class="form-control" id="contactNumber" required title="Please enter a valid phone number" pattern="^\+?[0-9]{3}-?[0-9]{6,12}$"
+										ng-model="abCtrl.newContact.contactNumber">
+									</div>
+								</div>
+
+								<div class="form-group">
+									<div class="col-md-3 control-label">
+										<label for="input14" class="margin-b-n">Alternative contact number</label>
+									</div>
+									<div class="col-md-9">
+										<input type="text" class="form-control" id="alternativeContactNumber" ng-model="abCtrl.newContact.altContactNumber">
+									</div>
+								</div>
+
+								<div class="form-group">
+									<div class="col-md-3 control-label">
+										<label for="input14" class="margin-b-n"><strong class="text-danger">*</strong>Email </label>
+									</div>
+									<div class="col-md-9">
+										<input type="email" class="form-control" id="email" required ng-model="abCtrl.newContact.email">
+									</div>
+								</div>
+
+								<div class="form-group">
+									<div class="col-md-3 control-label">
+										<label for="input14" class="margin-b-n">Website</label>
+									</div>
+									<div class="col-md-9">
+										<input type="text" class="form-control" id="website" ng-model="abCtrl.newContact.website">
+									</div>
+								</div>
+
+
+
+								<div class="form-group">
+									<div class="col-md-3 control-label">
+										<label for="input14" class="margin-b-n">Alternative address</label>
+									</div>
+									<div class="col-md-9">
+										<input type="text" class="form-control" id="alternativeAddress" ng-model="abCtrl.newContact.alternativeAddress">
+									</div>
+								</div>
+
+								<!--form-group-->
+								<div class="pull-left">
+									<input type="button" value="Cancel" class="btn btn-danger" ng-click="abCtrl.creatingContact = false; abCtrl.newContact = undefined ">
+								</div>
+								<div class="pull-right">
+									<input type="submit" value="Save" class="btn btn-primary">
+								</div>
+							</form>
+						</div>
+					</div>
+					<!--panel-->
+					<!--accordion-group -->
+					<uib-accordion close-others="true" class="contact-list">
+						<uib-accordion-group heading="{{contact.name}}" is-open="status.isFirstOpen" ng-repeat="contact in abCtrl.$AddressBookRESTService.selectedCompany.contacts">
+							<form class="form-horizontal" name="newContactForm{{$index}}" ng-submit="abCtrl.updateContact(contact)">
+								<div class="form-group">
+									<div class="col-md-3 control-label">
+										<label for="input13" class="margin-b-n"><strong class="text-danger">*</strong> Name</label>
+									</div>
+									<div class="col-md-9">
+										<input type="text" ng-show="abCtrl.contactEditing[contact._id]" class="form-control" id="contact{{$index}}Name" ng-model="abCtrl.backupContacts[contact._id].name"
+										required>
+										<h5 ng-hide="abCtrl.contactEditing[contact._id]"> {{contact.name}}</h5>
+									</div>
+								</div>
+								<!--form-group-->
+
+								<div class="form-group">
+									<div class="col-md-3 control-label">
+										<label for="input14" class="margin-b-n">Description</label>
+									</div>
+									<div class="col-md-9">
+										<input type="text" ng-show="abCtrl.contactEditing[contact._id]" class="form-control" id="contact{{$index}}Description" ng-model="abCtrl.backupContacts[contact._id].description">
+										<h5 ng-hide="abCtrl.contactEditing[contact._id]"> {{contact.description}}</h5>
+									</div>
+
+								</div>
+
+								<div class="form-group">
+									<div class="col-md-3 control-label">
+										<label for="input14" class="margin-b-n">Position</label>
+									</div>
+									<div class="col-md-9">
+										<input type="text" ng-show="abCtrl.contactEditing[contact._id]" class="form-control" id="contact{{$index}}Position" ng-model="abCtrl.backupContacts[contact._id].position">
+										<h5 ng-hide="abCtrl.contactEditing[contact._id]"> {{contact.position}}</h5>
+									</div>
+								</div>
+
+								<div class="form-group">
+									<div class="col-md-3 control-label">
+										<label for="input14" class="margin-b-n"><strong class="text-danger">*</strong>Contact number</label>
+									</div>
+									<div class="col-md-9">
+										<input type="text" ng-show="abCtrl.contactEditing[contact._id]" class="form-control" id="contact{{$index}}Number" required
+										title="Please enter a valid phone number" pattern="^\+?[0-9]{3}-?[0-9]{6,12}$" ng-model="abCtrl.backupContacts[contact._id].contactNumber">
+										<h5 ng-hide="abCtrl.contactEditing[contact._id]"> {{contact.contactNumber}}</h5>
+									</div>
+								</div>
+
+								<div class="form-group">
+									<div class="col-md-3 control-label">
+										<label for="input14" class="margin-b-n">Alternative contact number</label>
+									</div>
+									<div class="col-md-9">
+										<input type="text" ng-show="abCtrl.contactEditing[contact._id]" class="form-control" id="contact{{$index}}alternativeContactNumber"
+										ng-model="abCtrl.backupContacts[contact._id].altContactNumber">
+										<h5 ng-hide="abCtrl.contactEditing[contact._id]"> {{contact.altContactNumber}}</h5>
+									</div>
+								</div>
+
+								<div class="form-group">
+									<div class="col-md-3 control-label">
+										<label for="input14" class="margin-b-n"><strong class="text-danger">*</strong>Email </label>
+									</div>
+									<div class="col-md-9">
+										<input type="email" ng-show="abCtrl.contactEditing[contact._id]" class="form-control" id="email" required ng-model="abCtrl.backupContacts[contact._id].email">
+										<h5 ng-hide="abCtrl.contactEditing[contact._id]"> {{contact.email}}</h5>
+									</div>
+								</div>
+
+								<div class="form-group">
+									<div class="col-md-3 control-label">
+										<label for="input14" class="margin-b-n">Website</label>
+									</div>
+									<div class="col-md-9">
+										<input type="text" ng-show="abCtrl.contactEditing[contact._id]" class="form-control" id="website" ng-model="abCtrl.backupContacts[contact._id].website">
+										<h5 ng-hide="abCtrl.contactEditing[contact._id]"> {{contact.website}}</h5>
+									</div>
+								</div>
+
+
+
+								<div class="form-group">
+									<div class="col-md-3 control-label">
+										<label for="input14" class="margin-b-n">Alternative address</label>
+									</div>
+									<div class="col-md-9">
+										<input type="text" ng-show="abCtrl.contactEditing[contact._id]" class="form-control" id="alternativeAddress" ng-model="abCtrl.backupContacts[contact._id].alternativeAddress">
+										<h5 ng-hide="abCtrl.contactEditing[contact._id]"> {{contact.alternativeAddress}}</h5>
+									</div>
+								</div>
+
+								<!--form-group-->
+								<div class="pull-left">
+									<input type="button" value="Delete contact" ng-hide="abCtrl.contactEditing[contact._id]" class="btn btn-danger" ng-click="abCtrl.removeContact(contact) ">
+								</div>
+								<div class="pull-left">
+									<input type="button" value="Cancel" ng-show="abCtrl.contactEditing[contact._id]" class="btn btn-danger" ng-click="abCtrl.cancelEditContact(contact)">
+								</div>
+
+								<div class="pull-right">
+									<input type="button" value="Edit details" ng-hide="abCtrl.contactEditing[contact._id]" class="btn btn-primary" ng-click="abCtrl.startEditContact(contact)">
+								</div>
+								<div class="pull-right">
+									<input type="submit" value="Save" ng-show="abCtrl.contactEditing[contact._id]" class="btn btn-primary">
+								</div>
+							</form>
+						</uib-accordion-group>
+					</uib-accordion>
+				</div>
+				<!--col-lg-6-->
+			</div>
+			<!--row-->
+
+		</div>
+
+		<!--right panel-->
+	</div>
+
+</div>

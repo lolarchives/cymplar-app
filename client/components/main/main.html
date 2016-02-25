@@ -1,19 +1,10 @@
-<div class="page-header">
+<main-navbar user="mainCtrl.user" organization-member="mainCtrl.organizationMember" organization="mainCtrl.organization"
+companies="mainCtrl.companies">
+	<div transclude-to="main" class="grid-block vertical" style="height:100%">
+		<div ui-view="main" class="grid-block vertical"></div>
+	</div>
+	<div transclude-to="right" class="grid-block vertical">
+		<div ui-view="right-bar" class="grid-block vertical"></div>
+	</div>
 
-  <h1>Main page</h1>
-</div>
-
-<hr>
-<h3>User:</h3>
-<pre>{{main.userBeautified}}</pre>
-<hr>
-
-<h3>Organization:</h3>
-<pre>{{main.organizationBeautified}}</pre>
-<hr>
-
-<h3>Organization member:</h3>
-<pre>{{main.organizationMemberBeautified}}</pre>
-<hr>
-
-<button class="btn btn-danger" ng-click="main.logout()">Log out</button>
+</main-navbar>

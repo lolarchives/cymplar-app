@@ -4,11 +4,15 @@ export class MainController {
   private organizationMemberBeautified: string;
   /* @ngInject */
   constructor (private toastr: any, private AuthToken: any, 
-      private $state: any, private user: any, private organization_member: any, private organization: any) { 
+      private $state: any, private user: any, private organizationMember: any, 
+      private organization: any, private companies: any) { 
     this.toastr = toastr;
     this.userBeautified = JSON.stringify(this.user, null, 4);
     this.organizationBeautified = JSON.stringify(this.organization, null, 4);
-    this.organizationMemberBeautified = JSON.stringify(this.organization_member, null, 4);
+    this.organizationMemberBeautified = JSON.stringify(this.organizationMember, null, 4);
+    console.log(user, organizationMember, organization, companies);
+    
+
   }
 
   showToastr() {
@@ -20,5 +24,6 @@ export class MainController {
     this.AuthToken.setIdO();
     this.$state.go('login');
   }
+  
   
 }

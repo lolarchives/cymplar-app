@@ -16,27 +16,28 @@ export class SignupService {
 	createOne(data: SignUp = {}, options: ModelOptions = {}): Promise<string> {
 		
 		return new Promise<string>((fulfill: Function, reject: Function) => {
-
-		options.requireAuthorization = false; // As it doesn't need authorization validation it can be skipped
-				
-		accountUserService.createOne(data.user, options)
-		.then((accountUser: AccountUser) => {
-			data.organization.createdBy = accountUser;
-			data.organizationMember.user = accountUser;
-			return accountOrganizationService.createOneWithMember(data, options); 
-		})
-		.then((accountOrganization: AccountOrganization) => { 
-			const response = { 
-				init: accountOrganization._id,
-				token: loginService.getToken(data.organization.createdBy)
-			};
-			fulfill(response); 
-		})
-		.catch((err) => {
-			if (ObjectUtil.isPresent(data.organization.createdBy)) {
-				accountUserService.removeOneById(data.organization.createdBy._id, options);
-			} 
-			reject(err); 
+			options.requireAuthorization = false; // As it doesn't need authorization validation it can be skipped
+			options.copyAuthorizationData = '';
+					
+			accountUserService.createOne(data.user, options)
+			.then((accountUser: AccountUser) => {
+				options.authorization.user = accountUser;
+				options.copyAuthorizationData = 'user';
+				return accountOrganizationService.createOneWithMember(data, options); 
+			})
+			.then((accountOrganization: AccountOrganization) => { 
+				const response = { 
+					init: accountOrganization._id,
+					token: loginService.getToken(options.authorization.user)
+				};
+				fulfill(response); 
+			})
+			.catch((err) => {
+				if (ObjectUtil.isPresent(options.authorization.user)) {
+					accountUserService.removeSkipingHooks({ _id: options.authorization.user._id });
+				} 
+				reject(err);
+				return; 
 			});
 		});
 	}

@@ -21,6 +21,22 @@ export class ObjectUtil {
 			dest[prop] = src[prop];
 		}
 	}
+	
+	static mergePrefix(dest: Object, src: Object, prefix: String) {
+		if (ObjectUtil.isBlank(src)) {
+			return dest;
+		}
+		if (ObjectUtil.isBlank(dest)) {
+			const newSrc = {};
+			for (let prop in src) {
+				newSrc[prefix + '.' + prop] = src[prop];
+			}
+			return newSrc;
+		}
+		for (let prop in src) {
+			dest[prefix + '.' + prop] = src[prop];
+		}
+	}
 
 	static isPresent(data: any): boolean {
 		return !ObjectUtil.isBlank(data);

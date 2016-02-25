@@ -13,13 +13,19 @@ const db = createConnection(process.env.CYMPLAR_MONGO_URI);
 db.on('error', () => console.error('Error connecting to Database:', process.env.CYMPLAR_MONGO_URI));
 db.once('open', () => console.log('%s: Connected to MongoDb on %s', new Date(), process.env.CYMPLAR_MONGO_URI));
 
+const subDocumentSchemas = {
+  leadStatus: new Schema({
+    label: { type: String, required: true },
+    value: { type: String, required: true }
+  }, { _id : false })
+};
 
 const schemas = {
   user: new Schema({
     email: { type: String, unique: true, required: true },
     password: { type: String, required: true },
     name: { type: String, required: true },
-    locale: { type: String, required: true },
+    locale: { type: String },
     picture: { type: String },
     countryCode: { type: String },
     timezone: { type: Number },
@@ -59,10 +65,17 @@ const schemas = {
     createdAt: { type: Number },
     updatedAt: { type: Number }
   }),
-  city: new Schema({
+  state: new Schema({
     code: { type: String, required: true },
     name: { type: String, required: true },
     country: { type: ObjectId, ref: 'country', required: true },
+    createdAt: { type: Number },
+    updatedAt: { type: Number }
+  }),
+  city: new Schema({
+    code: { type: String, required: true },
+    name: { type: String, required: true },
+    state: { type: ObjectId, ref: 'state', required: true },
     createdAt: { type: Number },
     updatedAt: { type: Number }
   }),
@@ -80,6 +93,7 @@ const schemas = {
     altContactNumber: { type: String },
     email: { type: String, required: true },
     website: { type: String },
+    alternativeAddress: { type: String },
     group: { type: ObjectId, ref: 'addressBookGroup', required: true, index: true },
     createdBy: { type: ObjectId, ref: 'accountUser' },
     createdAt: { type: Number },
@@ -90,10 +104,11 @@ const schemas = {
     description: { type: String },
     city: { type: ObjectId, ref: 'city', required: true },
     postcode: { type: String },
+    suburb: { type: String },
     streetName: { type: String },
     industry: { type: ObjectId, ref: 'industry', required: true },
     website: { type: String },
-    bussinessNumber: { type: String },
+    businessNumber: { type: String },
     createdBy: { type: ObjectId, ref: 'accountUser', required: true, index: true },
     createdAt: { type: Number },
     updatedAt: { type: Number }
@@ -104,18 +119,26 @@ const schemas = {
     firstName: { type: String },
     middleName: { type: String },
     lastName: { type: String },
+    locale: { type: String },
+    picture: { type: String },
     alias: { type: String },
-    birthday: { type: Date }
+    birthday: { type: Date },
+    timezone: { type: Number },
+    gender: { type: String },
+    verified: { type: Number },
+    status: { type: Number, default: 1, required: true, index: true },
+    lastLoginDate: { type: Date }
   }),
   accountOrganization: new Schema({
     name: { type: String, required: true, index: true },
-    domain: { type: String, required: true, unique: true },
+    domain: { type: String, required: true, unique: true, lowercase: true, trim: true },
     description: { type: String },
     city: { type: ObjectId, ref: 'city', index: true },
     postcode: { type: String },
     suburb: { type: String },
+    streetName: { type: String },
     industry: { type: ObjectId, ref: 'industry' },
-    bussinessNumber: { type: String },
+    businessNumber: { type: String },
     team: { type: Number },
     web: { type: String },
     facebook: { type: String },
@@ -124,7 +147,8 @@ const schemas = {
     plus: { type: String },
     dribble: { type: String },
     pinterest: { type: String },
-    createdBy: { type: ObjectId, ref: 'accountUser' }
+    createdBy: { type: ObjectId, ref: 'accountUser' },
+    projectDefaultStatuses: [subDocumentSchemas.leadStatus]
   }),
   accountOrganizationMember: new Schema({
     name: { type: String },
@@ -156,7 +180,9 @@ const schemas = {
     status: { type: ObjectId, ref: 'salesLeadStatus' },
     contract: { type: String },
     amount: { type: Number },
-    createdBy: { type: ObjectId, ref: 'accountOrganizationMember' },
+    leadStatuses: [subDocumentSchemas.leadStatus],
+    currentStatus: subDocumentSchemas.leadStatus,
+    createdBy: { type: ObjectId, ref: 'accountUser' },
     createdAt: { type: Number },
     updatedAt: { type: Number }
   }),
@@ -167,27 +193,20 @@ const schemas = {
     createdAt: { type: Number },
     updatedAt: { type: Number }
   }),
-  salesLeadOrganization: new Schema({
-    lead: { type: ObjectId, ref: 'salesLead', required: true },
-    organization: { type: ObjectId, ref: 'accountOrganization', required: true },
-    createdBy: { type: ObjectId, ref: 'accountOrganizationMember' },
-    createdAt: { type: Number },
-    updatedAt: { type: Number }
-  }),
   salesLeadMemberRole: new Schema({
     code: { type: String, required: true },
     name: { type: String, required: true },
     description: { type: String, required: true },
-    grantCreate: {type: Boolean, required: true },
-    grantDelete: {type: Boolean, required: true }, 
-    grantUpdate: {type: Boolean, required: true },
-    grantRead: {type: Boolean, required: true },
-    grantInvitation: {type: Boolean, required: true }
+    grantCreate: { type: Boolean, required: true },
+    grantDelete: { type: Boolean, required: true }, 
+    grantUpdate: { type: Boolean, required: true },
+    grantRead: { type: Boolean, required: true },
+    grantInvitation: { type: Boolean, required: true }
   }),
   salesLeadOrganizationMember: new Schema({
+    lead: { type: ObjectId, ref: 'salesLead', required: true },
     role: { type: ObjectId, ref: 'salesLeadMemberRole' },
     member: { type: ObjectId, ref: 'accountOrganizationMember', required: true },
-    leadOrganization: { type: ObjectId, ref: 'salesLeadOrganization', required: true },
     createdBy: { type: ObjectId, ref: 'accountOrganizationMember' },
     createdAt: { type: Number },
     updatedAt: { type: Number }
@@ -195,15 +214,15 @@ const schemas = {
 };
 
 
-schemas.city.index({ code: 1, country: 1 }, { unique: true });
+schemas.city.index({ code: 1, state: 1 }, { unique: true });
+schemas.state.index({ code: 1, country: 1 }, { unique: true });
 schemas.addressBookContact.index({ email: 1, group: 1 }, { unique: true });
 schemas.addressBookGroup.index({ name: 1, createdBy: 1 }, { unique: true });
-schemas.accountOrganizationMember.index({ email: 1, organization: 1 }, { unique: true });
+schemas.accountOrganizationMember.index({ organization: 1, user: 1 }, { unique: true });
 schemas.accountMemberRole.index({ code: 1, name: 1 }, { unique: true });
 schemas.salesLead.index({ name: 1, organization: 1 }, { unique: true });
-schemas.salesLeadContact.index({ leadGroup: 1, contact: 1 }, { unique: true });
-schemas.salesLeadOrganization.index({ organization: 1, lead: 1 }, { unique: true });
-schemas.salesLeadOrganizationMember.index({ member: 1, leadOrganization: 1 }, { unique: true });
+schemas.salesLeadContact.index({ lead: 1, contact: 1 }, { unique: true });
+schemas.salesLeadOrganizationMember.index({ member: 1, lead: 1 }, { unique: true });
 
 
 for (let prop in schemas) {
@@ -224,6 +243,7 @@ export const UserModel = db.model('user', schemas.user);
 export const CompanyModel = db.model('company', schemas.company);
 export const ContactModel = db.model('contact', schemas.contact);
 export const CountryModel = db.model('country', schemas.country);
+export const StateModel = db.model('state', schemas.state);
 export const CityModel = db.model('city', schemas.city);
 export const IndustryModel = db.model('industry', schemas.industry);
 export const AddressBookContactModel = db.model('addressBookContact', schemas.addressBookContact);
@@ -235,23 +255,46 @@ export const AccountMemberRoleModel = db.model('accountMemberRole', schemas.acco
 export const SalesLeadStatusModel = db.model('salesLeadStatus', schemas.salesLeadStatus);
 export const SalesLeadModel = db.model('salesLead', schemas.salesLead);
 export const SalesLeadContactModel = db.model('salesLeadContact', schemas.salesLeadContact);
-export const SalesLeadOrganizationModel = db.model('salesLeadOrganization', schemas.salesLeadOrganization);
 export const SalesLeadOrganizationMemberModel = db.model('salesLeadOrganizationMember', schemas.salesLeadOrganizationMember);
 export const SalesLeadMemberRoleModel = db.model('salesLeadMemberRole', schemas.salesLeadMemberRole);
 
 
-schemas.addressBookGroup.pre('remove', function(next: Function) {
+schemas.addressBookGroup.post('remove', function() {
   const obj: Document = this;
-    
-  const queryAddressBook = {
-    group: obj['_id'] 
-  };
-  
-  AddressBookContactModel.find(queryAddressBook).remove((err: any, removedObjs: any) => {
+  AddressBookContactModel.find({group: obj['_id'] }).distinct('_id')
+  .exec((err: Error, foundContactsPerGroup: string[]) => {
     if (err) {
-      next(err);
-    }
-    next();
+      return;
+    } 
+    SalesLeadContactModel.find({ contact: { $in: foundContactsPerGroup }}).distinct('contact')
+    .exec((err: Error, foundObjs: string[]) => {
+      if (err) {
+        return;
+      }
+      
+      AddressBookContactModel.remove({ group: obj['_id'], _id: { $nin: foundObjs }}, (err: any) => {
+       if (err) {
+          return;
+        } 
+       return;
+      });
+    });	
+  });
+});
+
+schemas.addressBookContact.pre('remove', function(next: Function) {
+  const obj: Document = this;
+  SalesLeadContactModel.find({ contact: obj['_id']})
+  .exec((err: Error, foundObjs: Document[]) => {
+     if (err) {
+        next(err);
+        return;
+     } 	
+     if (ObjectUtil.isPresent(foundObjs) && foundObjs.length > 0) {
+       next(new Error('This contact is related to a lead, it cannot be erased'));
+       return;
+     }
+     next();
   });
 });
 
@@ -264,6 +307,7 @@ schemas.accountUser.pre('save', function (next: Function) {
   bcrypt.hash(obj['password'], SALT, (err, hash) => {
       if (err) { 
         next(err);
+        return;
       };
       
       obj['password'] = hash;
@@ -274,9 +318,10 @@ schemas.accountUser.pre('save', function (next: Function) {
 schemas.accountUser.pre('remove', function(next: Function) {
   const obj: Document = this;
   AccountOrganizationMemberModel.find({ user: obj['_id'] }).populate('role organization')
-	.exec((err: any, removedObjs: any) => {
+	.exec((err: Error, removedObjs: Document[]) => {
     if (err) {
         next(err);
+        return;
     }
     DatabaseObjectUtil.removeArrayPromise(removedObjs)
     .then((results: Document[]) => {
@@ -284,39 +329,40 @@ schemas.accountUser.pre('remove', function(next: Function) {
     })
     .catch((err: Error) => {
       next(err);
+      return;
     });
   });
 });
 
-schemas.accountUser.pre('remove', function(next: Function) {
+schemas.accountUser.post('remove', function() {
   const obj: Document = this;
   AddressBookGroupModel.find({ createdBy: obj['_id'] })
-	.exec((err: any, removedObjs: any) => {
+  .exec((err: Error, removedObjs: Document[]) => {
     if (err) {
-        next(err);
+        return;
     }
     DatabaseObjectUtil.removeArrayPromise(removedObjs)
     .then((results: Document[]) => {
-      next();
+      return;
     })
     .catch((err: Error) => {
-      next(err);
+      return;
     });
   });
 });
 
 schemas.accountOrganizationMember.pre('save', function(next: Function) {
   const obj: Document = this;
-  
   if (obj.isNew && ObjectUtil.isBlank(obj['createdBy'])) {    
     AccountMemberRoleModel.findOne({ code: 'OWNER' })
     .lean().exec((err: any, found: Document) => {
       if (err) {
         next(err);
+        return;
       }
       
       if (ObjectUtil.isBlank(found['_id'])) {
-        next("A role should be specified for this member ");
+        next('A role should be specified for this member ');
       }
 
       obj['role'] = found['_id'];
@@ -329,43 +375,172 @@ schemas.accountOrganizationMember.pre('save', function(next: Function) {
 
 schemas.accountOrganizationMember.pre('remove', function(next: Function) {
   const obj: Document = this;
-  if (obj['role']['grantDelete'] && ObjectUtil.isPresent(obj['organization']['_id'])) {
-  
-  const query = {
-      organization: obj['organization'], 
-      'role.grantDelete': true,
+  const queryOwnership = {
+    member: obj['_id'] 
+  };
+  SalesLeadOrganizationMemberModel.find(queryOwnership)
+  .populate('role lead').exec((err: Error, foundObjs: Document[]) => {
+    if (err) {
+        next(err);
+        return;
+      }
+    DatabaseObjectUtil.removeArrayPromise(foundObjs)
+    .then((removedObj: Document[]) => {
+      next();
+    })
+    .catch((err: any) => {
+      next(err);
+      return;
+    }); 
+  });
+});
+
+schemas.accountOrganizationMember.post('remove', function() {
+  const obj: Document = this;
+  const isUserTransaction = ObjectUtil.isPresent(obj['role']['code']);
+  const isOwner = obj['role']['code'] === 'OWNER';
+  if ( isUserTransaction && isOwner) {
+    const orgQuery = {
+      organization: obj['organization'],
       _id: { $ne: obj['_id'] } 
     };
-    
-    AccountOrganizationMemberModel.find(query).populate('role') // check whether there are more owners or not
-    .exec((err: any, foundMembers: any) => {
+    AccountOrganizationMemberModel.find(orgQuery) // check whether there are more owners or not
+    .populate('role').exec((err: any, foundMembers: any) => {
       if (err) {
-        next(err);
+        return;
       }
-      if (foundMembers.length < 1) {
+      const membersOnCharge: string[] = [];
+      for (let i = 0; i < foundMembers.length; i++ ) {
+        if (foundMembers[i]['role']['code'] === 'OWNER') {
+          membersOnCharge.push(foundMembers[i]['_id']);
+        } 
+      }
+     if (membersOnCharge.length < 1) {
         obj['organization'].remove((err: Error) => {
-            if (err) {
-              next(err);
-            }
-            next();
+          if (err) {
+            return;
+          }
         });
-      } else {
-        next();  
-      }
-    });
+      } 
+    }); 
   } else {
-    next();
+    return;
   } 
 });
 
 schemas.accountOrganization.pre('remove', function(next: Function) {
   const obj = this;
-  AccountOrganizationMemberModel.find({ organization: obj._id })
-  .remove((err: any, removedObjs: any) => {
+  AccountOrganizationMemberModel.find({ organization: obj['_id'] })
+  .exec((err: Error, foundObjs: Document[]) => {
     if (err) {
-        next(err);
+      next(err);
+      return;
     }
-    next();
-  }); 
+    DatabaseObjectUtil.removeArrayPromise(foundObjs)
+    .then((removedObj: Document[]) => {
+      next();
+    })
+    .catch((err: any) => {
+        next(err);
+        return;
+    });	
+  }); 	
 });
+
+schemas.salesLeadContact.post('remove', function() {
+  const obj: Document = this;
+  if (ObjectUtil.isPresent(obj['contact']['_id']) && ObjectUtil.isBlank(obj['contact']['group'])) { 
+    const contactQuery = {
+      contact: obj['contact'],
+      _id: { $ne: obj['_id'] } 
+    };
+       
+    SalesLeadContactModel.find(contactQuery) // check whether this contact belongs to more leads
+    .exec((err: Error, foundObjs: Document[]) => {
+      if (err) {
+        return;
+      }
+      if (foundObjs.length < 1) {
+        obj['contact'].remove((err: Error) => {
+            if (err) {
+              return;
+            }
+            return;
+        });
+      } 
+      
+      return;
+    });  
+  } 
+  
+  return;
+});
+
+schemas.salesLeadOrganizationMember.post('remove', function() {
+  const obj: Document = this;
+  SalesLeadMemberRoleModel.find({ code: 'OWNER' }).distinct('_id')
+  .exec((err: Error, roles: string[]) => {
+    if (err) {
+      return;
+    }
+ 
+    const orgQuery = {
+      lead: obj['lead'],
+      _id: { $ne: obj['_id'] },
+      role: { $in: roles}
+    };
+    
+    SalesLeadOrganizationMemberModel.find(orgQuery) // check whether there are more members or not
+    .exec((err: any, foundMembers: any) => {
+      if (err) {
+        return;
+      }
+      
+      if (foundMembers.length < 1) {
+        obj['lead'].remove((err: Error) => {
+            if (err) {
+              return;
+            }
+          return;
+        });
+      } 
+    });
+  });
+});
+
+
+schemas.salesLead.pre('remove', function(next: Function) {
+  const obj: Document = this;
+  const contactPopulation = {	 
+      path: 'contact',
+      populate: {
+        path: 'group',
+        model: 'addressBookGroup' 
+      } 
+    };
+    
+  SalesLeadContactModel.find({lead: obj['_id']}).populate(contactPopulation).populate('lead')
+  .exec((err: Error, foundObjs: Document[]) => {
+    if (err) {
+      next(err);
+      return;
+    }
+    DatabaseObjectUtil.removeArrayPromise(foundObjs)
+    .then((removedObj: Document[]) => {
+      SalesLeadOrganizationMemberModel.find({lead: obj['_id']})
+      .remove((err: Error, foundObjs: Document[]) => {
+        if (err) {
+          next(err);
+          return;
+        }
+       next();
+      });
+    })
+    .catch((err: any) => {
+		  next(err);
+      return;
+		});	
+  });
+});
+
 

@@ -29,8 +29,20 @@
 	<!--form-group-->
 	<div class="form-group">
 		<div class="col-md-5 control-label">
+			<label for="state" class="margin-b-n"><strong class="text-danger">*</strong> State</label>
+			<i class="fa fa-spinner pull-right fa-lg"  ng-class="{'fa-spin' : suCtrl.queryingState}" ng-show="suCtrl.queryingState"></i>
+		</div>
+		<div class="col-md-7">
+			<select class="form-control" ng-disabled="suCtrl.disableState" id="state" name="state" ng-options="state._id as state.name for state in suCtrl.availableStates" ng-model="suCtrl.signUpDetails.state" ng-required="suCtrl.availableStates.length > 0" ng-change="suCtrl.stateChanged()">
+				<option value=""></option>
+			</select>
+		</div>
+	</div>
+	<!--form-group-->
+	<div class="form-group">
+		<div class="col-md-5 control-label">
 			<label for="city" class="margin-b-n"><strong class="text-danger">*</strong> City</label>
-			<i class="fa fa-spinner pull-right fa-lg fa-spin" ng-show="suCtrl.queryingCity"></i>
+			<i class="fa fa-spinner pull-right fa-lg" ng-class="{'fa-spin' : suCtrl.queryingCity}" ng-show="suCtrl.queryingCity"></i>
 		</div>
 		<div class="col-md-7">
 			<select class="form-control" ng-disabled="suCtrl.disableCity" id="city" name="city" ng-options="city as city.name for city in suCtrl.availableCities" ng-model="suCtrl.signUpDetails.city" ng-required="suCtrl.availableCities.length > 0">
@@ -63,7 +75,7 @@
 			<a type="button" class="btn btn-default" ng-click="suCtrl.back()">Back</a>
 		</div>
 		<div class="col-xs-6 text-right">
-			<button type="submit" class="btn btn-primary" >Next</button>
+			<button type="submit" class="btn btn-primary" ng-disabled="suCtrl.queryingCity || suCtrl.queryingState" >Next</button>
 		</div>
 	</div>
 </form>

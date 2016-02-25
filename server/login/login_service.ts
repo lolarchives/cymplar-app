@@ -54,8 +54,9 @@ export class LoginService {
 				population: {
 					path: 'user',
 					match: { username: data.username }
-					},
-				copyAuthorizationData: false
+				},
+				copyAuthorizationData: '',
+				validatePostSearchAuthData: false
 			};
 			accountOrganizationMemberService.findOne({ organization: data.organization }, accountUserModelOptions)
 			.then((accountOrganizationMember: AccountOrganizationMember) => {
