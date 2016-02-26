@@ -75,10 +75,9 @@
                 </h5>
         <div class="collapse" id="collapse1">
           <ul class="main-nav">
-            <li><a class="sub-title notificationred" href="" ui-sref="main.lead.selectedLead({lead: {id: 123}})">Ford-training</a></li>
-            <li><a href="">Slim-Solutions</a></li>
-            <li><a href="">Neuli-Website</a></li>
-            <li><a href="">Costco-mufirtc</a></li>
+            <li ng-class="{'current': navCtrl.$state.params.id == lead._id && navCtrl.$state.current.name == 'main.lead.selectedLead'}"
+              ng-repeat=" lead in navCtrl.$LeadRESTService.allLeadsCached | filter: {status: navCtrl.coldStatus} ">
+              <a ng-click="navCtrl.$state.go('main.lead.selectedLead',{id: lead._id, lead: lead});navCtrl.$LeadRESTService.selectedLead = lead;navCtrl.console.log(navCtrl.$LeadRESTService.selectedLead)">{{lead.name}}</a></li>
           </ul>
         </div>
         <!--collapse-->
@@ -101,8 +100,9 @@
                 </h5>
         <div class="collapse" id="collapse2">
           <ul class="main-nav">
-            <li><a href="">Ford-training</a></li>
-            <li><a href="">Slim-Solutions</a></li>
+            <li ng-class="{'current': navCtrl.$state.params.id == lead._id && navCtrl.$state.current.name == 'main.lead.selectedLead'}"
+                ng-repeat=" lead in navCtrl.$LeadRESTService.allLeadsCached | filter: {status: navCtrl.opporturnityStatus} ">
+              <a ng-click="navCtrl.$state.go('main.lead.selectedLead',{id: lead._id, lead: lead});navCtrl.$LeadRESTService.selectedLead = lead;navCtrl.console.log(navCtrl.$LeadRESTService.selectedLead)">{{lead.name}}</a></li>
           </ul>
         </div>
         <!--collapse-->
@@ -113,20 +113,22 @@
                 </h5>
         <div class="collapse" id="collapse3">
           <ul class="main-nav">
-            <li><a href="">Ford-training</a></li>
-            <li><a href="">Slim-Solutions</a></li>
+            <li ng-class="{'current': navCtrl.$state.params.id == lead._id && navCtrl.$state.current.name == 'main.lead.selectedLead'}"
+             ng-repeat=" lead in navCtrl.$LeadRESTService.allLeadsCached | filter: {status: navCtrl.signedStatus} ">
+              <a ng-click="navCtrl.$state.go('main.lead.selectedLead',{id: lead._id, lead: lead});navCtrl.$LeadRESTService.selectedLead = lead;navCtrl.console.log(navCtrl.$LeadRESTService.selectedLead)">{{lead.name}}</a></li>
           </ul>
         </div>
         <!--collapse-->
 
         <h5 class="sub-title" data-toggle="collapse" data-target="#collapse4">
                     <span class="glyphicon glyphicon-chevron-down left-icon" aria-hidden="true"></span>
-                    My Lost/Inacative
+                    My Lost/Inactive
                 </h5>
         <div class="collapse" id="collapse4">
           <ul class="main-nav">
-            <li><a href="">Ford-training</a></li>
-            <li><a href="">Slim-Solutions</a></li>
+            <li ng-class="{'current': navCtrl.$state.params.id == lead._id && navCtrl.$state.current.name == 'main.lead.selectedLead'}"
+               ng-repeat=" lead in navCtrl.$LeadRESTService.allLeadsCached | filter: navCtrl.inactiveOrLostFilter ">
+               <a ng-click="navCtrl.$state.go('main.lead.selectedLead',{id: lead._id, lead: lead});navCtrl.$LeadRESTService.selectedLead = lead;navCtrl.console.log(navCtrl.$LeadRESTService.selectedLead)">{{lead.name}}</a></li>
           </ul>
         </div>
         <!--collapse-->
@@ -240,7 +242,7 @@
         <div class="collapse in" id="collapse8">
           <ul class="main-nav">
             <li ng-repeat="company in navCtrl.companies" ng-class="{'current': navCtrl.$state.params.id == company._id && navCtrl.$state.current.name == 'main.addressBook.selectedCompany'}">
-              <a ng-click="navCtrl.$state.go('main.addressBook.selectedCompany',{id: company._id, company: company});navCtrl.$AddressBookRESTService.selectedCompany = company;navCtrl.console.log(navCtrl.$AddressBookRESTService.selectedCompany,navCtrl.$AddressBookRESTService.allCompaniesCached)"
+              <a ng-click="navCtrl.$state.go('main.addressBook.selectedCompany',{id: company._id, company: company});navCtrl.$AddressBookRESTService.selectedCompany = company;navCtrl.console.log(navCtrl.$AddressBookRESTService.selectedCompany)"
               href="">{{company.name}}</a>
             </li>
           </ul>

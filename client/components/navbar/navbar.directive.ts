@@ -22,6 +22,12 @@ export function mainNavbar(): angular.IDirective {
 
 /** @ngInject */
 export class NavbarController {
+
+  inactiveOrLostFilter = (value: any, index: any, array: any[]) => {
+   
+    return value.status == this.lostStatus || value.status == this.inactiveStatus
+  }
+
   public relativeDate: string;
   public creationDate: number;
   private user: any;
@@ -29,19 +35,44 @@ export class NavbarController {
   private organization: any;
   private leftPanelOpen: boolean;
   private rightPanelOpen: boolean;
-  private displayInfo: boolean = false; 
+  private displayInfo: boolean = false;
   private displaySearchBar: boolean = false;
   private console: Console;
-  private STATE_WITH_RIGHT_PANEL = ['main.dashboard', 'main.addressBook.selectedCompany','main.lead.selectedLead'];
+  private STATE_WITH_RIGHT_PANEL = ['main.dashboard', 'main.addressBook.selectedCompany', 'main.lead.selectedLead'];
   private STATE_WITH_SEARCH_BAR = ['main.dashboard', 'main.addressBook.allCompanies', 'main.lead.selectedLead', 'main.lead.allLeads'];
-
+  private coldStatus: any;
+  private opporturnityStatus: any;
+  private signedStatus: any;
+  private lostStatus: any;
+  private inactiveStatus: any;
   private queryString: string;
-  
-  constructor(moment: moment.MomentStatic, private $state: any, 
+
+  constructor(moment: moment.MomentStatic, private $state: any,
     private $scope: angular.IScope, private AuthToken: any,
-    private $AddressBookRESTService: any) {
-    this.console = console; 
- 
+    private $AddressBookRESTService: any,
+    private $LeadRESTService: any) {
+   
+
+    for (let i = 0; i < $LeadRESTService.allLeadStatusesCached.length; i++) {
+      if ($LeadRESTService.allLeadStatusesCached[i].code == 'COLD') {
+        this.coldStatus = $LeadRESTService.allLeadStatusesCached[i]._id
+      }
+
+      if ($LeadRESTService.allLeadStatusesCached[i].code == 'OPP') {
+        this.opporturnityStatus = $LeadRESTService.allLeadStatusesCached[i]._id
+      }
+      if ($LeadRESTService.allLeadStatusesCached[i].code == 'SIGN') {
+        this.signedStatus = $LeadRESTService.allLeadStatusesCached[i]._id
+      }
+      if ($LeadRESTService.allLeadStatusesCached[i].code == 'IN') {
+        this.inactiveStatus = $LeadRESTService.allLeadStatusesCached[i]._id
+      }
+      if ($LeadRESTService.allLeadStatusesCached[i].code == 'LOST') {
+        this.lostStatus = $LeadRESTService.allLeadStatusesCached[i]._id
+      }
+
+    }
+
     $scope.$on('$stateChangeSuccess', (event, toState, toParams, fromState, fromParams) => {
       if (this.STATE_WITH_RIGHT_PANEL.indexOf(toState.name) === -1) {
         this.displayInfo = false;
@@ -67,6 +98,7 @@ export class NavbarController {
     }
 
   }
+
   logout() {
     this.AuthToken.logout();
     this.$state.go('login');

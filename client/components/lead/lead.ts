@@ -1,6 +1,6 @@
 import '../helper/helper';
 import './lead.service'
-import {AddressBookContact} from '../../core/dto';
+import {SalesLead} from '../../core/dto';
 namespace Lead {
     function config($stateProvider: any) {
         $stateProvider
@@ -24,7 +24,7 @@ namespace Lead {
                             } else {
                                 return {}
                             }
-                                
+
                         });
                     }
                 }
@@ -54,22 +54,22 @@ namespace Lead {
                 params: {
                     lead: '@',
                 },
-                onEnter: function($stateParams: any, $state: any) {
+                onEnter: function($stateParams: any, $state: any, $LeadRESTService: any) {
                     //map company to id
                     console.log($stateParams);
-					/*let availableCompanyId = $AddressBookRESTService.allCompaniesCached.map(function(company: any) {
-                        return company._id;
+					let availableLeadIds = $LeadRESTService.allLeadsCached.map(function(lead: any) {
+                        return lead._id;
                     });
                     // if the company does not exist
-                    let index = availableCompanyId.indexOf($stateParams.id);
-                    if (availableCompanyId.indexOf($stateParams.id) === -1) {
+                    let index = availableLeadIds.indexOf($stateParams.id);
+                    if (availableLeadIds.indexOf($stateParams.id) === -1) {
                         $state.go('main.dashboard');
                     } else {
-                        if ($stateParams.company === '@') { // first load page
-                            $stateParams.company = $AddressBookRESTService.allCompaniesCached[index];
-                            $AddressBookRESTService.selectedCompany = $stateParams.company;
+                        if ($stateParams.lead === '@') { // first load page
+                            $stateParams.lead = $LeadRESTService.allLeadsCached[index];
+                            $LeadRESTService.selectedLead = $stateParams.lead;
                         }
-                    }*/
+                    }
                 }
             });
     }
@@ -94,21 +94,34 @@ namespace Lead {
         private newLead: SalesLead;
         private coldStatusIndex: number;
         private opportunityStatusIndex: number;
-        
-        constructor(private $stateParams: any, private $AddressBookRESTService: any, private statuses: any,private $LeadRESTService: any) {
-            for (let i = 0; i< statuses.length;i++) {
-                if (statuses[i].code === "COLD") {this.coldStatusIndex = i;}
-                if (statuses[i].code === "OPP") {this.opportunityStatusIndex = i;}
+
+        constructor(private $stateParams: any, private $AddressBookRESTService: any, private statuses: any, private $LeadRESTService: any, private $state:any) {
+            for (let i = 0; i < $LeadRESTService.allLeadStatusesCached.length; i++) {
+                if (this.$LeadRESTService.allLeadStatusesCached[i].code === "COLD") { this.coldStatusIndex = i; }
+                if (this.$LeadRESTService.allLeadStatusesCached[i].code === "OPP") { this.opportunityStatusIndex = i; }
             }
         }
         createLead(newLead: SalesLead) {
-            if (this.$stateParams.status === "opportunity") { newLead.status = this.statuses[this.opportunityStatusIndex]; }
-            if (this.$stateParams.status === "lead") { newLead.status = this.statuses[this.coldStatusIndex];}
+
+            if (this.$stateParams.status === "opportunity") { 
+                newLead.status = this.$LeadRESTService.allLeadStatusesCached[this.opportunityStatusIndex]; }
+            if (this.$stateParams.status === "lead") { 
+                newLead.status = this.$LeadRESTService.allLeadStatusesCached[this.coldStatusIndex]; }
+            console.log('new lead', this.$LeadRESTService.allLeadStatusesCached, this.coldStatusIndex, this.opportunityStatusIndex, newLead)
             this.$LeadRESTService.newLead(newLead).then((response: any) => {
-                
+                if (response.success) {
+                    this.$state.go('main.lead.selectedLead',{id: response.data._id, lead: response.data});
+                    this.$LeadRESTService.selectedLead = response.data;
+                   
+                }
             })
         }
     }
+    
+    export class SelectedController{
+        
+    }
+    
     angular
         .module('app.lead', [
             'ui.router',

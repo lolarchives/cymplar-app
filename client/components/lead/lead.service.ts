@@ -49,20 +49,38 @@ namespace LeadService {
 		return resources;
 	}
 	export class $LeadRESTService {
+		private allLeadsCached: any[] = [];
+		private selectedLead: any;
+		private allLeadStatusesCached: any[] = [];
 		constructor(private $http: angular.IHttpService, private $LeadRESTResource: any, private $q: any, 
 			private $resourceHelper: any,private AuthToken: any) {
 		}
 		allLeads() {
-			return this.$resourceHelper.resourceRESTCall(this.$LeadRESTResource, "allLeads");
+			return this.$resourceHelper.resourceRESTCall(this.$LeadRESTResource, "allLeads").then((response: any) {
+				if (response.success) {
+					this.allLeadsCached = response.data;
+					return this.allLeadsCached;
+				};
+			});
 		}
 		allLeadStatuses() {
-			return this.$resourceHelper.resourceRESTCall(this.$LeadRESTResource, "allLeadStatuses");
+			return this.$resourceHelper.resourceRESTCall(this.$LeadRESTResource, "allLeadStatuses").then( (response: any) {
+				if (response.success) {
+					this.allLeadStatusesCached = response.data;
+					return this.allLeadStatusesCached;
+				};
+			});
 		}
 		findContactsNotInLead() {
 			return this.$resourceHelper.resourceRESTCall(this.$LeadRESTResource, "findContactsNotInLead", {ido: this.AuthToken.getIdO()});
 		}
 		newLead(lead: SalesLead) {
-			return this.$resourceHelper.resourceRESTCall(this.$LeadRESTResource, "newLead", lead, true);
+			return this.$resourceHelper.resourceRESTCall(this.$LeadRESTResource, "newLead", lead, true).then( (response: any) => {
+				if (response.success) {
+					this.allLeadsCached.push(response.data);
+					return response;
+				};
+			});
 		}
 	}
 
