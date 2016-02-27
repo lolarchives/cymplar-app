@@ -10,7 +10,7 @@ export class AccountInvitationService extends BaseService<AccountInvitation> {
 	}
 
 	createOne(data: AccountInvitation, options: ModelOptions = {}): Promise<AccountInvitation> {
-		
+
 		return new Promise<AccountInvitation>((fulfill: Function, reject: Function) => {
 			super.createOne(data, options)
 			.then((accountInvitation: AccountInvitation) => {
@@ -19,9 +19,9 @@ export class AccountInvitationService extends BaseService<AccountInvitation> {
 					to      : data.email,
 					from    : process.env.CYMPLAR_SENDGRID_ORIGIN,
 					subject : 'You have been invited to use cymplar',
-					text    : 'You have been invited to the organization, you can join the organization either' 
-							   + ' using the following link http://localhost:5555/api/login?inv=' + accountInvitation._id
-							   + ' or providing this code when requested after the login/signup ' + accountInvitation.code
+					text    : `You have been invited to the organization, you can join the organization either
+							   using the following link http://localhost:5555/api/login?inv=${accountInvitation._id}
+							   or providing this code when requested after the login/signup ${accountInvitation.code}`
 				};
 				return sendGridCymplarService.sendEmail(payload);
 			})
@@ -31,7 +31,6 @@ export class AccountInvitationService extends BaseService<AccountInvitation> {
 			.catch((err) => {
 				this.removeSkipingHooks(data); 
 				reject(err);
-				return; 
 			});
 		});
 	}

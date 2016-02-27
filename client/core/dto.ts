@@ -149,7 +149,7 @@ export interface AccountInvitation extends BaseDto {
   email?: string;
   code?: string;
   organization?: any;
-  role?: any;
+  role?: String | AccountMemberRole;
   redeemedBy?: any;
   expiresAt?: number;
 } 
