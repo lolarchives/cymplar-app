@@ -23,11 +23,19 @@ export class SignupService {
 			.then((accountUser: AccountUser) => {
 				options.authorization.user = accountUser;
 				options.copyAuthorizationData = 'user';
-				return accountOrganizationService.createOneWithMember(data, options); 
+				
+				const promises: Promise<AccountOrganization>[] = [];
+				promises.push(accountOrganizationService.createOneWithMember(data, options));
+				
+				if (ObjectUtil.isPresent(options.authorization.invitation)) {
+					promises.push(accountOrganizationService.addInvitedOrganizationMember({ _id: options.authorization.invitation }, options));
+				}
+				
+				return Promise.all(promises); 
 			})
-			.then((accountOrganization: AccountOrganization) => { 
+			.then((accountOrganizations: AccountOrganization[]) => { 
 				const response = { 
-					init: accountOrganization._id,
+					init: accountOrganizations[0]._id,
 					token: loginService.getToken(options.authorization.user)
 				};
 				fulfill(response); 

@@ -12,7 +12,7 @@ router.post('/', (req, res) => {
     requireAuthorization: false 
   };
   loginService.createOne(req.body, modelOptions)
-    .then((authentication: AuthenticationResponse) => formatSend(res, authentication), (err) => sendError(res, err));
+    .then((authentication: AuthenticationResponse) => formatSend(res, authentication), (err) => sendError(res, err, { token: false }));
 });
 
 export = router;

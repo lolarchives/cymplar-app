@@ -1,10 +1,11 @@
 ﻿import {SignUp, AccountOrganization, AccountOrganizationMember, AuthorizationData, ModelOptions, 
-	AuthorizationResponse} from '../../client/core/dto';
+	AuthorizationResponse, AccountInvitation} from '../../client/core/dto';
 import {AccountOrganizationModel} from '../core/model';
 import {BaseService} from '../core/base_service';
 import {ObjectUtil} from '../../client/core/util';
 import {accountOrganizationMemberService} from '../account_organization_member/account_organization_member_service';
 import {accountMemberRoleService} from '../account_member_role/account_member_role_service';
+import {accountInvitationService} from '../account_invitation/account_invitation_service';
 
 export class AccountOrganizationService extends BaseService<AccountOrganization> {
 
@@ -35,7 +36,7 @@ export class AccountOrganizationService extends BaseService<AccountOrganization>
 			createdAccountOrganization = accountOrganization;
 			const memberModelOptions: ModelOptions = {
 				authorization: options.authorization,
-				onlyValidateParentAuthorization: true,
+				onlyValidateParentAuthorization: true
 			};
 			
 			// Create the member for the organization
@@ -214,6 +215,77 @@ export class AccountOrganizationService extends BaseService<AccountOrganization>
 				}
 			})
 			.catch((err) => {
+				reject(err);
+				return;
+			});
+		});
+	}
+	
+	addInvitedOrganizationMember(data: AccountInvitation, newOptions: ModelOptions = {}): Promise<AccountOrganization> {
+		return new Promise<AccountOrganization>((resolve: Function, reject: Function) => {
+			
+			const intivationModelOptions: ModelOptions = {
+				authorization: newOptions.authorization,
+				population: '',
+				onlyValidateParentAuthorization: true,
+				copyAuthorizationData: ''
+			};
+			
+			if (ObjectUtil.isBlank(data._id) && (ObjectUtil.isBlank(data.code) && ObjectUtil.isBlank(data.email))) {
+				reject(new Error('There is not enough data to look for this invitation'));	
+			}
+			
+			accountInvitationService.findOne(data, intivationModelOptions)
+			.then((accountInvitation: AccountInvitation) => {
+				
+				if (accountInvitation.expiresAt < Date.now()) {
+					reject(new Error('The invitation has expired!'));	
+				}
+			
+				if (ObjectUtil.isPresent(accountInvitation.redeemedBy)) {
+					reject(new Error('The invitation was already used'));	
+				}
+				
+				const promises: Promise<any>[] = [];
+				promises.push(Promise.resolve(accountInvitation)); // Keeps the accountInvitation object in results[0];
+				
+				const memberModelOptions: ModelOptions = {
+					authorization: newOptions.authorization,
+					onlyValidateParentAuthorization: true
+				};
+			
+				const invitedMember: AccountOrganizationMember = {
+					email: accountInvitation.email,
+					createdBy: accountInvitation.createdBy,
+					organization: accountInvitation.organization,
+					role: accountInvitation.role	
+				};
+				
+				promises.push(accountOrganizationMemberService.createOne(invitedMember, memberModelOptions));
+				
+				return Promise.all(promises);
+			})
+			.then((results: any[]) => {
+				const promises: Promise<any>[] = [];
+				promises.push(Promise.resolve(results[1])); // Keeps the organizationMember object in results[0];
+				
+				const accountInvitation: AccountInvitation = results[0];
+				accountInvitation.redeemedBy = results[1]['user'];
+				
+				const intivationModelOptions: ModelOptions = {
+					authorization: newOptions.authorization,
+					population: '',
+					onlyValidateParentAuthorization: true,
+					copyAuthorizationData: ''
+				};
+				promises.push(accountInvitationService.updateOne(accountInvitation, intivationModelOptions));
+				
+				return Promise.all(promises);
+			})
+			.then((results: any[]) => {
+				resolve(results[0]['organization']); // Take the organizationMember to return their organization
+			})
+			.catch((err) => { 
 				reject(err);
 				return;
 			});

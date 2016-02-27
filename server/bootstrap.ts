@@ -21,6 +21,7 @@ import * as accountUserRouter from './account_user/account_user_router';
 import * as accountOrganizationRouter from './account_organization/account_organization_router';
 import * as accountOrganizationMemberRouter from './account_organization_member/account_organization_member_router';
 import * as accountMemberRoleRouter from './account_member_role/account_member_role_router';
+import * as accountInvitationRouter from './account_invitation/account_invitation_router';
 import * as salesLeadRouter from './sales_lead/sales_lead_router';
 import * as salesLeadOrganizationMemberRouter from './sales_lead_organization_member/sales_lead_organization_member_router';
 import * as salesLeadMemberRoleRouter from './sales_lead_member_role/sales_lead_member_role_router';
@@ -56,6 +57,7 @@ server.use('/api/account-user', accountUserRouter);
 server.use('/api/account-organization', accountOrganizationRouter);
 server.use('/api/account-organization-member', accountOrganizationMemberRouter);
 server.use('/api/account-organization-member-role', accountMemberRoleRouter);
+server.use('/api/account-invitation', accountInvitationRouter);
 
 server.use('/api/sales-lead', salesLeadRouter);
 server.use('/api/sales-lead-organization-member', salesLeadOrganizationMemberRouter);

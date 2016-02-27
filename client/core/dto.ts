@@ -145,6 +145,15 @@ export interface AccountMemberRole extends BaseDto {
   grantInvitation?: boolean;
 }
 
+export interface AccountInvitation extends BaseDto {
+  email?: string;
+  code?: string;
+  organization?: any;
+  role?: any;
+  redeemedBy?: any;
+  expiresAt?: number;
+} 
+
 export interface SignUp extends BaseDto {
   organizationMember?: AccountOrganizationMember;
   organization?: AccountOrganization;
@@ -166,6 +175,7 @@ export interface AuthorizationData {
   user?: AccountUser;
   organizationMember?: AccountOrganizationMember;
   leadMember?: SalesLeadOrganizationMember;
+  invitation?: any;
 }
 
 export interface ModelOptions {

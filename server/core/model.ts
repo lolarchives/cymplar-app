@@ -171,6 +171,17 @@ const schemas = {
     grantRead: {type: Boolean, required: true },
     grantInvitation: {type: Boolean, required: true }
   }),
+  accountInvitation: new Schema({
+    email: { type: String, required: true },
+    code: { type: String, unique: true },
+    role: { type: ObjectId, ref: 'accountMemberRole', required: true },
+    organization: { type: ObjectId, ref: 'accountOrganization', required: true },
+    createdBy: { type: ObjectId, ref: 'accountOrganizationMember', required: true },
+    redeemedBy: { type: ObjectId, ref: 'accountUser'},
+    createdAt: { type: Number },
+    expiresAt: { type: Number },
+    updatedAt: { type: Number }
+  }),
   salesLeadStatus: new Schema({
     code: { type: String, required: true, unique: true },
     name: { type: String, required: true, unique: true }
@@ -219,6 +230,7 @@ schemas.state.index({ code: 1, country: 1 }, { unique: true });
 schemas.addressBookContact.index({ email: 1, group: 1 }, { unique: true });
 schemas.addressBookGroup.index({ name: 1, createdBy: 1 }, { unique: true });
 schemas.accountOrganizationMember.index({ organization: 1, user: 1 }, { unique: true });
+schemas.accountInvitation.index({ email: 1, organization: 1 }, { unique: true });
 schemas.accountMemberRole.index({ code: 1, name: 1 }, { unique: true });
 schemas.salesLead.index({ name: 1, organization: 1 }, { unique: true });
 schemas.salesLeadContact.index({ lead: 1, contact: 1 }, { unique: true });
@@ -252,6 +264,7 @@ export const AccountUserModel = db.model('accountUser', schemas.accountUser);
 export const AccountOrganizationModel = db.model('accountOrganization', schemas.accountOrganization);
 export const AccountOrganizationMemberModel = db.model('accountOrganizationMember', schemas.accountOrganizationMember);
 export const AccountMemberRoleModel = db.model('accountMemberRole', schemas.accountMemberRole);
+export const AccountInvitationModel = db.model('accountInvitation', schemas.accountInvitation);
 export const SalesLeadStatusModel = db.model('salesLeadStatus', schemas.salesLeadStatus);
 export const SalesLeadModel = db.model('salesLead', schemas.salesLead);
 export const SalesLeadContactModel = db.model('salesLeadContact', schemas.salesLeadContact);
@@ -446,6 +459,23 @@ schemas.accountOrganization.pre('remove', function(next: Function) {
     });	
   }); 	
 });
+
+schemas.accountInvitation.pre('save', function(next: Function) {
+  const obj = this;
+  
+  if (obj.isNew) {
+    // Assign the default invitation code
+    const code = ('00000' + (Date.now() * Math.pow(36,5) << 0).toString(36)).slice(-5);
+    obj['code'] = code;
+    
+    // Assign the expiration date
+    const expirationDays = 3;
+    obj['expiresAt'] = Date.now() + (expirationDays * 86400000);
+  }
+  
+  next(); 	
+});
+
 
 schemas.salesLeadContact.post('remove', function() {
   const obj: Document = this;
