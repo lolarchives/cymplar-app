@@ -70,6 +70,14 @@ router.get('/_find_all', (req: express.Request, res: express.Response) => {
     .then((members: SalesLeadOrganizationMember[]) => formatSend(res, members), (err: any) => sendError(res, err));
 });
 
+router.get('/_find_membership', (req: express.Request, res: express.Response) => {
+  const modelOptions: ModelOptions = {
+    authorization: getAuthorizationData(req)
+  };
+  salesLeadOrganizationMemberService.returnCurrentLeadMember(modelOptions)
+    .then((member: SalesLeadOrganizationMember) => formatSend(res, member), (err: any) => sendError(res, err));
+});
+
 router.get('/_exist', (req, res) => {
   const modelOptions: ModelOptions = {
     authorization: getAuthorizationData(req)

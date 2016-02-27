@@ -59,7 +59,7 @@ server.use('/api/account-organization-member-role', accountMemberRoleRouter);
 
 server.use('/api/sales-lead', salesLeadRouter);
 server.use('/api/sales-lead-organization-member', salesLeadOrganizationMemberRouter);
-server.use('/api/sales-lead-member-role', salesLeadMemberRoleRouter);
+server.use('/api/sales-lead-organization-member-role', salesLeadMemberRoleRouter);
 server.use('/api/sales-lead-contact', salesLeadContactRouter);
 server.use('/api/sales-lead-status', salesLeadStatusRouter);
 

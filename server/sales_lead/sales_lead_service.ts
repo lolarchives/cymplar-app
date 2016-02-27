@@ -38,13 +38,18 @@ export class SalesLeadService extends BaseService<SalesLead> {
 				};
 				leadContactCreationModelOptions.authorization.leadMember = members[0];	// Assigns creator
 				
-				if (ObjectUtil.isBlank(data.contact)) {
+				if (ObjectUtil.isPresent(data.contact)) {
 					return this.associateContact(createdSalesLead, leadContactCreationModelOptions, data.contact);	
 				} else {
 					return {};
 				}
 			})
 			.then((contact: SalesLeadContact) => {	
+				
+				if (ObjectUtil.isPresent(contact)) {
+					createdSalesLead['contacts'] = [contact];	
+				}
+				 
 				fulfill(createdSalesLead); 
 			})
 			.catch((err) => {
@@ -52,7 +57,7 @@ export class SalesLeadService extends BaseService<SalesLead> {
 					this.removeSkipingHooks({_id: createdSalesLead._id});
 					salesLeadContactService.removeSkipingHooks({lead: createdSalesLead._id});
 					salesLeadOrganizationMemberService.removeSkipingHooks({lead: createdSalesLead._id});
-				}
+					}
 				reject(err);
 				return;
 			});
@@ -88,7 +93,7 @@ export class SalesLeadService extends BaseService<SalesLead> {
 					});
 				});
 			})
-			.catch((err) => { 
+			.catch((err) => {
 				reject(err);
 				return;
 			});
@@ -128,8 +133,8 @@ export class SalesLeadService extends BaseService<SalesLead> {
 				return super.find(data, newOptions); 
 			})
 			.then((leads: SalesLead[]) => {	
-				fulfill(leads); 
-			})
+				fulfill(leads);
+				})
 			.catch((err) => {
 				reject(err);
 				return;

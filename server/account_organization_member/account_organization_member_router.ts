@@ -53,6 +53,14 @@ router.get('/_find_team', (req: express.Request, res: express.Response) => {
     .then((members: AccountOrganizationMember[]) => formatSend(res, members), (err: any) => sendError(res, err));
 });
 
+router.get('/_find_membership', (req: express.Request, res: express.Response) => {
+  const modelOptions: ModelOptions = {
+    authorization: getAuthorizationData(req)
+  };
+  accountOrganizationMemberService.returnCurrentOrganizationMember(modelOptions)
+    .then((member: AccountOrganizationMember) => formatSend(res, member), (err: any) => sendError(res, err));
+});
+
 router.get('/_exist', (req, res) => {
   const modelOptions: ModelOptions = {
     authorization: getAuthorizationData(req),

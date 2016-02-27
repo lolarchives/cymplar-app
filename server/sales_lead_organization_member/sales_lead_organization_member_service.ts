@@ -106,7 +106,7 @@ export class SalesLeadOrganizationMemberService extends BaseService<SalesLeadOrg
 	}
 	
 	findCurrentLeadMembersPopulated(data: SalesLeadOrganizationMember, newOptions: ModelOptions = {}): Promise<SalesLeadOrganizationMember[]> {
-		return new Promise<SalesLead[]>((resolve: Function, reject: Function) => {
+		return new Promise<SalesLeadOrganizationMember[]>((resolve: Function, reject: Function) => {
 			const salesLeadModelOptions: ModelOptions = {
 				authorization: newOptions.authorization,
 				population: [
@@ -179,6 +179,19 @@ export class SalesLeadOrganizationMemberService extends BaseService<SalesLeadOrg
 				reject(err);
 				return;
 			});
+		});
+	}
+	
+	returnCurrentLeadMember(newOptions: ModelOptions = {}): Promise<SalesLeadOrganizationMember> {
+		return new Promise<SalesLeadOrganizationMember>((resolve: Function, reject: Function) => {
+			if (ObjectUtil.isBlank(newOptions.authorization.leadMember)) {
+				reject(new Error('This user is not member of this lead'));
+				return;
+			} 
+			
+			const leadMember: SalesLeadOrganizationMember = ObjectUtil.clone(newOptions.authorization.leadMember);
+			leadMember['member'] = newOptions.authorization.organizationMember;
+			resolve(leadMember);
 		});
 	}
 	
