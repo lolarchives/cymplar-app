@@ -2,7 +2,9 @@
   "name": "cymplar-app",
   "version": "0.0.0",
   "homepage": "https://github.com/Neulinet/cymplar-app",
-  "authors": [
+  "contributors": [
+    "Johanna Palma <johanna@neuli.net>",
+    "Neil Tran <neil@neuli.net>",
     "Roger Padilla <rogerjose81@gmail.com>"
   ],
   "license": "MIT",
