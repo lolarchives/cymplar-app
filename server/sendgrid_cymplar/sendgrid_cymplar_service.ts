@@ -12,13 +12,12 @@ export class SendGridCymplarService {
 		}
 	}
 	
-	sendEmail(email: any): Promise<any> {
+	sendEmail(email: Sendgrid.EmailOptions): Promise<any> {
 		return new Promise<any>((fulfill: Function, reject: Function) => {
 			this.sendgridServ.send(email, (err, json) => {
 				if (err) { 
 					console.error(err); 
-					reject(err);
-					return; 
+					return reject(err); 
 				}
 				fulfill(json); 
 			});
