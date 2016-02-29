@@ -54,9 +54,26 @@ namespace Lead {
                 params: {
                     lead: '@',
                 },
+                resolve:{
+                    contacts: function($LeadRESTService: any,$stateParams: any) {
+                        
+                        return $LeadRESTService.findContactsInLead($stateParams.id).then((response: any) => {
+                            if (response.success)
+                                return response.data
+                        });
+                
+                    }, 
+                    unaddedContacts: function($LeadRESTService: any,$stateParams: any) {
+                   
+                        return $LeadRESTService.findContactsNotInLead($stateParams.id).then((response: any) => {
+                            if (response.success)
+                                return response.data
+                        });
+                    }
+                },
                 onEnter: function($stateParams: any, $state: any, $LeadRESTService: any) {
                     //map company to id
-                    console.log($stateParams);
+           
 					let availableLeadIds = $LeadRESTService.allLeadsCached.map(function(lead: any) {
                         return lead._id;
                     });

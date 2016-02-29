@@ -16,7 +16,11 @@ namespace LeadService {
 			},
 			'findContactsNotInLead': {
 				method: 'GET',
-				url: BACK_END_ROUTE + '/sales-lead',
+				url: BACK_END_ROUTE + '/sales-lead-contact/_find_to_add',
+			},
+			'findContactsInLead': {
+				method: 'GET',
+				url: BACK_END_ROUTE + '/sales-lead-contact/_find',
 			},
 			'allLeadStatuses': {
 				method: 'GET',
@@ -56,7 +60,7 @@ namespace LeadService {
 			private $resourceHelper: any,private AuthToken: any) {
 		}
 		allLeads() {
-			return this.$resourceHelper.resourceRESTCall(this.$LeadRESTResource, "allLeads").then((response: any) {
+			return this.$resourceHelper.resourceRESTCall(this.$LeadRESTResource, "allLeads").then((response: any) => {
 				if (response.success) {
 					this.allLeadsCached = response.data;
 					return this.allLeadsCached;
@@ -64,15 +68,18 @@ namespace LeadService {
 			});
 		}
 		allLeadStatuses() {
-			return this.$resourceHelper.resourceRESTCall(this.$LeadRESTResource, "allLeadStatuses").then( (response: any) {
+			return this.$resourceHelper.resourceRESTCall(this.$LeadRESTResource, "allLeadStatuses").then( (response: any) => {
 				if (response.success) {
 					this.allLeadStatusesCached = response.data;
 					return this.allLeadStatusesCached;
 				};
 			});
 		}
-		findContactsNotInLead() {
-			return this.$resourceHelper.resourceRESTCall(this.$LeadRESTResource, "findContactsNotInLead", {ido: this.AuthToken.getIdO()});
+		findContactsInLead(leadId: any) {
+			return this.$resourceHelper.resourceRESTCall(this.$LeadRESTResource, "findContactsInLead", {ido: this.AuthToken.getIdO(), idl: leadId});
+		}
+		findContactsNotInLead(leadId: any) {
+			return this.$resourceHelper.resourceRESTCall(this.$LeadRESTResource, "findContactsNotInLead", {ido: this.AuthToken.getIdO(),idl: leadId});
 		}
 		newLead(lead: SalesLead) {
 			return this.$resourceHelper.resourceRESTCall(this.$LeadRESTResource, "newLead", lead, true).then( (response: any) => {
