@@ -48,6 +48,10 @@ namespace LeadService {
 				params: {
 					id: '@_id',
 				}
+			},
+			'roleInLead': {
+				method: 'GET',
+				url: BACK_END_ROUTE + '/sales-lead-organization-member/_find_membership'
 			}
 		});
 		return resources;
@@ -88,6 +92,10 @@ namespace LeadService {
 					return response;
 				};
 			});
+		}
+		roleInLead(leadId: any) {
+			return this.$resourceHelper.resourceRESTCall(this.$LeadRESTResource, "roleInLead", {idl: leadId, ido: this.AuthToken.getIdO()})
+			
 		}
 	}
 

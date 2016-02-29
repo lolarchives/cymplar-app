@@ -18,6 +18,7 @@ namespace Lead {
                 },
                 resolve: {
                     statuses: ($LeadRESTService: any) => {
+                   
                         return $LeadRESTService.allLeadStatuses().then((response: any) => {
                             if (response.success) {
                                 return response.data;
@@ -26,8 +27,10 @@ namespace Lead {
                             }
 
                         });
-                    }
+                    },
+
                 }
+        
             })
             .state('main.lead.newLead', {
                 url: '/new_lead/:status',
@@ -51,29 +54,41 @@ namespace Lead {
             .state('main.lead.selectedLead', {
                 url: '/:id',
                 templateUrl: 'components/lead/selected_lead.html',
+                controller: 'SelectedLeadController',
+                controllerAs: 'slCtrl',
                 params: {
                     lead: '@',
                 },
                 resolve:{
-                    contacts: function($LeadRESTService: any,$stateParams: any) {
-                        
+
+                    contacts: function($LeadRESTService: any,$stateParams: any, $state: any) {
+                        console.log('resolve this second', $state);
                         return $LeadRESTService.findContactsInLead($stateParams.id).then((response: any) => {
                             if (response.success)
                                 return response.data
+                            else {
+                                $state.go('main.dashboard');
+                            } 
+                                
                         });
                 
                     }, 
                     unaddedContacts: function($LeadRESTService: any,$stateParams: any) {
-                   
                         return $LeadRESTService.findContactsNotInLead($stateParams.id).then((response: any) => {
                             if (response.success)
                                 return response.data
                         });
-                    }
+                    },
+                    roleInLead: function($LeadRESTService: any,$stateParams: any) {
+    
+                        return $LeadRESTService.roleInLead($stateParams.id).then((response: any) => {
+                            if (response.success)
+                                return response.data
+                        });
                 },
                 onEnter: function($stateParams: any, $state: any, $LeadRESTService: any) {
                     //map company to id
-           
+                        
 					let availableLeadIds = $LeadRESTService.allLeadsCached.map(function(lead: any) {
                         return lead._id;
                     });
@@ -82,9 +97,11 @@ namespace Lead {
                     if (availableLeadIds.indexOf($stateParams.id) === -1) {
                         $state.go('main.dashboard');
                     } else {
+                         console.log('checking state params',$stateParams)
                         if ($stateParams.lead === '@') { // first load page
                             $stateParams.lead = $LeadRESTService.allLeadsCached[index];
                             $LeadRESTService.selectedLead = $stateParams.lead;
+                            console.log('preparing state params',$stateParams.lead)
                         }
                     }
                 }
@@ -135,8 +152,10 @@ namespace Lead {
         }
     }
     
-    export class SelectedController{
-        
+    export class SelectedLeadController{
+        constructor(private $stateParams: any, private $AddressBookRESTService: any, private statuses: any, private $LeadRESTService: any, private $state:any, roleInLead: any) {
+            console.log('your role',roleInLead);  
+        }
     }
     
     angular
@@ -148,4 +167,5 @@ namespace Lead {
         .config(config)
         .controller('LeadController', LeadController)
         .controller('NewLeadController', NewLeadController)
+        .controller('SelectedLeadController', SelectedLeadController)
 }
