@@ -29,7 +29,7 @@ export class Authentication {
 		
 		req.body.cymplarRole = {};
 		
-		if (NON_SECURED_URL.indexOf(req.originalUrl.split("?")[0]) > -1) {
+		if (NON_SECURED_URL.indexOf(req.originalUrl.split('?')[0]) > -1) {
 			return next();
 		}
 		
@@ -117,6 +117,9 @@ export class Authentication {
 				return next();
 			})
 			.catch((err: Error) => {
+				if (ObjectUtil.isPresent(req.body.cymplarRole.organizationMember) && ObjectUtil.isBlank(req.body.cymplarRole.leadMember)) {
+					return sendError(res, err);	
+				} 
 				return sendError(res, err, { token: false });
 			});
 		} catch (err) {
