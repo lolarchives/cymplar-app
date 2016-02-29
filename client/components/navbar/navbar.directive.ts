@@ -38,8 +38,8 @@ export class NavbarController {
   private displayInfo: boolean = false;
   private displaySearchBar: boolean = false;
   private console: Console;
-  private STATE_WITH_RIGHT_PANEL = ['main.dashboard', 'main.addressBook.selectedCompany', 'main.lead.selectedLead'];
-  private STATE_WITH_SEARCH_BAR = ['main.dashboard', 'main.addressBook.allCompanies', 'main.lead.selectedLead', 'main.lead.allLeads'];
+  private STATE_WITH_RIGHT_PANEL = ['main.dashboard', 'main.addressBook.selectedCompany', 'main.selectedLead'];
+  private STATE_WITH_SEARCH_BAR = ['main.dashboard', 'main.addressBook.allCompanies', 'main.selectedLead', 'main.allLeads'];
   private coldStatus: any;
   private opporturnityStatus: any;
   private signedStatus: any;

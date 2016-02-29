@@ -54,13 +54,13 @@
 
         <h5 class="uppercase title">
                     <span class="glyphicon glyphicon-star left-icon" aria-hidden="true"></span> 
-                    <a href="" ui-sref="main.lead.allLeads"><strong>Sales</strong></a>
+                    <a href="" ui-sref="main.allLeads"><strong>Sales</strong></a>
                 </h5>
 
         <h5 class="sub-title sub-title notification" data-toggle="collapse" data-target="#collapse1">
                     <span class="glyphicon glyphicon-chevron-down left-icon" aria-hidden="true" ></span>
                     My leads
-                    <a href="" class="create-btn" title="create new" ui-sref="main.lead.newLead({status:'lead'})">
+                    <a href="" class="create-btn" title="create new" ui-sref="main.newLead({status:'lead'})">
                         <span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span>
                     </a>
                     <div class="dropdown">
@@ -75,9 +75,9 @@
                 </h5>
         <div class="collapse" id="collapse1">
           <ul class="main-nav">
-            <li ng-class="{'current': navCtrl.$state.params.id == lead._id && navCtrl.$state.current.name == 'main.lead.selectedLead'}"
+            <li ng-class="{'current': navCtrl.$state.params.id == lead._id && navCtrl.$state.current.name == 'main.selectedLead'}"
               ng-repeat=" lead in navCtrl.$LeadRESTService.allLeadsCached | filter: {status: navCtrl.coldStatus} ">
-              <a ng-click="navCtrl.$state.go('main.lead.selectedLead',{id: lead._id, lead: lead});navCtrl.$LeadRESTService.selectedLead = lead;navCtrl.console.log(navCtrl.$LeadRESTService.selectedLead)">{{lead.name}}</a></li>
+              <a ng-click="navCtrl.$state.go('main.selectedLead',{id: lead._id, lead: lead});navCtrl.$LeadRESTService.selectedLead = lead;navCtrl.console.log(navCtrl.$LeadRESTService.selectedLead)">{{lead.name}}</a></li>
           </ul>
         </div>
         <!--collapse-->
@@ -85,7 +85,7 @@
         <h5 class="sub-title" data-toggle="collapse" data-target="#collapse2">
                     <span class="glyphicon glyphicon-chevron-down left-icon" aria-hidden="true"></span>
                     My Opportunities
-                    <a href="" class="create-btn" title="create new" ui-sref="main.lead.newLead({status:'opportunity'})">
+                    <a href="" class="create-btn" title="create new" ui-sref="main.newLead({status:'opportunity'})">
                         <span class="glyphicon glyphicon-plus-sign" aria-hidden="true" ></span>
                     </a>
                     <div class="dropdown">
@@ -100,9 +100,9 @@
                 </h5>
         <div class="collapse" id="collapse2">
           <ul class="main-nav">
-            <li ng-class="{'current': navCtrl.$state.params.id == lead._id && navCtrl.$state.current.name == 'main.lead.selectedLead'}"
+            <li ng-class="{'current': navCtrl.$state.params.id == lead._id && navCtrl.$state.current.name == 'main.selectedLead'}"
                 ng-repeat=" lead in navCtrl.$LeadRESTService.allLeadsCached | filter: {status: navCtrl.opporturnityStatus} ">
-              <a ng-click="navCtrl.$state.go('main.lead.selectedLead',{id: lead._id, lead: lead});navCtrl.$LeadRESTService.selectedLead = lead;navCtrl.console.log(navCtrl.$LeadRESTService.selectedLead)">{{lead.name}}</a></li>
+              <a ng-click="navCtrl.$state.go('main.selectedLead',{id: lead._id, lead: lead});navCtrl.$LeadRESTService.selectedLead = lead;navCtrl.console.log(navCtrl.$LeadRESTService.selectedLead)">{{lead.name}}</a></li>
           </ul>
         </div>
         <!--collapse-->
@@ -113,9 +113,9 @@
                 </h5>
         <div class="collapse" id="collapse3">
           <ul class="main-nav">
-            <li ng-class="{'current': navCtrl.$state.params.id == lead._id && navCtrl.$state.current.name == 'main.lead.selectedLead'}"
+            <li ng-class="{'current': navCtrl.$state.params.id == lead._id && navCtrl.$state.current.name == 'main.selectedLead'}"
              ng-repeat=" lead in navCtrl.$LeadRESTService.allLeadsCached | filter: {status: navCtrl.signedStatus} ">
-              <a ng-click="navCtrl.$state.go('main.lead.selectedLead',{id: lead._id, lead: lead});navCtrl.$LeadRESTService.selectedLead = lead;navCtrl.console.log(navCtrl.$LeadRESTService.selectedLead)">{{lead.name}}</a></li>
+              <a ng-click="navCtrl.$state.go('main.selectedLead',{id: lead._id, lead: lead});navCtrl.$LeadRESTService.selectedLead = lead;navCtrl.console.log(navCtrl.$LeadRESTService.selectedLead)">{{lead.name}}</a></li>
           </ul>
         </div>
         <!--collapse-->
@@ -126,9 +126,9 @@
                 </h5>
         <div class="collapse" id="collapse4">
           <ul class="main-nav">
-            <li ng-class="{'current': navCtrl.$state.params.id == lead._id && navCtrl.$state.current.name == 'main.lead.selectedLead'}"
+            <li ng-class="{'current': navCtrl.$state.params.id == lead._id && navCtrl.$state.current.name == 'main.selectedLead'}"
                ng-repeat=" lead in navCtrl.$LeadRESTService.allLeadsCached | filter: navCtrl.inactiveOrLostFilter ">
-               <a ng-click="navCtrl.$state.go('main.lead.selectedLead',{id: lead._id, lead: lead});navCtrl.$LeadRESTService.selectedLead = lead;navCtrl.console.log(navCtrl.$LeadRESTService.selectedLead)">{{lead.name}}</a></li>
+               <a ng-click="navCtrl.$state.go('main.selectedLead',{id: lead._id, lead: lead});navCtrl.$LeadRESTService.selectedLead = lead;navCtrl.console.log(navCtrl.$LeadRESTService.selectedLead)">{{lead.name}}</a></li>
           </ul>
         </div>
         <!--collapse-->

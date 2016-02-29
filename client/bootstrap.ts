@@ -113,7 +113,6 @@ namespace app {
             return $LeadRESTService.allLeads();
           },
           leadStatuses: ($LeadRESTService: any) => {
-            console.log('resolve this 0');
             return $LeadRESTService.allLeadStatuses().then((response: any) => {
               if (response.success) {
                 return response.data;

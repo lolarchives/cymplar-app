@@ -1,10 +1,13 @@
+<a class="btn btn-primary btn-block" ng-hide="slrbCtrl.editing" style="margin-bottom:10px" ng-click="slrbCtrl.startEditing()">Edit</a>
+<a class="btn btn-primary btn-block" ng-show="slrbCtrl.editing" style="margin-bottom:10px" ng-click="slrbCtrl.submitEditing()">Save changes</a>
 <strong>Info</strong>
-<input class="form-control input-sm margin-b-s" type="text" placeholder="input"  ng-model="$stateParams.lead.name">
+<h5 ng-hide="slrbCtrl.editing">{{$stateParams.lead.name}}</h5>
+<input class="form-control input-sm margin-b-s" type="text" ng-show="slrbCtrl.editing" placeholder="input" ng-model="slrbCtrl.editingLead.name">
 
 
-<strong>Contact name</strong>
+<strong>Contacts</strong>
 
-<div class="tags-wrap margin-b-s">
+<div class="tags-wrap margin-b-s" ng-show="slrbCtrl.editing">
 	<div class="tag">
 		Steven F.
 		<span class="glyphicon glyphicon-remove delete" aria-hidden="true"></span>
@@ -22,40 +25,39 @@
 	<!--tag-->
 </div>
 <!--tags-wrap-->
+<div ng-hide="slrbCtrl.editing">
+	<div class="field-with-icon margin-b-s">
+		<span class="glyphicon glyphicon-user" aria-hidden="true"></span>
+		<select class="form-control input-sm" ng-model="slrbCtrl.selectedContact" ng-options="contact as contact.name for contact in slrbCtrl.contacts">
+		</select>
+	</div>
+	<!--field-with-icon-->
 
-<div class="field-with-icon margin-b-s">
-	<span class="glyphicon glyphicon-user" aria-hidden="true"></span>
-	<select class="form-control input-sm">
-		<option>Steven F.</option>
-		<option>Stan</option>
-		<option>Jo</option>
-	</select>
+	<div class="field-with-icon margin-b-s">
+		<span class="glyphicon glyphicon-phone" aria-hidden="true"></span>
+		<input class="form-control input-sm" type="text" placeholder="Not set" ng-model="slrbCtrl.selectedContact.contactNumber" readonly>
+	</div>
+	<!--field-with-icon-->
+
+	<div class="field-with-icon margin-b-s">
+		<span class="glyphicon glyphicon-envelope" aria-hidden="true"></span>
+		<input class="form-control input-sm" type="text" placeholder="Not set" ng-model="slrbCtrl.selectedContact.email" readonly>
+	</div>
+	<!--field-with-icon-->
+
+	<div class="field-with-icon margin-b-l">
+		<span class="glyphicon glyphicon-globe" aria-hidden="true"></span>
+		<input class="form-control input-sm" type="text" placeholder="Not set" ng-model="slrbCtrl.selectedContact.website" readonly>
+	</div>
+	<!--field-with-icon-->
 </div>
-<!--field-with-icon-->
-
-<div class="field-with-icon margin-b-s">
-	<span class="glyphicon glyphicon-phone" aria-hidden="true"></span>
-	<input class="form-control input-sm" type="text" placeholder="input" value="+123456789">
-</div>
-<!--field-with-icon-->
-
-<div class="field-with-icon margin-b-s">
-	<span class="glyphicon glyphicon-envelope" aria-hidden="true"></span>
-	<input class="form-control input-sm" type="text" placeholder="input" value="steven@mail.com">
-</div>
-<!--field-with-icon-->
-
-<div class="field-with-icon margin-b-l">
-	<span class="glyphicon glyphicon-globe" aria-hidden="true"></span>
-	<input class="form-control input-sm" type="text" placeholder="input" value="@steven_f">
-</div>
-<!--field-with-icon-->
-
-<strong>Opportunity Name / Contract</strong>
-<input class="form-control input-sm margin-b-l" type="text" placeholder="input" value="Training">
+<strong>Description</strong>
+<h5 ng-hide="slrbCtrl.editing">{{$stateParams.lead.contract || 'No description'}}</h5>
+<input class="form-control input-sm margin-b-l" type="text" placeholder="Enter description" ng-show="slrbCtrl.editing" ng-model="slrbCtrl.editingLead.contract">
 
 <strong>Status</strong>
-<select class="form-control input-sm margin-b-l">
+<h5 ng-hide="slrbCtrl.editing">{{$stateParams.lead.status}}</h5>
+<select class="form-control input-sm margin-b-l" ng-show="slrbCtrl.editing">
 	<option>Opportunity</option>
 	<option>Lead-Hot</option>
 	<option>Lead-Warm</option>
@@ -68,4 +70,7 @@
 <input type="range" class="range margin-b-s">
 <input class="form-control input-sm margin-b-l" type="text" placeholder="input" value="25000">
 
-<a href="#" class="btn btn-primary btn-block">Save changes</a>
+
+
+<a class="btn btn-danger btn-block" ng-hide="slrbCtrl.editing && slrbCtrl.roleInLead.role.code == 'OWNER'" ng-click="slrbCtrl.deleteLead()">Delete lead</a>
+<a class="btn btn-danger btn-block" ng-show="slrbCtrl.editing" ng-click="slrbCtrl.editing = false">Cancel editing</a>

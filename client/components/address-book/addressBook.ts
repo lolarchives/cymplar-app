@@ -160,6 +160,7 @@ namespace AddressBook {
                         let index = this.$AddressBookRESTService.allCompaniesCached.indexOf(this.$AddressBookRESTService.selectedCompany);
                         this.$AddressBookRESTService.allCompaniesCached.splice(index, 1);
                         this.$AddressBookRESTService.selectedCompany = undefined;
+                        this.toastr.success("Delete group success");
                         this.$state.go('main.dashboard');
                     } else {
                         this.toastr.error(response.msg);
@@ -329,7 +330,7 @@ namespace AddressBook {
                     if (response.success) {
                         let index = this.$AddressBookRESTService.selectedCompany.contacts.indexOf(contact);
                         this.$AddressBookRESTService.selectedCompany.contacts.splice(index, 1);
-
+                        this.toastr.success("Delete contact success");
                     } else {
                         this.toastr.error(response.msg);
                     }

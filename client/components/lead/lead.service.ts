@@ -26,9 +26,9 @@ namespace LeadService {
 				method: 'GET',
 				url: BACK_END_ROUTE + '/sales-lead-status/_find',
 			},
-			'deleteCompany': {
+			'deleteLead': {
 				method: 'DELETE',
-				url: BACK_END_ROUTE + '/address-book-group/:id',
+				url: BACK_END_ROUTE + '/sales-lead/:id',
 
 			},
 			'newContact': {
@@ -95,7 +95,9 @@ namespace LeadService {
 		}
 		roleInLead(leadId: any) {
 			return this.$resourceHelper.resourceRESTCall(this.$LeadRESTResource, "roleInLead", {idl: leadId, ido: this.AuthToken.getIdO()})
-			
+		}
+		deleteLead(leadId: any) {
+			return this.$resourceHelper.resourceRESTCall(this.$LeadRESTResource, "deleteLead", {id: leadId, idl: leadId, ido: this.AuthToken.getIdO()},true)
 		}
 	}
 

@@ -4,68 +4,83 @@ import {SalesLead} from '../../core/dto';
 namespace Lead {
     function config($stateProvider: any) {
         $stateProvider
-            .state('main.lead', {
-                url: '/lead',
-                abstract: true,
+            .state('main.newLead', {
+                url: '/lead/new_lead/:status',
                 views: {
                     'main': {
-                        template: '<ui-view class="grid-block vertical"></ui-view>',
-
-                    },
-                    'right-bar': {
-                        templateUrl: 'components/lead/right_bar.html',
+                        templateUrl: 'components/lead/new_lead.html',
+                        controller: 'NewLeadController',
+                        controllerAs: 'nlCtrl',
                     },
                 },
-                resolve: {
-                    statuses: ($LeadRESTService: any) => {
-                   
-                        return $LeadRESTService.allLeadStatuses().then((response: any) => {
-                            if (response.success) {
-                                return response.data;
-                            } else {
-                                return {}
-                            }
-
-                        });
-                    },
-
-                }
-        
-            })
-            .state('main.lead.newLead', {
-                url: '/new_lead/:status',
-                templateUrl: 'components/lead/new_lead.html',
-                controller: 'NewLeadController',
-                controllerAs: 'nlCtrl',
+                
                 params: {
                     status: '@',
                 },
                 onEnter: function($stateParams: any, $state: any) {
                     console.log($stateParams)
                     if ($stateParams.status !== 'lead' && $stateParams.status !== 'opportunity') {
-                        $state.go('main.lead.allLeads');
+                        $state.go('main.allLeads');
                     }
                 }
             })
-            .state('main.lead.allLeads', {
-                url: '/all_leads',
-                templateUrl: 'components/lead/all_leads.html',
+            .state('main.allLeads', {
+                url: '/lead/all_leads',
+                views: {
+                    'main': {
+                      templateUrl: 'components/lead/all_leads.html',
+                    },
+                },
             })
-            .state('main.lead.selectedLead', {
-                url: '/:id',
-                templateUrl: 'components/lead/selected_lead.html',
-                controller: 'SelectedLeadController',
-                controllerAs: 'slCtrl',
+            .state('main.selectedLead', {
+                url: '/lead/:id',
+                 views: {
+                    'main': {
+                      templateUrl: 'components/lead/selected_lead.html',
+                      controller: 'SelectedLeadController',
+                      controllerAs: 'slCtrl',
+                    },
+                    'right-bar': {
+                        templateUrl: 'components/lead/right_bar.html',
+                        controller: 'SelectedLeadRightBarController',
+                        controllerAs: 'slrbCtrl',
+                    },
+                },
+               
                 params: {
                     lead: '@',
                 },
                 resolve:{
 
                     contacts: function($LeadRESTService: any,$stateParams: any, $state: any) {
-                        console.log('resolve this second', $state);
                         return $LeadRESTService.findContactsInLead($stateParams.id).then((response: any) => {
-                            if (response.success)
-                                return response.data
+                            if (response.success){
+                                if ($LeadRESTService.allLeadsCached.length == 0) { // must be newly reload
+                           
+                                    return $LeadRESTService.allLeads().then((subResponse: any) => {
+                                        let availableLeadIds = $LeadRESTService.allLeadsCached.map(function(lead: any) {
+                                            return lead._id;
+                                        });
+                                        let index = availableLeadIds.indexOf($stateParams.id);
+                                 
+                                        $stateParams.lead = $LeadRESTService.allLeadsCached[index];
+                                        $LeadRESTService.selectedLead = $stateParams.lead;
+                                        return response.data
+                                    })
+                                   
+                                } else {
+                                    if ($stateParams.lead === '@') { // first load page
+                                        let availableLeadIds = $LeadRESTService.allLeadsCached.map(function(lead: any) {
+                                            return lead._id;
+                                        });
+                                        // if the company does not exist
+                                        let index = availableLeadIds.indexOf($stateParams.id);
+                                        $stateParams.lead = $LeadRESTService.allLeadsCached[index];
+                                        $LeadRESTService.selectedLead = $stateParams.lead;
+                                    }
+                                    return response.data
+                                }
+                            }
                             else {
                                 $state.go('main.dashboard');
                             } 
@@ -80,7 +95,6 @@ namespace Lead {
                         });
                     },
                     roleInLead: function($LeadRESTService: any,$stateParams: any) {
-    
                         return $LeadRESTService.roleInLead($stateParams.id).then((response: any) => {
                             if (response.success)
                                 return response.data
@@ -88,33 +102,23 @@ namespace Lead {
                 },
                 onEnter: function($stateParams: any, $state: any, $LeadRESTService: any) {
                     //map company to id
-                        
+                
 					let availableLeadIds = $LeadRESTService.allLeadsCached.map(function(lead: any) {
                         return lead._id;
                     });
                     // if the company does not exist
                     let index = availableLeadIds.indexOf($stateParams.id);
-                    if (availableLeadIds.indexOf($stateParams.id) === -1) {
+                    if (index === -1) {
                         $state.go('main.dashboard');
-                    } else {
-                         console.log('checking state params',$stateParams)
+                    } else {                        
                         if ($stateParams.lead === '@') { // first load page
                             $stateParams.lead = $LeadRESTService.allLeadsCached[index];
                             $LeadRESTService.selectedLead = $stateParams.lead;
-                            console.log('preparing state params',$stateParams.lead)
                         }
                     }
                 }
             });
     }
-    export class LeadController {
-        private helloWorld: string = "Hello world";
-        constructor(private $stateParams: any) {
-            alert('hi');
-        }
-
-    }
-
     export interface SalesLead {
         name?: string;
         status?: any;
@@ -129,7 +133,7 @@ namespace Lead {
         private coldStatusIndex: number;
         private opportunityStatusIndex: number;
 
-        constructor(private $stateParams: any, private $AddressBookRESTService: any, private statuses: any, private $LeadRESTService: any, private $state:any) {
+        constructor(private $stateParams: any, private $AddressBookRESTService: any, private $LeadRESTService: any, private $state:any) {
             for (let i = 0; i < $LeadRESTService.allLeadStatusesCached.length; i++) {
                 if (this.$LeadRESTService.allLeadStatusesCached[i].code === "COLD") { this.coldStatusIndex = i; }
                 if (this.$LeadRESTService.allLeadStatusesCached[i].code === "OPP") { this.opportunityStatusIndex = i; }
@@ -141,10 +145,10 @@ namespace Lead {
                 newLead.status = this.$LeadRESTService.allLeadStatusesCached[this.opportunityStatusIndex]; }
             if (this.$stateParams.status === "lead") { 
                 newLead.status = this.$LeadRESTService.allLeadStatusesCached[this.coldStatusIndex]; }
-            console.log('new lead', this.$LeadRESTService.allLeadStatusesCached, this.coldStatusIndex, this.opportunityStatusIndex, newLead)
+           
             this.$LeadRESTService.newLead(newLead).then((response: any) => {
                 if (response.success) {
-                    this.$state.go('main.lead.selectedLead',{id: response.data._id, lead: response.data});
+                    this.$state.go('main.selectedLead',{id: response.data._id, lead: response.data});
                     this.$LeadRESTService.selectedLead = response.data;
                    
                 }
@@ -153,9 +157,45 @@ namespace Lead {
     }
     
     export class SelectedLeadController{
-        constructor(private $stateParams: any, private $AddressBookRESTService: any, private statuses: any, private $LeadRESTService: any, private $state:any, roleInLead: any) {
-            console.log('your role',roleInLead);  
+        private selectedLead:any = "selected_lead";
+        constructor(private $stateParams: any, private $AddressBookRESTService: any, private $LeadRESTService: any, private $state:any,private roleInLead: any,private contacts: any, private unaddedContacts: any ) {
+           
         }
+    }
+    export class SelectedLeadRightBarController{
+        private selectedLead:any = "selected_lead";
+        private editing:boolean = false;
+        private editingLead: SalesLead;
+        constructor(private $stateParams: any, private $AddressBookRESTService: any, private $LeadRESTService: any, private $state:any,private roleInLead: any,private toastr: any, private contacts: any, private unaddedContacts: any) {
+           console.log('contact-uncontact',contacts,unaddedContacts); 
+           console.log("Your role",roleInLead);
+           this.editing = false;
+        }
+        deleteLead() {
+            let result: boolean = confirm("Are you sure. Once delete all the lead data cannot be recovered");
+            if (result) {
+                this.$LeadRESTService.deleteLead(this.$LeadRESTService.selectedLead._id).then((response: any) => {
+                    
+                    if (response.success) {
+                        let index = this.$LeadRESTService.allLeadsCached.indexOf(this.$LeadRESTService.selectedLead);
+                        this.$LeadRESTService.allLeadsCached.splice(index, 1);
+                        this.$LeadRESTService.selectedLead = undefined;
+                        this.toastr.success("Delete lead success");
+                        this.$state.go('main.dashboard');
+                    } else {
+                      
+                        this.toastr.error(response.msg);
+                    }
+                });
+            };
+        }
+        startEditing() {
+            this.editing = true;
+            this.editingLead = angular.copy(this.$LeadRESTService.selectedLead)
+        }
+        submitEditing() {
+            
+        } 
     }
     
     angular
@@ -165,7 +205,8 @@ namespace Lead {
             'app.addressBook'
         ])
         .config(config)
-        .controller('LeadController', LeadController)
+       
         .controller('NewLeadController', NewLeadController)
         .controller('SelectedLeadController', SelectedLeadController)
+        .controller('SelectedLeadRightBarController', SelectedLeadRightBarController)
 }
