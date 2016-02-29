@@ -8,7 +8,8 @@ const router = express.Router();
 
 router.post('/', (req, res) => {
   const modelOptions: ModelOptions = {
-    authorization: getAuthorizationData(req)
+    authorization: getAuthorizationData(req),
+    copyAuthorizationData: 'organizationMember'
   };
   accountInvitationService.createOne(req.body, modelOptions)
     .then((accountInvitation: AccountInvitation) => formatSend(res, accountInvitation), (err) => sendError(res, err));

@@ -12,7 +12,7 @@ export interface Contact extends BaseDto {
   name?: string;
   website?: string;
   industry?: any;
-  city?: any;
+  city?: string | City;
 }
 
 export interface Notification {
@@ -28,13 +28,13 @@ export interface Country extends BaseDto {
 export interface State extends BaseDto {
   code?: string;
   name?: string;
-  country?: any;
+  country?: string | Country;
 }
 
 export interface City extends BaseDto {
   code?: string;
   name?: string;
-  state?: any;
+  state?: string | State;
 }
 
 export interface Industry extends BaseDto {
@@ -45,11 +45,11 @@ export interface Industry extends BaseDto {
 export interface AddressBookGroup extends BaseDto {
   name?: string;
   description?: string;
-  city?: any;
-  postcode?: any;
+  city?: string | City;
+  postcode?: string;
   suburb?: string;
   streetName?: string;
-  industry?: any;
+  industry?: string | Industry;
   website?: string;
   businessNumber?: string;
   contacts?: any;
@@ -64,7 +64,7 @@ export interface AddressBookContact extends BaseDto {
   email?: string;
   website?: string;
   alternativeAddress?: string;
-  group?: any;
+  group?: string | AddressBookGroup;
 }
 
 export interface AccountUser extends BaseDto {
@@ -81,10 +81,10 @@ export interface AccountOrganization extends BaseDto {
   name?: string;
   domain?: string;
   description?: string;
-  city?: any;
-  postcode?: any;
+  city?: string | City;
+  postcode?: number;
   suburb?: string;
-  industry?: any;
+  industry?: string | Industry;
   businessNumber?: string;
   team?: number;
   web?: string;
@@ -129,9 +129,9 @@ export interface AccountOrganizationMember extends BaseDto {
   position?: string;
   contactNumber?: string;
   altContactNumber?: string;
-  organization?: any;
-  user?: any;
-  role?: any;
+  organization?: string | AccountOrganization;
+  user?: string | AccountUser;
+  role?: string | AccountMemberRole;
 }
 
 export interface AccountMemberRole extends BaseDto {
@@ -148,9 +148,9 @@ export interface AccountMemberRole extends BaseDto {
 export interface AccountInvitation extends BaseDto {
   email?: string;
   code?: string;
-  organization?: any;
-  role?: String | AccountMemberRole;
-  redeemedBy?: any;
+  organization?: string | AccountOrganization;
+  role?: string | AccountMemberRole;
+  redeemedBy?: string | AccountOrganizationMember;
   expiresAt?: number;
 } 
 
@@ -175,7 +175,7 @@ export interface AuthorizationData {
   user?: AccountUser;
   organizationMember?: AccountOrganizationMember;
   leadMember?: SalesLeadOrganizationMember;
-  invitation?: any;
+  invitation?: string | AccountInvitation;
 }
 
 export interface ModelOptions {
@@ -199,7 +199,7 @@ export interface AuthorizationResponse {
 
 export interface SalesLead extends BaseDto {
   name?: string;
-  status?: any;
+  status?: string | SalesLeadStatus;
   contract?: string;
   amount?: number;
   contact?: any;
@@ -212,8 +212,8 @@ export interface SalesLeadStatus extends BaseDto {
 }
 
 export interface SalesLeadContact extends BaseDto {
-  lead?: any;
-  contact?: any;
+  lead?: string | SalesLead;
+  contact?: string | AddressBookContact;
 }
 
 export interface SalesLeadMemberRole extends BaseDto {
@@ -228,9 +228,9 @@ export interface SalesLeadMemberRole extends BaseDto {
 }
 
 export interface SalesLeadOrganizationMember extends BaseDto {
-  lead?: any;
-  member?: any;
-  role?: any;
+  lead?: string | SalesLead;
+  member?: string | AccountOrganizationMember;
+  role?: string | SalesLeadMemberRole;
 }
 
 export interface Dashboard extends BaseDto {

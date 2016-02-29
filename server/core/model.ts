@@ -465,12 +465,15 @@ schemas.accountInvitation.pre('save', function(next: Function) {
   
   if (obj.isNew) {
     // Assign the default invitation code
-    const code = ('00000' + (Date.now() * Math.pow(36,5) << 0).toString(36)).slice(-5);
+    const NUMBER_REQUIRED_DIGITS = 5;
+    const BASE = 36;
+    const code = ('00000' + (Date.now() * Math.pow(BASE,NUMBER_REQUIRED_DIGITS) << 0).toString(BASE)).slice(-NUMBER_REQUIRED_DIGITS);
     obj['code'] = code;
     
     // Assign the expiration date
     const expirationDays = 3;
-    obj['expiresAt'] = Date.now() + (expirationDays * 86400000);
+    const MILISECONDS_PER_DAY = 86400000;
+    obj['expiresAt'] = Date.now() + (expirationDays * MILISECONDS_PER_DAY);
   }
   
   next(); 	

@@ -2,6 +2,7 @@
 import {AccountInvitationModel} from '../core/model';
 import {BaseService} from '../core/base_service';
 import {sendGridCymplarService} from '../sendgrid_cymplar/sendgrid_cymplar_service';
+import {ObjectUtil} from '../../client/core/util';
 
 export class AccountInvitationService extends BaseService<AccountInvitation> {
 
@@ -35,13 +36,13 @@ export class AccountInvitationService extends BaseService<AccountInvitation> {
 		});
 	}
 	
+	/* tslint:disable */ // In this switches the default is not needed
 	protected addAuthorizationDataInCreate(modelOptions: ModelOptions = {}) {
 		switch (modelOptions.copyAuthorizationData) {
 			case 'organizationMember':
 				modelOptions.additionalData['createdBy'] = modelOptions.authorization.organizationMember._id;
-				modelOptions.additionalData['organization'] = modelOptions.authorization.organizationMember.organization._id;
-				break;
-			default:
+				modelOptions.additionalData['organization'] = 
+					ObjectUtil.getStringUnionProperty(modelOptions.authorization.organizationMember.organization);
 				break;
 		}
 	}
@@ -50,12 +51,12 @@ export class AccountInvitationService extends BaseService<AccountInvitation> {
 		switch (modelOptions.copyAuthorizationData) {
 			case 'organizationMember':
 				modelOptions.additionalData['createdBy'] = modelOptions.authorization.organizationMember._id;
-				modelOptions.additionalData['organization'] = modelOptions.authorization.organizationMember.organization._id;
-				break;
-			default:
+				modelOptions.additionalData['organization'] = 
+					ObjectUtil.getStringUnionProperty(modelOptions.authorization.organizationMember.organization);
 				break;
 		}
 	}
+	/* tslint:enable */
 }
 
 export const accountInvitationService = new AccountInvitationService();

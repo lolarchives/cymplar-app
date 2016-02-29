@@ -54,7 +54,6 @@ export class AccountOrganizationService extends BaseService<AccountOrganization>
 			} 
 			
 			reject(err);
-			return; 
 			});
 		});
 	}
@@ -83,10 +82,7 @@ export class AccountOrganizationService extends BaseService<AccountOrganization>
 			.then((accountOrganizations: AccountOrganization[]) => {
 				resolve(accountOrganizations);
 			})
-			.catch((err) => { 
-				reject(err);
-				return;
-			});
+			.catch((err) => reject(err));
 		});
 	}
 	
@@ -126,10 +122,7 @@ export class AccountOrganizationService extends BaseService<AccountOrganization>
 			.then((accountOrganizations: AccountOrganization[]) => {
 				resolve(accountOrganizations);
 			})
-			.catch((err) => { 
-				reject(err);
-				return;
-			});
+			.catch((err) => reject(err));
 		});
 	}
 	
@@ -149,10 +142,7 @@ export class AccountOrganizationService extends BaseService<AccountOrganization>
 					return;
 				});
 			})
-			.catch((err) => { 
-				reject(err);
-				return;
-			});	
+			.catch((err) => reject(err));	
 		});
 	}
 	
@@ -172,10 +162,7 @@ export class AccountOrganizationService extends BaseService<AccountOrganization>
 					return;
 				});
 			})
-			.catch((err) => { 
-				reject(err);
-				return;
-			});	
+			.catch((err) => reject(err));	
 		});
 	}
 	
@@ -214,10 +201,7 @@ export class AccountOrganizationService extends BaseService<AccountOrganization>
 					resolve(data);	
 				}
 			})
-			.catch((err) => {
-				reject(err);
-				return;
-			});
+			.catch((err) => reject(err));
 		});
 	}
 	
@@ -246,8 +230,8 @@ export class AccountOrganizationService extends BaseService<AccountOrganization>
 					reject(new Error('The invitation was already used'));	
 				}
 				
-				const promises: Promise<any>[] = [];
-				promises.push(Promise.resolve(accountInvitation)); // Keeps the accountInvitation object in results[0];
+				const acceptInvitationPromises: Promise<any>[] = [];
+				acceptInvitationPromises.push(Promise.resolve(accountInvitation)); // Keeps the accountInvitation object in results[0];
 				
 				const memberModelOptions: ModelOptions = {
 					authorization: newOptions.authorization,
@@ -261,13 +245,13 @@ export class AccountOrganizationService extends BaseService<AccountOrganization>
 					role: accountInvitation.role	
 				};
 				
-				promises.push(accountOrganizationMemberService.createOne(invitedMember, memberModelOptions));
+				acceptInvitationPromises.push(accountOrganizationMemberService.createOne(invitedMember, memberModelOptions));
 				
-				return Promise.all(promises);
+				return Promise.all(acceptInvitationPromises);
 			})
 			.then((results: any[]) => {
-				const promises: Promise<any>[] = [];
-				promises.push(Promise.resolve(results[1])); // Keeps the organizationMember object in results[0];
+				const postAcceptInvitationPromises: Promise<any>[] = [];
+				postAcceptInvitationPromises.push(Promise.resolve(results[1])); // Keeps the organizationMember object in results[0];
 				
 				const accountInvitation: AccountInvitation = results[0];
 				accountInvitation.redeemedBy = results[1]['user'];
@@ -278,17 +262,14 @@ export class AccountOrganizationService extends BaseService<AccountOrganization>
 					onlyValidateParentAuthorization: true,
 					copyAuthorizationData: ''
 				};
-				promises.push(accountInvitationService.updateOne(accountInvitation, intivationModelOptions));
+				postAcceptInvitationPromises.push(accountInvitationService.updateOne(accountInvitation, intivationModelOptions));
 				
-				return Promise.all(promises);
+				return Promise.all(postAcceptInvitationPromises);
 			})
 			.then((results: any[]) => {
 				resolve(results[0]['organization']); // Take the organizationMember to return their organization
 			})
-			.catch((err) => { 
-				reject(err);
-				return;
-			});
+			.catch((err) => reject(err));
 		});
 	}
 	
@@ -304,7 +285,7 @@ export class AccountOrganizationService extends BaseService<AccountOrganization>
 				return this.createAuthorizationResponse('Organization: Unauthorized member');
 			}
 			
-			if (roles.length > 0 && roles.indexOf(modelOptions.authorization.organizationMember.role.code) < 0) {
+			if (roles.length > 0 && !this.isAuthorizedInOrg(modelOptions.authorization, roles)) {
 				return this.createAuthorizationResponse('Organization: Unauthorized member role');
 			}
 		}

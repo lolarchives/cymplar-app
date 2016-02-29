@@ -31,25 +31,23 @@ export class LoginService {
 				const authenticationResp: AuthenticationResponse = {};
 				authenticationResp.token = this.getToken(accountUser);
 				
-				const promises: Promise<any>[] = [];
-				promises.push(Promise.resolve(authenticationResp));
+				const loginPromises: Promise<any>[] = [];
+				loginPromises.push(Promise.resolve(authenticationResp));
 				
 				if (ObjectUtil.isPresent(options.authorization.invitation)) {
 					const memberModelOptions: ModelOptions = {
 						authorization: { user: accountUser },
 						onlyValidateParentAuthorization: true
 					};
-					promises.push(accountOrganizationService.addInvitedOrganizationMember({ _id: options.authorization.invitation}, memberModelOptions));
+					loginPromises.push(accountOrganizationService.addInvitedOrganizationMember({ _id: options.authorization.invitation}, memberModelOptions));
 				}
 				
-				return Promise.all(promises);
+				return Promise.all(loginPromises);
 			})
 			.then((results: any) => {
 				resolve(results[0]); // Sends the authentication response
 			})
-			.catch((err) => {
-				return reject(err);
-			});
+			.catch((err) => reject(err));
 		});
 	}
 
@@ -83,7 +81,7 @@ export class LoginService {
 					reject(new Error('The user does not exist within this organization'));
 					return;
 				}
-				if (!bcrypt.compareSync(data.password, accountOrganizationMember.user.password)) {
+				if (!bcrypt.compareSync(data.password, ObjectUtil.getStringUnionProperty(accountOrganizationMember.user, 'password'))) {
 					reject(new Error('Invalid password'));
 					return;
 				}

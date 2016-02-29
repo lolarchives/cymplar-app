@@ -17,17 +17,15 @@ export class DatabaseObjectUtil {
 	
 	static removeArrayPromise(data: Document[]): Promise<Document[]> {
 		return new Promise<Document[]>((resolve: Function, reject: Function) => {						
-			const promises: Promise<Document>[] = [];
+			const docToRemovePromises: Promise<Document>[] = [];
 			data.forEach((doc) => {
-			 promises.push(this.removeDocumentPromise(doc));		
+			 docToRemovePromises.push(this.removeDocumentPromise(doc));		
 			});
-			Promise.all(promises)
+			Promise.all(docToRemovePromises)
 			.then((results: any) => {
 				resolve(results);
 			})
-			.catch((err: any) => {
-				reject(err);
-			});	
+			.catch((err) => reject(err));	
 		});
 	}
 }

@@ -41,10 +41,7 @@ export class AccountOrganizationMemberService extends BaseService<AccountOrganiz
 					return;
 				});
 			})
-			.catch((err) => { 
-				reject(err);
-				return;
-			});	
+			.catch((err) => reject(err));	
 		});
 	}
 	
@@ -64,10 +61,7 @@ export class AccountOrganizationMemberService extends BaseService<AccountOrganiz
 					return;
 				});
 			})
-			.catch((err) => { 
-				reject(err);
-				return;
-			});	
+			.catch((err) => reject(err));	
 		});
 	}
 	
@@ -109,29 +103,30 @@ export class AccountOrganizationMemberService extends BaseService<AccountOrganiz
 			.then((authorizationResponse: AuthorizationResponse) => {
 				resolve(data);
 			})
-			.catch((err) => {
-				reject(err);
-				return;
-			});
+			.catch((err) => reject(err));
 		});
 	}
 	
+	/* tslint:disable */ // In this switches the default is not needed
 	protected addAuthorizationDataPreSearch(modelOptions: ModelOptions = {}) {
+		
 		switch (modelOptions.copyAuthorizationData) {
 			case 'user':
 				modelOptions.additionalData['user'] = modelOptions.authorization.user._id;
 				break;
 			case 'organization':
-				modelOptions.additionalData['organization'] = modelOptions.authorization.organizationMember.organization;
+				modelOptions.additionalData['organization'] = 
+					ObjectUtil.getStringUnionProperty(modelOptions.authorization.organizationMember.organization);
 				break;
 			case 'team':
-				modelOptions.additionalData['organization'] = modelOptions.authorization.organizationMember.organization;
-				modelOptions.additionalData['_id'] = { $ne: modelOptions.authorization.organizationMember._id };
-				break;
-			default:
+				modelOptions.additionalData['organization'] = 
+					ObjectUtil.getStringUnionProperty(modelOptions.authorization.organizationMember.organization);
+				modelOptions.additionalData['_id'] = 
+					{ $ne: ObjectUtil.getStringUnionProperty(modelOptions.authorization.organizationMember) };
 				break;
 		}
 	}
+	/* tslint:enable */
 	
 	protected authorizationEntity(modelOptions: ModelOptions = {}, roles: string[] = []): AuthorizationResponse {
 		if (modelOptions.requireAuthorization) {
@@ -145,7 +140,7 @@ export class AccountOrganizationMemberService extends BaseService<AccountOrganiz
 				return this.createAuthorizationResponse('Organization member: Unauthorized member');
 			}
 			
-			if (roles.length > 0 && roles.indexOf(modelOptions.authorization.organizationMember.role.code) < 0) {
+			if (roles.length > 0 && !this.isAuthorizedInOrg(modelOptions.authorization, roles)) {
 				return this.createAuthorizationResponse('Organization member: Unauthorized member role');
 			}
 		}
@@ -166,7 +161,7 @@ export class AccountOrganizationMemberService extends BaseService<AccountOrganiz
 		data?: AccountOrganizationMember): AuthorizationResponse {
 		
 		const authRoles = ['OWNER'];
-		const isOrgOwner = authRoles.indexOf(modelOptions.authorization.organizationMember.role.code) >= 0;
+		const isOrgOwner = this.isAuthorizedInOrg(modelOptions.authorization, authRoles);
 		const isUser =  modelOptions.authorization.user._id.toString() === data.user.toString();
 		if (isOrgOwner || isUser) {
 			return this.createAuthorizationResponse();

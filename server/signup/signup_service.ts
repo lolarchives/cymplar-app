@@ -24,14 +24,14 @@ export class SignupService {
 				options.authorization.user = accountUser;
 				options.copyAuthorizationData = 'user';
 				
-				const promises: Promise<AccountOrganization>[] = [];
-				promises.push(accountOrganizationService.createOneWithMember(data, options));
+				const autoAccountCreationPromises: Promise<AccountOrganization>[] = [];
+				autoAccountCreationPromises.push(accountOrganizationService.createOneWithMember(data, options));
 				
 				if (ObjectUtil.isPresent(options.authorization.invitation)) {
-					promises.push(accountOrganizationService.addInvitedOrganizationMember({ _id: options.authorization.invitation }, options));
+					autoAccountCreationPromises.push(accountOrganizationService.addInvitedOrganizationMember({ _id: options.authorization.invitation }, options));
 				}
 				
-				return Promise.all(promises); 
+				return Promise.all(autoAccountCreationPromises); 
 			})
 			.then((accountOrganizations: AccountOrganization[]) => { 
 				const response = { 
