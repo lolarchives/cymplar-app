@@ -2,6 +2,11 @@
   "name": "cymplar2",
   "version": "0.0.0",
   "description": "Cymplar version 2",
+  "contributors": [
+    "Johanna Palma <johanna@neuli.net>",
+    "Neil Tran <neil@neuli.net>",
+    "Roger Padilla <rogerjose81@gmail.com>"
+  ],
   "repository": {
     "type": "git",
     "url": "https://github.com/Neulinet/cymplar-app.git"
@@ -14,7 +19,6 @@
     "start": "gulp serve --env dev",
     "test": "gulp test"
   },
-  "author": "Roger Padilla <rogerpadilla>",
   "private": true,
   "devDependencies": {
     "async": "^1.5.0",
