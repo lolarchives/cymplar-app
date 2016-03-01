@@ -30,16 +30,9 @@ export class LogItemService extends BaseService<LogItem> {
 		});	
 	}
 	
-	find(data: LogItem, newOptions: ModelOptions = {}): Promise<LogItem[]> {
+	findLimited(data: LogItem, newOptions: ModelOptions = {}): Promise<LogItem[]> {
 		return new Promise<LogItem[]>((resolve: Function, reject: Function) => {
 			const txModelOptions = this.obtainTransactionModelOptions(newOptions);
-			
-			if (ObjectUtil.isPresent(data.createdAt)) {
-				txModelOptions.additionalData = {
-					createdAt: { $lt: data.createdAt }	
-				};
-			}
-			
 			const authorizationResponse = this.isSearchAuthorized(txModelOptions);
 			if (!authorizationResponse.isAuthorized) {
 				return reject(new Error(authorizationResponse.errorMessage));
@@ -47,14 +40,39 @@ export class LogItemService extends BaseService<LogItem> {
 			this.addAuthorizationDataPreSearch(txModelOptions);	
 			this.transactionModelOptionsAddData(data, txModelOptions);	
 			const search = this.obtainSearchExpression(data, txModelOptions);
+			console.log('');
+			console.log('Search ' + JSON.stringify(search));
 			this.Model.find(search, txModelOptions.projection,
-			 { sort: '-createdAt', limit: 20, lean: true }).populate(txModelOptions.population)
+			{ sort: '-createdAt', limit: 20, lean: true }).populate(txModelOptions.population)
 			.exec((err, foundObjs) => {
 				if (err) {
 					return reject(err);
 				}
 				resolve(foundObjs);
 			});
+		});
+	}
+	
+	find(data: LogItem, newOptions: ModelOptions = {}): Promise<LogItem[]> {
+		return new Promise<LogItem[]>((resolve: Function, reject: Function) => {
+			this.findLimited(data, newOptions)
+			.then((logItems: LogItem[]) => {
+				console.log(JSON.stringify(logItems));
+				if (logItems.length === 1) {
+					if (ObjectUtil.isPresent(logItems[0].createdAt)) {
+						newOptions.additionalData = {
+							createdAt: { $lt: logItems[0].createdAt }	
+						};
+					}
+					return this.findLimited({}, newOptions);
+				}  
+				resolve(logItems);		
+					
+			})
+			.then((logItems: LogItem[]) => {
+				resolve(logItems);			
+			})
+			.catch((err) => reject(err));
 		});
 	}
 	
