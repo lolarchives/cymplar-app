@@ -187,21 +187,19 @@ export class SalesLeadService extends BaseService<SalesLead> {
 				distinct: 'lead',
 			};
 			
+			console.log('');
+			console.log(' contacts ' + JSON.stringify(contactId));
 			salesLeadContactService.findDistinct({ contact: { $in: contactId }}, salesContactModelOptions)
-			.then((leads: string[]) => {
+			.then((leads: string[]) => {				
 				const salesLeadModelOptions: ModelOptions = {
 					requireAuthorization: false,
 					population: {
-						path: 'lead',
-						populate: {
-							path: 'status',
-							model: 'salesLeadStatus',
-						}
+						path: 'status'
 					},
 					copyAuthorizationData: '',
 					validatePostSearchAuthData: false
 				};
-				return salesLeadContactService.find({ _id: { $in: leads }}, salesLeadModelOptions);
+				return this.find({ _id: { $in: leads }}, salesLeadModelOptions);
 			})
 			.then((leads: SalesLead[]) => fulfill(leads))
 			.catch((err) => reject(err));
