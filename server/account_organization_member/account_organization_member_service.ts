@@ -34,11 +34,9 @@ export class AccountOrganizationMemberService extends BaseService<AccountOrganiz
 			.then((accountOrganizationMember: any) => {
 				accountOrganizationMember.remove((err: Error) => {
 					if (err) {
-						reject(err);
-						return;
+						return reject(err);
 					}
 					resolve(accountOrganizationMember.toObject());
-					return;
 				});
 			})
 			.catch((err) => reject(err));	
@@ -54,11 +52,9 @@ export class AccountOrganizationMemberService extends BaseService<AccountOrganiz
 			.then((accountOrganizationMember: any) => {
 				accountOrganizationMember.remove((err: Error) => {
 					if (err) {
-						reject(err);
-						return;
+						return reject(err);
 					}
 					resolve(accountOrganizationMember.toObject());
-					return;
 				});
 			})
 			.catch((err) => reject(err));	
@@ -110,8 +106,7 @@ export class AccountOrganizationMemberService extends BaseService<AccountOrganiz
 	returnCurrentOrganizationMember(newOptions: ModelOptions = {}): Promise<AccountOrganizationMember> {
 		return new Promise<AccountOrganizationMember>((resolve: Function, reject: Function) => {
 			if (ObjectUtil.isBlank(newOptions.authorization.organizationMember)) {
-				reject(new Error('This user is not member of this organization'));
-				return;
+				return reject(new Error('This user is not member of this organization'));
 			} 
 			
 			const organizationMember: AccountOrganizationMember = ObjectUtil.clone(newOptions.authorization.organizationMember);

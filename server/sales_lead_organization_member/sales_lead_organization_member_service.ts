@@ -23,8 +23,7 @@ export class SalesLeadOrganizationMemberService extends BaseService<SalesLeadOrg
 	createOne(data: SalesLeadOrganizationMember, newOptions: ModelOptions = {}): Promise<SalesLeadOrganizationMember> {	
 		return new Promise<SalesLeadOrganizationMember>((resolve: Function, reject: Function) => {
 			if (ObjectUtil.isBlank(data.role)) {
-				reject(new Error('A role should be specified'));
-				return;
+				return reject(new Error('A role should be specified'));
 			}
 			super.createOne(data, newOptions)
 			.then((salesLeadOrganizationMember: SalesLeadOrganizationMember) => {
@@ -169,8 +168,7 @@ export class SalesLeadOrganizationMemberService extends BaseService<SalesLeadOrg
 	returnCurrentLeadMember(newOptions: ModelOptions = {}): Promise<SalesLeadOrganizationMember> {
 		return new Promise<SalesLeadOrganizationMember>((resolve: Function, reject: Function) => {
 			if (ObjectUtil.isBlank(newOptions.authorization.leadMember)) {
-				reject(new Error('This user is not member of this lead'));
-				return;
+				return reject(new Error('This user is not member of this lead'));
 			} 
 			
 			const leadMember: SalesLeadOrganizationMember = ObjectUtil.clone(newOptions.authorization.leadMember);
@@ -188,11 +186,9 @@ export class SalesLeadOrganizationMemberService extends BaseService<SalesLeadOrg
 			.then((salesLeadOrganizationMember: any) => {
 				salesLeadOrganizationMember.remove((err: Error) => {
 					if (err) {
-						reject(err);
-						return;
+						return reject(err);
 					}
 					resolve(salesLeadOrganizationMember.toObject());
-					return;
 				});
 			})
 			.catch((err: Error) => reject(err));
@@ -208,11 +204,9 @@ export class SalesLeadOrganizationMemberService extends BaseService<SalesLeadOrg
 			.then((salesLeadOrganizationMember: any) => {
 				salesLeadOrganizationMember.remove((err: Error) => {
 					if (err) {
-						reject(err);
-						return;
+						return reject(err);
 					}
 					resolve(salesLeadOrganizationMember.toObject());
-					return;
 				});
 			})
 			.catch((err: Error) => reject(err));
@@ -309,8 +303,7 @@ export class SalesLeadOrganizationMemberService extends BaseService<SalesLeadOrg
 			})
 			.then((authorizationResponse: AuthorizationResponse) => {
 				if (!authorizationResponse.isAuthorized) {
-					reject(new Error(authorizationResponse.errorMessage));
-					return;
+					return reject(new Error(authorizationResponse.errorMessage));
 				}
 				resolve(data);
 			})

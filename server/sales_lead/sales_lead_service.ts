@@ -80,16 +80,13 @@ export class SalesLeadService extends BaseService<SalesLead> {
 				
 				objectToUpdate.save((err: Error, savedDoc: any) => {
 					if (err) {
-						reject(err);
-						return;
+						return reject(err);
 					}
 					savedDoc.populate(txModelOptions.population, (err: Error, populatedObj: any) => {
 						if (err) {
-							reject(err);
-							return;
+							return reject(err);
 						}
 						resolve(populatedObj.toObject());
-						return;
 					});
 				});
 			})
@@ -108,9 +105,7 @@ export class SalesLeadService extends BaseService<SalesLead> {
 				newOptions.requireAuthorization = false;
 				return super.find(data, newOptions); 
 			})
-			.then((leads: SalesLead[]) => {	
-				fulfill(leads); 
-			})
+			.then((leads: SalesLead[]) => fulfill(leads))
 			.catch((err: Error) => reject(err));
 		});
 	}
@@ -126,9 +121,7 @@ export class SalesLeadService extends BaseService<SalesLead> {
 				newOptions.requireAuthorization = false;
 				return super.find(data, newOptions); 
 			})
-			.then((leads: SalesLead[]) => {	
-				fulfill(leads);
-				})
+			.then((leads: SalesLead[]) => fulfill(leads))
 			.catch((err: Error) => reject(err));
 		});
 	}
@@ -153,12 +146,10 @@ export class SalesLeadService extends BaseService<SalesLead> {
 				
 				this.Model.aggregate(aggregationCondition).exec((err, results) => {
 					if (err) {
-						reject(err);
-						return;
+						return reject(err);
 					}
 
 					fulfill(results);
-					return;
 				});
 			})
 			.catch((err: Error) => reject(err));

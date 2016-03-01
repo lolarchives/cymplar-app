@@ -289,7 +289,6 @@ schemas.addressBookGroup.post('remove', function() {
        if (err) {
           return;
         } 
-       return;
       });
     });	
   });
@@ -300,12 +299,10 @@ schemas.addressBookContact.pre('remove', function(next: Function) {
   SalesLeadContactModel.find({ contact: obj['_id']})
   .exec((err: Error, foundObjs: Document[]) => {
      if (err) {
-        next(err);
-        return;
+        return next(err);
      } 	
      if (ObjectUtil.isPresent(foundObjs) && foundObjs.length > 0) {
-       next(new Error('This contact is related to a lead, it cannot be erased'));
-       return;
+       return next(new Error('This contact is related to a lead, it cannot be erased'));
      }
      next();
   });
@@ -319,8 +316,7 @@ schemas.accountUser.pre('save', function (next: Function) {
  
   bcrypt.hash(obj['password'], SALT, (err, hash) => {
       if (err) { 
-        next(err);
-        return;
+        return next(err);
       };
       
       obj['password'] = hash;
@@ -333,16 +329,14 @@ schemas.accountUser.pre('remove', function(next: Function) {
   AccountOrganizationMemberModel.find({ user: obj['_id'] }).populate('role organization')
 	.exec((err: Error, removedObjs: Document[]) => {
     if (err) {
-        next(err);
-        return;
+        return next(err);
     }
     DatabaseObjectUtil.removeArrayPromise(removedObjs)
     .then((results: Document[]) => {
       next();
     })
     .catch((err: Error) => {
-      next(err);
-      return;
+      return next(err);
     });
   });
 });
@@ -403,7 +397,6 @@ schemas.accountOrganizationMember.pre('remove', function(next: Function) {
     })
     .catch((err: any) => {
       next(err);
-      return;
     }); 
   });
 });
@@ -436,9 +429,7 @@ schemas.accountOrganizationMember.post('remove', function() {
         });
       } 
     }); 
-  } else {
-    return;
-  } 
+  }
 });
 
 schemas.accountOrganization.pre('remove', function(next: Function) {
@@ -446,8 +437,7 @@ schemas.accountOrganization.pre('remove', function(next: Function) {
   AccountOrganizationMemberModel.find({ organization: obj['_id'] })
   .exec((err: Error, foundObjs: Document[]) => {
     if (err) {
-      next(err);
-      return;
+      return next(err);
     }
     DatabaseObjectUtil.removeArrayPromise(foundObjs)
     .then((removedObj: Document[]) => {
@@ -455,7 +445,6 @@ schemas.accountOrganization.pre('remove', function(next: Function) {
     })
     .catch((err: any) => {
         next(err);
-        return;
     });	
   }); 	
 });
@@ -498,15 +487,10 @@ schemas.salesLeadContact.post('remove', function() {
             if (err) {
               return;
             }
-            return;
         });
       } 
-      
-      return;
     });  
   } 
-  
-  return;
 });
 
 schemas.salesLeadOrganizationMember.post('remove', function() {
@@ -534,7 +518,6 @@ schemas.salesLeadOrganizationMember.post('remove', function() {
             if (err) {
               return;
             }
-          return;
         });
       } 
     });
@@ -578,23 +561,20 @@ schemas.salesLead.pre('remove', function(next: Function) {
   SalesLeadContactModel.find({lead: obj['_id']}).populate(contactPopulation).populate('lead')
   .exec((err: Error, foundObjs: Document[]) => {
     if (err) {
-      next(err);
-      return;
+      return next(err);
     }
     DatabaseObjectUtil.removeArrayPromise(foundObjs)
     .then((removedObj: Document[]) => {
       SalesLeadOrganizationMemberModel.find({lead: obj['_id']})
       .remove((err: Error, foundObjs: Document[]) => {
         if (err) {
-          next(err);
-          return;
+          return next(err);
         }
        next();
       });
     })
     .catch((err: any) => {
 		  next(err);
-      return;
 		});	
   });
 });

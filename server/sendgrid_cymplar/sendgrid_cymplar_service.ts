@@ -16,7 +16,6 @@ export class SendGridCymplarService {
 		return new Promise<any>((fulfill: Function, reject: Function) => {
 			this.sendgridServ.send(email, (err, json) => {
 				if (err) { 
-					console.error(err); 
 					return reject(err); 
 				}
 				fulfill(json); 

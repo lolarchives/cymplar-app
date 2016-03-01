@@ -44,8 +44,7 @@ export class SignupService {
 				if (ObjectUtil.isPresent(options.authorization.user)) {
 					accountUserService.removeSkipingHooks({ _id: options.authorization.user._id });
 				} 
-				reject(err);
-				return; 
+				reject(err); 
 			});
 		});
 	}

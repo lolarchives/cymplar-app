@@ -19,8 +19,7 @@ export class AddressBookContactService extends BaseService<AddressBookContact> {
 		return new Promise<AddressBookContact[]>((resolve: Function, reject: Function) => {
 
 			if (ObjectUtil.isBlank(data.group)) {
-				reject(new Error('A group should be specified'));
-				return;
+				return reject(new Error('A group should be specified'));
 			}
 				
 			const groupModelOptions: ModelOptions = {
@@ -34,8 +33,7 @@ export class AddressBookContactService extends BaseService<AddressBookContact> {
 			addressBookGroupService.findOne({}, groupModelOptions)
 			.then((group: AddressBookGroup) => {
 				if (ObjectUtil.isBlank(group._id)) {
-					reject(new Error('A contact cannot be added to a group that does not belong to this user'));
-					return;
+					return reject(new Error('A contact cannot be added to a group that does not belong to this user'));
 				}
 				return super.createOne(data, newOptions);
 			})

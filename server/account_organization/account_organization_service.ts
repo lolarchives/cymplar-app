@@ -92,8 +92,7 @@ export class AccountOrganizationService extends BaseService<AccountOrganization>
 			const authorizationResponse = super.authorizationEntity(newOptions);
 			
 			if (!authorizationResponse.isAuthorized) {
-				reject(new Error(authorizationResponse.errorMessage));
-				return;
+				return reject(new Error(authorizationResponse.errorMessage));
 			}
 			
 			newOptions.population = [{
@@ -135,11 +134,9 @@ export class AccountOrganizationService extends BaseService<AccountOrganization>
 			.then((accountOrganizationMember: any) => {
 				accountOrganizationMember.remove((err: Error) => {
 					if (err) {
-						reject(err);
-						return;
+						return reject(err);
 					}
 					resolve(accountOrganizationMember.toObject());
-					return;
 				});
 			})
 			.catch((err) => reject(err));	
@@ -155,11 +152,9 @@ export class AccountOrganizationService extends BaseService<AccountOrganization>
 			.then((accountOrganizationMember: any) => {
 				accountOrganizationMember.remove((err: Error) => {
 					if (err) {
-						reject(err);
-						return;
+						return reject(err);
 					}
 					resolve(accountOrganizationMember.toObject());
-					return;
 				});
 			})
 			.catch((err) => reject(err));	
@@ -195,8 +190,8 @@ export class AccountOrganizationService extends BaseService<AccountOrganization>
 			})
 			.then((orgMembers: string[]) => {
 				if (orgMembers.length > 0) {
-					reject(new Error('There are more owners for this organization, it will not be removed.'
-					+ 'Unsubscribe from this organization instead'));
+					return reject(new Error(`There are more owners for this organization, it will not be removed.
+					Unsubscribe from this organization instead`));
 				} else {
 					resolve(data);	
 				}
@@ -223,11 +218,11 @@ export class AccountOrganizationService extends BaseService<AccountOrganization>
 			.then((accountInvitation: AccountInvitation) => {
 				
 				if (accountInvitation.expiresAt < Date.now()) {
-					reject(new Error('The invitation has expired!'));	
+					return reject(new Error('The invitation has expired!'));	
 				}
 			
 				if (ObjectUtil.isPresent(accountInvitation.redeemedBy)) {
-					reject(new Error('The invitation was already used'));	
+					return reject(new Error('The invitation was already used'));	
 				}
 				
 				const acceptInvitationPromises: Promise<any>[] = [];

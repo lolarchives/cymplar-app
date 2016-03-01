@@ -12,20 +12,17 @@ import {accountOrganizationService} from '../account_organization/account_organi
 export class LoginService {
 
 	createOne(data: LogIn, options: ModelOptions = {}): Promise<string> {
-		if (ObjectUtil.isBlank(data.organization)) {
-			return new Promise(function (fulfill, reject) {
-			  reject(new Error('An organization should be chosen'));
-			});
-    	}
 		
-		if (ObjectUtil.isBlank(data.username) || ObjectUtil.isBlank(data.password)) {
-			return new Promise(function (fulfill, reject) {
-			  reject(new Error('Invalid credentials'));
-			});
-    	}
-
 		return new Promise<string>((resolve: Function, reject: Function) => {
+
+			if (ObjectUtil.isBlank(data.organization)) {
+				return reject(new Error('An organization should be chosen'));
+			}
 			
+			if (ObjectUtil.isBlank(data.username) || ObjectUtil.isBlank(data.password)) {
+				return reject(new Error('Invalid credentials'));
+			}
+		
 			this.validateAccountUser(data)
 			.then((accountUser: AccountUser) => {
 				const authenticationResp: AuthenticationResponse = {};
@@ -78,12 +75,10 @@ export class LoginService {
 			accountOrganizationMemberService.findOne({ organization: data.organization }, accountUserModelOptions)
 			.then((accountOrganizationMember: AccountOrganizationMember) => {
 				if (ObjectUtil.isBlank(accountOrganizationMember.user)) {
-					reject(new Error('The user does not exist within this organization'));
-					return;
+					return reject(new Error('The user does not exist within this organization'));
 				}
 				if (!bcrypt.compareSync(data.password, ObjectUtil.getStringUnionProperty(accountOrganizationMember.user, 'password'))) {
-					reject(new Error('Invalid password'));
-					return;
+					return reject(new Error('Invalid password'));
 				}
 				resolve(accountOrganizationMember.user);
 			})

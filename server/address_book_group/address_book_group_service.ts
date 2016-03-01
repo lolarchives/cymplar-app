@@ -46,9 +46,7 @@ export class AddressBookGroupService extends BaseService<AddressBookGroup> {
 				
 				return Promise.all(loadDataFromGroupPromises);	
 			})
-			.then((results: any) => {
-				fulfill(results);
-			})
+			.then((results: any) => fulfill(results))
 			.catch((err) => reject(err));
 		});
 	}

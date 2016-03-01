@@ -7,8 +7,7 @@ export class DatabaseObjectUtil {
 		return new Promise<Document>((resolve: Function, reject: Function) => {					
 			data.remove((err: Error) => {
 				if (err) {
-					reject(err);
-					return;
+					return reject(err);
 				}
 				resolve(data);
 			});
@@ -22,9 +21,7 @@ export class DatabaseObjectUtil {
 			 docToRemovePromises.push(this.removeDocumentPromise(doc));		
 			});
 			Promise.all(docToRemovePromises)
-			.then((results: any) => {
-				resolve(results);
-			})
+			.then((results: any) => resolve(results))
 			.catch((err) => reject(err));	
 		});
 	}
