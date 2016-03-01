@@ -186,9 +186,6 @@ export class SalesLeadService extends BaseService<SalesLead> {
 				validatePostSearchAuthData: false,
 				distinct: 'lead',
 			};
-			
-			console.log('');
-			console.log(' contacts ' + JSON.stringify(contactId));
 			salesLeadContactService.findDistinct({ contact: { $in: contactId }}, salesContactModelOptions)
 			.then((leads: string[]) => {				
 				const salesLeadModelOptions: ModelOptions = {

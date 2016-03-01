@@ -118,7 +118,6 @@ export class AddressBookContactService extends BaseService<AddressBookContact> {
 			.then((contacts: string[]) => {
 				salesLeadService.getLeadsPerGroupWithStatus(contacts)
 				.then((aggregation: any[]) => {
-					console.log(JSON.stringify(aggregation));
 					resolve(aggregation);
 				})
 				.catch((err) => { 
