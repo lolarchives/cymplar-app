@@ -8,6 +8,7 @@ import {AccountUserModel} from '../core/model';
 import {LogIn, AuthenticationResponse, AccountUser, AccountOrganizationMember, ModelOptions} from '../../client/core/dto';
 import {accountOrganizationMemberService} from '../account_organization_member/account_organization_member_service';
 import {accountOrganizationService} from '../account_organization/account_organization_service';
+import {accountUserService} from '../account_user/account_user_service';
 
 export class LoginService {
 
@@ -66,18 +67,25 @@ export class LoginService {
 		return new Promise<AccountUser>((resolve: Function, reject: Function) => {
 			const accountUserModelOptions: ModelOptions = {
 				requireAuthorization: false,
-				population: {
-					path: 'user',
-					match: { username: data.username }
-				},
 				copyAuthorizationData: '',
-				validatePostSearchAuthData: false
+				validatePostSearchAuthData: false,
+				projection: '_id'
 			};
-			accountOrganizationMemberService.findOne({ organization: data.organization }, accountUserModelOptions)
+			
+			accountUserService.findOne({ username: data.username }, accountUserModelOptions)
+			.then((accountUser: AccountUser) => {
+				const accountMemberModelOptions: ModelOptions = {
+					requireAuthorization: false,
+					copyAuthorizationData: '',
+					validatePostSearchAuthData: false,
+					population: 'user',
+					additionalData: { organization: data.organization, user: accountUser._id }
+				};
+			
+				return accountOrganizationMemberService.findOne({}, accountMemberModelOptions);
+			})
 			.then((accountOrganizationMember: AccountOrganizationMember) => {
-				if (ObjectUtil.isBlank(accountOrganizationMember.user)) {
-					return reject(new Error('The user does not exist within this organization'));
-				}
+				
 				if (!bcrypt.compareSync(data.password, ObjectUtil.getStringUnionProperty(accountOrganizationMember.user, 'password'))) {
 					return reject(new Error('Invalid password'));
 				}
