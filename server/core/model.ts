@@ -509,6 +509,29 @@ schemas.salesLeadOrganizationMember.post('remove', function() {
 });
 
 
+schemas.salesLead.pre('save', function(next: Function) {
+  const obj: Document = this;
+  if (obj.isNew) {    
+    SalesLeadStatusModel.findOne({ code: 'OPP' })
+    .lean().exec((err: any, found: Document) => {
+      if (err) {
+        next(err);
+        return;
+      }
+      
+      if (ObjectUtil.isBlank(found['_id'])) {
+        next(new Error('A status should be specified for this lead'));
+        return;
+      }
+
+      obj['status'] = found['_id'];
+      next();
+    }); 
+  } else {
+    next(); 
+  }
+});
+
 schemas.salesLead.pre('remove', function(next: Function) {
   const obj: Document = this;
   const contactPopulation = {	 

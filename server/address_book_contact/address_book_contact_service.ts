@@ -105,6 +105,34 @@ export class AddressBookContactService extends BaseService<AddressBookContact> {
 		});
 	}
 	
+	//TO DO - get rid of it once customizable status is working
+	getLeadPerGroupOldStatus(data: AddressBookGroup, newOptions: ModelOptions = {}): Promise<string[]> {
+		return new Promise<string[]>((resolve: Function, reject: Function) => {
+			this.getUsersGroups(data, newOptions)
+			.then((idGroups: string[]) => {
+				newOptions.additionalData = { group: { $in: idGroups }};
+				newOptions.distinct = '_id';
+				newOptions.copyAuthorizationData = '';
+				return this.findDistinct(data, newOptions);
+			})
+			.then((contacts: string[]) => {
+				salesLeadService.getLeadsPerGroupWithStatus(contacts)
+				.then((aggregation: any[]) => {
+					console.log(JSON.stringify(aggregation));
+					resolve(aggregation);
+				})
+				.catch((err) => { 
+					reject(err);
+					return;
+				});
+			})
+			.catch((err) => { 
+				reject(err);
+				return;
+			});
+		});
+	}
+	
 	protected validateAuthDataPostSearchUpdate(modelOptions: ModelOptions = {}, data?: AddressBookContact): AuthorizationResponse {
 		if (data.createdBy.toString() !== modelOptions.authorization.user._id.toString()) {
 			return this.createAuthorizationResponse('The user cannot perform this action');

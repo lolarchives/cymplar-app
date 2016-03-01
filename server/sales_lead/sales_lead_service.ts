@@ -12,7 +12,7 @@ import {accountMemberRoleService} from '../account_member_role/account_member_ro
 export class SalesLeadService extends BaseService<SalesLead> {
 
 	constructor() {
-		super(SalesLeadModel);
+		super(SalesLeadModel, { population: 'status' });
 	}
 	
 	createOne(data: SalesLead, newOptions: ModelOptions = {}): Promise<SalesLead> {
@@ -34,7 +34,8 @@ export class SalesLeadService extends BaseService<SalesLead> {
 			.then((members: SalesLeadOrganizationMember[]) => {
 				const leadContactCreationModelOptions: ModelOptions = {
 					authorization: newOptions.authorization,
-					copyAuthorizationData: 'lead'
+					copyAuthorizationData: 'lead',
+					population: 'contact'
 				};
 				leadContactCreationModelOptions.authorization.leadMember = members[0];	// Assigns creator
 				
@@ -46,8 +47,8 @@ export class SalesLeadService extends BaseService<SalesLead> {
 			})
 			.then((contact: SalesLeadContact) => {	
 				
-				if (ObjectUtil.isPresent(contact)) {
-					createdSalesLead['contacts'] = [contact];	
+				if (ObjectUtil.isPresent(contact) && ObjectUtil.isPresent(contact.contact)) {
+					createdSalesLead['contacts'] = [contact.contact];	
 				}
 				 
 				fulfill(createdSalesLead); 
@@ -176,6 +177,37 @@ export class SalesLeadService extends BaseService<SalesLead> {
 		});
 	}
 	
+	// TO DO: Delete once the customized states are used
+	getLeadsPerGroupWithStatus(contactId: string[]): Promise<SalesLead[]> {
+		return new Promise<SalesLead>((fulfill: Function, reject: Function) => {
+			const salesContactModelOptions: ModelOptions = {
+				requireAuthorization: false,
+				copyAuthorizationData: '',
+				validatePostSearchAuthData: false,
+				distinct: 'lead',
+			};
+			
+			salesLeadContactService.findDistinct({ contact: { $in: contactId }}, salesContactModelOptions)
+			.then((leads: string[]) => {
+				const salesLeadModelOptions: ModelOptions = {
+					requireAuthorization: false,
+					population: {
+						path: 'lead',
+						populate: {
+							path: 'status',
+							model: 'salesLeadStatus',
+						}
+					},
+					copyAuthorizationData: '',
+					validatePostSearchAuthData: false
+				};
+				return salesLeadContactService.find({ _id: { $in: leads }}, salesLeadModelOptions);
+			})
+			.then((leads: SalesLead[]) => fulfill(leads))
+			.catch((err) => reject(err));
+		});
+	}
+	
 	protected addAuthorizationDataInCreate(modelOptions: ModelOptions = {}) {
 		switch (modelOptions.copyAuthorizationData) {
 			case 'orgMember':
@@ -294,7 +326,7 @@ export class SalesLeadService extends BaseService<SalesLead> {
 		return new Promise<SalesLeadContact>((fulfill: Function, reject: Function) => {
 			const leadContact: SalesLeadContact = {
 				lead: data._id,
-				contact: contact
+				contact: contact,
 			};
 			salesLeadContactService.createOne(leadContact, options)
 			.then((createdLeadContact: SalesLeadContact) => { 		
