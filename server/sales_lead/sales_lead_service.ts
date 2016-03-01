@@ -8,6 +8,7 @@ import {accountOrganizationMemberService} from '../account_organization_member/a
 import {ObjectUtil} from '../../client/core/util';
 import {salesLeadMemberRoleService} from '../sales_lead_member_role/sales_lead_member_role_service';
 import {accountMemberRoleService} from '../account_member_role/account_member_role_service';
+import {logItemService} from '../log_item/log_item_service';
 
 export class SalesLeadService extends BaseService<SalesLead> {
 
@@ -69,11 +70,28 @@ export class SalesLeadService extends BaseService<SalesLead> {
 			const txModelOptions = this.obtainTransactionModelOptions(newOptions);			
 			this.preUpdateOne(data, txModelOptions)
 			.then((objectToUpdate: any) => {
+				const updateSalesLeadPromises: Promise<any>[] = [];
+				updateSalesLeadPromises.push(Promise.resolve(objectToUpdate)); // Keeps the object tp be updated in results[0];
 				
-				// TO DO: report log of status change
-				/*if (ObjectUtil.isPresent(data['currentStatus']) && (objectToUpdate['currentStatus'] !== data['currentStatus'])) {
-				}*/	
+				if (ObjectUtil.isPresent(data['currentStatus']) && (objectToUpdate['currentStatus'] !== data['currentStatus'])) {
 					
+					const logItemModelOptions: ModelOptions = {
+						authorization: newOptions.authorization,
+						copyAuthorizationData: 'lead'
+					};
+				
+					const statusChange = {
+						content: `The status of the lead changed from 
+							${objectToUpdate['currentStatus']['label']} to ${data['currentStatus']['label']}`
+					};
+					
+					updateSalesLeadPromises.push(logItemService.createStatusChangeLog(statusChange, logItemModelOptions));
+				}	
+				
+				return Promise.all(updateSalesLeadPromises);
+			})
+			.then((results: any) => {	
+				const objectToUpdate = results[0];
 				for (let prop in data) {
 					objectToUpdate[prop] = data[prop];
 				}
@@ -164,8 +182,9 @@ export class SalesLeadService extends BaseService<SalesLead> {
 				copyAuthorizationData: '',
 				validatePostSearchAuthData: false,
 				distinct: 'lead',
+				additionalData: { contact: { $in: contactId } }
 			};
-			salesLeadContactService.findDistinct({ contact: { $in: contactId }}, salesContactModelOptions)
+			salesLeadContactService.findDistinct({}, salesContactModelOptions)
 			.then((leads: string[]) => {				
 				const salesLeadModelOptions: ModelOptions = {
 					requireAuthorization: false,

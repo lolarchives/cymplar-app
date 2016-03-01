@@ -27,6 +27,8 @@ import * as salesLeadOrganizationMemberRouter from './sales_lead_organization_me
 import * as salesLeadMemberRoleRouter from './sales_lead_member_role/sales_lead_member_role_router';
 import * as salesLeadContactRouter from './sales_lead_contact/sales_lead_contact_router';
 import * as salesLeadStatusRouter from './sales_lead_status/sales_lead_status_router';
+import * as logItemRouter from './log_item/log_item_router';
+import * as logItemTypeRouter from './log_item_type/log_item_type_router';
 
 const INDEX_DEST_PATH = resolve(PATH.cwd, PATH.dest.app.base, 'index.html');
 
@@ -64,6 +66,8 @@ server.use('/api/sales-lead-organization-member', salesLeadOrganizationMemberRou
 server.use('/api/sales-lead-organization-member-role', salesLeadMemberRoleRouter);
 server.use('/api/sales-lead-contact', salesLeadContactRouter);
 server.use('/api/sales-lead-status', salesLeadStatusRouter);
+server.use('/api/log-item', logItemRouter);
+server.use('/api/log-item-type', logItemTypeRouter);
 
 server.all(APP_BASE + '*', (req, res) =>
   res.sendFile(INDEX_DEST_PATH)

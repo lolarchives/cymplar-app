@@ -63,7 +63,7 @@ router.get('/_exist', (req, res) => {
 router.get('/:id', (req: express.Request, res: express.Response) => {
   const modelOptions: ModelOptions = {
     authorization: getAuthorizationData(req),
-    additionalData: { contact: req.param },
+    additionalData: { contact: req.params.id },
     copyAuthorizationData: 'lead'
   };
   salesLeadContactService.findOne({}, modelOptions)

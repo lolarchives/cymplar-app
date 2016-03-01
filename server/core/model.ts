@@ -221,6 +221,21 @@ const schemas = {
     createdBy: { type: ObjectId, ref: 'accountOrganizationMember' },
     createdAt: { type: Number },
     updatedAt: { type: Number }
+  }),
+  logItemType: new Schema({
+    code: { type: String, required: true, unique: true },
+    name: { type: String, required: true, unique: true }
+  }), 
+  logItem: new Schema({
+    lead: { type: ObjectId, ref: 'salesLead', required: true },
+    type: { type: ObjectId, ref: 'logItemType', required: true },
+    content: { type: String, required: true },
+    dateTime: { type: Number },
+    location: { type: String },
+    edited: { type: Boolean },
+    createdBy: { type: ObjectId, ref: 'accountOrganizationMember', required: true },
+    createdAt: { type: Number },
+    updatedAt: { type: Number }
   })
 };
 
@@ -270,6 +285,8 @@ export const SalesLeadModel = db.model('salesLead', schemas.salesLead);
 export const SalesLeadContactModel = db.model('salesLeadContact', schemas.salesLeadContact);
 export const SalesLeadOrganizationMemberModel = db.model('salesLeadOrganizationMember', schemas.salesLeadOrganizationMember);
 export const SalesLeadMemberRoleModel = db.model('salesLeadMemberRole', schemas.salesLeadMemberRole);
+export const LogItemTypeModel = db.model('logItemType', schemas.logItemType);
+export const LogItemModel = db.model('logItem', schemas.logItem);
 
 
 schemas.addressBookGroup.post('remove', function() {
@@ -456,7 +473,7 @@ schemas.accountInvitation.pre('save', function(next: Function) {
     // Assign the default invitation code
     const NUMBER_REQUIRED_DIGITS = 5;
     const BASE = 36;
-    const code = ('00000' + (Date.now() * Math.pow(BASE,NUMBER_REQUIRED_DIGITS) << 0).toString(BASE)).slice(-NUMBER_REQUIRED_DIGITS);
+    const code = ('00000' + (Date.now() * Math.pow(BASE, NUMBER_REQUIRED_DIGITS) << 0).toString(BASE)).slice(-NUMBER_REQUIRED_DIGITS);
     obj['code'] = code;
     
     // Assign the expiration date
@@ -471,7 +488,7 @@ schemas.accountInvitation.pre('save', function(next: Function) {
 
 schemas.salesLeadContact.post('remove', function() {
   const obj: Document = this;
-  if (ObjectUtil.isPresent(obj['contact']['_id']) && ObjectUtil.isBlank(obj['contact']['group'])) { 
+  if (ObjectUtil.isPresent(obj['contact']) && ObjectUtil.isPresent(obj['contact']['_id']) && ObjectUtil.isBlank(obj['contact']['group'])) { 
     const contactQuery = {
       contact: obj['contact'],
       _id: { $ne: obj['_id'] } 

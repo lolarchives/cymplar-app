@@ -237,3 +237,17 @@ export interface Dashboard extends BaseDto {
   organization?: any;
   addressBook?: any;
 }
+
+export interface LogItemType extends BaseDto {
+  code?: string;
+  name?: string;
+}
+
+export interface LogItem extends BaseDto {
+  lead?: string | SalesLead;
+  type?: string | LogItemType;
+  content?: string;
+  dateTime?: number;
+  location?: string;
+  edited?: boolean;
+}
