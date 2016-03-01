@@ -28,7 +28,8 @@ export class SignupService {
 				autoAccountCreationPromises.push(accountOrganizationService.createOneWithMember(data, options));
 				
 				if (ObjectUtil.isPresent(options.authorization.invitation)) {
-					autoAccountCreationPromises.push(accountOrganizationService.addInvitedOrganizationMember({ _id: options.authorization.invitation }, options));
+					autoAccountCreationPromises.push(accountOrganizationService
+						.addInvitedOrganizationMember({ _id: options.authorization.invitation }, options));
 				}
 				
 				return Promise.all(autoAccountCreationPromises); 

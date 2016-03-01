@@ -2,6 +2,7 @@
 import {LogItemModel, AddressBookContactModel} from '../core/model';
 import {BaseService} from '../core/base_service';
 import {logItemTypeService} from '../log_item_type/log_item_type_service';
+import {ObjectUtil} from '../../client/core/util';
 
 export class LogItemService extends BaseService<LogItem> {
 
@@ -13,7 +14,7 @@ export class LogItemService extends BaseService<LogItem> {
 		super(LogItemModel, defaultModelOptions);
 	}
 	
-	createStatusChangeLog(data:LogItem, modelOptions: ModelOptions): Promise<LogItem> {
+	createStatusChangeLog(data: LogItem, modelOptions: ModelOptions): Promise<LogItem> {
 		return new Promise<LogItem>((resolve: Function, reject: Function) => {
 			const typeModelOptions: ModelOptions = {
 				authorization: modelOptions.authorization,
@@ -27,6 +28,34 @@ export class LogItemService extends BaseService<LogItem> {
 			})
 			.catch((err) => reject(err));
 		});	
+	}
+	
+	find(data: LogItem, newOptions: ModelOptions = {}): Promise<LogItem[]> {
+		return new Promise<LogItem[]>((resolve: Function, reject: Function) => {
+			const txModelOptions = this.obtainTransactionModelOptions(newOptions);
+			
+			if (ObjectUtil.isPresent(data.createdAt)) {
+				txModelOptions.additionalData = {
+					createdAt: { $lt: data.createdAt }	
+				};
+			}
+			
+			const authorizationResponse = this.isSearchAuthorized(txModelOptions);
+			if (!authorizationResponse.isAuthorized) {
+				return reject(new Error(authorizationResponse.errorMessage));
+			}
+			this.addAuthorizationDataPreSearch(txModelOptions);	
+			this.transactionModelOptionsAddData(data, txModelOptions);	
+			const search = this.obtainSearchExpression(data, txModelOptions);
+			this.Model.find(search, txModelOptions.projection,
+			 { sort: '-createdAt', limit: 20, lean: true }).populate(txModelOptions.population)
+			.exec((err, foundObjs) => {
+				if (err) {
+					return reject(err);
+				}
+				resolve(foundObjs);
+			});
+		});
 	}
 	
 	protected isCreateAuthorized(modelOptions: ModelOptions): AuthorizationResponse {

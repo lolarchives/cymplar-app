@@ -36,7 +36,8 @@ export class LoginService {
 						authorization: { user: accountUser },
 						onlyValidateParentAuthorization: true
 					};
-					loginPromises.push(accountOrganizationService.addInvitedOrganizationMember({ _id: options.authorization.invitation}, memberModelOptions));
+					loginPromises.push(accountOrganizationService
+						.addInvitedOrganizationMember({ _id: options.authorization.invitation}, memberModelOptions));
 				}
 				
 				return Promise.all(loginPromises);
