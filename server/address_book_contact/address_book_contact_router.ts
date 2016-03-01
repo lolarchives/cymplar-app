@@ -53,7 +53,7 @@ router.get('/_find_lead_status_group', (req: express.Request, res: express.Respo
   const modelOptions: ModelOptions = {
     authorization: getAuthorizationData(req)
   };
-  addressBookContactService.getLeadStatusPerGroup(req.query, modelOptions)
+  addressBookContactService.getLeadPerGroupOldStatus(req.query, modelOptions)
     .then((contacts: AddressBookContact[]) => formatSend(res, contacts), (err: any) => sendError(res, err));
 });
 

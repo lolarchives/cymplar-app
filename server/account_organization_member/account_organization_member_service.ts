@@ -107,7 +107,19 @@ export class AccountOrganizationMemberService extends BaseService<AccountOrganiz
 		});
 	}
 	
-	/* tslint:disable */ // In this switches the default is not needed
+	returnCurrentOrganizationMember(newOptions: ModelOptions = {}): Promise<AccountOrganizationMember> {
+		return new Promise<AccountOrganizationMember>((resolve: Function, reject: Function) => {
+			if (ObjectUtil.isBlank(newOptions.authorization.organizationMember)) {
+				reject(new Error('This user is not member of this organization'));
+				return;
+			} 
+			
+			const organizationMember: AccountOrganizationMember = ObjectUtil.clone(newOptions.authorization.organizationMember);
+			resolve(organizationMember);
+		});
+	}
+
+/* tslint:disable */ // In this switches the default is not needed
 	protected addAuthorizationDataPreSearch(modelOptions: ModelOptions = {}) {
 		
 		switch (modelOptions.copyAuthorizationData) {

@@ -12,7 +12,7 @@ import {accountMemberRoleService} from '../account_member_role/account_member_ro
 export class SalesLeadService extends BaseService<SalesLead> {
 
 	constructor() {
-		super(SalesLeadModel);
+		super(SalesLeadModel, { population: 'status' });
 	}
 	
 	createOne(data: SalesLead, newOptions: ModelOptions = {}): Promise<SalesLead> {
@@ -34,17 +34,23 @@ export class SalesLeadService extends BaseService<SalesLead> {
 			.then((members: SalesLeadOrganizationMember[]) => {
 				const leadContactCreationModelOptions: ModelOptions = {
 					authorization: newOptions.authorization,
-					copyAuthorizationData: 'lead'
+					copyAuthorizationData: 'lead',
+					population: 'contact'
 				};
 				leadContactCreationModelOptions.authorization.leadMember = members[0];	// Assigns creator
 				
-				if (ObjectUtil.isBlank(data.contact)) {
+				if (ObjectUtil.isPresent(data.contact)) {
 					return this.associateContact(createdSalesLead, leadContactCreationModelOptions, data.contact);	
 				} else {
 					return {};
 				}
 			})
 			.then((contact: SalesLeadContact) => {	
+				
+				if (ObjectUtil.isPresent(contact) && ObjectUtil.isPresent(contact.contact)) {
+					createdSalesLead['contacts'] = [contact.contact];	
+				}
+				 
 				fulfill(createdSalesLead); 
 			})
 			.catch((err) => {
@@ -52,7 +58,7 @@ export class SalesLeadService extends BaseService<SalesLead> {
 					this.removeSkipingHooks({_id: createdSalesLead._id});
 					salesLeadContactService.removeSkipingHooks({lead: createdSalesLead._id});
 					salesLeadOrganizationMemberService.removeSkipingHooks({lead: createdSalesLead._id});
-				}
+					}
 				reject(err);
 				return;
 			});
@@ -88,7 +94,7 @@ export class SalesLeadService extends BaseService<SalesLead> {
 					});
 				});
 			})
-			.catch((err) => { 
+			.catch((err) => {
 				reject(err);
 				return;
 			});
@@ -128,8 +134,8 @@ export class SalesLeadService extends BaseService<SalesLead> {
 				return super.find(data, newOptions); 
 			})
 			.then((leads: SalesLead[]) => {	
-				fulfill(leads); 
-			})
+				fulfill(leads);
+				})
 			.catch((err) => {
 				reject(err);
 				return;
@@ -169,6 +175,32 @@ export class SalesLeadService extends BaseService<SalesLead> {
 				reject(err);
 				return;
 			});
+		});
+	}
+	
+	// TO DO: Delete once the customized states are used
+	getLeadsPerGroupWithStatus(contactId: string[]): Promise<SalesLead[]> {
+		return new Promise<SalesLead>((fulfill: Function, reject: Function) => {
+			const salesContactModelOptions: ModelOptions = {
+				requireAuthorization: false,
+				copyAuthorizationData: '',
+				validatePostSearchAuthData: false,
+				distinct: 'lead',
+			};
+			salesLeadContactService.findDistinct({ contact: { $in: contactId }}, salesContactModelOptions)
+			.then((leads: string[]) => {				
+				const salesLeadModelOptions: ModelOptions = {
+					requireAuthorization: false,
+					population: {
+						path: 'status'
+					},
+					copyAuthorizationData: '',
+					validatePostSearchAuthData: false
+				};
+				return this.find({ _id: { $in: leads }}, salesLeadModelOptions);
+			})
+			.then((leads: SalesLead[]) => fulfill(leads))
+			.catch((err) => reject(err));
 		});
 	}
 	
@@ -285,7 +317,7 @@ export class SalesLeadService extends BaseService<SalesLead> {
 		return new Promise<SalesLeadContact>((fulfill: Function, reject: Function) => {
 			const leadContact: SalesLeadContact = {
 				lead: data._id,
-				contact: contact
+				contact: contact,
 			};
 			salesLeadContactService.createOne(leadContact, options)
 			.then((createdLeadContact: SalesLeadContact) => { 		

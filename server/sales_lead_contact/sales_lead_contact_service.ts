@@ -81,12 +81,18 @@ export class SalesLeadContactService extends BaseService<SalesLeadContact> {
 							groups.push(current['group']);
 						}
 					}
-				
-					newOptions.additionalData = {
-						_id: { $nin: contacts }
-					};					
+					
+					newOptions.additionalData = {};
+					
+					if (contacts.length > 0) {
+						newOptions.additionalData['_id']  = { $nin: contacts };
+					}
+					
+					if (groups.length > 0) {
+						newOptions.additionalData['group']  = { $in: groups };
+					}
 				}
-
+				
 				newOptions.copyAuthorizationData = 'createdBy';
 				return addressBookContactService.find(data, newOptions);
 			})
