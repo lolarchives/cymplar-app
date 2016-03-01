@@ -1,6 +1,7 @@
 import {Model, Document} from 'mongoose';
 
-import {BaseDto, ModelOptions, AuthorizationData, AuthorizationResponse} from '../../client/core/dto';
+import {BaseDto, ModelOptions, AuthorizationData, AuthorizationResponse, AccountMemberRole, 
+	SalesLeadMemberRole} from '../../client/core/dto';
 import {ObjectUtil} from '../../client/core/util';
 import {DatabaseObjectUtil} from './db_util';
 
@@ -63,7 +64,8 @@ export class BaseAuthorizationService<T extends BaseDto>{
 		}
 		return true;
 	}
-
+	
+	/* tslint:disable */ // In this switches the default is not needed
 	protected addAuthorizationDataInCreate(modelOptions: ModelOptions = {}, data?: T) {
 		switch (modelOptions.copyAuthorizationData) {
 			case 'user':
@@ -71,8 +73,6 @@ export class BaseAuthorizationService<T extends BaseDto>{
 				break;
 			case 'createdBy':
 				modelOptions.additionalData['createdBy'] = modelOptions.authorization.user._id;
-				break;
-			default:
 				break;
 		}
 	}
@@ -85,10 +85,9 @@ export class BaseAuthorizationService<T extends BaseDto>{
 			case 'createdBy':
 				modelOptions.additionalData['createdBy'] = modelOptions.authorization.user._id;
 				break;
-			default:
-				break;
 		}
 	}
+	/* tslint:enable */
 	
 	protected validateAuthDataPostSearchUpdate(modelOptions: ModelOptions = {}, data?: T): AuthorizationResponse {
 		return this.createAuthorizationResponse();
@@ -100,5 +99,17 @@ export class BaseAuthorizationService<T extends BaseDto>{
 	
 	protected validateAuthDataPostSearch(modelOptions: ModelOptions = {}, data?: T): AuthorizationResponse {
 		return this.createAuthorizationResponse();
+	}
+	
+	protected isAuthorizedInOrg(authorizationData: AuthorizationData, authorizedRoles: string[]): boolean {
+		const role: AccountMemberRole = ObjectUtil.getBaseDtoObject(authorizationData.organizationMember.role);
+		const roleCode: string = role.code;	
+		return ObjectUtil.isPresent(roleCode) && authorizedRoles.indexOf(roleCode) >= 0;
+	}
+	
+	protected isAuthorizedInLead(authorizationData: AuthorizationData, authorizedRoles: string[]): boolean {
+		const role: SalesLeadMemberRole = ObjectUtil.getBaseDtoObject(authorizationData.leadMember.role);
+		const roleCode: string = role.code;	
+		return ObjectUtil.isPresent(roleCode) && authorizedRoles.indexOf(roleCode) >= 0;
 	}
 }

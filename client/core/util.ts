@@ -1,3 +1,5 @@
+import {BaseDto} from '../../client/core/dto';
+
 export class ObjectUtil {
 
 	private static _seq = 0;
@@ -65,5 +67,22 @@ export class ObjectUtil {
 		return filters;
 	}
 
+	static getBaseDtoObject(data: any, property: string = '_id'): any {
+		if (ObjectUtil.isPresent(data[property])) {
+			return data;
+		} else {
+			const baseDtoObject = {};
+			baseDtoObject[property] = data;
+			return baseDtoObject;
+		}
+	}
+	
+	static getStringUnionProperty(data: any, property: string = '_id'): string {
+		if (ObjectUtil.isPresent(data[property])) {
+			return data[property];
+		} else {
+			return data;
+		}
+	}
 }
 

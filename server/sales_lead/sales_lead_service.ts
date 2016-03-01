@@ -1,5 +1,5 @@
 ﻿import {SalesLead, SalesLeadContact, SalesLeadOrganizationMember, AccountOrganizationMember, ModelOptions,
-	AuthorizationResponse} from '../../client/core/dto';
+	AuthorizationResponse, AccountOrganization} from '../../client/core/dto';
 import {SalesLeadModel} from '../core/model';
 import {BaseService} from '../core/base_service';
 import {salesLeadContactService} from '../sales_lead_contact/sales_lead_contact_service';
@@ -143,10 +143,11 @@ export class SalesLeadService extends BaseService<SalesLead> {
 				requireAuthorization: false,
 				copyAuthorizationData: '',
 				validatePostSearchAuthData: false,
-				distinct: 'lead'
+				distinct: 'lead',
+				additionalData: { contact: { $in: contactId } }
 			};
 			
-			salesLeadContactService.findDistinct({ contact: { $in: contactId }}, salesContactModelOptions)
+			salesLeadContactService.findDistinct({}, salesContactModelOptions)
 			.then((leads: string[]) => {	
 							
 				const aggregationCondition = [
@@ -171,12 +172,11 @@ export class SalesLeadService extends BaseService<SalesLead> {
 		});
 	}
 	
+	/* tslint:disable */ // In this switches the default is not needed
 	protected addAuthorizationDataInCreate(modelOptions: ModelOptions = {}) {
 		switch (modelOptions.copyAuthorizationData) {
 			case 'orgMember':
 				modelOptions.additionalData['createdBy'] = modelOptions.authorization.organizationMember._id;
-				break;
-			default:
 				break;
 		}
 	}
@@ -184,16 +184,11 @@ export class SalesLeadService extends BaseService<SalesLead> {
 	protected addAuthorizationDataPreSearch(modelOptions: ModelOptions = {}) {
 		switch (modelOptions.copyAuthorizationData) {
 			case 'lead':
-				try {
-					modelOptions.additionalData['_id'] = modelOptions.authorization.leadMember.lead;
-				} catch (error) {
-					throw new Error('There is no lead specified, the search could not be executed');
-				}
-				break;
-			default:
+				modelOptions.additionalData['_id'] = modelOptions.authorization.leadMember.lead;
 				break;
 		}
 	}
+	/* tslint:enable */
 	
 	protected authorizationEntity(modelOptions: ModelOptions = {}, roles: string[] = []): AuthorizationResponse {
 		if (modelOptions.requireAuthorization) {
@@ -206,7 +201,7 @@ export class SalesLeadService extends BaseService<SalesLead> {
 				return this.createAuthorizationResponse();
 			}
 
-			if (roles.length > 0 && roles.indexOf(modelOptions.authorization.organizationMember.role.code) < 0) {
+			if (roles.length > 0 && this.isAuthorizedInLead(modelOptions.authorization, roles)) {
 				return this.createAuthorizationResponse('Sales lead member: Unauthorized member role');
 			}
 		}
@@ -226,12 +221,13 @@ export class SalesLeadService extends BaseService<SalesLead> {
 			.then((roles: string[]) => {
 				const nextStagePromises: any = [];
 				
+				const organization: AccountOrganization = ObjectUtil.getBaseDtoObject(options.authorization.organizationMember.organization);
 				const accountMemberModelOptions: ModelOptions = {
 					authorization: options.authorization,
 					additionalData: {
 						_id: { $ne: options.authorization.organizationMember._id },
 						role: { $in: roles },
-						organization: options.authorization.organizationMember.organization
+						organization: organization._id
 					},
 					requireAuthorization: false,
 					copyAuthorizationData: ''
@@ -251,7 +247,7 @@ export class SalesLeadService extends BaseService<SalesLead> {
 			.then((results: any[]) => {
 				const members: AccountOrganizationMember[] = results[0];
 				const leadRole = results[1];
-				const promises: Promise<SalesLeadOrganizationMember>[] = [];
+				const membersToAddPromises: Promise<SalesLeadOrganizationMember>[] = [];
 				
 				const leadMemberModelOptions: ModelOptions = {
 					authorization: options.authorization,
@@ -263,7 +259,7 @@ export class SalesLeadService extends BaseService<SalesLead> {
 					member: options.authorization.organizationMember,
 					role: leadRole
 				};
-				promises.push(salesLeadOrganizationMemberService.createOne(leadOrganizationMemberCreator, leadMemberModelOptions));
+				membersToAddPromises.push(salesLeadOrganizationMemberService.createOne(leadOrganizationMemberCreator, leadMemberModelOptions));
 				
 				for (let i = 0; i < members.length; i++) {
 					const leadOrganizationMember: SalesLeadOrganizationMember = {
@@ -271,9 +267,9 @@ export class SalesLeadService extends BaseService<SalesLead> {
 						member: members[i]._id,
 						role: leadRole
 					};
-					promises.push(salesLeadOrganizationMemberService.createOne(leadOrganizationMember, leadMemberModelOptions));
+					membersToAddPromises.push(salesLeadOrganizationMemberService.createOne(leadOrganizationMember, leadMemberModelOptions));
 				}
-				return Promise.all(promises);
+				return Promise.all(membersToAddPromises);
 			})
 			.then((results: any) => {
 				fulfill(results);

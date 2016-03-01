@@ -1,5 +1,5 @@
 ﻿import {SalesLeadOrganizationMember, ModelOptions, AuthorizationResponse, SalesLead, 
-	AccountOrganizationMember} from '../../client/core/dto';
+	AccountOrganizationMember, AccountMemberRole, AccountOrganization} from '../../client/core/dto';
 import {SalesLeadOrganizationMemberModel, AccountOrganizationModel, AccountUserModel} from '../core/model';
 import {BaseService} from '../core/base_service';
 import {ObjectUtil} from '../../client/core/util';
@@ -160,8 +160,10 @@ export class SalesLeadOrganizationMemberService extends BaseService<SalesLeadOrg
 				for (let i = 0; i < leadMembers.length; i++ ) {
 					const current: AccountOrganizationMember = leadMembers[i]['member'];
 					members.push(current._id);
-					if (organizations.indexOf(current.organization) < 0) {
-						organizations.push(current.organization);
+					
+					const organization: AccountOrganization = ObjectUtil.getBaseDtoObject(current.organization);
+					if (organizations.indexOf(organization._id) < 0) {
+						organizations.push(organization._id);
 					}
 				}
 			
@@ -245,10 +247,13 @@ export class SalesLeadOrganizationMemberService extends BaseService<SalesLeadOrg
 					let response: AuthorizationResponse;
 					let owners = 0;
 					for (let i = 0; i < otherMembers.length; i++) {
-						if (otherMembers[i].role.code.toString() === 'OWNER') {
+						const role: AccountMemberRole = ObjectUtil.getBaseDtoObject(otherMembers[i].role);
+						const roleCode: string = role.code;
+						if (ObjectUtil.isPresent(roleCode) && roleCode === 'OWNER') {
 							owners++;
 						}
 					}
+					
 					if (owners < 1) {
 						response = this.createAuthorizationResponse('This is the only lead owner, there should be at least one owner');
 					} else {
@@ -284,7 +289,9 @@ export class SalesLeadOrganizationMemberService extends BaseService<SalesLeadOrg
 					let response: AuthorizationResponse;
 					let owners = 0;
 					for (let i = 0; i < otherMembers.length; i++) {
-						if (otherMembers[i].role.code.toString()  === 'OWNER') {
+						const role: AccountMemberRole = ObjectUtil.getBaseDtoObject(otherMembers[i].role);
+						const roleCode: string = role.code;
+						if (ObjectUtil.isPresent(roleCode) && roleCode === 'OWNER') {
 							owners++;
 						}
 					}
@@ -335,11 +342,11 @@ export class SalesLeadOrganizationMemberService extends BaseService<SalesLeadOrg
 		return new Promise<AuthorizationResponse>((resolve: Function, reject: Function) => {
 			this.find({}, newOptions)
 			.then((salesLeadOrganizationMembers: SalesLeadOrganizationMember[]) => {
-				const promises: Promise<any>[] = [];
+				const validationPromises: Promise<any>[] = [];
 				for (let i = 0; i < salesLeadOrganizationMembers.length; i++) {
-					promises.push(this.removeOneValidation(salesLeadOrganizationMembers[i], newOptions));
+					validationPromises.push(this.removeOneValidation(salesLeadOrganizationMembers[i], newOptions));
 				}
-				return Promise.all(promises);
+				return Promise.all(validationPromises);
 			})
 			.then((results: any) => {
 				const response = this.createAuthorizationResponse();
@@ -352,6 +359,7 @@ export class SalesLeadOrganizationMemberService extends BaseService<SalesLeadOrg
 		});
 	}
 	
+	/* tslint:disable */ // In this switches the default is not needed
 	protected addAuthorizationDataInCreate(modelOptions: ModelOptions = {}) {
 		switch (modelOptions.copyAuthorizationData) {
 			case 'orgMember':
@@ -360,8 +368,6 @@ export class SalesLeadOrganizationMemberService extends BaseService<SalesLeadOrg
 			case 'createdBy':
 				modelOptions.additionalData['lead'] = modelOptions.authorization.leadMember.lead;
 				modelOptions.additionalData['createdBy'] = modelOptions.authorization.organizationMember._id;
-				break;
-			default:
 				break;
 		}
 	}
@@ -374,10 +380,9 @@ export class SalesLeadOrganizationMemberService extends BaseService<SalesLeadOrg
 			case 'lead':
 					modelOptions.additionalData['lead'] = modelOptions.authorization.leadMember.lead;
 				break;
-			default:
-				break;
 		}
 	}
+	/* tslint:enable */
 	
 	protected authorizationEntity(modelOptions: ModelOptions = {}, roles: string[] = []): AuthorizationResponse {
 		if (modelOptions.requireAuthorization) {
@@ -389,8 +394,10 @@ export class SalesLeadOrganizationMemberService extends BaseService<SalesLeadOrg
 			if (modelOptions.onlyValidateParentAuthorization) {
 				return this.createAuthorizationResponse();
 			}
-
-			if (roles.length > 0 && roles.indexOf(modelOptions.authorization.organizationMember.role.code) < 0) {
+			
+			const role: AccountMemberRole = ObjectUtil.getBaseDtoObject(modelOptions.authorization.organizationMember.role);
+			const roleCode: string = role.code;
+			if (roles.length > 0 && ObjectUtil.isPresent(roleCode) && roles.indexOf(roleCode) < 0) {
 				return this.createAuthorizationResponse('Sales lead member: Unauthorized member role');
 			}
 		}
@@ -402,8 +409,9 @@ export class SalesLeadOrganizationMemberService extends BaseService<SalesLeadOrg
 	protected validateAuthDataPostSearchUpdate(modelOptions: ModelOptions = {}, 
 		data?: SalesLeadOrganizationMember): AuthorizationResponse {
 		const authRoles = ['OWNER'];
-		const isOrgOwner = authRoles.indexOf(modelOptions.authorization.organizationMember.role.code) >= 0;
+		const isOrgOwner = this.isAuthorizedInOrg(modelOptions.authorization, authRoles);
 		const isTheLeadMember =  modelOptions.authorization.leadMember._id.toString() === data._id.toString();
+		
 		if (isOrgOwner || isTheLeadMember) {
 			return this.createAuthorizationResponse();
 		}
@@ -413,7 +421,7 @@ export class SalesLeadOrganizationMemberService extends BaseService<SalesLeadOrg
 	protected validateAuthDataPostSearchRemove(modelOptions: ModelOptions = {}, 
 		data?: SalesLeadOrganizationMember): AuthorizationResponse {
 		const authRoles = ['OWNER'];
-		const isOrgOwner = authRoles.indexOf(modelOptions.authorization.organizationMember.role.code) >= 0;
+		const isOrgOwner = this.isAuthorizedInOrg(modelOptions.authorization, authRoles);
 		const isTheLeadMember =  modelOptions.authorization.leadMember._id.toString() === data._id.toString();
 		if (isOrgOwner || isTheLeadMember) {
 			return this.createAuthorizationResponse();
