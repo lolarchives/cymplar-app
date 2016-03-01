@@ -87,9 +87,7 @@ export class LoginService {
 				}
 				resolve(accountOrganizationMember.user);
 			})
-			.catch((err) => {
-				return reject(err);
-			});
+			.catch((err: Error) => reject(err));
 		});
 	}
 

@@ -110,7 +110,6 @@ export abstract class BaseService<T extends BaseDto> extends BaseAuthorizationSe
 							return;
 						}
 						resolve(populatedObj.toObject());
-						return;
 					});
 				});
 			})
@@ -163,7 +162,6 @@ export abstract class BaseService<T extends BaseDto> extends BaseAuthorizationSe
 							return;
 						}
 						resolve(populatedObj.toObject());
-						return;
 					});
 				});
 			});
@@ -214,7 +212,6 @@ export abstract class BaseService<T extends BaseDto> extends BaseAuthorizationSe
 						return;
 					}
 					resolve(objectToRemove.toObject());
-					return;
 				});
 			})
 			.catch((err) => reject(err));
@@ -262,7 +259,6 @@ export abstract class BaseService<T extends BaseDto> extends BaseAuthorizationSe
 						return;
 					}
 					resolve(objectToRemove.toObject());
-					return;
 				});
 			})
 			.catch((err) => reject(err));
@@ -317,7 +313,6 @@ export abstract class BaseService<T extends BaseDto> extends BaseAuthorizationSe
 					return;
 				}
 				resolve(foundObjs);
-				return;
 			});
 		});
 	}

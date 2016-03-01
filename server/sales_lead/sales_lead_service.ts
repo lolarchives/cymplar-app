@@ -60,7 +60,6 @@ export class SalesLeadService extends BaseService<SalesLead> {
 					salesLeadOrganizationMemberService.removeSkipingHooks({lead: createdSalesLead._id});
 					}
 				reject(err);
-				return;
 			});
 		});
 	}
@@ -94,10 +93,7 @@ export class SalesLeadService extends BaseService<SalesLead> {
 					});
 				});
 			})
-			.catch((err) => {
-				reject(err);
-				return;
-			});
+			.catch((err: Error) => reject(err));
 		});
 	}
 	
@@ -115,10 +111,7 @@ export class SalesLeadService extends BaseService<SalesLead> {
 			.then((leads: SalesLead[]) => {	
 				fulfill(leads); 
 			})
-			.catch((err) => {
-				reject(err);
-				return;
-			});
+			.catch((err: Error) => reject(err));
 		});
 	}
 	
@@ -136,10 +129,7 @@ export class SalesLeadService extends BaseService<SalesLead> {
 			.then((leads: SalesLead[]) => {	
 				fulfill(leads);
 				})
-			.catch((err) => {
-				reject(err);
-				return;
-			});
+			.catch((err: Error) => reject(err));
 		});
 	}
 
@@ -171,10 +161,7 @@ export class SalesLeadService extends BaseService<SalesLead> {
 					return;
 				});
 			})
-			.catch((err) => {
-				reject(err);
-				return;
-			});
+			.catch((err: Error) => reject(err));
 		});
 	}
 	
@@ -306,10 +293,7 @@ export class SalesLeadService extends BaseService<SalesLead> {
 			.then((results: any) => {
 				fulfill(results);
 			})
-			.catch((err: any) => {
-				reject(err);
-				return;
-			});
+			.catch((err: Error) => reject(err));
 		});
 	}
 	
@@ -323,10 +307,7 @@ export class SalesLeadService extends BaseService<SalesLead> {
 			.then((createdLeadContact: SalesLeadContact) => { 		
 				fulfill(createdLeadContact); 
 			})
-			.catch((err) => {
-				reject(err); 
-				return;
-			});
+			.catch((err: Error) => reject(err));
 		});
 	}
 }

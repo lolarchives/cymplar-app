@@ -99,10 +99,7 @@ export class SalesLeadContactService extends BaseService<SalesLeadContact> {
 			.then((leadContacts: AddressBookContact[]) => {
 				resolve(leadContacts);
 			})
-			.catch((err) => { 
-				reject(err);
-				return;
-			});
+			.catch((err: Error) => reject(err));
 		});
 	}
 	

@@ -105,15 +105,9 @@ export class AddressBookContactService extends BaseService<AddressBookContact> {
 				.then((aggregation: any[]) => {
 					resolve(aggregation);
 				})
-				.catch((err) => { 
-					reject(err);
-					return;
-				});
+				.catch((err: Error) => reject(err));
 			})
-			.catch((err) => { 
-				reject(err);
-				return;
-			});
+			.catch((err: Error) => reject(err));
 		});
 	}
 	

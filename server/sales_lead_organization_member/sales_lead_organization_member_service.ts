@@ -30,10 +30,7 @@ export class SalesLeadOrganizationMemberService extends BaseService<SalesLeadOrg
 			.then((salesLeadOrganizationMember: SalesLeadOrganizationMember) => {
 				resolve(salesLeadOrganizationMember);
 			})
-			.catch((err: any) => {
-				reject(err);
-				return;
-			});	
+			.catch((err: Error) => reject(err));
 		});		
 	}
 	
@@ -54,10 +51,7 @@ export class SalesLeadOrganizationMemberService extends BaseService<SalesLeadOrg
 			.then((leads: string[]) => {
 				resolve(leads);
 			})
-			.catch((err) => { 
-				reject(err);
-				return;
-			});
+			.catch((err: Error) => reject(err));
 		});
 	}
 	
@@ -77,10 +71,7 @@ export class SalesLeadOrganizationMemberService extends BaseService<SalesLeadOrg
 			.then((leads: string[]) => {
 				resolve(leads);
 			})
-			.catch((err) => { 
-				reject(err);
-				return;
-			});
+			.catch((err: Error) => reject(err));
 		});
 	}
 	
@@ -98,10 +89,7 @@ export class SalesLeadOrganizationMemberService extends BaseService<SalesLeadOrg
 			.then((leadMembers: AccountOrganizationMember[]) => {
 				resolve(leadMembers);
 			})
-			.catch((err) => { 
-				reject(err);
-				return;
-			});
+			.catch((err: Error) => reject(err));
 		});
 	}
 	
@@ -135,10 +123,7 @@ export class SalesLeadOrganizationMemberService extends BaseService<SalesLeadOrg
 			.then((leads: SalesLeadOrganizationMember[]) => {
 				resolve(leads);
 			})
-			.catch((err) => { 
-				reject(err);
-				return;
-			});
+			.catch((err: Error) => reject(err));
 		});
 	}
 	
@@ -177,10 +162,7 @@ export class SalesLeadOrganizationMemberService extends BaseService<SalesLeadOrg
 			.then((leadMembers: AccountOrganizationMember[]) => {
 				resolve(leadMembers);
 			})
-			.catch((err) => { 
-				reject(err);
-				return;
-			});
+			.catch((err: Error) => reject(err));
 		});
 	}
 	
@@ -213,10 +195,7 @@ export class SalesLeadOrganizationMemberService extends BaseService<SalesLeadOrg
 					return;
 				});
 			})
-			.catch((err) => { 
-				reject(err);
-				return;
-			});	
+			.catch((err: Error) => reject(err));
 		});
 	}
 	
@@ -236,10 +215,7 @@ export class SalesLeadOrganizationMemberService extends BaseService<SalesLeadOrg
 					return;
 				});
 			})
-			.catch((err) => { 
-				reject(err);
-				return;
-			});	
+			.catch((err: Error) => reject(err));
 		});
 	}
 	
@@ -274,10 +250,7 @@ export class SalesLeadOrganizationMemberService extends BaseService<SalesLeadOrg
 					}
 					resolve(response);
 				})
-				.catch((err) => {
-					reject(err);
-					return;
-				});
+				.catch((err: Error) => reject(err));
 			} else {
 				const response = this.createAuthorizationResponse();
 				Promise.resolve(response);
@@ -315,10 +288,7 @@ export class SalesLeadOrganizationMemberService extends BaseService<SalesLeadOrg
 					}
 					resolve(response);
 				})
-				.catch((err) => {
-					reject(err);
-					return;
-				});
+				.catch((err: Error) => reject(err));
 			} else {
 				const response = this.createAuthorizationResponse();
 				Promise.resolve(response);
@@ -344,10 +314,7 @@ export class SalesLeadOrganizationMemberService extends BaseService<SalesLeadOrg
 				}
 				resolve(data);
 			})
-			.catch((err) => { 
-				reject(err);
-				return;
-			});	
+			.catch((err: Error) => reject(err));
 		});
 	}
 	
@@ -365,10 +332,7 @@ export class SalesLeadOrganizationMemberService extends BaseService<SalesLeadOrg
 				const response = this.createAuthorizationResponse();
 				resolve(response);
 			})
-			.catch((err) => { 
-				reject(err);
-				return;
-			});	
+			.catch((err: Error) => reject(err));
 		});
 	}
 	
