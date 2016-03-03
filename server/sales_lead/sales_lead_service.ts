@@ -109,7 +109,7 @@ export class SalesLeadService extends BaseService<SalesLead> {
 				if (ObjectUtil.isPresent(data.contact)) {
 					return this.multipleContactUpdate(salesLead, newOptions, data.contact);
 				} else {
-					return Promise.resolve(salesLead);
+					return Promise.resolve(this.loadContacts(salesLead));
 				}
 				
 			})
