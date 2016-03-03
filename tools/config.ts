@@ -62,6 +62,7 @@ export const PATH = {
       `${BC}/angular-bootstrap/ui-bootstrap.js`,
       `${BC}/angular-multiple-transclusion/dist/angular-multiple-transclusion.min.js`,
       `${BC}/angular-bootstrap/ui-bootstrap-tpls.js`,
+      `${BC}/angular-filter/dist/angular-filter.min.js`,
       `${BC}/angular-custom-range-slider/src/angular-custom-range-slide.js`,
       `${BC}/ng-tags-input/ng-tags-input.min.js`,
       slash(resolve(`angular-ui-router/release/angular-ui-router.js`)),

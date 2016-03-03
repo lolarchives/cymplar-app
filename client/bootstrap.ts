@@ -149,6 +149,7 @@ namespace app {
     'ui.router',
     'ui.bootstrap',
     'angular-multiple-transclusion',
+    'angular.filter',
     'toastr',
     'ngCookies',
     'app.contacts',

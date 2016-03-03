@@ -208,7 +208,7 @@ namespace Lead {
         }
         
         submitEditing() {
-            this.editingLead.contacts = this.editingLead.softContacts.map((currentValue: any, index:any , array: any)=>{
+            this.editingLead.contact = this.editingLead.softContacts.map((currentValue: any, index:any , array: any)=>{
                 return currentValue._id;
             })
             console.log('sending',this.editingLead)

@@ -221,12 +221,12 @@
       <div class="aside-block">
         <h5 class="uppercase title">
           <span class="glyphicon glyphicon-book left-icon" aria-hidden="true"></span>
-          <strong><a href="" ui-sref="main.addressBook.allCompanies"> My Address book <a/> </strong>
+          <strong><a href="" ui-sref="main.allCompanies"> My Address book <a/> </strong>
         </h5>
         <h5 class="sub-title" data-toggle="collapse" data-target="#collapse8">
                     <span class="glyphicon glyphicon-chevron-down left-icon" aria-hidden="true"></span>
                     Companies/Groups
-                    <a href="" class="create-btn" title="Create new companies/group" ui-sref="main.addressBook.newCompany">
+                    <a href="" class="create-btn" title="Create new companies/group" ui-sref="main.newCompany">
                         <span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span>
                     </a>
                     <!--<div class="dropdown">
@@ -241,8 +241,8 @@
                 </h5>
         <div class="collapse in" id="collapse8">
           <ul class="main-nav">
-            <li ng-repeat="company in navCtrl.companies" ng-class="{'current': navCtrl.$state.params.id == company._id && navCtrl.$state.current.name == 'main.addressBook.selectedCompany'}">
-              <a ng-click="navCtrl.$state.go('main.addressBook.selectedCompany',{id: company._id, company: company});navCtrl.$AddressBookRESTService.selectedCompany = company;navCtrl.console.log(navCtrl.$AddressBookRESTService.selectedCompany)"
+            <li ng-repeat="company in navCtrl.companies" ng-class="{'current': navCtrl.$state.params.id == company._id && navCtrl.$state.current.name == 'main.selectedCompany'}">
+              <a ng-click="navCtrl.$state.go('main.selectedCompany',{id: company._id, company: company});navCtrl.$AddressBookRESTService.selectedCompany = company;navCtrl.console.log(navCtrl.$AddressBookRESTService.selectedCompany)"
               href="">{{company.name}}</a>
             </li>
           </ul>
