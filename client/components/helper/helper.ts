@@ -53,8 +53,19 @@ namespace HelperServices {
 			return deferred.promise;
 		}
 	};
-
+	export class ultiHelper {
+		indexOfFromId(arr: any[], obj:any ) {
+			
+			for	(let i = 0; i< arr.length; i++) {
+				if (arr[i]._id === obj._id)
+					return i 
+			}
+			
+			return -1;
+		}
+	}
 	angular
 		.module('app.helper', [])
-		.service('$resourceHelper', $resourceHelper);
+		.service('$resourceHelper', $resourceHelper)
+		.service('ultiHelper', ultiHelper);
 }

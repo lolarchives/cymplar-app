@@ -51,7 +51,10 @@ namespace LeadService {
 		private selectedLead: any;
 		private allLeadStatusesCached: any[] = [];
 		constructor(private $http: angular.IHttpService, private $LeadRESTResource: any, private $q: any, 
-			private $resourceHelper: any,private AuthToken: any) {
+			private $resourceHelper: any,private AuthToken: any, $rootScope: any) {
+				$rootScope.$on('updateLead', function(event: any, lead: any, index: number){
+					console.log('update lead ',lead, index);
+				})
 		}
 		allLeads() {
 			return this.$resourceHelper.resourceRESTCall(this.$LeadRESTResource, "allLeads").then((response: any) => {
@@ -97,8 +100,8 @@ namespace LeadService {
 		}
 	}
 
-	function get$LeadRESTServiceInstance($http: angular.IHttpService, $LeadRESTResource: any, $q: any, $resourceHelper: any, AuthToken: any) {
-        return new $LeadRESTService($http, $LeadRESTResource, $q, $resourceHelper, AuthToken);
+	function get$LeadRESTServiceInstance($http: angular.IHttpService, $LeadRESTResource: any, $q: any, $resourceHelper: any, AuthToken: any, $rootScope: any) {
+        return new $LeadRESTService($http, $LeadRESTResource, $q, $resourceHelper, AuthToken, $rootScope);
     }
 
 

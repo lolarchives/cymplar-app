@@ -5,12 +5,16 @@
 	<button class="btn btn-primary btn-block" type="submit" ng-show="slrbCtrl.editing" style="margin-bottom:10px">Save changes</button>
 
 	<strong>Name</strong>
-	<h5 ng-hide="slrbCtrl.editing">{{$stateParams.lead.name}}</h5>
+	<h5 ng-hide="slrbCtrl.editing">{{slrbCtrl.$stateParams.lead.name}}</h5>
 	<input class="form-control input-sm margin-b-s" type="text" ng-show="slrbCtrl.editing" placeholder="input" ng-model="slrbCtrl.editingLead.name"
 	required>
 	<strong>Contacts</strong>
-	<tags-input ng-show="slrbCtrl.editing" ng-model="slrbCtrl.contacts" display-property="name">
-		<auto-complete source="slrbCtrl.loadContact($query)" 
+	<tags-input ng-show="slrbCtrl.editing" add-from-autocomplete-only="true" 
+		on-tag-added="slrbCtrl.contactAdded($tag)"
+		placeholder="Add/remove contact"
+		on-tag-removed="slrbCtrl.contactRemoved($tag)"
+		ng-model="slrbCtrl.editingLead.contacts" display-property="name">
+		<auto-complete source="slrbCtrl.loadContacts($query)" 
                      min-length="0" 
                      debounce-delay="0"
                      max-results-to-show="10"></auto-complete>
@@ -20,7 +24,7 @@
 	<div ng-hide="slrbCtrl.editing">
 		<div class="field-with-icon margin-b-s">
 			<span class="glyphicon glyphicon-user" aria-hidden="true"></span>
-			<select class="form-control input-sm" ng-model="slrbCtrl.selectedContact" ng-options="contact as contact.name for contact in slrbCtrl.contacts">
+			<select class="form-control input-sm" ng-model="slrbCtrl.selectedContact" ng-options="contact as contact.name for contact in slrbCtrl.$stateParams.lead.contacts">
 			</select>
 		</div>
 		<!--field-with-icon-->
@@ -45,23 +49,23 @@
 		<!--field-with-icon-->
 	</div>
 	<strong>Description</strong>
-	<h5 ng-hide="slrbCtrl.editing">{{$stateParams.lead.contract || 'No description'}}</h5>
+	<h5 ng-hide="slrbCtrl.editing">{{slrbCtrl.$stateParams.lead.contract || 'No description'}}</h5>
 	<input class="form-control input-sm margin-b-l" type="text" placeholder="Enter description" ng-show="slrbCtrl.editing" ng-model="slrbCtrl.editingLead.contract">
 
 	<strong>Status</strong>
-	<h5 ng-hide="slrbCtrl.editing">{{$stateParams.lead.status.name}}</h5>
+	<h5 ng-hide="slrbCtrl.editing">{{slrbCtrl.$stateParams.lead.status.name}}</h5>
 	<select class="form-control input-sm margin-b-l" ng-show="slrbCtrl.editing" ng-options="status as status.name for status in slrbCtrl.$LeadRESTService.allLeadStatusesCached"
 	ng-model="slrbCtrl.editingLead.status" required>
 		<option value=""></option>
 	</select>
 
 	<strong>Percentage: </strong>
-	<h5 ng-hide="slrbCtrl.editing">{{$stateParams.lead.percentage || 'Not set'}} %</h5>
+	<h5 ng-hide="slrbCtrl.editing">{{slrbCtrl.$stateParams.lead.percentage || 'Not set'}} %</h5>
 	<h5 ng-show="slrbCtrl.editing">{{slrbCtrl.editingLead.percentage || 'Not set'}} %</h5>
 	<input type="range" value="0" step="10" class="range margin-b-s" ng-show="slrbCtrl.editing" ng-model="slrbCtrl.editingLead.percentage">
 
 	<strong>Estimates value: </strong>
-	<h5 ng-hide="slrbCtrl.editing">{{$stateParams.amount || 'Not set'}}</h5>
+	<h5 ng-hide="slrbCtrl.editing">{{slrbCtrl.$stateParams.amount || 'Not set'}}</h5>
 	<input class="form-control input-sm margin-b-l" type="text" placeholder="Enter estimate value" ng-show="slrbCtrl.editing"
 	ng-model="slrbCtrl.editingLead.amount">
 

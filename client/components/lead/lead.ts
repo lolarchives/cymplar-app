@@ -113,7 +113,7 @@ namespace Lead {
                     } else {                        
                         if ($stateParams.lead === '@') { // first load page
                             $stateParams.lead = $LeadRESTService.allLeadsCached[index];
-                            $LeadRESTService.selectedLead = $stateParams.lead;
+                            $LeadRESTService.selectedLead = $LeadRESTService.allLeadsCached[index];
                         }
                     }
                 }
@@ -166,13 +166,16 @@ namespace Lead {
         }
     }
     export class SelectedLeadRightBarController{
+      
         private selectedLead:any = "selected_lead";
         private editing:boolean = false;
         private editingLead: SalesLead;
-        constructor(private $stateParams: any, private $AddressBookRESTService: any, private $LeadRESTService: any, private $state:any,private roleInLead: any,private toastr: any, private contacts: any, private unaddedContacts: any) {
-         
-           console.log("Your role",this.$LeadRESTService.allLeadStatusesCached);
+        private $LeadRESTService: any;
+        constructor(private $stateParams: any, private $AddressBookRESTService: any, $LeadRESTService: any, private $state:any,private roleInLead: any,private toastr: any, private contacts: any, private unaddedContacts: any, private $rootScope: any, private ultiHelper: any) {
+           $stateParams.lead.contacts = contacts;
+           this.$LeadRESTService = $LeadRESTService; 
            this.editing = false;
+   
         }
         deleteLead() {
             let result: boolean = confirm("Are you sure. Once delete all the lead data cannot be recovered");
@@ -180,13 +183,12 @@ namespace Lead {
                 this.$LeadRESTService.deleteLead(this.$LeadRESTService.selectedLead._id).then((response: any) => {
                     
                     if (response.success) {
-                        let index = this.$LeadRESTService.allLeadsCached.indexOf(this.$LeadRESTService.selectedLead);
+                        let index = this.ultiHelper.indexOfFromId( this.$LeadRESTService.allLeadsCached, this.$LeadRESTService.selectedLead );
                         this.$LeadRESTService.allLeadsCached.splice(index, 1);
                         this.$LeadRESTService.selectedLead = undefined;
                         this.toastr.success("Delete lead success");
                         this.$state.go('main.dashboard');
                     } else {
-                      
                         this.toastr.error(response.msg);
                     }
                 });
@@ -202,13 +204,35 @@ namespace Lead {
                 }
             }  
         }
+        
         submitEditing() {
-            console.log('editing lead',this.editingLead);
+          
             this.$LeadRESTService.updateLead(this.editingLead).then((response: any) => {
-                console.log(response)
+                if (response.success) {
+                    let index = this.ultiHelper.indexOfFromId( this.$LeadRESTService.allLeadsCached, this.$LeadRESTService.selectedLead );
+                     this.$LeadRESTService.allLeadsCached[index] = response.data;
+                     this.$LeadRESTService.selectedLead = this.$LeadRESTService.allLeadsCached[index];
+                     this.$stateParams.lead = this.$LeadRESTService.allLeadsCached[index];
+                     console.log('indexing',index);
+                     this.toastr.success("Update lead success");
+                     this.editing = false;
+                     this.$rootScope.$broadcast('updateLead',response.data, index)
+                } else {
+                    this.toastr.error('Some error occur, cannot update lead');
+                }
             })
             
         } 
+        loadContacts($query:any ) {
+            console.log($query);
+            return this.unaddedContacts;
+        }
+        contactAdded($tag: any){
+            console.log('added',$tag)
+        }
+        contactRemoved($tag: any){
+            console.log('added',$tag)
+        }
     }
     
     angular

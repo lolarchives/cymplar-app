@@ -76,7 +76,7 @@
         <div class="collapse" id="collapse1">
           <ul class="main-nav">
             <li ng-class="{'current': navCtrl.$state.params.id == lead._id && navCtrl.$state.current.name == 'main.selectedLead'}"
-              ng-repeat=" lead in navCtrl.$LeadRESTService.allLeadsCached | filter: {status: navCtrl.coldStatus} ">
+              ng-repeat=" lead in navCtrl.$LeadRESTService.allLeadsCached | filter: navCtrl.leadFilter ">
               <a ng-click="navCtrl.$state.go('main.selectedLead',{id: lead._id, lead: lead});navCtrl.$LeadRESTService.selectedLead = lead;navCtrl.console.log(navCtrl.$LeadRESTService.selectedLead)">{{lead.name}}</a></li>
           </ul>
         </div>
@@ -101,7 +101,7 @@
         <div class="collapse" id="collapse2">
           <ul class="main-nav">
             <li ng-class="{'current': navCtrl.$state.params.id == lead._id && navCtrl.$state.current.name == 'main.selectedLead'}"
-                ng-repeat=" lead in navCtrl.$LeadRESTService.allLeadsCached | filter: {status: navCtrl.opporturnityStatus} ">
+                ng-repeat=" lead in navCtrl.$LeadRESTService.allLeadsCached | filter: navCtrl.opportunityFilter ">
               <a ng-click="navCtrl.$state.go('main.selectedLead',{id: lead._id, lead: lead});navCtrl.$LeadRESTService.selectedLead = lead;navCtrl.console.log(navCtrl.$LeadRESTService.selectedLead)">{{lead.name}}</a></li>
           </ul>
         </div>
@@ -114,7 +114,7 @@
         <div class="collapse" id="collapse3">
           <ul class="main-nav">
             <li ng-class="{'current': navCtrl.$state.params.id == lead._id && navCtrl.$state.current.name == 'main.selectedLead'}"
-             ng-repeat=" lead in navCtrl.$LeadRESTService.allLeadsCached | filter: {status: navCtrl.signedStatus} ">
+             ng-repeat=" lead in navCtrl.$LeadRESTService.allLeadsCached | filter: navCtrl.signedFilter ">
               <a ng-click="navCtrl.$state.go('main.selectedLead',{id: lead._id, lead: lead});navCtrl.$LeadRESTService.selectedLead = lead;navCtrl.console.log(navCtrl.$LeadRESTService.selectedLead)">{{lead.name}}</a></li>
           </ul>
         </div>

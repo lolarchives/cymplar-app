@@ -92,7 +92,7 @@ namespace AddressBook {
         constructor(private $state: any, private countries: any,
             private $SignUpRESTService: any, private industries: any,
             private $AddressBookRESTService: any, private toastr: any, private $scope: any,
-            private $uibModal: any) {
+            private $uibModal: any, private ultiHelper: any) {
             this.console = console;
             console.log('count', this.count);
             this.count += 1 ;
@@ -157,7 +157,8 @@ namespace AddressBook {
             if (result) {
                 this.$AddressBookRESTService.deleteCompany(this.$AddressBookRESTService.selectedCompany._id).then((response: any) => {
                     if (response.success) {
-                        let index = this.$AddressBookRESTService.allCompaniesCached.indexOf(this.$AddressBookRESTService.selectedCompany);
+                        
+                        let index = this.ultiHelper.indexOfFromId( this.$AddressBookRESTService.allCompaniesCached, this.$AddressBookRESTService.selectedCompany );
                         this.$AddressBookRESTService.allCompaniesCached.splice(index, 1);
                         this.$AddressBookRESTService.selectedCompany = undefined;
                         this.toastr.success("Delete group success");
@@ -280,9 +281,11 @@ namespace AddressBook {
             if (!(this.editingCompany.queryingCity || this.editingCompany.disableCity)) {
                 this.$AddressBookRESTService.editCompany(this.editingCompany).then((response: any) => {
                     if (response.success) {
-                        let index = this.$AddressBookRESTService.allCompaniesCached.indexOf(this.$AddressBookRESTService.selectedCompany);
+                        let index = this.ultiHelper.indexOfFromId( this.$AddressBookRESTService.allCompaniesCached, this.$AddressBookRESTService.selectedCompany );
+                        
                         this.$AddressBookRESTService.allCompaniesCached[index] = response.data;
                         this.$AddressBookRESTService.selectedCompany = this.$AddressBookRESTService.allCompaniesCached[index];
+                        this.$AddressBookRESTService.selectedCompany.contacts = this.editingCompany.contacts;
                         this.editing = false;
                     } else {
                         this.toastr.error(response.msg);
@@ -315,6 +318,7 @@ namespace AddressBook {
             this.$AddressBookRESTService.editContact(this.backupContacts[contact._id]).then((response: any) => {
                 if (response.success) {
                     let index = this.$AddressBookRESTService.selectedCompany.contacts.indexOf(contact);
+                    
                     this.$AddressBookRESTService.selectedCompany.contacts[index] = response.data;
                     this.contactEditing[contact._id] = false;
                 } else {

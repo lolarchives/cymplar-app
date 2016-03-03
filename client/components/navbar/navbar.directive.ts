@@ -25,8 +25,21 @@ export class NavbarController {
 
   inactiveOrLostFilter = (value: any, index: any, array: any[]) => {
    
-    return value.status == this.lostStatus || value.status == this.inactiveStatus
+    return value.status.code == this.lostStatus.code || value.status == this.inactiveStatus.code
   }
+  opportunityFilter = (value: any, index: any, array: any[]) => {
+   
+    return value.status.code == this.opporturnityStatus.code 
+  }
+  signedFilter = (value: any, index: any, array: any[]) => {
+   
+    return value.status.code == this.signedStatus.code
+  }
+  leadFilter = (value: any, index: any, array: any[]) => {
+    return ( (value.status.code != this.lostStatus.code) && (value.status.code != this.opporturnityStatus.code) && (value.status.code != this.signedStatus.code) && (value.status.code != this.inactiveStatus.code)) 
+  }
+  
+
 
   public relativeDate: string;
   public creationDate: number;
@@ -50,7 +63,8 @@ export class NavbarController {
   constructor(moment: moment.MomentStatic, private $state: any,
     private $scope: angular.IScope, private AuthToken: any,
     private $AddressBookRESTService: any,
-    private $LeadRESTService: any) {
+    private $LeadRESTService: any,
+    private $filter: any) {
    
       
     for (let i = 0; i < $LeadRESTService.allLeadStatusesCached.length; i++) {
@@ -72,6 +86,7 @@ export class NavbarController {
       }
 
     }
+    
   
     $scope.$on('$stateChangeSuccess', (event, toState, toParams, fromState, fromParams) => {
       if (this.STATE_WITH_RIGHT_PANEL.indexOf(toState.name) === -1) {
