@@ -13,10 +13,8 @@ const ENV: string = argv['env'] || process.env.profile || 'dev';
 process.env.profile = ENV;
 
 const CYMPLAR_MONGO_URI: string = argv['CYMPLAR_MONGO_URI'] || process.env.CYMPLAR_MONGO_URI || 
-  'mongodb://cymplarUser:cympl4rUs3r@ds033175.mongolab.com:33175/cymplar';
-//const CYMPLAR_MONGO_URI: string = argv['CYMPLAR_MONGO_URI'] || process.env.CYMPLAR_MONGO_URI || 
-  //'mongodb://cymplarUser:cympl4rUs3r@ds051575.mongolab.com:51575/cymplardev';
-
+  //'mongodb://cymplarUser:cympl4rUs3r@ds033175.mongolab.com:33175/cymplar';
+  'mongodb://cymplarUser:cympl4rUs3r@ds051575.mongolab.com:51575/cymplardev';
 process.env.CYMPLAR_MONGO_URI = CYMPLAR_MONGO_URI;
 
 const CYMPLAR_SECRET: string = argv['CYMPLAR_SECRET'] || process.env.CYMPLAR_SECRET || 'cymplarSecret';
@@ -77,7 +75,8 @@ export const PATH = {
       slash(resolve('angular-touch/angular-touch.js')),    
       slash(resolve('angular-messages/angular-messages.js')),    
       slash(resolve('angular-toastr/dist/angular-toastr.js')),
-      slash(resolve('angular-toastr/dist/angular-toastr.tpls.js'))
+      slash(resolve('angular-toastr/dist/angular-toastr.tpls.js')),
+      slash(resolve('socket.io-client/socket.io.js'))
     ],
     jslib_copy_only: [
       slash(resolve('systemjs/dist/system-polyfills.js')),
