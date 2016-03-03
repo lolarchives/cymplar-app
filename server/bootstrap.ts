@@ -4,6 +4,7 @@ import * as bodyParser from 'body-parser';
 import * as openResource from 'open';
 import * as serveStatic from 'serve-static';
 import {resolve} from 'path';
+import * as socketIO from 'socket.io';
 
 import {APP_BASE, LIVE_RELOAD_PORT, PATH, PORT} from '../tools/config';
 import {authentication} from './authentication/authentication_middleware';
@@ -29,6 +30,7 @@ import * as salesLeadContactRouter from './sales_lead_contact/sales_lead_contact
 import * as salesLeadStatusRouter from './sales_lead_status/sales_lead_status_router';
 import * as logItemRouter from './log_item/log_item_router';
 import * as logItemTypeRouter from './log_item_type/log_item_type_router';
+import {SocketIOCymplarService} from './socket_io_cymplar/socket_io_cymplar_service';
 
 const INDEX_DEST_PATH = resolve(PATH.cwd, PATH.dest.app.base, 'index.html');
 
@@ -73,7 +75,7 @@ server.all(APP_BASE + '*', (req, res) =>
   res.sendFile(INDEX_DEST_PATH)
 );
 
-server.listen(PORT, () => {
+const httpServer = server.listen(PORT, () => {
   const url = 'http://localhost:' + PORT + APP_BASE;
   if (process.env.RESTART) {     
     console.log('Server restarted at: ', url);
@@ -82,4 +84,6 @@ server.listen(PORT, () => {
     console.log('Server started at: ', url);
   }
 });
+
+const socketIoServerService = new SocketIOCymplarService(socketIO(httpServer));
 

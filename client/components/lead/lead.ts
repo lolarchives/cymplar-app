@@ -133,14 +133,18 @@ namespace Lead {
         private coldStatusIndex: number;
         private opportunityStatusIndex: number;
 
-        constructor(private $stateParams: any, private $AddressBookRESTService: any, private $LeadRESTService: any, private $state:any) {
+        constructor(private $stateParams: any, private $AddressBookRESTService: any, private $LeadRESTService: any, private $state:any, 
+            private socket: any) {
             for (let i = 0; i < $LeadRESTService.allLeadStatusesCached.length; i++) {
                 if (this.$LeadRESTService.allLeadStatusesCached[i].code === "COLD") { this.coldStatusIndex = i; }
                 if (this.$LeadRESTService.allLeadStatusesCached[i].code === "OPP") { this.opportunityStatusIndex = i; }
             }
+            
+            this.socket.on('broadcast', (data: any) => {
+                console.log('push something dom');
+            });
         }
         createLead(newLead: SalesLead) {
-
             if (this.$stateParams.status === "opportunity") { 
                 newLead.status = this.$LeadRESTService.allLeadStatusesCached[this.opportunityStatusIndex]; }
             if (this.$stateParams.status === "lead") { 
@@ -150,7 +154,7 @@ namespace Lead {
                 if (response.success) {
                     this.$state.go('main.selectedLead',{id: response.data._id, lead: response.data});
                     this.$LeadRESTService.selectedLead = response.data;
-                   
+                    this.socket.emit('message', response.data);
                 }
             })
         }
@@ -158,7 +162,8 @@ namespace Lead {
     
     export class SelectedLeadController{
         private selectedLead:any = "selected_lead";
-        constructor(private $stateParams: any, private $AddressBookRESTService: any, private $LeadRESTService: any, private $state:any,private roleInLead: any,private contacts: any, private unaddedContacts: any ) {
+        constructor(private $stateParams: any, private $AddressBookRESTService: any, private $LeadRESTService: any, private $state:any,private roleInLead: any,private contacts: any, private unaddedContacts: any,
+            private socket: any) {
            
         }
     }

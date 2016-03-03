@@ -13,6 +13,7 @@ import './components/address-book/addressBook.service';
 import './components/lead/lead';
 import './components/lead/lead.service';
 import './components/helper/account.service';
+import './components/socket-io-cymplar/socket-io-cymplar.factory';
 declare var moment: moment.MomentStatic;
 
 namespace app {
@@ -117,7 +118,7 @@ namespace app {
               if (response.success) {
                 return response.data;
               } else {
-                return {}
+                return {};
               }
 
             });
@@ -159,7 +160,8 @@ namespace app {
     'app.addressBook',
     'app.helper',
     'app.ui.helper',
-    'app.lead'
+    'app.lead',
+    'app.socket-io-cymplar'
   ])
     .config(config)
     .config(routerConfig)
