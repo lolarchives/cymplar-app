@@ -62,6 +62,8 @@ export const PATH = {
       `${BC}/angular-bootstrap/ui-bootstrap.js`,
       `${BC}/angular-multiple-transclusion/dist/angular-multiple-transclusion.min.js`,
       `${BC}/angular-bootstrap/ui-bootstrap-tpls.js`,
+      `${BC}/angular-custom-range-slider/src/angular-custom-range-slide.js`,
+      `${BC}/ng-tags-input/ng-tags-input.min.js`,
       slash(resolve(`angular-ui-router/release/angular-ui-router.js`)),
       slash(resolve('angular-sanitize/angular-sanitize.js')),    
       slash(resolve('angular-animate/angular-animate.js')),    
@@ -78,6 +80,10 @@ export const PATH = {
       slash(resolve('bootstrap/dist/css/bootstrap.min.css')),
       slash(resolve('bootstrap/dist/css/bootstrap.css.map')),
       `${BC}/bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.min.css`,
+      `${BC}/angular-custom-range-slider/styles/angular-custom-range-slide.css`,
+      `${BC}/angular-custom-range-slider/styles/angular-custom-range-slide.css`,
+      `${BC}/ng-tags-input/ng-tags-input.min.css`,
+      `${BC}/ng-tags-input/ng-tags-input.bootstrap.min.css`,
       slash(resolve('angular-toastr/dist/angular-toastr.css'))
     ],
     font: [

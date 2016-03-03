@@ -52,27 +52,27 @@ export class NavbarController {
     private $AddressBookRESTService: any,
     private $LeadRESTService: any) {
    
-
+      
     for (let i = 0; i < $LeadRESTService.allLeadStatusesCached.length; i++) {
       if ($LeadRESTService.allLeadStatusesCached[i].code == 'COLD') {
-        this.coldStatus = $LeadRESTService.allLeadStatusesCached[i]._id
+        this.coldStatus = $LeadRESTService.allLeadStatusesCached[i]
       }
 
       if ($LeadRESTService.allLeadStatusesCached[i].code == 'OPP') {
-        this.opporturnityStatus = $LeadRESTService.allLeadStatusesCached[i]._id
+        this.opporturnityStatus = $LeadRESTService.allLeadStatusesCached[i]
       }
       if ($LeadRESTService.allLeadStatusesCached[i].code == 'SIGN') {
-        this.signedStatus = $LeadRESTService.allLeadStatusesCached[i]._id
+        this.signedStatus = $LeadRESTService.allLeadStatusesCached[i]
       }
       if ($LeadRESTService.allLeadStatusesCached[i].code == 'IN') {
-        this.inactiveStatus = $LeadRESTService.allLeadStatusesCached[i]._id
+        this.inactiveStatus = $LeadRESTService.allLeadStatusesCached[i]
       }
       if ($LeadRESTService.allLeadStatusesCached[i].code == 'LOST') {
-        this.lostStatus = $LeadRESTService.allLeadStatusesCached[i]._id
+        this.lostStatus = $LeadRESTService.allLeadStatusesCached[i]
       }
 
     }
-
+  
     $scope.$on('$stateChangeSuccess', (event, toState, toParams, fromState, fromParams) => {
       if (this.STATE_WITH_RIGHT_PANEL.indexOf(toState.name) === -1) {
         this.displayInfo = false;

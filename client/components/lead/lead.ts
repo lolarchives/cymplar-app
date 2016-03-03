@@ -133,7 +133,7 @@ namespace Lead {
         private coldStatusIndex: number;
         private opportunityStatusIndex: number;
 
-        constructor(private $stateParams: any, private $AddressBookRESTService: any, private $LeadRESTService: any, private $state:any) {
+        constructor(private $stateParams: any, private $AddressBookRESTService: any, private $LeadRESTService: any, private $state:any, private toastr:any) {
             for (let i = 0; i < $LeadRESTService.allLeadStatusesCached.length; i++) {
                 if (this.$LeadRESTService.allLeadStatusesCached[i].code === "COLD") { this.coldStatusIndex = i; }
                 if (this.$LeadRESTService.allLeadStatusesCached[i].code === "OPP") { this.opportunityStatusIndex = i; }
@@ -147,10 +147,13 @@ namespace Lead {
                 newLead.status = this.$LeadRESTService.allLeadStatusesCached[this.coldStatusIndex]; }
            
             this.$LeadRESTService.newLead(newLead).then((response: any) => {
+                console.log('response');
                 if (response.success) {
                     this.$state.go('main.selectedLead',{id: response.data._id, lead: response.data});
                     this.$LeadRESTService.selectedLead = response.data;
-                   
+           
+                } else {
+                    this.toastr.error("Cannot create a sale, please check for a sale with the same name")
                 }
             })
         }
@@ -167,8 +170,8 @@ namespace Lead {
         private editing:boolean = false;
         private editingLead: SalesLead;
         constructor(private $stateParams: any, private $AddressBookRESTService: any, private $LeadRESTService: any, private $state:any,private roleInLead: any,private toastr: any, private contacts: any, private unaddedContacts: any) {
-           console.log('contact-uncontact',contacts,unaddedContacts); 
-           console.log("Your role",roleInLead);
+         
+           console.log("Your role",this.$LeadRESTService.allLeadStatusesCached);
            this.editing = false;
         }
         deleteLead() {
@@ -192,8 +195,18 @@ namespace Lead {
         startEditing() {
             this.editing = true;
             this.editingLead = angular.copy(this.$LeadRESTService.selectedLead)
+            for (let i = 0; i < this.$LeadRESTService.allLeadStatusesCached.length;i++) {
+                if (this.editingLead.status.code == this.$LeadRESTService.allLeadStatusesCached[i].code) {
+                    this.editingLead.status = this.$LeadRESTService.allLeadStatusesCached[i]       
+                    break;
+                }
+            }  
         }
         submitEditing() {
+            console.log('editing lead',this.editingLead);
+            this.$LeadRESTService.updateLead(this.editingLead).then((response: any) => {
+                console.log(response)
+            })
             
         } 
     }

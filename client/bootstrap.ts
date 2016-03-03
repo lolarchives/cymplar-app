@@ -159,7 +159,8 @@ namespace app {
     'app.addressBook',
     'app.helper',
     'app.ui.helper',
-    'app.lead'
+    'app.lead',
+    'ngTagsInput'
   ])
     .config(config)
     .config(routerConfig)

@@ -29,24 +29,14 @@ namespace LeadService {
 			'deleteLead': {
 				method: 'DELETE',
 				url: BACK_END_ROUTE + '/sales-lead/:id',
-
 			},
-			'newContact': {
-				method: 'POST',
-				url: BACK_END_ROUTE + '/address-book-contact'
-			},
-			'editContact': {
+			'updateLead': {
 				method: 'PUT',
-				url: BACK_END_ROUTE + '/address-book-contact/:id',
-				params: {
-					id: '@_id',
-				}
-			},
-			'deleteContact': {
-				method: 'DELETE',
-				url: BACK_END_ROUTE + '/address-book-contact/:_id',
-				params: {
-					id: '@_id',
+				url: BACK_END_ROUTE + '/sales-lead/:id',
+				params : {
+					ido: AuthToken.getIdO(),
+					id : "@_id",
+					idl: "@_id",
 				}
 			},
 			'roleInLead': {
@@ -89,8 +79,14 @@ namespace LeadService {
 			return this.$resourceHelper.resourceRESTCall(this.$LeadRESTResource, "newLead", lead, true).then( (response: any) => {
 				if (response.success) {
 					this.allLeadsCached.push(response.data);
-					return response;
+			
 				};
+				return response;
+			});
+		}
+		updateLead(lead: SalesLead) {
+			return this.$resourceHelper.resourceRESTCall(this.$LeadRESTResource, "updateLead", lead , true).then( (response: any) => {
+				return response;
 			});
 		}
 		roleInLead(leadId: any) {

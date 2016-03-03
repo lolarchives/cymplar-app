@@ -41,10 +41,11 @@ namespace HelperServices {
 					this.loadingModal.close();
 					error.data.status = error.status;
 				}
-	
+				console.log('error',error)
 				if (error.data.token === false) {
 					this.$rootScope.$broadcast('badToken', {data: 'Illegal token access'});
 				}
+			
 				error.data.statusText = error.statusText;
 				deferred.resolve(error.data);
 			});
