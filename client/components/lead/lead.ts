@@ -169,9 +169,10 @@ namespace Lead {
       
         private selectedLead:any = "selected_lead";
         private editing:boolean = false;
-        private editingLead: SalesLead;
+        private editingLead: any;
         private $LeadRESTService: any;
-        constructor(private $stateParams: any, private $AddressBookRESTService: any, $LeadRESTService: any, private $state:any,private roleInLead: any,private toastr: any, private contacts: any, private unaddedContacts: any, private $rootScope: any, private ultiHelper: any) {
+        constructor(private $stateParams: any, private $AddressBookRESTService: any, $LeadRESTService: any, private $state:any,private roleInLead: any,private toastr: any, private contacts: any, private unaddedContacts: any,
+            private $filter: any, private ultiHelper: any) {
            $stateParams.lead.contacts = contacts;
            this.$LeadRESTService = $LeadRESTService; 
            this.editing = false;
@@ -197,6 +198,7 @@ namespace Lead {
         startEditing() {
             this.editing = true;
             this.editingLead = angular.copy(this.$LeadRESTService.selectedLead)
+            this.editingLead.softContacts = this.editingLead.contacts;
             for (let i = 0; i < this.$LeadRESTService.allLeadStatusesCached.length;i++) {
                 if (this.editingLead.status.code == this.$LeadRESTService.allLeadStatusesCached[i].code) {
                     this.editingLead.status = this.$LeadRESTService.allLeadStatusesCached[i]       
@@ -206,17 +208,23 @@ namespace Lead {
         }
         
         submitEditing() {
-          
+            this.editingLead.contacts = this.editingLead.softContacts.map((currentValue: any, index:any , array: any)=>{
+                return currentValue._id;
+            })
+            console.log('sending',this.editingLead)
             this.$LeadRESTService.updateLead(this.editingLead).then((response: any) => {
                 if (response.success) {
                     let index = this.ultiHelper.indexOfFromId( this.$LeadRESTService.allLeadsCached, this.$LeadRESTService.selectedLead );
+                     response.data.contacts = response.data.contacts.map((currentValue: any, index:any , array: any)=>{
+                        return currentValue.contact;
+                     })
                      this.$LeadRESTService.allLeadsCached[index] = response.data;
                      this.$LeadRESTService.selectedLead = this.$LeadRESTService.allLeadsCached[index];
                      this.$stateParams.lead = this.$LeadRESTService.allLeadsCached[index];
-                     console.log('indexing',index);
+                                       
                      this.toastr.success("Update lead success");
                      this.editing = false;
-                     this.$rootScope.$broadcast('updateLead',response.data, index)
+                  
                 } else {
                     this.toastr.error('Some error occur, cannot update lead');
                 }
@@ -225,7 +233,8 @@ namespace Lead {
         } 
         loadContacts($query:any ) {
             console.log($query);
-            return this.unaddedContacts;
+            
+            return this.$filter('filter')(this.unaddedContacts,{name:$query});
         }
         contactAdded($tag: any){
             console.log('added',$tag)

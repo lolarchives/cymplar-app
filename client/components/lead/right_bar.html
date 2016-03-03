@@ -12,8 +12,9 @@
 	<tags-input ng-show="slrbCtrl.editing" add-from-autocomplete-only="true" 
 		on-tag-added="slrbCtrl.contactAdded($tag)"
 		placeholder="Add/remove contact"
+		replace-spaces-with-dashes="false"
 		on-tag-removed="slrbCtrl.contactRemoved($tag)"
-		ng-model="slrbCtrl.editingLead.contacts" display-property="name">
+		ng-model="slrbCtrl.editingLead.softContacts" display-property="name">
 		<auto-complete source="slrbCtrl.loadContacts($query)" 
                      min-length="0" 
                      debounce-delay="0"
