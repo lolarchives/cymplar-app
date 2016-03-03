@@ -192,7 +192,7 @@ export interface SalesLead extends BaseDto {
   status?: any;
   contract?: string;
   amount?: number;
-  contact?: any;
+  contacts?: any;
   members?: any;
 }
 

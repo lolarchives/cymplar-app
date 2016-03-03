@@ -320,6 +320,9 @@ export abstract class BaseService<T extends BaseDto> extends BaseAuthorizationSe
 			this.addAuthorizationDataPreSearch(txModelOptions);	
 			this.transactionModelOptionsAddData(data, txModelOptions);	
 			const search = this.obtainSearchExpression(data, txModelOptions);
+			console.log(' ');
+				console.log(' in base search'  + JSON.stringify(search));
+				
 			this.Model.find(search, txModelOptions.projection,
 			 { sort: '-createdAt', lean: true }).populate(txModelOptions.population)
 			.exec((err, foundObjs) => {
