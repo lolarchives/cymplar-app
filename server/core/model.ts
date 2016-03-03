@@ -449,7 +449,7 @@ schemas.accountOrganization.pre('remove', function(next: Function) {
 
 schemas.salesLeadContact.post('remove', function() {
   const obj: Document = this;
-  if (ObjectUtil.isPresent(obj['contact']['_id']) && ObjectUtil.isBlank(obj['contact']['group'])) { 
+  if (ObjectUtil.isPresent(obj['contact']) && ObjectUtil.isPresent(obj['contact']['_id']) && ObjectUtil.isBlank(obj['contact']['group'])) { 
     const contactQuery = {
       contact: obj['contact'],
       _id: { $ne: obj['_id'] } 
@@ -511,7 +511,7 @@ schemas.salesLeadOrganizationMember.post('remove', function() {
 
 schemas.salesLead.pre('save', function(next: Function) {
   const obj: Document = this;
-  if (obj.isNew) {    
+  if (obj.isNew && ObjectUtil.isBlank(obj['status'])) {    
     SalesLeadStatusModel.findOne({ code: 'OPP' })
     .lean().exec((err: any, found: Document) => {
       if (err) {
@@ -542,7 +542,7 @@ schemas.salesLead.pre('remove', function(next: Function) {
       } 
     };
     
-  SalesLeadContactModel.find({lead: obj['_id']}).populate(contactPopulation).populate('lead')
+  SalesLeadContactModel.find({lead: obj['_id']}).populate(contactPopulation)
   .exec((err: Error, foundObjs: Document[]) => {
     if (err) {
       next(err);
