@@ -15,7 +15,7 @@ namespace socketIoCymplar {
 				socket.on(eventName, callback);
 			},
 			emit: function(eventName: string, data: SocketNotification) {
-				console.log('client emit '+ JSON.stringify(eventName) + ' - ' + JSON.stringify(data));
+				console.log('client emit ' + JSON.stringify(eventName) + ' - ' + JSON.stringify(data));
 				socket.emit(eventName, data);
 			}
 		};
