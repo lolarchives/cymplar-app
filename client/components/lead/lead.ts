@@ -5,7 +5,7 @@ namespace Lead {
     function config($stateProvider: any) {
         $stateProvider
             .state('main.newLead', {
-                url: '/lead/new_lead/:status',
+                url: '/lead/new_lead/:status/:group_id',
                 views: {
                     'main': {
                         templateUrl: 'components/lead/new_lead.html',
@@ -119,24 +119,28 @@ namespace Lead {
                 }
             });
     }
-    export interface SalesLead {
-        name?: string;
-        status?: any;
-        contract?: string;
-        amount?: number;
-        contact?: any;
-        members?: any;
-    }
+    
 
     export class NewLeadController {
-        private newLead: SalesLead;
+        private newLead: any;
         private coldStatusIndex: number;
         private opportunityStatusIndex: number;
 
-        constructor(private $stateParams: any, private $AddressBookRESTService: any, private $LeadRESTService: any, private $state:any, private toastr:any) {
+        constructor(private $stateParams: any, private $AddressBookRESTService: any, private $LeadRESTService: any, 
+                    private $state:any, private toastr:any, private ultiHelper: any) {
             for (let i = 0; i < $LeadRESTService.allLeadStatusesCached.length; i++) {
                 if (this.$LeadRESTService.allLeadStatusesCached[i].code === "COLD") { this.coldStatusIndex = i; }
                 if (this.$LeadRESTService.allLeadStatusesCached[i].code === "OPP") { this.opportunityStatusIndex = i; }
+            }
+            this.newLead = {};
+            if ($stateParams.group_id !== undefined) {
+               let index = this.ultiHelper.indexOfFromId(this.$AddressBookRESTService.allCompaniesCached,{_id: this.$stateParams.group_id}) 
+              
+                if (index == -1) {
+                    this.$state.go("main.dashboard");
+                } else {
+                    this.newLead.group = this.$AddressBookRESTService.allCompaniesCached[index];
+                }
             }
         }
         createLead(newLead: SalesLead) {
@@ -200,13 +204,8 @@ namespace Lead {
                readOnly :false,
                showTicks: true,
 
-           }
-           
-           console.log(this.showingSliderOptions);
-  
-          
+           }   
      
-           console.log(stepsArray,this.$stateParams.lead.currentStatus,this.indexOfSelectedStatus)
         }
         deleteLead() {
             let result: boolean = confirm("Are you sure. Once delete all the lead data cannot be recovered");
