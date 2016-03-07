@@ -12,6 +12,7 @@ import './components/address-book/addressBook';
 import './components/address-book/addressBook.service';
 import './components/lead/lead';
 import './components/lead/lead.service';
+import './components/lead/lead.directive';
 import './components/helper/account.service';
 import './components/socket-io-cymplar/socket-io-cymplar.factory';
 declare var moment: moment.MomentStatic;

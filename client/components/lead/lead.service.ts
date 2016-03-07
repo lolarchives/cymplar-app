@@ -106,7 +106,7 @@ namespace LeadService {
 
 
 	angular
-		.module('app.addressBook')
+		.module('app.lead')
 		.factory('$LeadRESTResource', $LeadRESTResource)
 		.factory('$LeadRESTService', get$LeadRESTServiceInstance);
 }

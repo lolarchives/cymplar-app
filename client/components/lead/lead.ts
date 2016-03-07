@@ -1,5 +1,4 @@
 import '../helper/helper';
-import './lead.service'
 import {SalesLead} from '../../core/dto';
 namespace Lead {
     function config($stateProvider: any) {
@@ -194,7 +193,7 @@ namespace Lead {
                this.indexOfSelectedStatus = stepsArray.indexOf(this.$stateParams.lead.currentStatus.label);
            }
                
-            
+  
             
            this.showingSliderOptions = {
                stepsArray: stepsArray,
@@ -202,12 +201,6 @@ namespace Lead {
                showTicks: true,
 
            }
-           this.editingSliderOptions = {
-               stepsArray: stepsArray,
-               readOnly :false,
-               showTicks: true,
-
-           }   
      
         }
         deleteLead() {
