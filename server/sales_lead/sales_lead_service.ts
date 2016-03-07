@@ -73,7 +73,7 @@ export class SalesLeadService extends BaseService<SalesLead> {
 				const updateSalesLeadPromises: Promise<any>[] = [];
 				updateSalesLeadPromises.push(Promise.resolve(objectToUpdate)); // Keeps the object tp be updated in results[0];
 				
-				if (ObjectUtil.isPresent(data['currentStatus']) && (objectToUpdate['currentStatus'] !== data['currentStatus'])) {
+				if (ObjectUtil.isPresent(data['currentStatus']) && (objectToUpdate['currentStatus']['label'] !== data['currentStatus']['label'])) {
 					
 					const logItemModelOptions: ModelOptions = {
 						authorization: newOptions.authorization,
@@ -90,7 +90,7 @@ export class SalesLeadService extends BaseService<SalesLead> {
 				
 				return Promise.all(updateSalesLeadPromises);
 			})
-			.then((results: any) => {	
+			.then((results: any) => {
 				const objectToUpdate = results[0];
 				for (let prop in data) {
 					objectToUpdate[prop] = data[prop];

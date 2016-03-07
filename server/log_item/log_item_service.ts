@@ -26,6 +26,9 @@ export class LogItemService extends BaseService<LogItem> {
 				data.type = logItemType;
 				return this.createOne(data, modelOptions);
 			})
+			.then((logItem: LogItem) => {
+				resolve(logItem);
+			})
 			.catch((err) => reject(err));
 		});	
 	}
@@ -40,8 +43,6 @@ export class LogItemService extends BaseService<LogItem> {
 			this.addAuthorizationDataPreSearch(txModelOptions);	
 			this.transactionModelOptionsAddData(data, txModelOptions);	
 			const search = this.obtainSearchExpression(data, txModelOptions);
-			console.log('');
-			console.log('Search ' + JSON.stringify(search));
 			this.Model.find(search, txModelOptions.projection,
 			{ sort: '-createdAt', limit: 20, lean: true }).populate(txModelOptions.population)
 			.exec((err, foundObjs) => {
