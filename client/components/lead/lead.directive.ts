@@ -21,6 +21,9 @@ export function logItem(): angular.IDirective {
 
 /** @ngInject */
 export class LogItemController {
+  constructor(){
+    
+  }
 }	
 
 
