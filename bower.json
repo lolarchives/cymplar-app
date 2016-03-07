@@ -23,7 +23,8 @@
     "angular-multiple-transclusion": "~1.0.0",
     "ng-tags-input": "~3.0.0",
     "angular-custom-range-slider": "~1.0.15",
-    "angular-filter": "~0.5.8"
+    "angular-filter": "~0.5.8",
+    "angularjs-slider": "~2.10.2"
   },
   "resolutions": {
     "angular-bootstrap": "~1.0.3",

@@ -161,7 +161,8 @@ namespace app {
     'app.helper',
     'app.ui.helper',
     'app.lead',
-    'ngTagsInput'
+    'ngTagsInput',
+    'rzModule'
   ])
     .config(config)
     .config(routerConfig)

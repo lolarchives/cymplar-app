@@ -59,19 +59,22 @@
 	ng-model="slrbCtrl.editingLead.status" required>
 		<option value=""></option>
 	</select>
+	
+	
 
-	<strong>Percentage: </strong>
-	<h5 ng-hide="slrbCtrl.editing">{{slrbCtrl.$stateParams.lead.percentage || 'Not set'}} %</h5>
-	<h5 ng-show="slrbCtrl.editing">{{slrbCtrl.editingLead.percentage || 'Not set'}} %</h5>
-	<input type="range" value="0" step="10" class="range margin-b-s" ng-show="slrbCtrl.editing" ng-model="slrbCtrl.editingLead.percentage">
+	<strong>Progress: </strong>
+	<rzslider rz-slider-model="slrbCtrl.indexOfSelectedStatus" rz-slider-options="slrbCtrl.showingSliderOptions"></rzslider>
+	
+	
+	
 
 	<strong>Estimates value: </strong>
 	<h5 ng-hide="slrbCtrl.editing">{{slrbCtrl.$stateParams.amount || 'Not set'}}</h5>
-	<input class="form-control input-sm margin-b-l" type="text" placeholder="Enter estimate value" ng-show="slrbCtrl.editing"
+	<input class="form-control input-sm margin-b-l" type="number" placeholder="Enter estimate value" ng-show="slrbCtrl.editing"
 	ng-model="slrbCtrl.editingLead.amount">
 
 
 
 	<a class="btn btn-danger btn-block" ng-hide="slrbCtrl.editing && slrbCtrl.roleInLead.role.code == 'OWNER'" ng-click="slrbCtrl.deleteLead()">Delete lead</a>
-	<a class="btn btn-danger btn-block" ng-show="slrbCtrl.editing" ng-click="slrbCtrl.editing = false">Cancel editing</a>
+	<a class="btn btn-danger btn-block" ng-show="slrbCtrl.editing" ng-click="slrbCtrl.cancelEdit()">Cancel editing</a>
 </form>
