@@ -41,10 +41,11 @@ namespace HelperServices {
 					this.loadingModal.close();
 					error.data.status = error.status;
 				}
-	
+				console.log('error',error)
 				if (error.data.token === false) {
 					this.$rootScope.$broadcast('badToken', {data: 'Illegal token access'});
 				}
+			
 				error.data.statusText = error.statusText;
 				deferred.resolve(error.data);
 			});
@@ -52,8 +53,20 @@ namespace HelperServices {
 			return deferred.promise;
 		}
 	};
-
+	export class ultiHelper {
+		indexOfFromId(arr: any[], obj:any ) {
+			
+			for	(let i = 0; i< arr.length; i++) {
+				console.log(arr[i],obj,'comparing');
+				if (arr[i]._id === obj._id)
+					return i 
+			}
+			
+			return -1;
+		}
+	}
 	angular
 		.module('app.helper', [])
-		.service('$resourceHelper', $resourceHelper);
+		.service('$resourceHelper', $resourceHelper)
+		.service('ultiHelper', ultiHelper);
 }

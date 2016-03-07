@@ -29,24 +29,14 @@ namespace LeadService {
 			'deleteLead': {
 				method: 'DELETE',
 				url: BACK_END_ROUTE + '/sales-lead/:id',
-
 			},
-			'newContact': {
-				method: 'POST',
-				url: BACK_END_ROUTE + '/address-book-contact'
-			},
-			'editContact': {
+			'updateLead': {
 				method: 'PUT',
-				url: BACK_END_ROUTE + '/address-book-contact/:id',
-				params: {
-					id: '@_id',
-				}
-			},
-			'deleteContact': {
-				method: 'DELETE',
-				url: BACK_END_ROUTE + '/address-book-contact/:_id',
-				params: {
-					id: '@_id',
+				url: BACK_END_ROUTE + '/sales-lead/:id',
+				params : {
+					ido: AuthToken.getIdO(),
+					id : "@_id",
+					idl: "@_id",
 				}
 			},
 			'roleInLead': {
@@ -61,7 +51,10 @@ namespace LeadService {
 		private selectedLead: any;
 		private allLeadStatusesCached: any[] = [];
 		constructor(private $http: angular.IHttpService, private $LeadRESTResource: any, private $q: any, 
-			private $resourceHelper: any,private AuthToken: any) {
+			private $resourceHelper: any,private AuthToken: any, $rootScope: any) {
+				$rootScope.$on('updateLead', function(event: any, lead: any, index: number){
+					console.log('update lead ',lead, index);
+				})
 		}
 		allLeads() {
 			return this.$resourceHelper.resourceRESTCall(this.$LeadRESTResource, "allLeads").then((response: any) => {
@@ -89,8 +82,14 @@ namespace LeadService {
 			return this.$resourceHelper.resourceRESTCall(this.$LeadRESTResource, "newLead", lead, true).then( (response: any) => {
 				if (response.success) {
 					this.allLeadsCached.push(response.data);
-					return response;
+			
 				};
+				return response;
+			});
+		}
+		updateLead(lead: SalesLead) {
+			return this.$resourceHelper.resourceRESTCall(this.$LeadRESTResource, "updateLead", lead , true).then( (response: any) => {
+				return response;
 			});
 		}
 		roleInLead(leadId: any) {
@@ -101,8 +100,8 @@ namespace LeadService {
 		}
 	}
 
-	function get$LeadRESTServiceInstance($http: angular.IHttpService, $LeadRESTResource: any, $q: any, $resourceHelper: any, AuthToken: any) {
-        return new $LeadRESTService($http, $LeadRESTResource, $q, $resourceHelper, AuthToken);
+	function get$LeadRESTServiceInstance($http: angular.IHttpService, $LeadRESTResource: any, $q: any, $resourceHelper: any, AuthToken: any, $rootScope: any) {
+        return new $LeadRESTService($http, $LeadRESTResource, $q, $resourceHelper, AuthToken, $rootScope);
     }
 
 

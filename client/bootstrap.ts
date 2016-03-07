@@ -150,6 +150,7 @@ namespace app {
     'ui.router',
     'ui.bootstrap',
     'angular-multiple-transclusion',
+    'angular.filter',
     'toastr',
     'ngCookies',
     'app.contacts',
@@ -161,6 +162,8 @@ namespace app {
     'app.helper',
     'app.ui.helper',
     'app.lead',
+    'ngTagsInput',
+    'rzModule',
     'app.socket-io-cymplar'
   ])
     .config(config)

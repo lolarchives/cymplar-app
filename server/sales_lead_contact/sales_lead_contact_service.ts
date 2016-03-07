@@ -20,13 +20,37 @@ export class SalesLeadContactService extends BaseService<SalesLeadContact> {
 		super(SalesLeadContactModel, defaultModelOptions);
 	}
 
+	createOneSimpleContact(data: SalesLeadContact, newOptions: ModelOptions = {}): Promise<AddressBookContact> {
+		return new Promise<AddressBookContact>((resolve: Function, reject: Function) => {
+			this.createOne(data, newOptions)
+			.then((contact: SalesLeadContact) => {
+				resolve(contact.contact);
+			})
+			.catch((err) => { 
+				return reject(err);
+			});
+		});
+	}
+	
+	removeOneSimpleContact(data: SalesLeadContact, newOptions: ModelOptions = {}): Promise<AddressBookContact> {
+		return new Promise<AddressBookContact>((resolve: Function, reject: Function) => {
+			this.removeOne(data, newOptions)
+			.then((contact: SalesLeadContact) => {
+				resolve(contact.contact);
+			})
+			.catch((err) => { 
+				return reject(err);
+			});
+		});
+	}
+	
 	//Returns the contacts that are part of the lead
 	findContactsPerLead(newOptions: ModelOptions = {}): Promise<string[]> {
 		return new Promise<string[]>((resolve: Function, reject: Function) => {
 			const salesLeadModelOptions: ModelOptions = {
 				authorization: newOptions.authorization,
 				population: {
-					path: 'contact -id'
+					path: 'contact -_id'
 				},
 				distinct: 'contact',
 				copyAuthorizationData: 'lead'

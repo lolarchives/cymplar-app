@@ -1,5 +1,5 @@
 ﻿import {SalesLead, SalesLeadContact, SalesLeadOrganizationMember, AccountOrganizationMember, ModelOptions,
-	AuthorizationResponse, AccountOrganization} from '../../client/core/dto';
+	AuthorizationResponse, AddressBookContact, AccountOrganization} from '../../client/core/dto';
 import {SalesLeadModel} from '../core/model';
 import {BaseService} from '../core/base_service';
 import {salesLeadContactService} from '../sales_lead_contact/sales_lead_contact_service';
@@ -40,16 +40,16 @@ export class SalesLeadService extends BaseService<SalesLead> {
 				};
 				leadContactCreationModelOptions.authorization.leadMember = members[0];	// Assigns creator
 				
-				if (ObjectUtil.isPresent(data.contact)) {
-					return this.associateContact(createdSalesLead, leadContactCreationModelOptions, data.contact);	
+				if (ObjectUtil.isPresent(data.contacts)) {
+					return this.associateContacts(createdSalesLead, leadContactCreationModelOptions, data.contacts);	
 				} else {
 					return {};
 				}
 			})
-			.then((contact: SalesLeadContact) => {	
+			.then((contacts: AddressBookContact[]) => {	
 				
-				if (ObjectUtil.isPresent(contact) && ObjectUtil.isPresent(contact.contact)) {
-					createdSalesLead['contacts'] = [contact.contact];	
+				if (ObjectUtil.isPresent(contacts)) {
+					createdSalesLead['contacts'] = contacts;	
 				}
 				 
 				fulfill(createdSalesLead); 
@@ -109,6 +109,27 @@ export class SalesLeadService extends BaseService<SalesLead> {
 				});
 			})
 			.catch((err: Error) => reject(err));
+		});
+	}
+	
+	updateOneContacts(data: SalesLead, newOptions: ModelOptions = {}): Promise<SalesLead> {	
+		return new Promise<SalesLead>((resolve: Function, reject: Function) => {
+			const updateContactsModelOptions = ObjectUtil.clone(newOptions);
+			this.updateOne(data, updateContactsModelOptions)
+			.then((salesLead: SalesLead) => {
+				if (ObjectUtil.isPresent(data.contacts)) {
+					return this.multipleContactUpdate(salesLead, newOptions, data.contacts);
+				} else {
+					return Promise.resolve(this.loadContacts(salesLead, newOptions));
+				}
+			})
+			.then((salesLeadMultiple: SalesLead) => {
+				resolve(salesLeadMultiple);
+			})
+			.catch((err: Error) => {
+				reject(err);
+				return;
+			});
 		});
 	}
 	
@@ -307,15 +328,91 @@ export class SalesLeadService extends BaseService<SalesLead> {
 		});
 	}
 	
-	private associateContact(data: SalesLead, options: ModelOptions = {}, contact: String): Promise<SalesLeadContact> {
-		return new Promise<SalesLeadContact>((fulfill: Function, reject: Function) => {
-			const leadContact: SalesLeadContact = {
-				lead: data._id,
-				contact: contact,
+	private loadContacts(data: SalesLead, options: ModelOptions = {}): Promise<SalesLead> {
+		return new Promise<SalesLead>((fulfill: Function, reject: Function) => {
+			const loadContactsModelOptions: ModelOptions = {
+				authorization: options.authorization
 			};
-			salesLeadContactService.createOne(leadContact, options)
-			.then((createdLeadContact: SalesLeadContact) => { 		
-				fulfill(createdLeadContact); 
+			salesLeadContactService.findCurrentLeadContacts({}, loadContactsModelOptions)
+			.then((leadContacts: AddressBookContact[]) => {
+				data['contacts'] = leadContacts;
+				fulfill(data); 
+			})
+			.catch((err: Error) => reject(err));
+		});
+	}
+	
+	private multipleContactUpdate(data: SalesLead, options: ModelOptions = {}, contacts: string[]): Promise<SalesLead> {
+		return new Promise<SalesLead>((fulfill: Function, reject: Function) => {		
+			this.loadContacts(data, options)
+			.then((salesLead: SalesLead) => {
+				const toDelete: AddressBookContact[] = [];
+				const existent: AddressBookContact[] = [];
+				
+				for (let i = 0; i < salesLead.contacts.length; i++){
+					const currentContact: AddressBookContact = salesLead.contacts[i];
+					const positionInContacts = contacts.indexOf(currentContact._id.toString());
+					
+					if ( positionInContacts < 0) {
+						toDelete.push(ObjectUtil.clone(currentContact));
+					} else { 
+						existent.push(ObjectUtil.clone(currentContact));
+						contacts.splice(positionInContacts, 1);
+					}
+				} 	
+						
+				const contactsManagementPromises: Promise<AddressBookContact>[] = [];
+				contactsManagementPromises.push(Promise.resolve(existent));
+				contactsManagementPromises.push(this.associateContacts(data, options, contacts));
+				contactsManagementPromises.push(this.disassociateContacts(data, options, toDelete)); 
+				return Promise.all(contactsManagementPromises);
+			})
+			.then((updateContactsResults: any) => { 
+				const currentContacts = updateContactsResults[0].concat(updateContactsResults[1]);
+				data['contacts'] = currentContacts;
+				fulfill(data); 
+			})
+			.catch((err: Error) => reject(err));
+		});
+	}
+	
+	private associateContacts(data: SalesLead, options: ModelOptions = {}, contacts: string[]): Promise<AddressBookContact[]> {
+		return new Promise<AddressBookContact[]>((fulfill: Function, reject: Function) => {
+			const createContactsPromises: Promise<AddressBookContact>[] = [];	
+			for (let i = 0; i < contacts.length; i++)	{
+				const leadContact: SalesLeadContact = {
+					lead: data._id,
+					contact: contacts[i]
+				};
+				createContactsPromises.push(salesLeadContactService.createOneSimpleContact(leadContact, options));
+			}
+				
+			Promise.all(createContactsPromises)
+			.then((createdLeadContacts: AddressBookContact[]) => { 		
+				fulfill(createdLeadContacts); 
+			})
+			.catch((err: Error) => reject(err));
+		});
+	}
+	
+	private disassociateContacts(data: SalesLead, options: ModelOptions = {}, contacts: AddressBookContact[]): Promise<SalesLeadContact[]> {
+		return new Promise<SalesLeadContact[]>((fulfill: Function, reject: Function) => {
+			const deleteContactsPromises: Promise<AddressBookContact>[] = [];
+			const leadContactModelOptions: ModelOptions = {
+				authorization: options.authorization,
+				additionalData: {
+					lead: data._id
+				},
+				requireAuthorization: true,
+				copyAuthorizationData: ''
+			};
+			for (let i = 0; i < contacts.length; i++)	{
+				deleteContactsPromises.push(salesLeadContactService.removeOneSimpleContact({contact: contacts[i]._id}, leadContactModelOptions));
+			}
+				
+			Promise.all(deleteContactsPromises)
+			.then((deletedLeadContacts: AddressBookContact[]) => { 		
+				fulfill(deletedLeadContacts); 
 			})
 			.catch((err: Error) => reject(err));
 		});

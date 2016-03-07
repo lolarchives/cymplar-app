@@ -19,6 +19,10 @@ namespace AddressBookServices {
 					id: '@_id',
 				}
 			},
+			'getLeads': {
+				method: 'GET',
+				url: BACK_END_ROUTE + '/address-book-contact/_find_lead_status_group'
+			},
 			'deleteCompany': {
 				method: 'DELETE',
 				url: BACK_END_ROUTE + '/address-book-group/:id',
@@ -56,6 +60,10 @@ namespace AddressBookServices {
 					return this.allCompaniesCached;
 				};
 			});
+		};
+		getLeads = (id: any) => {
+
+			return this.$resourceHelper.resourceRESTCall(this.$AddressBookRESTResource, 'getLeads', {group: id});
 		};
 		editCompany = (company: any) => {
 			return this.$resourceHelper.resourceRESTCall(this.$AddressBookRESTResource, 'editCompany', company, true);

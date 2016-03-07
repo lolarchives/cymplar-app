@@ -21,7 +21,7 @@ router.put('/:id', (req, res) => {
     copyAuthorizationData: 'lead'
   };
   req.body._id = req.params.id;
-  salesLeadService.updateOne(req.body, modelOptions)
+  salesLeadService.updateOneContacts(req.body, modelOptions)
     .then((member: SalesLead) => formatSend(res, member), (err) => sendError(res, err));
 });
 

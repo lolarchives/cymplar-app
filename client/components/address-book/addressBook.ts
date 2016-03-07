@@ -1,21 +1,16 @@
 import '../helper/helper';
 import '../auth/auth.service';
+
 import {AddressBookContact} from '../../core/dto';
 namespace AddressBook {
     /** @ngInject */
     function config($stateProvider: any) {
         $stateProvider
-            .state('main.addressBook', {
-                url: '/address_book',
-                abstract: true,
+            .state('main.newCompany', {
+                url: '/address_book/new_company',
                 views: {
                     'main': {
-                        template: '<ui-view class="grid-block vertical"></ui-view>',
-                        controller: 'AddressBookController',
-                        controllerAs: 'abCtrl',
-                    },
-                    'right-bar': {
-                        templateUrl: 'components/address-book/right_bar.html',
+                        templateUrl: 'components/address-book/new_company.html',
                         controller: 'AddressBookController',
                         controllerAs: 'abCtrl',
                     },
@@ -32,19 +27,52 @@ namespace AddressBook {
                             return response.data;
                         });
                     },
+                },
+            })
+            .state('main.allCompanies', {
+                url: '/address_book/all_companies',
+
+                views: {
+                    'main': {
+                        templateUrl: 'components/address-book/all_companies.html',
+                    },
                 }
             })
-            .state('main.addressBook.newCompany', {
-                url: '/new_company',
-                templateUrl: 'components/address-book/new_company.html',
-            })
-            .state('main.addressBook.allCompanies', {
-                url: '/all_companies',
-                templateUrl: 'components/address-book/all_companies.html',
-            })
-            .state('main.addressBook.selectedCompany', {
-                url: '/:id',
-                templateUrl: 'components/address-book/selected_company.html',
+            .state('main.selectedCompany', {
+                url: '/address_book/:id',
+
+                views: {
+                    'main': {
+                        templateUrl: 'components/address-book/selected_company.html',
+                        controller: 'AddressBookController',
+                        controllerAs: 'abCtrl',
+                    },
+                    'right-bar': {
+                        templateUrl: 'components/address-book/right_bar.html',
+                        controller: 'AddressBookRightBarController',
+                        controllerAs: 'abrbCtrl',
+                    },
+
+                },
+                resolve: {
+                    leads: ($AddressBookRESTService: any, $stateParams: any) => {
+                        
+                        return $AddressBookRESTService.getLeads($stateParams.id).then((response: any) => {
+                                return response.data;
+                        });
+
+                    },
+                    countries: ($SignUpRESTService: any) => {
+                        return $SignUpRESTService.getCountries().then((response: any) => {
+                            return response.data;
+                        });
+                    },
+                    industries: ($SignUpRESTService: any) => {
+                        return $SignUpRESTService.getIndustries().then((response: any) => {
+                            return response.data;
+                        });
+                    },
+                },
                 params: {
                     company: '@',
                 },
@@ -92,10 +120,10 @@ namespace AddressBook {
         constructor(private $state: any, private countries: any,
             private $SignUpRESTService: any, private industries: any,
             private $AddressBookRESTService: any, private toastr: any, private $scope: any,
-            private $uibModal: any) {
+            private $uibModal: any, private ultiHelper: any) {
             this.console = console;
-            console.log('count', this.count);
-            this.count += 1 ;
+         
+            this.count += 1;
             $scope.$on('$stateChangeSuccess', () => {
                 this.editing = false;
                 this.creatingContact = false;
@@ -157,7 +185,8 @@ namespace AddressBook {
             if (result) {
                 this.$AddressBookRESTService.deleteCompany(this.$AddressBookRESTService.selectedCompany._id).then((response: any) => {
                     if (response.success) {
-                        let index = this.$AddressBookRESTService.allCompaniesCached.indexOf(this.$AddressBookRESTService.selectedCompany);
+
+                        let index = this.ultiHelper.indexOfFromId(this.$AddressBookRESTService.allCompaniesCached, this.$AddressBookRESTService.selectedCompany);
                         this.$AddressBookRESTService.allCompaniesCached.splice(index, 1);
                         this.$AddressBookRESTService.selectedCompany = undefined;
                         this.toastr.success("Delete group success");
@@ -280,9 +309,11 @@ namespace AddressBook {
             if (!(this.editingCompany.queryingCity || this.editingCompany.disableCity)) {
                 this.$AddressBookRESTService.editCompany(this.editingCompany).then((response: any) => {
                     if (response.success) {
-                        let index = this.$AddressBookRESTService.allCompaniesCached.indexOf(this.$AddressBookRESTService.selectedCompany);
+                        let index = this.ultiHelper.indexOfFromId(this.$AddressBookRESTService.allCompaniesCached, this.$AddressBookRESTService.selectedCompany);
+
                         this.$AddressBookRESTService.allCompaniesCached[index] = response.data;
                         this.$AddressBookRESTService.selectedCompany = this.$AddressBookRESTService.allCompaniesCached[index];
+                        this.$AddressBookRESTService.selectedCompany.contacts = this.editingCompany.contacts;
                         this.editing = false;
                     } else {
                         this.toastr.error(response.msg);
@@ -299,7 +330,7 @@ namespace AddressBook {
                         response.data.contacts = [];
                         this.$AddressBookRESTService.allCompaniesCached.unshift(response.data);
                         this.$AddressBookRESTService.selectedCompany = response.data;
-                        this.$state.go('main.addressBook.selectedCompany', { id: response.data._id, company: response.data });
+                        this.$state.go('main.selectedCompany', { id: response.data._id, company: response.data });
                     } else {
                         if (response.msg.substring(0, 6) === 'E11000') {
                             this.toastr.error('This company already in your address book');
@@ -315,6 +346,7 @@ namespace AddressBook {
             this.$AddressBookRESTService.editContact(this.backupContacts[contact._id]).then((response: any) => {
                 if (response.success) {
                     let index = this.$AddressBookRESTService.selectedCompany.contacts.indexOf(contact);
+
                     this.$AddressBookRESTService.selectedCompany.contacts[index] = response.data;
                     this.contactEditing[contact._id] = false;
                 } else {
@@ -341,24 +373,46 @@ namespace AddressBook {
 
             this.contactEditing[contact._id] = true;
             this.backupContacts[contact._id] = angular.copy(contact);
-            console.log('start edit', contact);
+          
         }
         cancelEditContact(contact: any) {
 
             this.contactEditing[contact._id] = false;
-            console.log('end edit', contact);
+            
         }
 
 
+    }
+    export class AddressBookRightBarController {
+         private countBy : any;
+         /** @ngInject */
+        constructor(private $state: any, 
+            private leads: any, private leadStatuses: any,
+            private $AddressBookRESTService: any, private toastr: any,
+            private $uibModal: any, private ultiHelper: any, private $filter: any) {
+            this.countBy = $filter("countBy")(leads,"status.code")
+            this.countBy.HOT = this.countBy.HOT || 0;
+            this.countBy.OPP = this.countBy.OPP || 0;
+            this.countBy.LOST = this.countBy.LOST || 0;
+            this.countBy.SIGN = this.countBy.SIGN || 0;
+            this.countBy.WARM = this.countBy.WARM || 0; 
+            this.countBy.COLD = this.countBy.COLD || 0;
+            this.countBy.IN = (this.countBy.IN || 0) + this.countBy.LOST;
+            this.countBy.LEAD = this.countBy.HOT + this.countBy.COLD + this.countBy.WARM
+            console.log('lead',leads,this.countBy);
+            
+        }
     }
 
     angular
         .module('app.addressBook', [
             'ui.router',
+            'angular.filter',
             'app.helper',
             'app.signup'
         ])
         .config(config)
-        .controller('AddressBookController', AddressBookController);
+        .controller('AddressBookController', AddressBookController)
+        .controller('AddressBookRightBarController', AddressBookRightBarController);
 
 }

@@ -1,23 +1,23 @@
-<h5><strong>My Customer History</strong></h5>
+<h4><strong>My Customer History</strong></h4>
 
 <div class="form-group">
-	Opportunities
-	<input type="text" class="form-control input-sm">
+	<strong>Opportunities</strong>
+	<h5>{{abrbCtrl.countBy.OPP}}</h5>
 </div>
 
 <div class="form-group">
-	Active Leads
-	<input type="text" class="form-control input-sm" value="1">
+	<strong>Active Leads</strong>
+	<h5>{{abrbCtrl.countBy.LEAD}}</h5>
 </div>
 
 <div class="form-group">
-	Signed Contracts
-	<input type="text" class="form-control input-sm" value="0">
+	<strong>Signed Contracts</strong>
+	<h5>{{abrbCtrl.countBy.SIGN}}</h5>
 </div>
 
 <div class="form-group">
-	Inactive Leads
-	<input type="text" class="form-control input-sm" value="3">
+	<strong>Inactive Leads</strong>
+	<h5>{{abrbCtrl.countBy.IN}}</h5>
 </div>
 
-<a href="" class="btn btn-primary btn-block">New opportunity</a>
+<a  class="btn btn-primary btn-block" ui-sref="main.newLead({status:'opportunity',group_id: abrbCtrl.$AddressBookRESTService.selectedCompany._id})">New opportunity</a>
