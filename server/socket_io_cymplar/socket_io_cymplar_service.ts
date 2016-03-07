@@ -15,7 +15,7 @@ export class SocketIOCymplarService {
         
         generateOrganizationConfiguration(socket: SocketIO.Socket) {
                 socket.on('orgJoin', (notification: SocketNotification) => {
-                        const room = ObjectUtil.getStringUnionProperty(notification.organization)
+                        const room = ObjectUtil.getStringUnionProperty(notification.organization);
                         const member = ObjectUtil.getStringUnionProperty(notification.member);
                         
                         const sendFormat = {
@@ -33,7 +33,7 @@ export class SocketIOCymplarService {
                 });
                 
                 socket.on('orgLeave', (notification: SocketNotification) => {
-                        const room = ObjectUtil.getStringUnionProperty(notification.organization)
+                        const room = ObjectUtil.getStringUnionProperty(notification.organization);
                         const member = ObjectUtil.getStringUnionProperty(notification.member);
                         
                         const sendFormat = {
@@ -54,8 +54,9 @@ export class SocketIOCymplarService {
         
         generateLeadLogConfiguration(socket: SocketIO.Socket) {
                 socket.on('leadLogJoin', (notification: SocketNotification) => {
-                        const room = ObjectUtil.getStringUnionProperty(notification.organization)
+                        const room = ObjectUtil.getStringUnionProperty(notification.lead);
                         const member = ObjectUtil.getStringUnionProperty(notification.member);
+                        const organization = ObjectUtil.getStringUnionProperty(notification.organization);
                         
                         const sendFormat = {
                                 success: true,
@@ -73,8 +74,9 @@ export class SocketIOCymplarService {
                 });
                 
                 socket.on('leadLogLeave', (notification: SocketNotification) => {
-                        const room = ObjectUtil.getStringUnionProperty(notification.organization)
+                        const room = ObjectUtil.getStringUnionProperty(notification.lead);
                         const member = ObjectUtil.getStringUnionProperty(notification.member);
+                        const organization = ObjectUtil.getStringUnionProperty(notification.organization);
                         
                         const sendFormat = {
                                 success: true,
@@ -92,8 +94,9 @@ export class SocketIOCymplarService {
                 });
                 
                 socket.on('leadLogAdd', (notification: SocketNotification) => {
-                        const room = ObjectUtil.getStringUnionProperty(notification.organization)
+                        const room = ObjectUtil.getStringUnionProperty(notification.lead);
                         const member = ObjectUtil.getStringUnionProperty(notification.member);
+                        const organization = ObjectUtil.getStringUnionProperty(notification.organization);
                         
                         const sendFormat = {
                                 success: true,
@@ -107,8 +110,9 @@ export class SocketIOCymplarService {
                 });
                 
                 socket.on('leadLogEdit', (notification: SocketNotification) => {
-                        const room = ObjectUtil.getStringUnionProperty(notification.organization)
+                        const room = ObjectUtil.getStringUnionProperty(notification.lead);
                         const member = ObjectUtil.getStringUnionProperty(notification.member);
+                        const organization = ObjectUtil.getStringUnionProperty(notification.organization);
                         
                         const sendFormat = {
                                 success: true,
