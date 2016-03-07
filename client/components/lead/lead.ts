@@ -171,12 +171,42 @@ namespace Lead {
         private editing:boolean = false;
         private editingLead: any;
         private $LeadRESTService: any;
-        constructor(private $stateParams: any, private $AddressBookRESTService: any, $LeadRESTService: any, private $state:any,private roleInLead: any,private toastr: any, private contacts: any, private unaddedContacts: any,
-            private $filter: any, private ultiHelper: any) {
+        private showingSliderOptions: any;
+        private editingSliderOptions: any;
+        private indexOfSelectedStatus: number;
+        private indexOfSelectedStatusBackup: number;
+        constructor(private $stateParams: any, private $AddressBookRESTService: any, 
+            $LeadRESTService: any, private $state:any,private roleInLead: any,private toastr: any, private contacts: any, private unaddedContacts: any,
+            private $timeout:any,
+            private $filter: any, private ultiHelper: any,
+            private $scope: any) {
            $stateParams.lead.contacts = contacts;
            this.$LeadRESTService = $LeadRESTService; 
            this.editing = false;
-   
+           
+           let stepsArray = this.$stateParams.lead.leadStatuses.map(function(currentValue: any) {
+               return currentValue.label;
+           })
+           this.indexOfSelectedStatus = stepsArray.indexOf(this.$stateParams.lead.currentStatus.label);
+            
+           this.showingSliderOptions = {
+               stepsArray: stepsArray,
+               readOnly :true,
+               showTicks: true,
+
+           }
+           this.editingSliderOptions = {
+               stepsArray: stepsArray,
+               readOnly :false,
+               showTicks: true,
+
+           }
+           
+           console.log(this.showingSliderOptions);
+  
+          
+     
+           console.log(stepsArray,this.$stateParams.lead.currentStatus,this.indexOfSelectedStatus)
         }
         deleteLead() {
             let result: boolean = confirm("Are you sure. Once delete all the lead data cannot be recovered");
@@ -197,8 +227,11 @@ namespace Lead {
         }
         startEditing() {
             this.editing = true;
+            this.showingSliderOptions.readOnly = false;
+            this.indexOfSelectedStatusBackup = angular.copy(this.indexOfSelectedStatus); 
             this.editingLead = angular.copy(this.$LeadRESTService.selectedLead)
             this.editingLead.softContacts = this.editingLead.contacts;
+            this.showingSliderOptions.readOnly = false;
             for (let i = 0; i < this.$LeadRESTService.allLeadStatusesCached.length;i++) {
                 if (this.editingLead.status.code == this.$LeadRESTService.allLeadStatusesCached[i].code) {
                     this.editingLead.status = this.$LeadRESTService.allLeadStatusesCached[i]       
@@ -208,22 +241,21 @@ namespace Lead {
         }
         
         submitEditing() {
-            this.editingLead.contact = this.editingLead.softContacts.map((currentValue: any, index:any , array: any)=>{
+            this.editingLead.contacts = this.editingLead.softContacts.map((currentValue: any, index:any , array: any)=>{
                 return currentValue._id;
             })
-            console.log('sending',this.editingLead)
+            this.editingLead.currentStatus = this.editingLead.leadStatuses[this.indexOfSelectedStatus];
             this.$LeadRESTService.updateLead(this.editingLead).then((response: any) => {
                 if (response.success) {
                     let index = this.ultiHelper.indexOfFromId( this.$LeadRESTService.allLeadsCached, this.$LeadRESTService.selectedLead );
-                     response.data.contacts = response.data.contacts.map((currentValue: any, index:any , array: any)=>{
-                        return currentValue.contact;
-                     })
+                     
                      this.$LeadRESTService.allLeadsCached[index] = response.data;
                      this.$LeadRESTService.selectedLead = this.$LeadRESTService.allLeadsCached[index];
                      this.$stateParams.lead = this.$LeadRESTService.allLeadsCached[index];
                                        
                      this.toastr.success("Update lead success");
                      this.editing = false;
+                     this.showingSliderOptions.readOnly = true;
                   
                 } else {
                     this.toastr.error('Some error occur, cannot update lead');
@@ -240,7 +272,16 @@ namespace Lead {
             console.log('added',$tag)
         }
         contactRemoved($tag: any){
-            console.log('added',$tag)
+            console.log('removed',$tag)
+             let index = this.ultiHelper.indexOfFromId( this.unaddedContacts, $tag );
+            if (index == -1) {
+                this.unaddedContacts.push($tag);
+            } 
+        }
+        cancelEdit() {
+            this.editing = false;
+            this.showingSliderOptions.readOnly = true;
+            this.indexOfSelectedStatus = this.indexOfSelectedStatusBackup;
         }
     }
     
