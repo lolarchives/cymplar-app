@@ -57,7 +57,7 @@ namespace HelperServices {
 		indexOfFromId(arr: any[], obj:any ) {
 			
 			for	(let i = 0; i< arr.length; i++) {
-				console.log(arr[i],obj,'comparing');
+			
 				if (arr[i]._id === obj._id)
 					return i 
 			}

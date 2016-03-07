@@ -68,8 +68,8 @@ namespace LeadService {
 			return this.$resourceHelper.resourceRESTCall(this.$LeadRESTResource, "allLeadStatuses").then( (response: any) => {
 				if (response.success) {
 					this.allLeadStatusesCached = response.data;
-					return this.allLeadStatusesCached;
-				};
+				} 
+				return response;
 			});
 		}
 		findContactsInLead(leadId: any) {

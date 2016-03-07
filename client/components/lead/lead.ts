@@ -188,7 +188,13 @@ namespace Lead {
            let stepsArray = this.$stateParams.lead.leadStatuses.map(function(currentValue: any) {
                return currentValue.label;
            })
-           this.indexOfSelectedStatus = stepsArray.indexOf(this.$stateParams.lead.currentStatus.label);
+           if (this.$stateParams.lead.currentStatus == undefined) { 
+               this.indexOfSelectedStatus = 0;
+           } else {
+               this.indexOfSelectedStatus = stepsArray.indexOf(this.$stateParams.lead.currentStatus.label);
+           }
+               
+            
             
            this.showingSliderOptions = {
                stepsArray: stepsArray,

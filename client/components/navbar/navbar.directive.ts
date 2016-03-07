@@ -24,18 +24,20 @@ export function mainNavbar(): angular.IDirective {
 export class NavbarController {
 
   inactiveOrLostFilter = (value: any, index: any, array: any[]) => {
-   
+    if (value.status == undefined) return false;
     return value.status.code == this.lostStatus.code || value.status == this.inactiveStatus.code
   }
   opportunityFilter = (value: any, index: any, array: any[]) => {
-   
+    if (value.status == undefined) return false;
     return value.status.code == this.opporturnityStatus.code 
   }
   signedFilter = (value: any, index: any, array: any[]) => {
-   
+    if (value.status == undefined) return false;
     return value.status.code == this.signedStatus.code
   }
   leadFilter = (value: any, index: any, array: any[]) => {
+    
+    if (value.status == undefined) return true;
     return ( (value.status.code != this.lostStatus.code) && (value.status.code != this.opporturnityStatus.code) && (value.status.code != this.signedStatus.code) && (value.status.code != this.inactiveStatus.code)) 
   }
   
