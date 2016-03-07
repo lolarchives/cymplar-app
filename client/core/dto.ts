@@ -257,6 +257,7 @@ export interface SocketNotification extends BaseDto {
   organization?: string | AccountOrganization;
   lead?: string | SalesLead;
   member?: string | AccountOrganizationMember;
+  leadMember?: string | SalesLeadOrganizationMember;
   message?: string;
   parentsData?: any;
   data?: any;

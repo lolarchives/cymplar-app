@@ -20,7 +20,7 @@ export class SocketIOCymplarService {
                         
                         const sendFormat = {
                                 success: true,
-                                data: { member: member }
+                                data: notification
                         };
                                         
                         socket.join(room, (err: Error) => {
@@ -34,11 +34,10 @@ export class SocketIOCymplarService {
                 
                 socket.on('orgLeave', (notification: SocketNotification) => {
                         const room = ObjectUtil.getStringUnionProperty(notification.organization);
-                        const member = ObjectUtil.getStringUnionProperty(notification.member);
                         
                         const sendFormat = {
                                 success: true,
-                                data: { member: member }
+                                data: notification
                         };
                                         
                         socket.leave(room, (err: Error) => {
@@ -55,12 +54,10 @@ export class SocketIOCymplarService {
         generateLeadLogConfiguration(socket: SocketIO.Socket) {
                 socket.on('leadLogJoin', (notification: SocketNotification) => {
                         const room = ObjectUtil.getStringUnionProperty(notification.lead);
-                        const member = ObjectUtil.getStringUnionProperty(notification.member);
-                        const organization = ObjectUtil.getStringUnionProperty(notification.organization);
                         
                         const sendFormat = {
                                 success: true,
-                                data: { member: member },
+                                data: notification,
                                 message: 'Someone joined to the room'
                         };
                                         
@@ -75,12 +72,10 @@ export class SocketIOCymplarService {
                 
                 socket.on('leadLogLeave', (notification: SocketNotification) => {
                         const room = ObjectUtil.getStringUnionProperty(notification.lead);
-                        const member = ObjectUtil.getStringUnionProperty(notification.member);
-                        const organization = ObjectUtil.getStringUnionProperty(notification.organization);
                         
                         const sendFormat = {
                                 success: true,
-                                data: { member: member },
+                                data: notification,
                                 message: 'Someone left the room'
                         };
                                         
@@ -95,14 +90,10 @@ export class SocketIOCymplarService {
                 
                 socket.on('leadLogAdd', (notification: SocketNotification) => {
                         const room = ObjectUtil.getStringUnionProperty(notification.lead);
-                        const member = ObjectUtil.getStringUnionProperty(notification.member);
-                        const organization = ObjectUtil.getStringUnionProperty(notification.organization);
                         
                         const sendFormat = {
                                 success: true,
-                                data: notification.data,
-                                member: notification.member,
-                                organization: notification.organization,
+                                data: notification,
                                 message: 'new log activity'
                         };
                         
@@ -111,14 +102,10 @@ export class SocketIOCymplarService {
                 
                 socket.on('leadLogEdit', (notification: SocketNotification) => {
                         const room = ObjectUtil.getStringUnionProperty(notification.lead);
-                        const member = ObjectUtil.getStringUnionProperty(notification.member);
-                        const organization = ObjectUtil.getStringUnionProperty(notification.organization);
                         
                         const sendFormat = {
                                 success: true,
-                                data: notification.data,
-                                member: notification.member,
-                                organization: notification.organization,
+                                data: notification,
                                 message: 'edited log'
                         };
                         
