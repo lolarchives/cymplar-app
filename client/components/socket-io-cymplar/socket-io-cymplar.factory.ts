@@ -1,3 +1,5 @@
+import {SocketNotification} from '../../core/dto';
+
 namespace socketIoCymplar {
 	
 	angular.module('app.socket-io-cymplar', [])
@@ -12,8 +14,8 @@ namespace socketIoCymplar {
 				console.log('client on ' + eventName);
 				socket.on(eventName, callback);
 			},
-			emit: function(eventName: string, data: Object) {
-				console.log('client emit ' + JSON.stringify(data));
+			emit: function(eventName: string, data: SocketNotification) {
+				console.log('client emit '+ JSON.stringify(eventName) + ' - ' + JSON.stringify(data));
 				socket.emit(eventName, data);
 			}
 		};

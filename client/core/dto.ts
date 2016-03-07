@@ -251,3 +251,12 @@ export interface LogItem extends BaseDto {
   location?: string;
   edited?: boolean;
 }
+
+export interface SocketNotification extends BaseDto {
+  from?: string | AccountUser;
+  organization?: string | AccountOrganization;
+  member?: string | AccountOrganizationMember;
+  message?: string;
+  parentsData?: any;
+  data?: any;
+}
