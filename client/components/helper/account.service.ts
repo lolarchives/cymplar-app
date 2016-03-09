@@ -15,6 +15,30 @@ namespace AccountService {
 			'accountOrganizationMember': {
 				method: 'GET',
 				url: BACK_END_ROUTE + '/account-organization-member/_find?ido=' + AuthToken.getIdO()
+			},
+			'accountOrganizations': {
+				method: 'GET',
+				url: BACK_END_ROUTE + '/account-organization-member/_find',
+			},
+			'accountOrganizationParam': {
+				method: 'GET',
+				url: BACK_END_ROUTE + '/account-organization/:id'
+			},
+			'accountOrganizationMemberParam': {
+				method: 'GET',
+				url: BACK_END_ROUTE + '/account-organization-member/_find'
+			},
+			'saveAccountOrganizationMember': {
+				method: 'PUT',
+				url: BACK_END_ROUTE + '/account-organization-member/:id',
+				params: {
+					id: '@_id',
+					ido: '@organization._id'
+				}
+			},
+			'accountOrganizationTeam': {
+				method: 'GET',
+				url: BACK_END_ROUTE + '/account-organization-member/_find_team'
 			}
 		});
 		return resources;
@@ -28,10 +52,28 @@ namespace AccountService {
 			return this.$resourceHelper.resourceRESTCall(this.$AccountRESTResource, 'accountUser');
 		};
 		accountOrganization = () => {
-			return this.$resourceHelper.resourceRESTCall(this.$AccountRESTResource, "accountOrganization",{ido: this.AuthToken.getIdO()});
+			return this.$resourceHelper.resourceRESTCall(this.$AccountRESTResource, 'accountOrganization', {ido: this.AuthToken.getIdO()});
 		};
 		accountOrganizationMember = () => {
 			return this.$resourceHelper.resourceRESTCall(this.$AccountRESTResource, 'accountOrganizationMember');
+		};
+		accountOrganizations = () => {
+			return this.$resourceHelper.resourceRESTCall(this.$AccountRESTResource, 'accountOrganizations');
+		};
+		accountOrganizationParam = (orgId: string) => {
+			return this.$resourceHelper.resourceRESTCall(this.$AccountRESTResource, 'accountOrganizationParam', { id: orgId, ido: orgId });
+		};
+		accountOrganizationMemberParam = (orgId: string) => {
+			return this.$resourceHelper
+				.resourceRESTCall(this.$AccountRESTResource, 'accountOrganizationMemberParam', { organization: orgId, ido: orgId });
+		};
+		saveAccountOrganizationMember = (orgMember: any) => {
+			return this.$resourceHelper
+				.resourceRESTCall(this.$AccountRESTResource, 'saveAccountOrganizationMember', orgMember, true);
+		};
+		accountOrganizationTeam = (orgId: string) => {
+			return this.$resourceHelper
+				.resourceRESTCall(this.$AccountRESTResource, 'accountOrganizationTeam', { organization: orgId, ido: orgId });
 		};
 	}
 

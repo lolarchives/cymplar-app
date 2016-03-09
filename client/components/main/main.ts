@@ -5,7 +5,7 @@ export class MainController {
   /* @ngInject */
   constructor (private toastr: any, private AuthToken: any, 
       private $state: any, private user: any, private organizationMember: any, 
-      private organization: any, private companies: any,private leads:any) { 
+      private organization: any, private companies: any, private leads: any) { 
     this.toastr = toastr;
     this.userBeautified = JSON.stringify(this.user, null, 4);
     this.organizationBeautified = JSON.stringify(this.organization, null, 4);

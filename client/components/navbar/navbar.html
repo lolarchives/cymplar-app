@@ -42,7 +42,7 @@
           <li class="current check"><a href="">{{navCtrl.user.firstName + " " +navCtrl.user.lastName}}</a></li>
           <li><a href="">Company Profile</a></li>
           <li class="divider"></li>
-          <li><a href="">Settings</a></li>
+          <li><a ui-sref="main-account.organization.profile({orgId: navCtrl.organization._id})">Setting</a></li>
           <li><a href="">Help</a></li>
           <li class="divider"></li>
           <li><a ng-click="navCtrl.logout()">Logout</a></li>

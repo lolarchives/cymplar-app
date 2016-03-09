@@ -1,0 +1,31 @@
+<div class="padding-box">
+    <div class="limit-width">
+        <ul class="list-line">
+            <li>
+                <div class="row">
+                    <div class="col-sm-4">
+                        <strong>{{accOrgProfCtrl.profile.role.code}}</strong>	
+                    </div><!--col-sm-4-->
+                    <div class="col-sm-4">
+                        Free	
+                    </div><!--col-sm-4-->
+                </div><!--row-->
+            </li>
+            <li>
+                <div class="row">
+                    <div class="col-sm-4">
+                        <strong>Contact email</strong>
+                    </div><!--col-sm-4-->
+                    <div class="col-sm-4">
+                        {{accOrgProfCtrl.profile.email}}
+                    </div><!--col-sm-4-->
+                    <div class="col-sm-4" align="right">
+                        <a href="" ng-click="accOrgProfCtrl.editProfile(accOrgProfCtrl.profile)">Edit</a>
+                    </div><!--col-sm-4-->
+                </div><!--row-->
+            </li>
+        </ul>
+
+    </div><!--limit-width-->
+</div><!--padding-box-->
+

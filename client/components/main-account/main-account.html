@@ -1,0 +1,8 @@
+<main-account-navbar user="mainAccCtrl.user" memberships="mainAccCtrl.memberships">
+	<div transclude-to="main-account" class="grid-block vertical" style="height:100%">
+		<div ui-view="main-account" class="grid-block vertical"></div>
+	</div>
+	<div transclude-to="right-account" class="grid-block vertical">
+		<div ui-view="right-bar-account" class="grid-block vertical"></div>
+	</div>
+</main-account-navbar>
