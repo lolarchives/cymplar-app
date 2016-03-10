@@ -1,71 +1,71 @@
 <div class="grid-content center-panel">
 	<div class="page-head">
 		<div class="padding-box">
-			<h3 class="uppercase title">{{slCtrl.$LeadRESTService.selectedLead.name}} {{slCtrl.showLog}}</h3>
+			<h3 class="uppercase title">{{slCtrl.$LeadRESTService.selectedLead.name}}</h3>
 			<ul class="lead-nav">
-				<li class="current">
+				<li ng-class="{'current': slCtrl.showLog}">
 					<a ng-click="slCtrl.showLog = true">
-						<span class="glyphicon glyphicon-home" aria-hidden="true"></span> Main
+						<span class="glyphicon glyphicon-home" ></span> Main
 					</a>
 				</li>
-				<li>
+				<li ng-class="{'current': !slCtrl.showLog}">
 					<a ng-click="slCtrl.showLog = false">
-						<span class="glyphicon glyphicon-comment" aria-hidden="true"></span> Chat
+						<span class="glyphicon glyphicon-comment" ></span> Chat
 					</a>
 				</li>
 			</ul>
 			<!--lead-nav-->
 		</div>
 		<!--padding-box-->
-		<div class="filter-box sub-bar">
-			<strong class="uppercase filter-title">Filter:</strong>
-			<ul class="filter l_tinynav1">
-				<li class="selected">
-					<a href="">
-						<span class="glyphicon glyphicon-list-alt" aria-hidden="true"></span> All
+		<div class="sub-bar" ng-class="{'filter-box':slCtrl.showLog}">
+			<strong class="uppercase filter-title" ng-show="slCtrl.showLog">Filter:</strong>
+			<ul class="filter l_tinynav1" ng-show="slCtrl.showLog">
+				<li ng-class="{'selected': slCtrl.queryTypeIndex == -1}">
+					<a ng-click="slCtrl.queryTypeIndex = -1">
+						<span class="glyphicon glyphicon-list-alt" ></span> All
+					</a>
+				</li>
+				<li ng-class="{'selected': slCtrl.queryTypeIndex == slCtrl.commIndex}">
+					<a ng-click="slCtrl.queryTypeIndex = slCtrl.commIndex">
+						<span class="glyphicon glyphicon-comment" ></span> Communications
+					</a>
+				</li>
+				<li ng-class="{'selected': slCtrl.queryTypeIndex == slCtrl.noteIndex}">
+					<a ng-click="slCtrl.queryTypeIndex = slCtrl.noteIndex" >
+						<span class="glyphicon glyphicon-pushpin" ></span> Notes
+					</a>
+				</li>
+				<li ng-class="{'selected': slCtrl.queryTypeIndex == slCtrl.fwupIndex}">
+					<a ng-click="slCtrl.queryTypeIndex = slCtrl.fwupIndex">
+						<span class="glyphicon glyphicon-arrow-up" ></span> Follow Ups
+					</a>
+				</li>
+				<li ng-class="{'selected': slCtrl.queryTypeIndex == slCtrl.meetIndex}">
+					<a ng-click="slCtrl.queryTypeIndex = slCtrl.meetIndex" >
+						<span class="glyphicon glyphicon-globe"></span> Meeting
 					</a>
 				</li>
 				<li>
-					<a href="">
-						<span class="glyphicon glyphicon-comment" aria-hidden="true"></span> Communications
-					</a>
-				</li>
-				<li>
-					<a href="">
-						<span class="glyphicon glyphicon-pushpin" aria-hidden="true"></span> Notes
-					</a>
-				</li>
-				<li>
-					<a href="">
-						<span class="glyphicon glyphicon-arrow-up" aria-hidden="true"></span> Follow Ups
-					</a>
-				</li>
-				<li>
-					<a href="">
-						<span class="glyphicon glyphicon-globe" aria-hidden="true"></span> Meeting
-					</a>
-				</li>
-				<li>
-					<a href="">
-						<span class="glyphicon glyphicon-file" aria-hidden="true"></span> Documents
-					</a>
+					<!--<a ng-class="{'selected': slCtrl.queryTypeIndex == slCtrl.Index}">
+						<span class="glyphicon glyphicon-file" ></span> Documents
+					</a>-->
 				</li>
 			</ul>
 			<!--filter-->
-			<div class="tags-wrap margin-b-n">
+			<div class="tags-wrap margin-b-n" ng-hide="slCtrl.showLog">
 				<div class="tag">
 					Steven F.
-					<span class="glyphicon glyphicon-remove delete" aria-hidden="true"></span>
+					<span class="glyphicon glyphicon-remove delete"></span>
 				</div>
 				<!--tag-->
 				<div class="tag">
 					Jo
-					<span class="glyphicon glyphicon-remove delete" aria-hidden="true"></span>
+					<span class="glyphicon glyphicon-remove delete"></span>
 				</div>
 				<!--tag-->
 				<div class="tag">
 					Stan
-					<span class="glyphicon glyphicon-remove delete" aria-hidden="true"></span>
+					<span class="glyphicon glyphicon-remove delete"></span>
 				</div>
 				<!--tag-->
 			</div>
@@ -73,294 +73,19 @@
 		<!--filter-box-->
 	</div>
 	<!--page-head-->
-
 	<div class="padding-box feed">
-
-
-		<!--card-->
-		<log-item item="sbCtrl.logItem"></log-item>
-		<div class="card">
-			<div class="row">
-				<div class="col-md-3">
-					<h4 class="title">
-                                    <a class="red-link">
-                                        <span class="glyphicon glyphicon-pushpin" aria-hidden="true"></span>
-                                        Notes  
-                                    </a>
-                                </h4>
-					<p class="time"><small> Today at 8:45pm</small></p>
-				</div>
-				<!--col-md-3-->
-				<div class="col-md-9">
-					<h5><strong>By John V.</strong></h5>
-					<div class="limit-width">
-						<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc vulputate id tellus eget dapibus. Fusce tempor pharetra
-							commodo.
-						</p>
-					</div>
-				</div>
-				<!--col-md-9-->
-
-				<div class="dropdown control">
-					<span class="glyphicon glyphicon-option-horizontal" aria-hidden="true" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></span>
-					<ul class="dropdown-menu dropdown-menu-right">
-						<li><a href="#">Edit</a></li>
-						<li><a href="#">Delete</a></li>
-					</ul>
-				</div>
-				<!--dropdown -->
-			</div>
-			<!--row-->
-		</div>
-		<!--card-->
-
-		<div class="card">
-			<div class="row">
-				<div class="col-md-3">
-					<h4 class="title">
-                                    <a href="" class="red-link">
-                                        <span class="glyphicon glyphicon-arrow-up" aria-hidden="true"></span>
-                                        Follow Ups   
-                                    </a>
-                                </h4>
-					<p class="time"><small> Today at 8:45pm</small></p>
-				</div>
-				<!--col-md-3-->
-				<div class="col-md-9">
-					<h5><strong>By John V.</strong></h5>
-					<div class="limit-width">
-						<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc vulputate id tellus eget dapibus. Fusce tempor pharetra
-							commodo.
-						</p>
-					</div>
-				</div>
-				<!--col-md-9-->
-
-				<div class="dropdown control">
-					<span class="glyphicon glyphicon-option-horizontal" aria-hidden="true" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></span>
-					<ul class="dropdown-menu dropdown-menu-right">
-						<li><a href="#">Edit</a></li>
-						<li><a href="#">Delete</a></li>
-					</ul>
-				</div>
-				<!--dropdown -->
-			</div>
-			<!--row-->
-		</div>
-		<!--card-->
-
-		<div class="card">
-			<div class="row">
-				<div class="col-md-3">
-					<h4 class="title">
-                                    <a href="" class="red-link">
-                                        <span class="glyphicon glyphicon-globe" aria-hidden="true"></span>
-                                        Meeting   
-                                    </a>
-                                </h4>
-					<p class="time"><small> Today at 8:45pm</small></p>
-				</div>
-				<!--col-md-3-->
-				<div class="col-md-9">
-					<h5><strong>By John V.</strong></h5>
-					<div class="limit-width">
-						<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc vulputate id tellus eget dapibus. Fusce tempor pharetra
-							commodo.
-						</p>
-					</div>
-				</div>
-				<!--col-md-9-->
-
-				<div class="dropdown control">
-					<span class="glyphicon glyphicon-option-horizontal" aria-hidden="true" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></span>
-					<ul class="dropdown-menu dropdown-menu-right">
-						<li><a href="#">Edit</a></li>
-						<li><a href="#">Delete</a></li>
-					</ul>
-				</div>
-				<!--dropdown -->
-			</div>
-			<!--row-->
-		</div>
-		<!--card-->
-
-		<div class="card">
-			<div class="row">
-				<div class="col-md-3">
-					<h4 class="title">
-                                    <a href="" class="red-link">
-                                        <span class="glyphicon glyphicon-comment" aria-hidden="true"></span>
-                                        Communications
-                                    </a>
-                                </h4>
-					<p class="time"><small> Today at 8:45pm</small></p>
-				</div>
-				<!--col-md-3-->
-				<div class="col-md-9">
-					<h5><strong>By John V.</strong></h5>
-					<div class="limit-width">
-						<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc vulputate id tellus eget dapibus. Fusce tempor pharetra
-							commodo.
-						</p>
-					</div>
-				</div>
-				<!--col-md-9-->
-
-				<div class="dropdown control">
-					<span class="glyphicon glyphicon-option-horizontal" aria-hidden="true" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></span>
-					<ul class="dropdown-menu dropdown-menu-right">
-						<li><a href="#">Edit</a></li>
-						<li><a href="#">Delete</a></li>
-					</ul>
-				</div>
-				<!--dropdown -->
-			</div>
-			<!--row-->
-		</div>
-		<!--card-->
-
+		<ng-include src="'components/lead/log.html'" ng-show="slCtrl.showLog"></ng-include>
+		<ng-include src="'components/lead/chat.html'" ng-hide="slCtrl.showLog"></ng-include>
 	</div>
-	<!--padding-box-->
 </div>
 <!--grid-content-->
 
 <div class="form-box-wrap grid-content shrink">
 	<div class="form-btn"></div>
 	<div class="form-box">
-		<ul class="nav nav-tabs post-categorie margin-b" role="tablist">
-			<li role="presentation" ng-class="{'active': slCtrl.itemTypeIndex == slCtrl.commIndex}">
-				<a aria-controls="home" role="tab" ng-click="slCtrl.itemTypeIndex = slCtrl.commIndex">
-					<span class="glyphicon glyphicon-comment" aria-hidden="true"></span> Communications
-				</a>
-			</li>
-			<li role="presentation" ng-class="{'active': slCtrl.itemTypeIndex == slCtrl.noteIndex}">
-				<a aria-controls="profile" role="tab" ng-click="slCtrl.itemTypeIndex = slCtrl.noteIndex">
-					<span class="glyphicon glyphicon-pushpin" aria-hidden="true"></span> Notes
-				</a>
-			</li>
-			<li role="presentation" ng-class="{'active': slCtrl.itemTypeIndex == slCtrl.fwupIndex}">
-				<a aria-controls="messages" role="tab" ng-click="slCtrl.itemTypeIndex = slCtrl.fwupIndex">
-					<span class="glyphicon glyphicon-arrow-up" aria-hidden="true"></span> Follow Ups
-				</a>
-			</li>
-			<li role="presentation" ng-class="{'active': slCtrl.itemTypeIndex == slCtrl.meetIndex}">
-				<a aria-controls="settings" role="tab" ng-click="slCtrl.itemTypeIndex = slCtrl.meetIndex">
-					<span class="glyphicon glyphicon-globe" aria-hidden="true"></span> Meeting
-				</a>
-			</li>
-			<li role="presentation">
-				{{slCtrl.itemTypeIndex}}
-			</li>
-		</ul>
-		<!--nav nav-tabs-->
-
-		<div class="tab-content">
-
-			<div role="tabpanel" class="tab-pane active">
-				<div class="row">
-					<div class="col-sm-12">
-						<textarea rows="2" placeholder="Communication" class="form-control margin-b"></textarea>
-					</div>
-					<!--col-md-12-->
-					<div class="col-sm-9">
-						<div class="margin-b-s">
-							<input id="input-file" type="file">
-							<label for="input-file" class="pointer">
-								<span class="glyphicon glyphicon-paperclip" aria-hidden="true"></span>
-								<strong>Attach a file</strong>
-							</label>
-						</div>
-						<div class="tag">
-							Docname.doc
-							<span class="glyphicon glyphicon-remove delete" aria-hidden="true"></span>
-						</div>
-						<!--tag-->
-					</div>
-					<!--col-md-9-->
-					<div class="col-sm-3 text-right">
-						<input type="submit" class="btn btn-default send-btn" value="Send">
-					</div>
-					<!--col-md-3-->
-				</div>
-				<!--row-->
-			</div>
-			<!--tab-pane-->
-
-			<div role="tabpanel" class="tab-pane">
-				<div class="row">
-					<div class="col-sm-12">
-						<textarea rows="2" placeholder="Notes" class="form-control margin-b"></textarea>
-					</div>
-					<!--col-md-12-->
-					<div class="col-sm-9">
-						<div class="margin-b-s">
-							<input id="input-file" type="file">
-							<label for="input-file" class="pointer">
-								<span class="glyphicon glyphicon-paperclip" aria-hidden="true"></span>
-								<strong>Attach a file</strong>
-							</label>
-						</div>
-					</div>
-					<!--col-md-9-->
-					<div class="col-sm-3 text-right">
-						<input type="submit" class="btn btn-default send-btn" value="Send">
-					</div>
-					<!--col-md-3-->
-				</div>
-				<!--row-->
-			</div>
-			<!--tab-pane-->
-
-			<div role="tabpanel" class="tab-pane">
-				<div class="row">
-					<div class="col-sm-6 margin-b-s">
-						<strong>Date / Time</strong>
-						<input type='text' class="form-control" id='datetimepicker1' />
-					</div>
-					<!--col-md-6-->
-					<div class="col-sm-6 margin-b-s">
-						<strong>Comment</strong>
-						<input type="text" class="form-control margin-b">
-					</div>
-					<!--col-md-6-->
-					<div class="col-sm-12 text-right">
-						<input type="submit" class="btn btn-default send-btn" value="Send">
-					</div>
-					<!--col-md-12-->
-				</div>
-				<!--row-->
-			</div>
-			<!--tab-pane-->
-
-			<div role="tabpanel" class="tab-pane">
-				<div class="row">
-					<div class="col-sm-4 margin-b-s">
-						<strong>Date / Time</strong>
-						<input type='text' class="form-control" id='datetimepicker2' />
-					</div>
-					<!--col-md-4-->
-					<div class="col-sm-4 margin-b-s">
-						<strong>Location</strong>
-						<input type='text' class="form-control" id='datetimepicker1' />
-					</div>
-					<!--col-md-4-->
-					<div class="col-sm-4 margin-b-s">
-						<strong>Comment</strong>
-						<input type="text" class="form-control margin-b">
-					</div>
-					<!--col-md-6-->
-					<div class="col-sm-12 text-right">
-						<input type="submit" class="btn btn-default send-btn" value="Send">
-					</div>
-					<!--col-md-12-->
-				</div>
-				<!--row-->
-			</div>
-			<!--tab-pane-->
-		</div>
-		<!--tab-content-->
+		<ng-include src="'components/lead/log_form.html'" ng-show="slCtrl.showLog"></ng-include>
+		<ng-include src="'components/lead/chat_form.html'" ng-hide="slCtrl.showLog"></ng-include>
 	</div>
-	<!--form-box-->
 </div>
 <!--form-box-wrap-->
 

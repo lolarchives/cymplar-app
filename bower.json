@@ -24,7 +24,8 @@
     "ng-tags-input": "~3.0.0",
     "angular-custom-range-slider": "~1.0.15",
     "angular-filter": "~0.5.8",
-    "angularjs-slider": "~2.10.2"
+    "angularjs-slider": "~2.10.2",
+    "bootstrap-ui-datetime-picker": "~2.2.2"
   },
   "resolutions": {
     "angular-bootstrap": "~1.0.3",

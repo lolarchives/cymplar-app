@@ -66,6 +66,7 @@ export const PATH = {
       slash(resolve(`angular/angular.js`)),
       slash(resolve(`angular-resource/angular-resource.js`)),
       slash(resolve(`angular-cookies/angular-cookies.js`)),
+      `${BC}/bootstrap-ui-datetime-picker/dist/datetime-picker.min.js`,
       `${BC}/angular-bootstrap/ui-bootstrap.js`,
       `${BC}/angular-multiple-transclusion/dist/angular-multiple-transclusion.min.js`,
       `${BC}/angular-bootstrap/ui-bootstrap-tpls.js`,

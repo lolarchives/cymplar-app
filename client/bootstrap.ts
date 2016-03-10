@@ -150,6 +150,7 @@ namespace app {
     'ngResource',
     'ui.router',
     'ui.bootstrap',
+    'ui.bootstrap.datetimepicker',
     'angular-multiple-transclusion',
     'angular.filter',
     'toastr',

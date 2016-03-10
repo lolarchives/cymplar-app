@@ -168,6 +168,12 @@ namespace Lead {
         private noteIndex: number;
         private meetIndex: number;
         private itemTypeIndex: number;
+        private showLog: boolean; 
+        private queryTypeIndex: number;
+        private newLogItem: any;
+        private datePicker: any;
+        private logItems: any = [""];
+        
         constructor(private $stateParams: any, private $AddressBookRESTService: any, private $LeadRESTService: any, private $state:any,private roleInLead: any,private contacts: any, private unaddedContacts: any,
             private socket: any,private logItemTypes: any) {
             for (let i = 0; i < logItemTypes.length; i++){
@@ -176,8 +182,15 @@ namespace Lead {
                 if (logItemTypes[i].code == 'FWUP') this.noteIndex = i;
                 if (logItemTypes[i].code == 'MEET') this.meetIndex = i;
             }
-            this.itemTypeIndex = this.commIndex;
-            console.log(this.commIndex,this.fwupIndex,this.noteIndex,this.meetIndex);
+            this.itemTypeIndex = this.fwupIndex;
+            this.showLog = true;
+            this.queryTypeIndex = -1;
+           
+        }
+        addLogItem() {
+            this.newLogItem.type = this.logItemTypes[this.itemTypeIndex];
+            this.newLogItem.dateTime = this.datePicker;
+            console.log(this.newLogItem,this.itemTypeIndex);
         }
     }
     export class SelectedLeadRightBarController{
