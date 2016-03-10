@@ -98,6 +98,10 @@ namespace Lead {
                             if (response.success)
                                 return response.data
                         });
+                    },
+                    logItemTypes: function($LogItemRESTService: any) {
+                        return $LogItemRESTService.getLogItemTypes();
+                    }
                 },
                 onEnter: function($stateParams: any, $state: any, $LeadRESTService: any) {
                     //map company to id
@@ -159,10 +163,21 @@ namespace Lead {
     }
     
     export class SelectedLeadController{
-        private selectedLead:any = "selected_lead";
+        private commIndex: number; 
+        private fwupIndex: number;
+        private noteIndex: number;
+        private meetIndex: number;
+        private itemTypeIndex: number;
         constructor(private $stateParams: any, private $AddressBookRESTService: any, private $LeadRESTService: any, private $state:any,private roleInLead: any,private contacts: any, private unaddedContacts: any,
-            private socket: any) {
-           
+            private socket: any,private logItemTypes: any) {
+            for (let i = 0; i < logItemTypes.length; i++){
+                if (logItemTypes[i].code == 'COMM') this.commIndex = i;
+                if (logItemTypes[i].code == 'NOTE') this.fwupIndex = i;
+                if (logItemTypes[i].code == 'FWUP') this.noteIndex = i;
+                if (logItemTypes[i].code == 'MEET') this.meetIndex = i;
+            }
+            this.itemTypeIndex = this.commIndex;
+            console.log(this.commIndex,this.fwupIndex,this.noteIndex,this.meetIndex);
         }
     }
     export class SelectedLeadRightBarController{

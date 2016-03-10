@@ -9,7 +9,7 @@ export function logItem(): angular.IDirective {
   return {
     restrict: 'E',
     scope: {
-   
+       item: '=',
     },
     templateUrl: 'components/lead/log_item.html',
     controller: LogItemController,

@@ -5,12 +5,12 @@
 			<ul class="lead-nav">
 				<li class="current">
 					<a ng-click="slCtrl.showLog = true">
-						<span class="glyphicon glyphicon-home" aria-hidden="true"></span> Main
+						<span class="glyphicon glyphicon-home"></span> Main
 					</a>
 				</li>
 				<li>
 					<a ng-click="slCtrl.showLog = false">
-						<span class="glyphicon glyphicon-comment" aria-hidden="true"></span> Chat
+						<span class="glyphicon glyphicon-comment"></span> Chat
 					</a>
 				</li>
 			</ul>
@@ -52,23 +52,6 @@
 				</li>
 			</ul>
 			<!--filter-->
-			<div class="tags-wrap margin-b-n">
-				<div class="tag">
-					Steven F.
-					<span class="glyphicon glyphicon-remove delete" aria-hidden="true"></span>
-				</div>
-				<!--tag-->
-				<div class="tag">
-					Jo
-					<span class="glyphicon glyphicon-remove delete" aria-hidden="true"></span>
-				</div>
-				<!--tag-->
-				<div class="tag">
-					Stan
-					<span class="glyphicon glyphicon-remove delete" aria-hidden="true"></span>
-				</div>
-				<!--tag-->
-			</div>
 		</div>
 		<!--filter-box-->
 	</div>
@@ -76,7 +59,7 @@
 
 	<div class="padding-box feed">
 
-
+		
 		<!--card-->
 		<log-item item="sbCtrl.logItem"></log-item>
 		<div class="card">
@@ -95,8 +78,7 @@
 					<h5><strong>By John V.</strong></h5>
 					<div class="limit-width">
 						<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc vulputate id tellus eget dapibus. Fusce tempor pharetra
-							commodo.
-						</p>
+							commodo.</p>
 					</div>
 				</div>
 				<!--col-md-9-->
@@ -130,8 +112,7 @@
 					<h5><strong>By John V.</strong></h5>
 					<div class="limit-width">
 						<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc vulputate id tellus eget dapibus. Fusce tempor pharetra
-							commodo.
-						</p>
+							commodo.</p>
 					</div>
 				</div>
 				<!--col-md-9-->
@@ -165,8 +146,7 @@
 					<h5><strong>By John V.</strong></h5>
 					<div class="limit-width">
 						<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc vulputate id tellus eget dapibus. Fusce tempor pharetra
-							commodo.
-						</p>
+							commodo.</p>
 					</div>
 				</div>
 				<!--col-md-9-->
@@ -200,8 +180,7 @@
 					<h5><strong>By John V.</strong></h5>
 					<div class="limit-width">
 						<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc vulputate id tellus eget dapibus. Fusce tempor pharetra
-							commodo.
-						</p>
+							commodo.</p>
 					</div>
 				</div>
 				<!--col-md-9-->
@@ -239,12 +218,12 @@
 				</a>
 			</li>
 			<li role="presentation" ng-class="{'active': slCtrl.itemTypeIndex == slCtrl.fwupIndex}">
-				<a aria-controls="messages" role="tab" ng-click="slCtrl.itemTypeIndex = slCtrl.fwupIndex">
+				<a  aria-controls="messages" role="tab" ng-click="slCtrl.itemTypeIndex = slCtrl.fwupIndex">
 					<span class="glyphicon glyphicon-arrow-up" aria-hidden="true"></span> Follow Ups
 				</a>
 			</li>
 			<li role="presentation" ng-class="{'active': slCtrl.itemTypeIndex == slCtrl.meetIndex}">
-				<a aria-controls="settings" role="tab" ng-click="slCtrl.itemTypeIndex = slCtrl.meetIndex">
+				<a  aria-controls="settings" role="tab" ng-click="slCtrl.itemTypeIndex = slCtrl.meetIndex">
 					<span class="glyphicon glyphicon-globe" aria-hidden="true"></span> Meeting
 				</a>
 			</li>
@@ -256,7 +235,7 @@
 
 		<div class="tab-content">
 
-			<div role="tabpanel" class="tab-pane active">
+			<div role="tabpanel" class="tab-pane active" >
 				<div class="row">
 					<div class="col-sm-12">
 						<textarea rows="2" placeholder="Communication" class="form-control margin-b"></textarea>
@@ -286,7 +265,7 @@
 			</div>
 			<!--tab-pane-->
 
-			<div role="tabpanel" class="tab-pane">
+			<div role="tabpanel" class="tab-pane" >
 				<div class="row">
 					<div class="col-sm-12">
 						<textarea rows="2" placeholder="Notes" class="form-control margin-b"></textarea>
@@ -311,7 +290,7 @@
 			</div>
 			<!--tab-pane-->
 
-			<div role="tabpanel" class="tab-pane">
+			<div role="tabpanel" class="tab-pane" >
 				<div class="row">
 					<div class="col-sm-6 margin-b-s">
 						<strong>Date / Time</strong>
