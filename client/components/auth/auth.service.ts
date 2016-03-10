@@ -42,6 +42,13 @@ namespace AuthServices {
 		getInvitation(): any {
 			return this.$window.localStorage.getItem('invitation') || undefined;
 		}
+		getInvitationUrlParam(): any {
+			const urlParams = {};
+			if (this.getInvitation()){
+				urlParams['inv'] = this.getInvitation();
+			}
+			return urlParams;
+		}
 	}
 
 	function AuthInterceptor(AuthToken: any, $q: any): any {

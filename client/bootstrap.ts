@@ -32,7 +32,10 @@ namespace app {
     // simple middleware to prevent unauthorized access and double log in attempt
     
     $rootScope.$on('$stateChangeStart', (event: any, toState: any, toParams: any, fromState: any, fromParams: any) => {
-      AuthToken.setInvitation($location.search()['inv']);
+      
+      if (!AuthToken.getInvitation()){
+        AuthToken.setInvitation($location.search()['inv']);  
+      }
       if (NoTokenState.indexOf(toState.name) === -1) { // should be logged in
         if (!AuthToken.isLoggedIn()) { // prevent double log in
           event.preventDefault();
@@ -42,7 +45,8 @@ namespace app {
       } else { // should not be logged in
         if (AuthToken.isLoggedIn()) { // prevent double log in
           event.preventDefault();
-          $state.go('main.dashboard', {}, { reload: true });
+          const urlParam = AuthToken.getInvitationUrlParam();
+          $state.go('main.dashboard', urlParam, { reload: true });
         }
       }
 

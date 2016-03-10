@@ -14,7 +14,7 @@ namespace AccountService {
 			},
 			'accountOrganizationMember': {
 				method: 'GET',
-				url: BACK_END_ROUTE + '/account-organization-member/_find?ido=' + AuthToken.getIdO()
+				url: BACK_END_ROUTE + '/account-organization-member/_find'
 			},
 			'accountOrganizations': {
 				method: 'GET',
@@ -55,7 +55,7 @@ namespace AccountService {
 			return this.$resourceHelper.resourceRESTCall(this.$AccountRESTResource, 'accountOrganization', {ido: this.AuthToken.getIdO()});
 		};
 		accountOrganizationMember = () => {
-			return this.$resourceHelper.resourceRESTCall(this.$AccountRESTResource, 'accountOrganizationMember');
+			return this.$resourceHelper.resourceRESTCall(this.$AccountRESTResource, 'accountOrganizationMember', {ido: this.AuthToken.getIdO()});
 		};
 		accountOrganizations = () => {
 			return this.$resourceHelper.resourceRESTCall(this.$AccountRESTResource, 'accountOrganizations');

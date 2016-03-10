@@ -10,8 +10,8 @@ namespace Lead {
                     'main': {
                         templateUrl: 'components/lead/new_lead.html',
                         controller: 'NewLeadController',
-                        controllerAs: 'nlCtrl',
-                    },
+                        controllerAs: 'nlCtrl'
+                    }
                 },
                 
                 params: {
@@ -29,8 +29,8 @@ namespace Lead {
                 views: {
                     'main': {
                       templateUrl: 'components/lead/all_leads.html',
-                    },
-                },
+                    }
+                }
             })
             .state('main.selectedLead', {
                 url: '/lead/:id',
@@ -44,11 +44,11 @@ namespace Lead {
                         templateUrl: 'components/lead/right_bar.html',
                         controller: 'SelectedLeadRightBarController',
                         controllerAs: 'slrbCtrl',
-                    },
+                    }
                 },
                
                 params: {
-                    lead: '@',
+                    lead: '@'
                 },
                 resolve:{
 
@@ -86,7 +86,7 @@ namespace Lead {
                             } 
                                 
                         });
-                
+                       
                     }, 
                     unaddedContacts: function($LeadRESTService: any,$stateParams: any) {
                         return $LeadRESTService.findContactsNotInLead($stateParams.id).then((response: any) => {
@@ -99,6 +99,7 @@ namespace Lead {
                             if (response.success)
                                 return response.data
                         });
+                    }
                 },
                 onEnter: function($stateParams: any, $state: any, $LeadRESTService: any) {
                     //map company to id
@@ -153,7 +154,7 @@ namespace Lead {
                     this.$state.go('main.selectedLead',{id: response.data._id, lead: response.data});
                     this.$LeadRESTService.selectedLead = response.data;           
                 } else {
-                    this.toastr.error("Cannot create a sale, please check for a sale with the same name")
+                    this.toastr.error("Cannot create a sale, please check for a sale with the same name");
                 }
             })
         }

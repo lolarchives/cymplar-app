@@ -31,25 +31,25 @@ namespace Login {
 		submitDomain() {
 			if (this.domain !== undefined && this.domain.trim() !== '') {
 				this.$LoginRESTService.accountOrganizationLogin(this.domain).then((response: any) => {
-				
 					this.domainExist = response.success;
 					if (this.domainExist) {
-						this.accountOrganizationId = response.data._id; 
+						this.accountOrganizationId = response.data._id;
 					}
 				});
 			}
 		}
 		
 		login() {
-			this.loginDetails.organization = this.accountOrganizationId;
+			const organization = this.accountOrganizationId;
+			this.loginDetails.organization = organization;
 			this.$LoginRESTService.accountLogin(this.loginDetails).then((response: any) => {
-			
 				this.loginError = !response.success;
 				this.errorMessage = response.msg;
 				if (response.success) {
 					this.AuthToken.setToken(response.data.token);
-					this.AuthToken.setIdO(this.accountOrganizationId);
-					this.$state.transitionTo('main.dashboard');
+					this.AuthToken.setIdO(organization);
+					const urlInvParam = this.AuthToken.getInvitationUrlParam();
+					this.$state.transitionTo('main.dashboard', urlInvParam);
 				}
 			});
 		}
@@ -57,6 +57,11 @@ namespace Login {
 		switchDomain() {
 			this.domainExist = undefined;
 			this.accountOrganizationId = undefined;
+		}
+		
+		resgisterNow() {
+			const urlParam = this.AuthToken.getInvitationUrlParam();
+      		this.$state.go('signup', urlParam, { reload: true });
 		}
 	};
 	angular

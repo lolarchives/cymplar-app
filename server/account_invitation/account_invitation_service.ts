@@ -22,7 +22,7 @@ export class AccountInvitationService extends BaseService<AccountInvitation> {
 					subject : 'You have been invited to use Cymplar',
 					html	: this.getHtmlText(accountInvitation),
 					text    : `You have been invited to the organization, you can join the organization either
-							   using the following link http://localhost:5555/#/login?inv=${accountInvitation._id}
+							   using the following link ${process.env.CYMPLAR_SERVER}/#/login?inv=${accountInvitation._id}
 							   or providing this code when requested after the login/signup ${accountInvitation.code}`
 				};
 				
@@ -96,7 +96,7 @@ export class AccountInvitationService extends BaseService<AccountInvitation> {
 						</tr>
 						<tr>
 							<td style="padding:0;">
-								<a href="http://localhost:5555/#/login?inv=${data._id}" style="color:#fff; font-size:18px; text-decoration:none; color:#fff; font-weight:600; font-size:16px; display: inline-block; border-radius:3px; line-height:1; padding:20px 40px; background:#5cb85c;">Join now</a>
+								<a href="${process.env.CYMPLAR_SERVER}/#/login?inv=${data._id}" style="color:#fff; font-size:18px; text-decoration:none; color:#fff; font-weight:600; font-size:16px; display: inline-block; border-radius:3px; line-height:1; padding:20px 40px; background:#5cb85c;">Join now</a>
 							</td>
 						</tr>
 					</tbody>

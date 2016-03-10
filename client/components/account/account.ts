@@ -130,6 +130,8 @@ namespace accountSettings {
             this.$AccountRESTService.saveAccountOrganizationMember(theProfileToSave).then(function(response: any) {
                 if (response.success) {
                     modalInstance.close(response.data);
+                } else {
+                    this.toastr.error(response.msg);
                 }
             });           
         }
@@ -149,7 +151,11 @@ namespace accountSettings {
 			} else {
 				this.checkingEmail = false;
 			}
-		};
+		}
+        
+        unAuthorized(): boolean {
+            return this.profile.role.code !== 'OWNER';
+        }
     }
     
     export class AccountOrganizationTeamController {
@@ -235,6 +241,8 @@ namespace accountSettings {
             this.$AccountRESTService.saveAccountOrganizationMember(theProfileToSave).then(function(response: any) {
                 if (response.success) {
                     modalInstance.close(response.data);
+                } else {
+                    this.toastr.error(response.msg);
                 }
             });           
         }
@@ -261,6 +269,8 @@ namespace accountSettings {
             this.$InvitationRESTService.sendInvitation(invitation, this.organization._id).then(function(response: any) {
                 if (response.success) {
                     modalInstance.close(response.data);
+                } else {
+                    this.toastr.error(response.msg);
                 }
             });           
         }

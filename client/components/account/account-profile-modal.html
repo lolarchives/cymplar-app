@@ -10,7 +10,7 @@
                     <label for="role" class="margin-b-n"><strong class="text-danger">*</strong> Role</label>
                 </div>
                 <div class="col-md-7">
-                    <select class="form-control" id="role" name="role" required ng-options="role._id as role.name for role in mProfCtrl.roles" ng-model="mProfCtrl.newProfile.role._id">
+                    <select class="form-control" id="role" name="role" required ng-options="role._id as role.name for role in mProfCtrl.roles" ng-model="mProfCtrl.newProfile.role._id" ng-disabled="mProfCtrl.unAuthorized()">
                         <option></option>
                     </select>
                 </div>
