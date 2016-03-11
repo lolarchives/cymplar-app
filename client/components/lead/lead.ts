@@ -163,6 +163,12 @@ namespace Lead {
     }
     
     export class SelectedLeadController{
+        
+        logItemFilter = (value: any, index: any, array: any[]) => {
+            if (this.queryTypeIndex == -1) return true;
+            else return value.type == this.logItemTypes[this.queryTypeIndex]._id;
+        }
+        
         private commIndex: number; 
         private fwupIndex: number;
         private noteIndex: number;
@@ -172,7 +178,33 @@ namespace Lead {
         private queryTypeIndex: number;
         private newLogItem: any;
         private datePicker: any;
-        private logItems: any = [""];
+        private logItems: any = [
+            {
+                createBy: "President snow",
+                "type": "56ddf9fe7aff8e3ce782ba67",
+                "content": "This is a meeting",
+                "dateTime": "12-06-2016",
+                "location": "Some string location (temporal)",
+                'edited': true
+            },
+            {
+                createBy: "Gecko Mozilla",
+                "type": "56ddf9fe7aff8e3ce782ba66",
+                "content": "This is a follow up",
+                "dateTime": "12-06-2016"
+            },
+            {
+                createBy: "Jon Snow",
+                "type": "56ddf9fe7aff8e3ce782ba64",
+                "content": "this is a communication",
+                edited: true
+            },
+            {
+                createBy: "Jon AppleSmith",
+                "type": "56ddf9fe7aff8e3ce782ba65",
+                "content": "this is a note"
+            }
+        ];
         
         constructor(private $stateParams: any, private $AddressBookRESTService: any, private $LeadRESTService: any, private $state:any,private roleInLead: any,private contacts: any, private unaddedContacts: any,
             private socket: any,private logItemTypes: any) {

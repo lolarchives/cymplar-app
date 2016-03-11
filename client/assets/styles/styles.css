@@ -625,8 +625,9 @@ p:focus, a:focus {
 	}
 
 .red-link:hover {
-	color:#cf2a0e;
-	}
+	/*color:#cf2a0e;*/
+	text-decoration: none;
+}
 
 .limit-width {
     max-width: 700px;

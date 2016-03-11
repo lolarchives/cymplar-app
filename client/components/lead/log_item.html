@@ -2,23 +2,33 @@
 	<div class="row">
 		<div class="col-md-3">
 			<h4 class="title">
-				<a class="red-link">
+				<p class="red-link" ng-show="liCtrl.item.type == liCtrl.noteType._id ">
                 	<span class="glyphicon glyphicon-pushpin"></span>
                      Notes  
-                </a>
-                <a class="red-link">
+                </p>
+                <a class="red-link" ng-show="liCtrl.item.type == liCtrl.commType._id ">
                 	<span class="glyphicon glyphicon-comment"></span>
                     Communications
                	</a>
+				<a class="red-link" ng-show="liCtrl.item.type == liCtrl.fwupType._id ">
+                	<span class="glyphicon glyphicon-arrow-up"></span>
+                    Follow Ups
+               	</a>
+				<a class="red-link" ng-show="liCtrl.item.type == liCtrl.meetType._id ">
+                	<span class="glyphicon glyphicon-globe"></span>
+                    Meeting   
+                </a>
+				<small ng-show="liCtrl.item.edited">(edited)</small>
             </h4>
-			<p class="time"><small> Today at 8:45pm</small></p>
+			<p class="time" ng-show="liCtrl.item.type == liCtrl.fwupType._id || liCtrl.item.type == liCtrl.meetType._id "><small><strong> {{liCtrl.item.dateTime || 'No time selected'}}</strong></small></p>
+			<p class="time" ng-show="liCtrl.item.type == liCtrl.meetType._id " > <small><strong> at {{liCtrl.item.location || 'No location selected'}}</strong></small></p>
+			<p class="time"><small> {{liCtrl.item.createdAt || 'Undefined time'}}</small></p>
 		</div>
 		<!--col-md-3-->
 		<div class="col-md-9">
-			<h5><strong>By John V.</strong></h5>
+			<h5><strong>By {{liCtrl.item.createBy}}</strong> </h5> 
 			<div class="limit-width">
-				<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc vulputate id tellus eget dapibus. Fusce tempor pharetra
-					commodo.
+				<p>{{liCtrl.item.content}}
 				</p>
 			</div>
 		</div>
@@ -27,8 +37,8 @@
 		<div class="dropdown control">
 			<span class="glyphicon glyphicon-option-horizontal" aria-hidden="true" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></span>
 			<ul class="dropdown-menu dropdown-menu-right">
-				<li><a href="#">Edit</a></li>
-				<li><a href="#">Delete</a></li>
+				<li><a>Edit</a></li>
+				<li><a>Delete</a></li>
 			</ul>
 		</div>
 		<!--dropdown -->
