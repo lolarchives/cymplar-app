@@ -8,7 +8,37 @@ export class LogItemService extends BaseService<LogItem> {
 
 	constructor() {
 		const defaultModelOptions: ModelOptions = {
-			population: 'type',
+			population: [
+				{
+					path: 'type'
+				},
+				{
+					path: 'createdBy',
+					select: 'member role -_id',
+					populate: [
+						{
+							path: 'member',
+							select: 'user role -_id',
+							model: 'accountOrganizationMember',
+							populate: [ 
+								{
+									path: 'user',
+									select: 'firstName lastName middleName -_id',
+									model: 'accountUser'	
+								},
+								{
+									path: 'role',
+									model: 'accountMemberRole'
+								}
+							]
+						},
+						{
+							path: 'role',
+							model: 'salesLeadMemberRole'
+						}
+					]	
+				}
+			],
 			copyAuthorizationData: ''
 		};
 		super(LogItemModel, defaultModelOptions);

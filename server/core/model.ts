@@ -233,7 +233,7 @@ const schemas = {
     dateTime: { type: Number },
     location: { type: String },
     edited: { type: Boolean },
-    createdBy: { type: ObjectId, ref: 'accountOrganizationMember', required: true },
+    createdBy: { type: ObjectId, ref: 'salesLeadOrganizationMember', required: true },
     createdAt: { type: Number },
     updatedAt: { type: Number }
   })
