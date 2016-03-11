@@ -35,17 +35,20 @@
 						<strong>Date / Time</strong>
 
 						<div class="input-group">
-							<input type="text" class="form-control" close-on-date-selection="true" datetime-picker="dd/MM/yyyy HH:mm" ng-model="slCtrl.datePicker" is-open="slCtrl.dateOpen"
-							/>
+							<input type="text" class="form-control" readonly datetime-picker="dd/MM/yyyy HH:mm" ng-model="slCtrl.datePicker" is-open="slCtrl.dateOpen"
+							close-on-date-selection="false" />
 							<span class="input-group-btn">
                 				<button type="button" class="btn btn-default" ng-click="slCtrl.dateOpen = !slCtrl.dateOpen"><i class="fa fa-calendar"></i></button>
             				</span>
+							
 						</div>
+
+						<p ng-show="slCtrl.pleasePickADate" style="color:#c9302c"><b>Please pick a date</b></p>
 					</div>
 					<!--col-md-4-->
-					<div class="col-sm-4 margin-b-s" ng-show="slCtrl.itemTypeIndex == slCtrl.meetIndex">
+					<div class="col-sm-4 margin-b-s" ng-if="slCtrl.itemTypeIndex == slCtrl.meetIndex">
 						<strong>Location</strong>
-						<input type='text' class="form-control" />
+						<input type='text' class="form-control" required ng-model="slCtrl.newLogItem.location"/>
 					</div>
 					<!--col-md-4-->
 					<div class=" margin-b-s" ng-if="slCtrl.itemTypeIndex == slCtrl.meetIndex || slCtrl.itemTypeIndex == slCtrl.fwupIndex" ng-class="{'col-sm-4':slCtrl.itemTypeIndex == slCtrl.meetIndex,'col-sm-6':slCtrl.itemTypeIndex == slCtrl.fwupIndex}">

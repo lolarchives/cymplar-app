@@ -32,7 +32,7 @@ namespace LeadDirective {
         if ($LogItemRESTService.allLogItemTypesCached[i].code == 'FWUP') this.fwupType = $LogItemRESTService.allLogItemTypesCached[i];
         if ($LogItemRESTService.allLogItemTypesCached[i].code == 'MEET') this.meetType = $LogItemRESTService.allLogItemTypesCached[i];
       }
-      console.log(moment);
+      console.log(this.commType,$LogItemRESTService.allLogItemTypesCached);
     }
   }
 

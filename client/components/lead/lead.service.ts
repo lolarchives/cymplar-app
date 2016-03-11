@@ -106,7 +106,7 @@ namespace LeadService {
 
 
 	function $LogItemRESTResource($resource: angular.resource.IResourceService,
-		AuthToken: any, $LeadRESTService: any): angular.resource.IResourceClass<any> {
+		AuthToken: any, $LeadRESTService: any, $stateParams: any): angular.resource.IResourceClass<any> {
 		let resources: angular.resource.IResourceClass<any> = $resource("", {}, {
 			'getLogItemTypes': {
 				method: 'GET',
@@ -122,13 +122,18 @@ namespace LeadService {
 			},
 			'newLogItem': {
 				method: 'POST',
-				url: BACK_END_ROUTE + '/log-item/?ido=' + AuthToken.getIdO()+"&idl=:leadId"+  
+				url: BACK_END_ROUTE + '/log-item/?ido=' + AuthToken.getIdO()
+				
+			},
+			'loadLogItem': {
+				method: 'GET',
+				url: BACK_END_ROUTE + '/log-item/_find'
 			}
 		});
 		return resources;
 	}
 	export class $LogItemRESTService {
-		private allLeadsCached: any[] = [];
+		private allLogItemsCached: any[] = [];
 		private selectedLead: any;
 		private allLogItemTypesCached: any[] = [];
 		constructor(private $LeadRESTResource: any, private $LogItemRESTResource: any,
@@ -145,16 +150,34 @@ namespace LeadService {
 			});
 		}
 		deleteLogItem(logItem: any) {
-			return this.$resourceHelper.resourceRESTCall(this.$LogItemRESTResource, "deleteLogItem", {idl: this.$LeadRESTService.selectedLead._id, id: logItem._id, ido: this.AuthToken.getIdO() } ,true).then((response: any) => {
+			return this.$resourceHelper.resourceRESTCall(this.$LogItemRESTResource, "deleteLogItem", { idl: this.$LeadRESTService.selectedLead._id, id: logItem._id, ido: this.AuthToken.getIdO() }, true).then((response: any) => {
 			});
 		}
 		editLogItem(logItem: any) {
-			return this.$resourceHelper.resourceRESTCall(this.$LogItemRESTResource, "editLogItem", {idl: this.$LeadRESTService.selectedLead._id, id: logItem._id, ido: this.AuthToken.getIdO() } ,true).then((response: any) => {
+			return this.$resourceHelper.resourceRESTCall(this.$LogItemRESTResource, "editLogItem", { idl: this.$LeadRESTService.selectedLead._id, id: logItem._id, ido: this.AuthToken.getIdO() }, true).then((response: any) => {
 			});
 		}
 		newLogItem(logItem: any) {
-			return this.$resourceHelper.resourceRESTCall(this.$LogItemRESTResource, "newLogItem", {idl: this.$LeadRESTService.selectedLead._id, id: logItem._id, ido: this.AuthToken.getIdO() } ,true).then((response: any) => {
-			});
+			logItem.idl = this.$LeadRESTService.selectedLead._id;
+			return this.$resourceHelper.resourceRESTCall(this.$LogItemRESTResource, "newLogItem",  logItem, true);
+		}
+		preloadLogItem(selectedLeadId: string) {
+			return this.$resourceHelper.resourceRESTCall(this.$LogItemRESTResource, "loadLogItem",{idl: selectedLeadId,ido: this.AuthToken.getIdO() }).then((response: any) => {
+				if (response.success) {
+					this.allLogItemsCached = response.data;
+					return response.data;
+				} else {
+					return {};
+				}
+			})
+		}
+		loadMoreLogItem(lastItem: any) {
+			return this.$resourceHelper.resourceRESTCall(this.$LogItemRESTResource, "loadLogItem").then((response: any) => {
+				if (response.success) {
+					this.allLogItemsCached.push(response.data);
+					return response.data;
+				}
+			})
 		}
 
 	}

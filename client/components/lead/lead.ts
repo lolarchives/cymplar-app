@@ -101,6 +101,9 @@ namespace Lead {
                     },
                     logItemTypes: function($LogItemRESTService: any) {
                         return $LogItemRESTService.getLogItemTypes();
+                    },
+                    logItems: function($LogItemRESTService: any, $stateParams: any) {
+                        return $LogItemRESTService.preloadLogItem($stateParams.id);
                     }
                 },
                 onEnter: function($stateParams: any, $state: any, $LeadRESTService: any) {
@@ -178,6 +181,7 @@ namespace Lead {
         private queryTypeIndex: number;
         private newLogItem: any;
         private datePicker: any;
+        private pleasePickADate: boolean;
         private logItems: any = [
             {
                 createBy: "President snow",
@@ -207,13 +211,14 @@ namespace Lead {
         ];
         
         constructor(private $stateParams: any, private $AddressBookRESTService: any, private $LeadRESTService: any, private $state:any,private roleInLead: any,private contacts: any, private unaddedContacts: any,
-            private socket: any,private logItemTypes: any) {
+            private socket: any,private logItemTypes: any,private $LogItemRESTService: any) {
             for (let i = 0; i < logItemTypes.length; i++){
                 if (logItemTypes[i].code == 'COMM') this.commIndex = i;
-                if (logItemTypes[i].code == 'NOTE') this.fwupIndex = i;
-                if (logItemTypes[i].code == 'FWUP') this.noteIndex = i;
+                if (logItemTypes[i].code == 'NOTE') this.noteIndex = i;
+                if (logItemTypes[i].code == 'FWUP') this.fwupIndex = i;
                 if (logItemTypes[i].code == 'MEET') this.meetIndex = i;
             }
+            this.pleasePickADate = false;
             this.itemTypeIndex = this.fwupIndex;
             this.showLog = true;
             this.queryTypeIndex = -1;
@@ -221,13 +226,28 @@ namespace Lead {
         }
         addLogItem() {
             this.newLogItem.type = this.logItemTypes[this.itemTypeIndex];
-            this.newLogItem.dateTime = this.datePicker;
-            console.log(this.newLogItem,this.itemTypeIndex);
+            this.pleasePickADate = false;
+            if (this.itemTypeIndex == this.fwupIndex || this.itemTypeIndex == this.meetIndex ) {
+                if (this.datePicker != undefined) {
+                   this.newLogItem.dateTime = this.datePicker.valueOf();
+                } else {
+                   this.pleasePickADate = true;
+                }
+            } 
+                
+            if (!this.pleasePickADate) {
+                this.$LogItemRESTService.newLogItem(this.newLogItem).then((response: any) => {
+                    if (response.success) {
+                        this.newLogItem = {};
+                        this.datePicker = undefined;
+                    }
+                }) 
+            }    
+            
         }
     }
     export class SelectedLeadRightBarController{
-      
-        private selectedLead:any = "selected_lead";
+  
         private editing:boolean = false;
         private editingLead: any;
         private $LeadRESTService: any;
