@@ -55,6 +55,8 @@ export class SocketIOCymplarService {
                 socket.on('leadLogJoin', (notification: SocketNotification) => {
                         const room = ObjectUtil.getStringUnionProperty(notification.lead);
                         
+                        console.log('someone joined the room: ' + room);
+ 
                         const sendFormat = {
                                 success: true,
                                 data: notification,
@@ -97,6 +99,7 @@ export class SocketIOCymplarService {
                                 message: 'new log activity'
                         };
                         
+                        console.log('sending broadCast to: ' + room);
                         socket.broadcast.to(room).emit('leadLogAdded', sendFormat);
                 });
                 

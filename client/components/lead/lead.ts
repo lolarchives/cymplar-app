@@ -208,6 +208,8 @@ namespace Lead {
                 "type": "56ddf9fe7aff8e3ce782ba65",
                 "content": "this is a note"
             }
+            
+            
         ];
         
         constructor(private $stateParams: any, private $AddressBookRESTService: any, private $LeadRESTService: any, private $state:any,private roleInLead: any,private contacts: any, private unaddedContacts: any,
@@ -223,6 +225,18 @@ namespace Lead {
             this.showLog = true;
             this.queryTypeIndex = -1;
             console.log(this.moment);
+            
+            const joinNotification {
+                lead: this.$LeadRESTService.selectedLead._id;
+                message: 'this is optional';
+            }
+
+            this.socket.emit('leadLogJoin', joinNotification);
+            
+            this.socket.on('leadLogAdded', (data: any) => {
+                console.log('push something dom' + JSON.stringify(data));
+            });
+            
            
         }
         addLogItem() {
@@ -239,6 +253,14 @@ namespace Lead {
             if (!this.pleasePickADate) {
                 this.$LogItemRESTService.newLogItem(this.newLogItem).then((response: any) => {
                     if (response.success) {
+                   
+                        const notification {
+                            lead: response.data['lead'];
+                            message: 'this is optional';
+                            data:  response.data;
+                        }
+                        
+                        this.socket.emit('leadLogAdd', notification);
                         this.newLogItem = {};
                         this.datePicker = undefined;
                     }
