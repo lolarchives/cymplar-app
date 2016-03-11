@@ -211,7 +211,7 @@ namespace Lead {
         ];
         
         constructor(private $stateParams: any, private $AddressBookRESTService: any, private $LeadRESTService: any, private $state:any,private roleInLead: any,private contacts: any, private unaddedContacts: any,
-            private socket: any,private logItemTypes: any,private $LogItemRESTService: any) {
+            private socket: any,private logItemTypes: any,private $LogItemRESTService: any, private moment: any) {
             for (let i = 0; i < logItemTypes.length; i++){
                 if (logItemTypes[i].code == 'COMM') this.commIndex = i;
                 if (logItemTypes[i].code == 'NOTE') this.noteIndex = i;
@@ -222,6 +222,7 @@ namespace Lead {
             this.itemTypeIndex = this.fwupIndex;
             this.showLog = true;
             this.queryTypeIndex = -1;
+            console.log(this.moment);
            
         }
         addLogItem() {

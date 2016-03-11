@@ -114,7 +114,10 @@ namespace LeadService {
 			},
 			'deleteLogItem': {
 				method: 'DELETE',
-				url: BACK_END_ROUTE + '/log-item/:id'
+				url: BACK_END_ROUTE + '/log-item/:id',
+				params : {
+					id: "id"
+				}
 			},
 			'editLogItem': {
 				method: 'PUT',
@@ -135,10 +138,11 @@ namespace LeadService {
 	export class $LogItemRESTService {
 		private allLogItemsCached: any[] = [];
 		private selectedLead: any;
+		private loadMore: boolean;
 		private allLogItemTypesCached: any[] = [];
 		constructor(private $LeadRESTResource: any, private $LogItemRESTResource: any,
 			private $resourceHelper: any, private AuthToken: any, private $LeadRESTService: any) {
-
+		
 		}
 		getLogItemTypes() {
 			return this.$resourceHelper.resourceRESTCall(this.$LogItemRESTResource, "getLogItemTypes").then((response: any) => {
@@ -150,8 +154,7 @@ namespace LeadService {
 			});
 		}
 		deleteLogItem(logItem: any) {
-			return this.$resourceHelper.resourceRESTCall(this.$LogItemRESTResource, "deleteLogItem", { idl: this.$LeadRESTService.selectedLead._id, id: logItem._id, ido: this.AuthToken.getIdO() }, true).then((response: any) => {
-			});
+			return this.$resourceHelper.resourceRESTCall(this.$LogItemRESTResource, "deleteLogItem", { idl: this.$LeadRESTService.selectedLead._id, id: logItem._id, ido: this.AuthToken.getIdO() }, true)
 		}
 		editLogItem(logItem: any) {
 			return this.$resourceHelper.resourceRESTCall(this.$LogItemRESTResource, "editLogItem", { idl: this.$LeadRESTService.selectedLead._id, id: logItem._id, ido: this.AuthToken.getIdO() }, true).then((response: any) => {
@@ -165,6 +168,11 @@ namespace LeadService {
 			return this.$resourceHelper.resourceRESTCall(this.$LogItemRESTResource, "loadLogItem",{idl: selectedLeadId,ido: this.AuthToken.getIdO() }).then((response: any) => {
 				if (response.success) {
 					this.allLogItemsCached = response.data;
+					if (response.data.length <20) {
+						this.loadMore = false;
+					} else {
+						this.loadMore = true;
+					}
 					return response.data;
 				} else {
 					return {};
@@ -175,6 +183,11 @@ namespace LeadService {
 			return this.$resourceHelper.resourceRESTCall(this.$LogItemRESTResource, "loadLogItem").then((response: any) => {
 				if (response.success) {
 					this.allLogItemsCached.push(response.data);
+					if (response.data.length <20) {
+						this.loadMore = false;
+					} else {
+						this.loadMore = true;
+					}
 					return response.data;
 				}
 			})
