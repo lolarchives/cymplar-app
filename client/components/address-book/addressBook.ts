@@ -181,15 +181,16 @@ namespace AddressBook {
         }
         remove() {
 
-            let result: boolean = confirm("Are you sure. All the contact belong to this group will be lost?");
+            let result: boolean = confirm('Are you sure. All the contact belong to this group will be lost?');
             if (result) {
                 this.$AddressBookRESTService.deleteCompany(this.$AddressBookRESTService.selectedCompany._id).then((response: any) => {
                     if (response.success) {
 
-                        let index = this.ultiHelper.indexOfFromId(this.$AddressBookRESTService.allCompaniesCached, this.$AddressBookRESTService.selectedCompany);
+                        let index = this.ultiHelper.indexOfFromId(this.$AddressBookRESTService.allCompaniesCached, 
+                            this.$AddressBookRESTService.selectedCompany);
                         this.$AddressBookRESTService.allCompaniesCached.splice(index, 1);
                         this.$AddressBookRESTService.selectedCompany = undefined;
-                        this.toastr.success("Delete group success");
+                        this.toastr.success('Delete group success');
                         this.$state.go('main.dashboard');
                     } else {
                         this.toastr.error(response.msg);
@@ -309,7 +310,8 @@ namespace AddressBook {
             if (!(this.editingCompany.queryingCity || this.editingCompany.disableCity)) {
                 this.$AddressBookRESTService.editCompany(this.editingCompany).then((response: any) => {
                     if (response.success) {
-                        let index = this.ultiHelper.indexOfFromId(this.$AddressBookRESTService.allCompaniesCached, this.$AddressBookRESTService.selectedCompany);
+                        let index = this.ultiHelper.indexOfFromId(this.$AddressBookRESTService.allCompaniesCached, 
+                            this.$AddressBookRESTService.selectedCompany);
 
                         this.$AddressBookRESTService.allCompaniesCached[index] = response.data;
                         this.$AddressBookRESTService.selectedCompany = this.$AddressBookRESTService.allCompaniesCached[index];
@@ -356,18 +358,18 @@ namespace AddressBook {
         }
         removeContact(contact: any) {
 
-            let result: boolean = confirm("Are you sure? Once deleted the contact data can't be restore");
+            let result: boolean = confirm(`Are you sure? Once deleted the contact data can't be restore`);
             if (result) {
                 this.$AddressBookRESTService.deleteContact(contact).then((response: any) => {
                     if (response.success) {
                         let index = this.$AddressBookRESTService.selectedCompany.contacts.indexOf(contact);
                         this.$AddressBookRESTService.selectedCompany.contacts.splice(index, 1);
-                        this.toastr.success("Delete contact success");
+                        this.toastr.success('Delete contact success');
                     } else {
                         this.toastr.error(response.msg);
                     }
                 });
-            };
+            }
         }
         startEditContact(contact: any) {
 
@@ -390,7 +392,7 @@ namespace AddressBook {
             private leads: any, private leadStatuses: any,
             private $AddressBookRESTService: any, private toastr: any,
             private $uibModal: any, private ultiHelper: any, private $filter: any) {
-            this.countBy = $filter("countBy")(leads,"status.code")
+            this.countBy = $filter('countBy')(leads, 'status.code');
             this.countBy.HOT = this.countBy.HOT || 0;
             this.countBy.OPP = this.countBy.OPP || 0;
             this.countBy.LOST = this.countBy.LOST || 0;
@@ -398,8 +400,8 @@ namespace AddressBook {
             this.countBy.WARM = this.countBy.WARM || 0; 
             this.countBy.COLD = this.countBy.COLD || 0;
             this.countBy.IN = (this.countBy.IN || 0) + this.countBy.LOST;
-            this.countBy.LEAD = this.countBy.HOT + this.countBy.COLD + this.countBy.WARM
-            console.log('lead',leads,this.countBy);
+            this.countBy.LEAD = this.countBy.HOT + this.countBy.COLD + this.countBy.WARM;
+            console.log('lead', leads, this.countBy);
             
         }
     }

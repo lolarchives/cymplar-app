@@ -44,7 +44,7 @@ namespace AuthServices {
 		}
 		getInvitationUrlParam(): any {
 			const urlParams = {};
-			if (this.getInvitation()){
+			if (this.getInvitation()) {
 				urlParams['inv'] = this.getInvitation();
 			}
 			return urlParams;

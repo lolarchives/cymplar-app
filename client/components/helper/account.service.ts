@@ -46,7 +46,7 @@ namespace AccountService {
 	
 	export class $AccountRESTService {
 		constructor(private $http: angular.IHttpService, private $AccountRESTResource: any, private $q: any, 
-			private $resourceHelper: any,private AuthToken: any) {
+			private $resourceHelper: any, private AuthToken: any) {
 		}
 		accountUser = () => {
 			return this.$resourceHelper.resourceRESTCall(this.$AccountRESTResource, 'accountUser');

@@ -67,7 +67,7 @@ export class ObjectUtil {
 		return filters;
 	}
 
-	static getBaseDtoObject(data: any, property: string = '_id'): any {
+	static getBaseDtoObject(data: any, property = '_id'): any {
 		if (ObjectUtil.isPresent(data[property])) {
 			return data;
 		} else {
@@ -77,7 +77,7 @@ export class ObjectUtil {
 		}
 	}
 	
-	static getStringUnionProperty(data: any, property: string = '_id'): string {
+	static getStringUnionProperty(data: any, property = '_id'): string {
 		if (ObjectUtil.isPresent(data[property])) {
 			return data[property];
 		} else {

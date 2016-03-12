@@ -82,7 +82,8 @@ export class AccountInvitationService extends BaseService<AccountInvitation> {
 					</tbody>
 				</table>
 				
-				<table style="max-width:600px; width:100%; background:#304c69 url(http://gdriv.es/cymweb/bg.png) no-repeat left bottom; text-align:center; padding:80px 30px;" align="center">
+				<table style="max-width:600px; width:100%; background:#304c69 url(http://gdriv.es/cymweb/bg.png) no-repeat left bottom; 
+				text-align:center; padding:80px 30px;" align="center">
 					<tbody>
 						<tr>
 							<td style="color:#fff; font-size:30px; font-weight:600; line-height:1.2; padding:0 0 10px;">
@@ -96,7 +97,9 @@ export class AccountInvitationService extends BaseService<AccountInvitation> {
 						</tr>
 						<tr>
 							<td style="padding:0;">
-								<a href="${process.env.CYMPLAR_SERVER}/#/login?inv=${data._id}" style="color:#fff; font-size:18px; text-decoration:none; color:#fff; font-weight:600; font-size:16px; display: inline-block; border-radius:3px; line-height:1; padding:20px 40px; background:#5cb85c;">Join now</a>
+								<a href="${process.env.CYMPLAR_SERVER}/#/login?inv=${data._id}" style="color:#fff; 
+								font-size:18px; text-decoration:none; color:#fff; font-weight:600; font-size:16px; 
+								display: inline-block; border-radius:3px; line-height:1; padding:20px 40px; background:#5cb85c;">Join now</a>
 							</td>
 						</tr>
 					</tbody>
@@ -111,7 +114,9 @@ export class AccountInvitationService extends BaseService<AccountInvitation> {
 						</tr>
 						<tr>
 							<td style="color:#333; padding-bottom:15px; ">
-								Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer libero tellus, aliquet maximus nisi vel, vestibulum efficitur nibh. Aenean sit amet augue eu sapien auctor viverra convallis nec velit. Integer in ante lobortis, facilisis tortor sed, venenatis sapien.
+								Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer libero tellus,
+								 aliquet maximus nisi vel, vestibulum efficitur nibh. Aenean sit amet augue eu 
+								 sapien auctor viverra convallis nec velit. Integer in ante lobortis, facilisis tortor sed, venenatis sapien.
 							</td>
 						</tr>
 						<tr>
@@ -121,14 +126,15 @@ export class AccountInvitationService extends BaseService<AccountInvitation> {
 						</tr>
 						<tr>
 							<td style="color:#333; padding:0 0 15px;">
-								Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer libero tellus, aliquet maximus nisi vel, vestibulum efficitur nibh. Aenean sit amet augue eu sapien auctor viverra convallis nec velit. Integer in ante lobortis, facilisis tortor sed, venenatis sapien.
+								Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer libero tellus, aliquet maximus nisi vel. 
+								Aenean sit amet augue eu sapien auctor viverra convallis nec velit. Integer in ante lobortis.
 							</td>
 						</tr>
 					</tbody>
 				</table>
 			</div>
 		</body>
-		</html>`
+		</html>`;
 		
 		return htmlString;
 	}

@@ -41,7 +41,7 @@ namespace HelperServices {
 					this.loadingModal.close();
 					error.data.status = error.status;
 				}
-				console.log('error',error)
+				console.log('error', error);
 				if (error.data.token === false) {
 					this.$rootScope.$broadcast('badToken', {data: 'Illegal token access'});
 				}
@@ -54,12 +54,12 @@ namespace HelperServices {
 		}
 	};
 	export class ultiHelper {
-		indexOfFromId(arr: any[], obj:any ) {
+		indexOfFromId(arr: any[], obj: any) {
 			
-			for	(let i = 0; i< arr.length; i++) {
-			
-				if (arr[i]._id === obj._id)
-					return i 
+			for	(let i = 0; i < arr.length; i++) {
+				if (arr[i]._id === obj._id) {
+					return i;
+				}
 			}
 			
 			return -1;

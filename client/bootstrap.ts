@@ -34,7 +34,7 @@ namespace app {
     
     $rootScope.$on('$stateChangeStart', (event: any, toState: any, toParams: any, fromState: any, fromParams: any) => {
       
-      if (!AuthToken.getInvitation()){
+      if (!AuthToken.getInvitation()) {
         AuthToken.setInvitation($location.search()['inv']);  
       }
       if (NoTokenState.indexOf(toState.name) === -1) { // should be logged in

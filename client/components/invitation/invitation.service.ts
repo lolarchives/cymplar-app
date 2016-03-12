@@ -33,33 +33,19 @@ namespace InvitationService {
 	
 	export class $InvitationRESTService {
 		constructor(private $http: angular.IHttpService, private $InvitationRESTResource: any, private $q: any, 
-			private $resourceHelper: any,private AuthToken: any) {
+			private $resourceHelper: any, private AuthToken: any) {
 		}
 		sendInvitation = (invitation: any, organization: string = this.AuthToken.getIdO()) => {
 			invitation['ido'] = organization;
 			return this.$resourceHelper.resourceRESTCall(this.$InvitationRESTResource, 'sendInvitation', invitation, true);
 		};
-		sendInvitationOrg = (invitation: any, organization: string) => {
-			invitation['ido'] = this.AuthToken.getIdO();
-			return this.$resourceHelper.resourceRESTCall(this.$InvitationRESTResource, 'sendInvitation', invitation, true);
-		};
 		getInvitation = (invitationId: string, organization: string = this.AuthToken.getIdO()) => {
 			return this.$resourceHelper.resourceRESTCall(this.$InvitationRESTResource, 'getInvitation', {id: invitationId, ido: organization});
-		};
-		getInvitationOrg = (invitationId: string, organization: string) => {
-			return this.$resourceHelper.resourceRESTCall(this.$InvitationRESTResource, 'getInvitation', {ido: organization, id: invitationId});
 		};
 		getInvitations = (organization: string = this.AuthToken.getIdO()) => {
 			return this.$resourceHelper.resourceRESTCall(this.$InvitationRESTResource, 'getInvitations', {ido: organization});
 		};
-		getInvitationsOrg = (organization: string) => {
-			return this.$resourceHelper.resourceRESTCall(this.$InvitationRESTResource, 'getInvitations', {ido: organization});
-		};
 		updateInvitation = (invitation: any, organization: string = this.AuthToken.getIdO()) => {
-			invitation['ido'] = organization;
-			return this.$resourceHelper.resourceRESTCall(this.$InvitationRESTResource, 'updateInvitation', invitation);
-		};
-		updateInvitationOrg = (invitation: any, organization: string) => {
 			invitation['ido'] = organization;
 			return this.$resourceHelper.resourceRESTCall(this.$InvitationRESTResource, 'updateInvitation', invitation);
 		};

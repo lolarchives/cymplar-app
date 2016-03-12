@@ -24,21 +24,30 @@ export function mainNavbar(): angular.IDirective {
 export class NavbarController {
 
   inactiveOrLostFilter = (value: any, index: any, array: any[]) => {
-    if (value.status == undefined) return false;
-    return value.status.code == this.lostStatus.code || value.status == this.inactiveStatus.code
+    if (value.status === undefined) {
+      return false;
+    }
+    return value.status.code === this.lostStatus.code || value.status === this.inactiveStatus.code;
   }
   opportunityFilter = (value: any, index: any, array: any[]) => {
-    if (value.status == undefined) return false;
-    return value.status.code == this.opporturnityStatus.code 
+    if (value.status === undefined) {
+      return false;
+    }
+    return value.status.code === this.opporturnityStatus.code; 
   }
   signedFilter = (value: any, index: any, array: any[]) => {
-    if (value.status == undefined) return false;
-    return value.status.code == this.signedStatus.code
+    if (value.status === undefined) {
+      return false;
+    }
+    return value.status.code === this.signedStatus.code;
   }
   leadFilter = (value: any, index: any, array: any[]) => {
     
-    if (value.status == undefined) return true;
-    return ( (value.status.code != this.lostStatus.code) && (value.status.code != this.opporturnityStatus.code) && (value.status.code != this.signedStatus.code) && (value.status.code != this.inactiveStatus.code)) 
+    if (value.status === undefined) {
+      return true;
+    }
+    return ( (value.status.code !== this.lostStatus.code) && (value.status.code !== this.opporturnityStatus.code) 
+    && (value.status.code !== this.signedStatus.code) && (value.status.code !== this.inactiveStatus.code)); 
   }
   
 
@@ -70,21 +79,21 @@ export class NavbarController {
    
       
     for (let i = 0; i < $LeadRESTService.allLeadStatusesCached.length; i++) {
-      if ($LeadRESTService.allLeadStatusesCached[i].code == 'COLD') {
-        this.coldStatus = $LeadRESTService.allLeadStatusesCached[i]
+      if ($LeadRESTService.allLeadStatusesCached[i].code === 'COLD') {
+        this.coldStatus = $LeadRESTService.allLeadStatusesCached[i];
       }
 
-      if ($LeadRESTService.allLeadStatusesCached[i].code == 'OPP') {
-        this.opporturnityStatus = $LeadRESTService.allLeadStatusesCached[i]
+      if ($LeadRESTService.allLeadStatusesCached[i].code === 'OPP') {
+        this.opporturnityStatus = $LeadRESTService.allLeadStatusesCached[i];
       }
-      if ($LeadRESTService.allLeadStatusesCached[i].code == 'SIGN') {
-        this.signedStatus = $LeadRESTService.allLeadStatusesCached[i]
+      if ($LeadRESTService.allLeadStatusesCached[i].code === 'SIGN') {
+        this.signedStatus = $LeadRESTService.allLeadStatusesCached[i];
       }
-      if ($LeadRESTService.allLeadStatusesCached[i].code == 'IN') {
-        this.inactiveStatus = $LeadRESTService.allLeadStatusesCached[i]
+      if ($LeadRESTService.allLeadStatusesCached[i].code === 'IN') {
+        this.inactiveStatus = $LeadRESTService.allLeadStatusesCached[i];
       }
-      if ($LeadRESTService.allLeadStatusesCached[i].code == 'LOST') {
-        this.lostStatus = $LeadRESTService.allLeadStatusesCached[i]
+      if ($LeadRESTService.allLeadStatusesCached[i].code === 'LOST') {
+        this.lostStatus = $LeadRESTService.allLeadStatusesCached[i];
       }
 
     }

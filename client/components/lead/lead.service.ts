@@ -5,7 +5,7 @@ import {BACK_END_ROUTE, SalesLead} from '../../core/dto';
 namespace LeadService {
 	function $LeadRESTResource($resource: angular.resource.IResourceService,
 		AuthToken: any): angular.resource.IResourceClass<any> {
-		let resources: angular.resource.IResourceClass<any> = $resource("", {}, {
+		let resources: angular.resource.IResourceClass<any> = $resource('', {}, {
 			'newLead': {
 				method: 'POST',
 				url: BACK_END_ROUTE + '/sales-lead'
@@ -34,8 +34,8 @@ namespace LeadService {
 				method: 'PUT',
 				url: BACK_END_ROUTE + '/sales-lead/:id',
 				params : {
-					id : "@_id",
-					idl: "@_id",
+					id : '@_id',
+					idl: '@_id',
 				}
 			},
 			'roleInLead': {
@@ -53,10 +53,11 @@ namespace LeadService {
 			private $resourceHelper: any, private AuthToken: any, $rootScope: any) {
 			$rootScope.$on('updateLead', function(event: any, lead: any, index: number) {
 				console.log('update lead ', lead, index);
-			})
+			});
 		}
 		allLeads() {
-			return this.$resourceHelper.resourceRESTCall(this.$LeadRESTResource, "allLeads", {ido: this.AuthToken.getIdO()} ).then((response: any) => {
+			return this.$resourceHelper.resourceRESTCall(this.$LeadRESTResource, 'allLeads', {ido: this.AuthToken.getIdO()} )
+			.then((response: any) => {
 				if (response.success) {
 					this.allLeadsCached = response.data;
 					return this.allLeadsCached;
@@ -64,7 +65,7 @@ namespace LeadService {
 			});
 		}
 		allLeadStatuses() {
-			return this.$resourceHelper.resourceRESTCall(this.$LeadRESTResource, "allLeadStatuses").then((response: any) => {
+			return this.$resourceHelper.resourceRESTCall(this.$LeadRESTResource, 'allLeadStatuses').then((response: any) => {
 				if (response.success) {
 					this.allLeadStatusesCached = response.data;
 				}
@@ -72,14 +73,16 @@ namespace LeadService {
 			});
 		}
 		findContactsInLead(leadId: any) {
-			return this.$resourceHelper.resourceRESTCall(this.$LeadRESTResource, "findContactsInLead", { ido: this.AuthToken.getIdO(), idl: leadId });
+			return this.$resourceHelper.resourceRESTCall(this.$LeadRESTResource, 'findContactsInLead', 
+			{ ido: this.AuthToken.getIdO(), idl: leadId });
 		}
 		findContactsNotInLead(leadId: any) {
-			return this.$resourceHelper.resourceRESTCall(this.$LeadRESTResource, "findContactsNotInLead", { ido: this.AuthToken.getIdO(), idl: leadId });
+			return this.$resourceHelper.resourceRESTCall(this.$LeadRESTResource, 'findContactsNotInLead', 
+			{ ido: this.AuthToken.getIdO(), idl: leadId });
 		}
 		newLead(lead: SalesLead) {
 			lead['ido'] = this.AuthToken.getIdO();
-			return this.$resourceHelper.resourceRESTCall(this.$LeadRESTResource, "newLead", lead, true).then( (response: any) => {
+			return this.$resourceHelper.resourceRESTCall(this.$LeadRESTResource, 'newLead', lead, true).then( (response: any) => {
 				if (response.success) {
 					this.allLeadsCached.push(response.data);
 			
@@ -89,26 +92,29 @@ namespace LeadService {
 		}
 		updateLead(lead: SalesLead) {
 			lead['ido'] = this.AuthToken.getIdO();
-			return this.$resourceHelper.resourceRESTCall(this.$LeadRESTResource, "updateLead", lead , true).then( (response: any) => {
+			return this.$resourceHelper.resourceRESTCall(this.$LeadRESTResource, 'updateLead', lead , true).then( (response: any) => {
 				return response;
 			});
 		}
 		roleInLead(leadId: any) {
-			return this.$resourceHelper.resourceRESTCall(this.$LeadRESTResource, "roleInLead", { idl: leadId, ido: this.AuthToken.getIdO() })
+			return this.$resourceHelper.resourceRESTCall(this.$LeadRESTResource, 'roleInLead', 
+			{ idl: leadId, ido: this.AuthToken.getIdO() });
 		}
 		deleteLead(leadId: any) {
-			return this.$resourceHelper.resourceRESTCall(this.$LeadRESTResource, "deleteLead", { id: leadId, idl: leadId, ido: this.AuthToken.getIdO() }, true)
+			return this.$resourceHelper.resourceRESTCall(this.$LeadRESTResource, 'deleteLead', 
+			{ id: leadId, idl: leadId, ido: this.AuthToken.getIdO() }, true);
 		}
 	}
 
-	function get$LeadRESTServiceInstance($http: angular.IHttpService, $LeadRESTResource: any, $q: any, $resourceHelper: any, AuthToken: any, $rootScope: any) {
+	function get$LeadRESTServiceInstance($http: angular.IHttpService, $LeadRESTResource: any, $q: any, $resourceHelper: any, 
+	AuthToken: any, $rootScope: any) {
         return new $LeadRESTService($http, $LeadRESTResource, $q, $resourceHelper, AuthToken, $rootScope);
     }
 
 
 	function $LogItemRESTResource($resource: angular.resource.IResourceService,
 		AuthToken: any, $LeadRESTService: any, $stateParams: any): angular.resource.IResourceClass<any> {
-		let resources: angular.resource.IResourceClass<any> = $resource("", {}, {
+		let resources: angular.resource.IResourceClass<any> = $resource('', {}, {
 			'getLogItemTypes': {
 				method: 'GET',
 				url: BACK_END_ROUTE + '/log-item-type/_find'
@@ -117,7 +123,7 @@ namespace LeadService {
 				method: 'DELETE',
 				url: BACK_END_ROUTE + '/log-item/:id',
 				params : {
-					id: "id"
+					id: 'id'
 				}
 			},
 			'editLogItem': {
@@ -146,7 +152,7 @@ namespace LeadService {
 		
 		}
 		getLogItemTypes() {
-			return this.$resourceHelper.resourceRESTCall(this.$LogItemRESTResource, "getLogItemTypes").then((response: any) => {
+			return this.$resourceHelper.resourceRESTCall(this.$LogItemRESTResource, 'getLogItemTypes').then((response: any) => {
 				if (response.success) {
 					this.allLogItemTypesCached = response.data;
 					return response.data;
@@ -155,21 +161,24 @@ namespace LeadService {
 			});
 		}
 		deleteLogItem(logItem: any) {
-			return this.$resourceHelper.resourceRESTCall(this.$LogItemRESTResource, "deleteLogItem", { idl: this.$LeadRESTService.selectedLead._id, id: logItem._id, ido: this.AuthToken.getIdO() }, true)
+			return this.$resourceHelper.resourceRESTCall(this.$LogItemRESTResource, 'deleteLogItem', 
+			{ idl: this.$LeadRESTService.selectedLead._id, id: logItem._id, ido: this.AuthToken.getIdO() }, true);
 		}
 		editLogItem(logItem: any) {
-			return this.$resourceHelper.resourceRESTCall(this.$LogItemRESTResource, "editLogItem", { idl: this.$LeadRESTService.selectedLead._id, id: logItem._id, ido: this.AuthToken.getIdO() }, true).then((response: any) => {
+			return this.$resourceHelper.resourceRESTCall(this.$LogItemRESTResource, 'editLogItem', 
+			{ idl: this.$LeadRESTService.selectedLead._id, id: logItem._id, ido: this.AuthToken.getIdO() }, true).then((response: any) => {
 			});
 		}
 		newLogItem(logItem: any) {
 			logItem.idl = this.$LeadRESTService.selectedLead._id;
-			return this.$resourceHelper.resourceRESTCall(this.$LogItemRESTResource, "newLogItem",  logItem, true);
+			return this.$resourceHelper.resourceRESTCall(this.$LogItemRESTResource, 'newLogItem',  logItem, true);
 		}
 		preloadLogItem(selectedLeadId: string) {
-			return this.$resourceHelper.resourceRESTCall(this.$LogItemRESTResource, "loadLogItem",{idl: selectedLeadId,ido: this.AuthToken.getIdO() }).then((response: any) => {
+			return this.$resourceHelper.resourceRESTCall(this.$LogItemRESTResource, 'loadLogItem',
+			{idl: selectedLeadId, ido: this.AuthToken.getIdO() }).then((response: any) => {
 				if (response.success) {
 					this.allLogItemsCached = response.data;
-					if (response.data.length <20) {
+					if (response.data.length < 20) {
 						this.loadMore = false;
 					} else {
 						this.loadMore = true;
@@ -178,25 +187,26 @@ namespace LeadService {
 				} else {
 					return {};
 				}
-			})
+			});
 		}
 		loadMoreLogItem(lastItem: any) {
-			return this.$resourceHelper.resourceRESTCall(this.$LogItemRESTResource, "loadLogItem").then((response: any) => {
+			return this.$resourceHelper.resourceRESTCall(this.$LogItemRESTResource, 'loadLogItem').then((response: any) => {
 				if (response.success) {
 					this.allLogItemsCached.push(response.data);
-					if (response.data.length <20) {
+					if (response.data.length < 20) {
 						this.loadMore = false;
 					} else {
 						this.loadMore = true;
 					}
 					return response.data;
 				}
-			})
+			});
 		}
 
 	}
 
-	function get$LogItemRESTServiceInstance($LeadRESTResource: any, $LogItemRESTResource: any, $resourceHelper: any, AuthToken: any, $LeadRESTService: any) {
+	function get$LogItemRESTServiceInstance($LeadRESTResource: any, $LogItemRESTResource: any, $resourceHelper: any, 
+	AuthToken: any, $LeadRESTService: any) {
         return new $LogItemRESTService($LeadRESTResource, $LogItemRESTResource, $resourceHelper, AuthToken, $LeadRESTService);
     }
 
