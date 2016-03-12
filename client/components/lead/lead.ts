@@ -9,8 +9,8 @@ namespace Lead {
                     'main': {
                         templateUrl: 'components/lead/new_lead.html',
                         controller: 'NewLeadController',
-                        controllerAs: 'nlCtrl',
-                    },
+                        controllerAs: 'nlCtrl'
+                    }
                 },
                 
                 params: {
@@ -28,8 +28,8 @@ namespace Lead {
                 views: {
                     'main': {
                       templateUrl: 'components/lead/all_leads.html',
-                    },
-                },
+                    }
+                }
             })
             .state('main.selectedLead', {
                 url: '/lead/:id',
@@ -43,11 +43,11 @@ namespace Lead {
                         templateUrl: 'components/lead/right_bar.html',
                         controller: 'SelectedLeadRightBarController',
                         controllerAs: 'slrbCtrl',
-                    },
+                    }
                 },
                
                 params: {
-                    lead: '@',
+                    lead: '@'
                 },
                 resolve:{
 
@@ -85,7 +85,7 @@ namespace Lead {
                             } 
                                 
                         });
-                
+                       
                     }, 
                     unaddedContacts: function($LeadRESTService: any,$stateParams: any) {
                         return $LeadRESTService.findContactsNotInLead($stateParams.id).then((response: any) => {
@@ -159,7 +159,7 @@ namespace Lead {
                     this.$state.go('main.selectedLead',{id: response.data._id, lead: response.data});
                     this.$LeadRESTService.selectedLead = response.data;           
                 } else {
-                    this.toastr.error("Cannot create a sale, please check for a sale with the same name")
+                    this.toastr.error("Cannot create a sale, please check for a sale with the same name");
                 }
             })
         }
@@ -226,9 +226,9 @@ namespace Lead {
             this.queryTypeIndex = -1;
             console.log(this.moment);
             
-            const joinNotification {
-                lead: this.$LeadRESTService.selectedLead._id;
-                message: 'this is optional';
+            const joinNotification = {
+                lead: this.$LeadRESTService.selectedLead._id,
+                message: 'this is optional'
             }
 
             this.socket.emit('leadLogJoin', joinNotification);
@@ -254,10 +254,10 @@ namespace Lead {
                 this.$LogItemRESTService.newLogItem(this.newLogItem).then((response: any) => {
                     if (response.success) {
                    
-                        const notification {
-                            lead: response.data['lead'];
-                            message: 'this is optional';
-                            data:  response.data;
+                        const notification = {
+                            lead: response.data['lead'],
+                            message: 'this is optional',
+                            data:  response.data
                         }
                         
                         this.socket.emit('leadLogAdd', notification);

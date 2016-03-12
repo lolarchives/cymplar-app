@@ -201,8 +201,8 @@ namespace SignUp {
 				if (response.success) {
 					this.AuthToken.setToken(response.data.token);
 					this.AuthToken.setIdO(response.data.init);
-					alert('Successfully sign up');
-					this.$state.go('main.dashboard');
+					const urlInvParam = this.AuthToken.getInvitationUrlParam();
+					this.$state.go('main.dashboard', urlInvParam);
 				}
 
 

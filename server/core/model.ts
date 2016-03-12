@@ -154,7 +154,7 @@ const schemas = {
     name: { type: String },
     email: { type: String, required: true },
     position: { type: String },
-    contactNumber: { type: String, required: true },
+    contactNumber: { type: String },
     altContactNumber: { type: String },
     organization: { type: ObjectId, ref: 'accountOrganization', required: true },
     user: { type: ObjectId, ref: 'accountUser', required: true },

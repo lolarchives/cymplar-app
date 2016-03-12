@@ -8,34 +8,33 @@ namespace LeadService {
 		let resources: angular.resource.IResourceClass<any> = $resource("", {}, {
 			'newLead': {
 				method: 'POST',
-				url: BACK_END_ROUTE + '/sales-lead?ido=' + AuthToken.getIdO()
+				url: BACK_END_ROUTE + '/sales-lead'
 			},
 			'allLeads': {
 				method: 'GET',
-				url: BACK_END_ROUTE + '/sales-lead/_find?ido=' + AuthToken.getIdO()
+				url: BACK_END_ROUTE + '/sales-lead/_find'
 			},
 			'findContactsNotInLead': {
 				method: 'GET',
-				url: BACK_END_ROUTE + '/sales-lead-contact/_find_to_add',
+				url: BACK_END_ROUTE + '/sales-lead-contact/_find_to_add'
 			},
 			'findContactsInLead': {
 				method: 'GET',
-				url: BACK_END_ROUTE + '/sales-lead-contact/_find',
+				url: BACK_END_ROUTE + '/sales-lead-contact/_find'
 			},
 			'allLeadStatuses': {
 				method: 'GET',
-				url: BACK_END_ROUTE + '/sales-lead-status/_find',
+				url: BACK_END_ROUTE + '/sales-lead-status/_find'
 			},
 			'deleteLead': {
 				method: 'DELETE',
-				url: BACK_END_ROUTE + '/sales-lead/:id',
+				url: BACK_END_ROUTE + '/sales-lead/:id'
 			},
 			'updateLead': {
 				method: 'PUT',
 				url: BACK_END_ROUTE + '/sales-lead/:id',
-				params: {
-					ido: AuthToken.getIdO(),
-					id: "@_id",
+				params : {
+					id : "@_id",
 					idl: "@_id",
 				}
 			},
@@ -57,11 +56,11 @@ namespace LeadService {
 			})
 		}
 		allLeads() {
-			return this.$resourceHelper.resourceRESTCall(this.$LeadRESTResource, "allLeads").then((response: any) => {
+			return this.$resourceHelper.resourceRESTCall(this.$LeadRESTResource, "allLeads", {ido: this.AuthToken.getIdO()} ).then((response: any) => {
 				if (response.success) {
 					this.allLeadsCached = response.data;
 					return this.allLeadsCached;
-				};
+				}
 			});
 		}
 		allLeadStatuses() {
@@ -79,16 +78,18 @@ namespace LeadService {
 			return this.$resourceHelper.resourceRESTCall(this.$LeadRESTResource, "findContactsNotInLead", { ido: this.AuthToken.getIdO(), idl: leadId });
 		}
 		newLead(lead: SalesLead) {
-			return this.$resourceHelper.resourceRESTCall(this.$LeadRESTResource, "newLead", lead, true).then((response: any) => {
+			lead['ido'] = this.AuthToken.getIdO();
+			return this.$resourceHelper.resourceRESTCall(this.$LeadRESTResource, "newLead", lead, true).then( (response: any) => {
 				if (response.success) {
 					this.allLeadsCached.push(response.data);
-
-				};
+			
+				}
 				return response;
 			});
 		}
 		updateLead(lead: SalesLead) {
-			return this.$resourceHelper.resourceRESTCall(this.$LeadRESTResource, "updateLead", lead, true).then((response: any) => {
+			lead['ido'] = this.AuthToken.getIdO();
+			return this.$resourceHelper.resourceRESTCall(this.$LeadRESTResource, "updateLead", lead , true).then( (response: any) => {
 				return response;
 			});
 		}

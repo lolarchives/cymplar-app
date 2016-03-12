@@ -32,15 +32,7 @@ export class LoginService {
 				const loginPromises: Promise<any>[] = [];
 				loginPromises.push(Promise.resolve(authenticationResp));
 				
-				if (ObjectUtil.isPresent(options.authorization.invitation)) {
-					const memberModelOptions: ModelOptions = {
-						authorization: { user: accountUser },
-						onlyValidateParentAuthorization: true
-					};
-					loginPromises.push(accountOrganizationService
-						.addInvitedOrganizationMember({ _id: options.authorization.invitation}, memberModelOptions));
-				}
-				
+								
 				return Promise.all(loginPromises);
 			})
 			.then((results: any) => {

@@ -30,7 +30,7 @@ namespace SignUpServices {
 			},
 			'getRoles': {
 				method: 'GET',
-				url: BACK_END_ROUTE + '/account-member-role/_find'	
+				url: BACK_END_ROUTE + '/account-organization-member-role/_find'	
 			},
 			'isAccountUserExisted': {
 				method: 'GET',

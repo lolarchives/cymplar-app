@@ -1,0 +1,37 @@
+<div class="modal-content">
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close" ng-click="mProfCtrl.cancel()"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel">Edit my account settings</h4>
+    </div>
+    <div class="modal-body">
+        <div class="form-horizontal">
+            <div class="form-group">
+                <div class="col-md-5 control-label">
+                    <label for="role" class="margin-b-n"><strong class="text-danger">*</strong> Role</label>
+                </div>
+                <div class="col-md-7">
+                    <select class="form-control" id="role" name="role" required ng-options="role._id as role.name for role in mProfCtrl.roles" ng-model="mProfCtrl.newProfile.role._id" ng-disabled="mProfCtrl.unAuthorized()">
+                        <option></option>
+                    </select>
+                </div>
+            </div>    
+            <div class="form-group">
+                <div class="col-md-5 control-label">
+                    <label for="email" class="margin-b-n"><strong class="text-danger">*</strong> Contact email</label>
+                    <i class="fa fa-spinner pull-right fa-lg" ng-class="{'fa-spin' : mProfCtrl.checkingEmail}" ng-show="mProfCtrl.checkingEmail"></i>
+                    <i class="fa fa-check pull-right fa-lg" ng-show="mProfCtrl.availableEmail"></i>
+                </div>
+                <div class="col-md-7">
+                    <input type="email" class="form-control" id="email" required ng-model="mProfCtrl.newProfile.email" ng-blur="mProfCtrl.emailChanged()">
+                </div>
+            </div>
+            <div class="form-group" ng-show="mProfCtrl.availableEmail == false">
+                <p class="pull-right text-danger">Email has already been registered in this organization</p>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal" ng-click="mProfCtrl.cancel()">Close</button>
+        <button type="button" class="btn btn-primary"  ng-disabled="mProfCtrl.checkingEmail" ng-click="mProfCtrl.save(mProfCtrl.modalProfileInstance)">Save changes</button>
+    </div>
+</div>

@@ -18,7 +18,7 @@ export class AccountOrganizationMemberService extends BaseService<AccountOrganiz
 				},
 				{
 					path: 'role',
-					select: 'code'
+					select: 'code name'
 				}]
 		};
 			

@@ -29,6 +29,14 @@ export class Authentication {
 		
 		req.body.cymplarRole = {};
 		
+		// Stores the invitation id or object in the AuthorizationData Object		
+		const invitation = (req.query.inv ? req.query.inv : req.body.inv);
+		if (ObjectUtil.isPresent(invitation)) {
+			req.body.cymplarRole['invitation'] = ObjectUtil.clone(invitation);
+			delete req.query.inv;
+			delete req.body.inv;
+		}
+		
 		if (NON_SECURED_URL.indexOf(req.originalUrl.split('?')[0]) > -1) {
 			return next();
 		}

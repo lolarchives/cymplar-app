@@ -1,0 +1,38 @@
+<div class="modal-content">
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close" ng-click="mTeamInvitationCtrl.close()"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel">Send Invitation</h4>
+    </div>
+    <div class="modal-body">
+        <div class="form-horizontal">    
+            <div class="form-group">
+                <div class="col-md-5 control-label">
+                    <label for="email" class="margin-b-n"><strong class="text-danger">*</strong> Contact email</label>
+                    <i class="fa fa-spinner pull-right fa-lg" ng-class="{'fa-spin' : mTeamInvitationCtrl.checkingEmail}" ng-show="mTeamInvitationCtrl.checkingEmail"></i>
+                    <i class="fa fa-check pull-right fa-lg" ng-show="mTeamInvitationCtrl.availableEmail"></i>
+                </div>
+                <div class="col-md-7">
+                    <input type="email" class="form-control" id="email" required ng-model="mTeamInvitationCtrl.invitation.email" ng-blur="mTeamInvitationCtrl.emailChanged()">
+                </div>
+            </div>
+            <div class="form-group" ng-show="mTeamInvitationCtrl.availableEmail == false">
+                <p class="pull-right text-danger">Email has already been registered in this organization</p>
+            </div>
+            
+            <div class="form-group">
+                <div class="col-md-5 control-label">
+                    <label for="role" class="margin-b-n"><strong class="text-danger">*</strong> Role</label>
+                </div>
+                <div class="col-md-7">
+                    <select class="form-control" id="role" name="role" required ng-options="role._id as role.name for role in mTeamInvitationCtrl.roles" ng-model="mTeamInvitationCtrl.invitation.role._id">
+                        <option></option>
+                    </select>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal" ng-click="mTeamInvitationCtrl.close()">Close</button>
+        <button type="button" class="btn btn-primary"  ng-disabled="mTeamInvitationCtrl.checkingEmail" ng-click="mTeamInvitationCtrl.save(mTeamInvitationCtrl.invitation)">Save changes</button>
+    </div>
+</div>

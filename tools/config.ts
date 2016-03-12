@@ -29,6 +29,9 @@ process.env.CYMPLAR_SENDGRID_PASSWORD = CYMPLAR_SENDGRID_PASSWORD;
 const CYMPLAR_SENDGRID_ORIGIN: string = argv['CYMPLAR_SENDGRID_ORIGIN'] || process.env.CYMPLAR_SENDGRID_ORIGIN || 'johanna@neuli.net';
 process.env.CYMPLAR_SENDGRID_ORIGIN = CYMPLAR_SENDGRID_ORIGIN;
 
+const CYMPLAR_SERVER: string = argv['CYMPLAR_SERVER'] || process.env.CYMPLAR_SERVER || 'http://localhost:5555';
+process.env.CYMPLAR_SERVER = CYMPLAR_SERVER;
+
 export const PORT: number = argv['port'] || 5555;
 export const LIVE_RELOAD_PORT: number = argv['reload-port'] || 4002;
 export const APP_BASE: string = argv['base'] || '/';

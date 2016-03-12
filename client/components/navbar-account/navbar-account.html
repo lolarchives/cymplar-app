@@ -1,0 +1,96 @@
+<div class="grid-frame vertical">
+  <div class="top-panel">
+
+    <div class="nav-btn left-panel-btn" ng-class="{'active':navAccCtrl.leftPanelOpen}" ng-click="navAccCtrl.leftPanelOpen = !navAccCtrl.leftPanelOpen">
+      <span></span>
+      <span></span>
+      <span></span>
+    </div>
+
+    <a ui-sref="main.dashboard" class="logo">
+      <img src="img/logo-white.png">
+    </a>
+
+    <span class="right-panel-btn" ng-show="navAccCtrl.displayInfo" ng-click="navAccCtrl.leftPanelOpen = false; navAccCtrl.rightPanelOpen = ! navAccCtrl.rightPanelOpen">Info</span>
+
+  </div>
+  <!--top-bar-->
+
+  <div class="grid-block">
+        <div class="side-panel left-panel" ng-class="{'visible':navAccCtrl.leftPanelOpen}">
+            <div class="search-bar-wrap" ng-if="navAccCtrl.displaySearchBar">
+                <form class="search-bar" name="searchBarForm" ng-submit="navAccCtrl.submitQuery()">
+                    <input type="text" class="field" placeholder="Search" ng-model="navAccCtrl.queryString">
+                    <label for="submit-btn" class="label-submit-btn">
+                        <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
+                    </label>
+                    <input id="submit-btn" type="submit" value="">	
+                </form>
+            </div><!--search-bar-wrap-->
+        
+        	<div class="dropdown margin-b user-area">
+                <div class="user" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                	<div class="user-photo">
+                        <img style="max-height:40px" src="img/default_user.jpg">
+                    </div><!--user-photo"-->
+                    {{navAccCtrl.user.firstName + " " +navAccCtrl.user.lastName}}
+                <span class="caret"></span>
+                </div>
+                <ul class="dropdown-menu full-width" aria-labelledby="dLabel">
+                   <li><a href="">Settings</a></li>
+                    <li><a href="">Help</a></li>
+                    <li class="divider"></li>
+                    <li><a ng-click="navAccCtrl.logout()">Logout</a></li>
+                </ul>
+            </div><!--dropdown-->
+            
+            <div class="aside-block">
+                
+                <h5 class="sub-title" data-toggle="collapse" data-target="#collapse1">
+                    <span class="glyphicon glyphicon-chevron-down left-icon" aria-hidden="true"></span>
+                    My profile
+                </h5>
+                <div class="collapse" id="collapse1">
+                    <ul class="main-nav">
+                        <li ng-class="{current: $state.includes('main-account.settings.user')}">
+                            <a ui-sref="main-account.user({id: navAccCtrl.user._id})">{{navAccCtrl.user.firstName + " " +navAccCtrl.user.lastName}}</a>
+                        </li>
+                    </ul>
+                </div>
+                
+                <!--collapse-->
+                <h5 class="sub-title" data-toggle="collapse" data-target="#collapse2">
+                    <span class="glyphicon glyphicon-chevron-down left-icon" aria-hidden="true"></span>
+                    My Organizations
+                </h5>
+                <div class="collapse in" id="collapse2">
+                    <ul class="main-nav">   
+                        <li ng-repeat="membership in navAccCtrl.memberships | filter:{role: {code: 'OWNER'}}" ng-class="{current: $state.includes('main-account.organization', {orgId: membership.organization._id})}">
+                           <a ui-sref="main-account.organization.profile({orgId: membership.organization._id})">{{membership.organization.name}}</a> 
+                        </li>
+                   </ul>
+                </div><!--collapse-->
+                
+                <!--collapse-->
+                <h5 class="sub-title" data-toggle="collapse" data-target="#collapse2">
+                    <span class="glyphicon glyphicon-chevron-down left-icon" aria-hidden="true"></span>
+                    Accepted Invitations
+                </h5>
+                <div class="collapse in" id="collapse2">
+                    <ul class="main-nav">
+                        <li ng-repeat="membership in navAccCtrl.memberships | filter:{role: {code: '!OWNER'}}" ng-class="{current: $state.includes('main-account.organization', {orgId: membership.organization._id})}">
+                           <a ui-sref="main-account.organization.profile({orgId: membership.organization._id})">{{membership.organization.name}}</a> 
+                        </li>
+                   </ul>
+                </div><!--collapse-->
+                
+            </div><!--aside-block-->            
+    	</div><!--left panel-->
+
+    <div ng-transclude="" transclude-from="main-account" class="grid-block vertical"></div>
+    <div ng-transclude="" ng-show="navAccCtrl.displayInfo" ng-class="{'visible':navAccCtrl.rightPanelOpen}" transclude-from="right-account" class="side-panel right-panel"></div>
+</div>
+
+
+<div class="blackout left" ng-class="{'show-black-out':navAccCtrl.leftPanelOpen || navAccCtrl.rightPanelOpen}"></div>
+<div class="blackout right"></div>

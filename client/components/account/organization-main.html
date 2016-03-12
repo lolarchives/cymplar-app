@@ -1,0 +1,32 @@
+<div class="grid-block vertical">
+    <div class="grid-content center-panel">
+        <div class="page-head">
+            <div class="padding-box">
+                
+                <h3 class="uppercase title">{{accOrgMainCtrl.organization.name}}</h3>
+                
+                <ul class="lead-nav">
+                    
+                    <li ng-class="{current: $state.includes('main-account.organization.profile')}">
+                        <a ui-sref="main-account.organization.profile({orgId: accOrgMainCtrl.organization._id})">My account details</a>
+                    </li>
+                    
+                    <li ng-class="{current: $state.includes('main-account.organization.team')}">
+                        <a ui-sref="main-account.organization.team({orgId: accOrgMainCtrl.organization._id})">My Team</a>
+                    </li>
+                    
+                </ul><!--lead-nav-->
+
+            </div><!--padding-box-->  
+        </div><!--page-head-->
+        
+        <div class="padding-box">
+            <div class="limit-width">
+               <div ui-view="account-org-setting" class="span9 slide"></div>
+            </div><!--limit-width-->
+            <br>
+            <br>
+            <a href="" class="btn btn-primary" ng-click="accOrgMainCtrl.goToOrganization()">Go to this Cymplar</a>
+        </div><!--padding-box-->
+    </div><!--grid-content-->
+</div><!--center panel-->
