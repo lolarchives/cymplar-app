@@ -88,7 +88,6 @@ export class LogItemService extends BaseService<LogItem> {
 		return new Promise<LogItem[]>((resolve: Function, reject: Function) => {
 			this.findLimited(data, newOptions)
 			.then((logItems: LogItem[]) => {
-				console.log(JSON.stringify(logItems));
 				if (logItems.length === 1) {
 					if (ObjectUtil.isPresent(logItems[0].createdAt)) {
 						newOptions.additionalData = {
