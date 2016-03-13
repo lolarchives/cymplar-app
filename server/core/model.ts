@@ -375,6 +375,19 @@ schemas.accountUser.post('remove', function() {
   });
 });
 
+schemas.accountOrganization.pre('save', function (next: Function) {
+  const obj = this;
+  if (obj.isNew) {
+      obj['projectDefaultStatuses'] = [{'label': 'Lost/Inactive', 'value': '0'}, 
+        {'label': 'Opportunity', 'value': '20'}, 
+        {'label': 'Cold', 'value': '40'}, 
+        {'label': 'Warm', 'value': '60'}, 
+        {'label': 'Hot', 'value': '80'},
+        {'label': 'Contract signed', 'value': '100'}];
+  }
+  next();  
+});
+
 schemas.accountOrganizationMember.pre('save', function(next: Function) {
   const obj: Document = this;
   if (obj.isNew && ObjectUtil.isBlank(obj['createdBy'])) {    
