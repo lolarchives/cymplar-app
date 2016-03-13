@@ -14,7 +14,7 @@ export class LogItemService extends BaseService<LogItem> {
 				},
 				{
 					path: 'createdBy',
-					select: 'member role -_id',
+					select: 'member role',
 					populate: [
 						{
 							path: 'member',
@@ -166,7 +166,8 @@ export class LogItemService extends BaseService<LogItem> {
 	
 	protected validateAuthDataPostSearchUpdate(modelOptions: ModelOptions = {}, 
 		data?: LogItem): AuthorizationResponse {
-		const isLogItemOwner =  modelOptions.authorization.leadMember._id.toString() === data.createdBy.toString();
+		const isLogItemOwner =  modelOptions.authorization.leadMember._id.toString() === 
+			ObjectUtil.getStringUnionProperty(data.createdBy).toString();
 		if (isLogItemOwner) {
 			return this.createAuthorizationResponse();
 		}
@@ -175,7 +176,11 @@ export class LogItemService extends BaseService<LogItem> {
 	
 	protected validateAuthDataPostSearchRemove(modelOptions: ModelOptions = {}, 
 		data?: LogItem): AuthorizationResponse {
-		const isLogItemOwner =  modelOptions.authorization.leadMember._id.toString() === data.createdBy.toString();
+			
+		console.log(data);
+		console.log( modelOptions.authorization.leadMember);
+		const isLogItemOwner =  modelOptions.authorization.leadMember._id.toString() === 
+			ObjectUtil.getStringUnionProperty(data.createdBy).toString();
 		if (isLogItemOwner) {
 			return this.createAuthorizationResponse();
 		}
