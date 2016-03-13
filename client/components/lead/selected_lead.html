@@ -51,6 +51,7 @@
 					</a>-->
 				</li>
 			</ul>
+			<select class="tinynav" ng-options="option.value as option.label for option in slCtrl.optionFilters" ng-model="slCtrl.queryTypeIndex"></select>
 			<!--filter-->
 			<div class="tags-wrap margin-b-n" ng-hide="slCtrl.showLog">
 				<div class="tag">
@@ -81,8 +82,8 @@
 <!--grid-content-->
 
 <div class="form-box-wrap grid-content shrink">
-	<div class="form-btn"></div>
-	<div class="form-box">
+	<div class="form-btn" ng-class="{'active':slCtrl.smallFormOpen}" ng-click="slCtrl.smallFormOpen = !slCtrl.smallFormOpen;"></div>
+	<div class="form-box" ng-class="{'visible':slCtrl.smallFormOpen}">
 		<ng-include src="'components/lead/log_form.html'" ng-show="slCtrl.showLog"></ng-include>
 		<ng-include src="'components/lead/chat_form.html'" ng-hide="slCtrl.showLog"></ng-include>
 	</div>

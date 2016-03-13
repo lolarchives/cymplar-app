@@ -854,6 +854,7 @@ hr {
 	.top-panel {
 		position:relative;
 		z-index:6;
+		min-height: 50px;
 		}
 	
 	.logo {
@@ -978,6 +979,7 @@ hr {
 		}
 	
 	.filter-box {
+		min-height: 40px;
 		padding:0 0 0 80px;
 		}
 	

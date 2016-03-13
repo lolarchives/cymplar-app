@@ -26,7 +26,7 @@
 		</div>
 		<!--col-md-3-->
 		<div class="col-md-9">
-			<h5><strong>By {{liCtrl.item.createBy}}</strong> </h5> 
+			<h5><strong>By {{liCtrl.item.createdBy.member.user.firstName+" "+ liCtrl.item.createdBy.member.user.middleName+" " + liCtrl.item.createdBy.member.user.lastName}}</strong> </h5> 
 			<div class="limit-width">
 				<p>{{liCtrl.item.content}}
 				</p>
