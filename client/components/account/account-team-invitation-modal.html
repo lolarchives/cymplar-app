@@ -1,6 +1,6 @@
 <div class="modal-content">
     <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close" ng-click="mTeamInvitationCtrl.close()"><span aria-hidden="true">&times;</span></button>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close" ng-click="mTeamInvitationCtrl.cancel()"><span aria-hidden="true">&times;</span></button>
         <h4 class="modal-title" id="myModalLabel">Send Invitation</h4>
     </div>
     <div class="modal-body">
@@ -32,7 +32,7 @@
         </div>
     </div>
     <div class="modal-footer">
-        <button type="button" class="btn btn-default" data-dismiss="modal" ng-click="mTeamInvitationCtrl.close()">Close</button>
+        <button type="button" class="btn btn-default" data-dismiss="modal" ng-click="mTeamInvitationCtrl.cancel()">Close</button>
         <button type="button" class="btn btn-primary"  ng-disabled="mTeamInvitationCtrl.checkingEmail" ng-click="mTeamInvitationCtrl.save(mTeamInvitationCtrl.invitation)">Save changes</button>
     </div>
 </div>
