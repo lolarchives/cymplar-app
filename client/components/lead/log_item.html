@@ -6,27 +6,27 @@
                 	<span class="glyphicon glyphicon-pushpin"></span>
                      Notes  
                 </p>
-                <a class="red-link" ng-show="liCtrl.item.type._id == liCtrl.commType._id ">
+                <p class="red-link" ng-show="liCtrl.item.type._id == liCtrl.commType._id ">
                 	<span class="glyphicon glyphicon-comment"></span>
                     Communications
-               	</a>
-				<a class="red-link" ng-show="liCtrl.item.type._id == liCtrl.fwupType._id ">
+               	</p>
+				<p class="red-link" ng-show="liCtrl.item.type._id == liCtrl.fwupType._id ">
                 	<span class="glyphicon glyphicon-arrow-up"></span>
                     Follow Ups
-               	</a>
-				<a class="red-link" ng-show="liCtrl.item.type._id == liCtrl.meetType._id ">
+               	</p>
+				<p class="red-link" ng-show="liCtrl.item.type._id == liCtrl.meetType._id ">
                 	<span class="glyphicon glyphicon-globe"></span>
                     Meeting   
-                </a>
+                </p>
 				<small ng-show="liCtrl.item.edited">(edited)</small>
             </h4>
 			<p class="time" ng-show="liCtrl.item.type._id == liCtrl.fwupType._id || liCtrl.item.type._id == liCtrl.meetType._id "><small><strong> Date: </strong>{{ liCtrl.moment(liCtrl.item.dateTime).format('lll') || 'No time selected'}}</small></p>
 			<p class="time" ng-show="liCtrl.item.type._id == liCtrl.meetType._id " > <small><strong> Location: </strong> {{liCtrl.item.location || 'No location selected'}}</small></p>
-			<p class="time"><small> {{ liCtrl.moment(liCtrl.item.createdAt).fromNow() || 'Undefined time'}}</small></p>
+			<p class="time"><small> {{ liCtrl.reactiveFromNow || 'Undefined time'}}</small></p>
 		</div>
 		<!--col-md-3-->
 		<div class="col-md-9">
-			<h5><strong>By {{liCtrl.item.createBy}}</strong> </h5> 
+			<h5><strong>By {{liCtrl.item.createdBy.member.user.firstName+" "+ liCtrl.item.createdBy.member.user.middleName+" " + liCtrl.item.createdBy.member.user.lastName}}</strong> </h5> 
 			<div class="limit-width">
 				<p>{{liCtrl.item.content}}
 				</p>
@@ -37,7 +37,7 @@
 		<div class="dropdown control">
 			<span class="glyphicon glyphicon-option-horizontal" aria-hidden="true" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></span>
 			<ul class="dropdown-menu dropdown-menu-right">
-				<li><a>Edit</a></li>
+				<li><a ng-click="liCtrl.startEditingItem()">Edit</a></li>
 				<li><a ng-click="liCtrl.deleteItem()">Delete</a></li>
 			</ul>
 		</div>

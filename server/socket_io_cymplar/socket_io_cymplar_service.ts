@@ -114,6 +114,17 @@ export class SocketIOCymplarService {
                         
                         socket.broadcast.to(room).emit('leadLogEdited', sendFormat);
                 });
+                socket.on('leadLogDeleted', (notification: SocketNotification) => {
+                        const room = ObjectUtil.getStringUnionProperty(notification.lead);
+                        
+                        const sendFormat = {
+                                success: true,
+                                data: notification,
+                                message: 'deleted log'
+                        };
+                        
+                        socket.broadcast.to(room).emit('leadLogDeleted', sendFormat);
+                });
 	}
         
         generateLeadChatConfiguration(socket: SocketIO.Socket) {

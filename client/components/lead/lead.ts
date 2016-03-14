@@ -138,7 +138,7 @@ namespace Lead {
                     private $state: any, private toastr: any, private ultiHelper: any) {
 
             this.newLead = {};
-            if ($stateParams.group_id !== undefined) {
+            if ($stateParams.group_id !== undefined && $stateParams.group_id.trim() !== "") {
                let index = this.ultiHelper.indexOfFromId(this.$AddressBookRESTService.allCompaniesCached, 
                {_id: this.$stateParams.group_id});
               
@@ -175,7 +175,7 @@ namespace Lead {
             if (this.queryTypeIndex === -1) {
                 return true;
             } else {
-                return value.type === this.logItemTypes[this.queryTypeIndex]._id;
+                return value.type._id === this.logItemTypes[this.queryTypeIndex]._id;
             }
         }
         
@@ -189,39 +189,14 @@ namespace Lead {
         private newLogItem: any;
         private datePicker: any;
         private pleasePickADate: boolean;
-        private logItems: any = [
-            {
-                createBy: 'President snow',
-                'type': '56ddf9fe7aff8e3ce782ba67',
-                'content': 'This is a meeting',
-                'dateTime': '12-06-2016',
-                'location': 'Some string location (temporal)',
-                'edited': true
-            },
-            {
-                createBy: 'Gecko Mozilla',
-                'type': '56ddf9fe7aff8e3ce782ba66',
-                'content': 'This is a follow up',
-                'dateTime': '12-06-2016'
-            },
-            {
-                createBy: 'Jon Snow',
-                'type': '56ddf9fe7aff8e3ce782ba64',
-                'content': 'this is a communication',
-                edited: true
-            },
-            {
-                createBy: 'Jon AppleSmith',
-                'type': '56ddf9fe7aff8e3ce782ba65',
-                'content': 'this is a note'
-            }
-            
-            
-        ];
-        
-        constructor(private $stateParams: any, private $AddressBookRESTService: any, private $LeadRESTService: any, private $state: any, 
+        private smallFormOpen :boolean;
+        private optionFilters: any;
+        constructor(private $stateParams: any, private $AddressBookRESTService: any, 
+            private $LeadRESTService: any, private $state: any, 
             private roleInLead: any, private contacts: any, private unaddedContacts: any,
-            private socket: any, private logItemTypes: any, private $LogItemRESTService: any, private moment: any) {
+            private socket: any, private logItemTypes: any, private $LogItemRESTService: any, 
+            private ultiHelper: any, private moment: any, private $scope: any) {
+            
             for (let i = 0; i < logItemTypes.length; i++) {
                 if (logItemTypes[i].code === 'COMM') {
                     this.commIndex = i;
@@ -235,12 +210,20 @@ namespace Lead {
                 if (logItemTypes[i].code === 'MEET') {
                     this.meetIndex = i;
                 }
+                
             }
             this.pleasePickADate = false;
             this.itemTypeIndex = this.fwupIndex;
             this.showLog = true;
             this.queryTypeIndex = -1;
-            console.log(this.moment);
+            
+            this.optionFilters = [
+                {value:-1,label:'All'},
+                {value:this.commIndex, label:'Communication'},
+                {value:this.noteIndex, label:'Note'},
+                {value:this.fwupIndex, label:'Follow ups'},
+                {value:this.meetIndex, label:'Meeting'},
+            ] 
             
             const joinNotification = {
                 lead: this.$LeadRESTService.selectedLead._id,
@@ -250,9 +233,38 @@ namespace Lead {
             this.socket.emit('leadLogJoin', joinNotification);
             
             this.socket.on('leadLogAdded', (data: any) => {
-                console.log('push something dom' + JSON.stringify(data));
+                let index = this.ultiHelper.indexOfFromId( this.$LogItemRESTService.allLogItemsCached, 
+                        data.data.data );
+                if (index == -1) {
+                    this.$LogItemRESTService.allLogItemsCached.unshift(data.data.data);
+                    this.$scope.$apply();
+                   
+                }
+                    
+                
+                
             });
             
+            this.socket.on('leadLogDeleted', (data: any) => {
+                
+                let index = this.ultiHelper.indexOfFromId(this.$LogItemRESTService.allLogItemsCached, data.data.data);
+               
+                if (index != -1)
+                    this.$LogItemRESTService.allLogItemsCached.splice(index, 1);
+                this.$scope.$apply();    
+
+            });
+            this.socket.on('leadLogEdited', (data: any) => {
+                console.log('edited',data);
+                let index = this.ultiHelper.indexOfFromId(this.$LogItemRESTService.allLogItemsCached, data.data.data);
+               
+                if (index != -1)
+                    this.$LogItemRESTService.allLogItemsCached[index] = data.data.data;
+                this.$scope.$apply();    
+
+            });
+            
+            this.smallFormOpen = false;
            
         }
         addLogItem() {
@@ -269,7 +281,8 @@ namespace Lead {
             if (!this.pleasePickADate) {
                 this.$LogItemRESTService.newLogItem(this.newLogItem).then((response: any) => {
                     if (response.success) {
-                   
+                        this.$LogItemRESTService.allLogItemsCached.unshift(response.data);
+                        
                         const notification = {
                             lead: response.data['lead'],
                             message: 'this is optional',
@@ -284,6 +297,7 @@ namespace Lead {
             }    
             
         }
+       
     }
     export class SelectedLeadRightBarController {
   
@@ -302,7 +316,7 @@ namespace Lead {
            $stateParams.lead.contacts = contacts;
            this.$LeadRESTService = $LeadRESTService; 
            this.editing = false;
-           
+        
            let stepsArray = this.$stateParams.lead.leadStatuses.map(function(currentValue: any) {
                return currentValue.label;
            });
@@ -377,6 +391,7 @@ namespace Lead {
             });
             
         } 
+        
         loadContacts($query: any) {
             console.log($query);
             
