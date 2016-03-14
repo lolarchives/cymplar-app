@@ -30,7 +30,7 @@ namespace Login {
 		};
 		submitDomain() {
 			if (this.domain !== undefined && this.domain.trim() !== '') {
-				this.$LoginRESTService.accountOrganizationLogin(this.domain).then((response: any) => {
+				this.$LoginRESTService.accountOrganizationLogin(this.domain.toLowerCase()).then((response: any) => {
 					this.domainExist = response.success;
 					if (this.domainExist) {
 						this.accountOrganizationId = response.data._id;
