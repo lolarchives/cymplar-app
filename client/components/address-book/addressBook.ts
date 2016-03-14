@@ -392,6 +392,7 @@ namespace AddressBook {
             private leads: any, private leadStatuses: any,
             private $AddressBookRESTService: any, private toastr: any,
             private $uibModal: any, private ultiHelper: any, private $filter: any) {
+                console.log('leads',leads)
             this.countBy = $filter('countBy')(leads, 'status.code');
             this.countBy.HOT = this.countBy.HOT || 0;
             this.countBy.OPP = this.countBy.OPP || 0;

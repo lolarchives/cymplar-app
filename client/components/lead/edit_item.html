@@ -1,0 +1,80 @@
+<div class="form-box" style="height:250px;padding:40px;">
+	
+	<ul class="nav nav-tabs post-categorie margin-b" role="tablist">
+		<li role="presentation" ng-class="{'active': eimCtrl.itemType._id == eimCtrl.commType._id}">
+			<a aria-controls="home" role="tab" ng-click="eimCtrl.itemType._id = eimCtrl.commType._id">
+				<span class="glyphicon glyphicon-comment" aria-hidden="true"></span> Communications
+			</a>
+		</li>
+		<li role="presentation" ng-class="{'active': eimCtrl.itemType._id == eimCtrl.noteType._id}">
+			<a aria-controls="profile" role="tab" ng-click="eimCtrl.itemType._id = eimCtrl.noteType._id">
+				<span class="glyphicon glyphicon-pushpin" aria-hidden="true"></span> Notes
+			</a>
+		</li>
+		<li role="presentation" ng-class="{'active': eimCtrl.itemType._id == eimCtrl.fwupType._id}">
+			<a aria-controls="messages" role="tab" ng-click="eimCtrl.itemType._id = eimCtrl.fwupType._id">
+				<span class="glyphicon glyphicon-arrow-up" aria-hidden="true"></span> Follow Ups
+			</a>
+		</li>
+		<li role="presentation" ng-class="{'active': eimCtrl.itemType._id == eimCtrl.meetType._id}">
+			<a aria-controls="settings" role="tab" ng-click="eimCtrl.itemType._id = eimCtrl.meetType._id">
+				<span class="glyphicon glyphicon-globe" aria-hidden="true"></span> Meeting
+			</a>
+		</li>
+	</ul>
+	<!--nav nav-tabs-->
+
+	<div class="tab-content">
+		<form ng-submit="eimCtrl.editLogItem()" name="editLogItem">
+			<div role="tabpanel" class="tab-pane active">
+				<div class="row">
+					<div class="col-sm-12" ng-if="eimCtrl.itemType._id == eimCtrl.commType._id || eimCtrl.itemType._id == eimCtrl.noteType._id">
+						<textarea rows="2" placeholder="Comment" required class="form-control margin-b" ng-model="eimCtrl.item.content"></textarea>
+					</div>
+
+					<div class=" margin-b-s" ng-if="eimCtrl.itemType._id == eimCtrl.meetType._id || eimCtrl.itemType._id == eimCtrl.fwupType._id" ng-class="{'col-sm-4':eimCtrl.itemType._id == eimCtrl.meetType._id,'col-sm-6':eimCtrl.itemType._id == eimCtrl.fwupType._id }">
+						<strong>Date / Time</strong>
+
+						<div class="input-group">
+							<input type="text" class="form-control" readonly datetime-picker="dd/MM/yyyy HH:mm" ng-model="eimCtrl.datePicker" is-open="eimCtrl.dateOpen"
+							close-on-date-selection="false" />
+							<span class="input-group-btn">
+                				<button type="button" class="btn btn-default" ng-click="eimCtrl.dateOpen = !eimCtrl.dateOpen"><i class="fa fa-calendar"></i></button>
+            				</span>
+
+						</div>
+
+						<p ng-show="eimCtrl.pleasePickADate" style="color:#c9302c"><b>Please pick a date</b></p>
+					</div>
+					<!--col-md-4-->
+					<div class="col-sm-4 margin-b-s" ng-if="eimCtrl.itemType._id == eimCtrl.meetType._id">
+						<strong>Location</strong>
+						<input type='text' class="form-control" required ng-model="eimCtrl.item.location" />
+					</div>
+					<!--col-md-4-->
+					<div class=" margin-b-s" ng-if="eimCtrl.itemType._id == eimCtrl.meetType._id || eimCtrl.itemType._id == eimCtrl.fwupType._id" ng-class="{'col-sm-4':eimCtrl.itemType._id == eimCtrl.meetType._id,'col-sm-6':eimCtrl.itemType._id == eimCtrl.fwupType._id}">
+						<strong>Comment</strong>
+						<input type="text" class="form-control margin-b" required ng-model="eimCtrl.item.content">
+					</div>
+
+
+					<!--col-md-12-->
+					
+					<!--col-md-9-->
+				</div>
+				<div class="row" style="margin-bottom: 15px">
+					
+						<button type="button" class="btn btn-danger send-btn pull-left" ng-click="eimCtrl.cancel()">Cancel</button>					
+						<input type="submit" class="btn btn-primary send-btn pull-right" value="Edit">
+					
+					<!--col-md-3-->
+				</div>
+				<!--row-->
+			</div>
+		</form>
+		<!--tab-pane-->
+
+
+	</div>
+	<!--tab-content-->
+</div>

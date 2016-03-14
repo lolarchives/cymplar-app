@@ -191,7 +191,8 @@ namespace Lead {
         private pleasePickADate: boolean;
         private smallFormOpen :boolean;
         private optionFilters: any;
-        constructor(private $stateParams: any, private $AddressBookRESTService: any, private $LeadRESTService: any, private $state: any, 
+        constructor(private $stateParams: any, private $AddressBookRESTService: any, 
+            private $LeadRESTService: any, private $state: any, 
             private roleInLead: any, private contacts: any, private unaddedContacts: any,
             private socket: any, private logItemTypes: any, private $LogItemRESTService: any, 
             private ultiHelper: any, private moment: any, private $scope: any) {
@@ -237,12 +238,32 @@ namespace Lead {
                 if (index == -1) {
                     this.$LogItemRESTService.allLogItemsCached.unshift(data.data.data);
                     this.$scope.$apply();
-                    console.log('push something dom' + data,this.$LogItemRESTService.allLogItemsCached);
+                   
                 }
                     
                 
                 
             });
+            
+            this.socket.on('leadLogDeleted', (data: any) => {
+                
+                let index = this.ultiHelper.indexOfFromId(this.$LogItemRESTService.allLogItemsCached, data.data.data);
+               
+                if (index != -1)
+                    this.$LogItemRESTService.allLogItemsCached.splice(index, 1);
+                this.$scope.$apply();    
+
+            });
+            this.socket.on('leadLogEdited', (data: any) => {
+                console.log('edited',data);
+                let index = this.ultiHelper.indexOfFromId(this.$LogItemRESTService.allLogItemsCached, data.data.data);
+               
+                if (index != -1)
+                    this.$LogItemRESTService.allLogItemsCached[index] = data.data.data;
+                this.$scope.$apply();    
+
+            });
+            
             this.smallFormOpen = false;
            
         }
