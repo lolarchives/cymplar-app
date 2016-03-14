@@ -383,7 +383,7 @@ schemas.accountOrganization.pre('save', function (next: Function) {
         {'label': 'Cold', 'value': '40'}, 
         {'label': 'Warm', 'value': '60'}, 
         {'label': 'Hot', 'value': '80'},
-        {'label': 'Contract signed', 'value': '100'}];
+        {'label': 'Won', 'value': '100'}];
   }
   next();  
 });
