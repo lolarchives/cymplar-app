@@ -156,7 +156,7 @@ p:focus, a:focus {
 	}
 
 .left-panel .sub-title.notification:after {
-	content:'';
+	/*content:'';
 	display:inline-block;
 	height:5px;
 	width:5px;
@@ -164,7 +164,7 @@ p:focus, a:focus {
 	background:#ffc000;
 	position:absolute;
 	top:13px;
-	right:70px;
+	right:70px;*/
 	}
 	
 .left-panel .sub-title.notificationgreen:after {
