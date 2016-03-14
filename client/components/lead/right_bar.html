@@ -69,7 +69,7 @@
 	
 
 	<strong>Estimates value: </strong>
-	<h5 ng-hide="slrbCtrl.editing">{{slrbCtrl.$stateParams.lead.amount || 'Not set'}}</h5>
+	<h5 ng-hide="slrbCtrl.editing">{{slrbCtrl.$stateParams.lead.amount | currency:"$" || 'Not set'}}</h5>
 	<input class="form-control input-sm margin-b-l" type="number" placeholder="Enter estimate value" ng-show="slrbCtrl.editing"
 	ng-model="slrbCtrl.editingLead.amount">
 
