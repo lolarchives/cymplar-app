@@ -1,62 +1,31 @@
 <div class="padding-box">        
                             
-					<h3>Edit, add or delete stage</h3>
-                    
-                    <div class="card">
-                         <h5><strong>Stage Title</strong></h5>
-                                                     
-                         <div class="progress margin-b-n">
-                            <div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="10" aria-valuemin="0" aria-valuemax="100" style="width: 10%;">
-                                10%
-                            </div>
-                        </div>
-   
-                        <div class="dropdown control">
-                            <span class="glyphicon glyphicon-option-horizontal" aria-hidden="true" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></span>
-                            <ul class="dropdown-menu dropdown-menu-right">
-                            	<li><a href="#">Edit</a></li>
-                                <li><a href="#">Delete</a></li>
-                            </ul>
-                        </div><!--dropdown -->
-                    </div><!--card-->  
-                    
-                    <div class="card">
-                         <h5><strong>Stage Title</strong></h5>
-                                                     
-                         <div class="progress margin-b-n">
-                            <div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="30" aria-valuemin="0" aria-valuemax="100" style="width: 30%;">
-                                30%
-                            </div>
-                        </div>
-   
-                        <div class="dropdown control">
-                            <span class="glyphicon glyphicon-option-horizontal" aria-hidden="true" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></span>
-                            <ul class="dropdown-menu dropdown-menu-right">
-                            	<li><a href="#">Edit</a></li>
-                                <li><a href="#">Delete</a></li>
-                            </ul>
-                        </div><!--dropdown -->
-                    </div><!--card--> 
-                    
-                    <div class="card">
-                         <h5><strong>Stage Title</strong></h5>
-                                                     
-                         <div class="progress margin-b-n">
-                            <div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="70" aria-valuemin="0" aria-valuemax="100" style="width: 70%;">
-                                70%
-                            </div>
-                        </div>
-   
-                        <div class="dropdown control">
-                            <span class="glyphicon glyphicon-option-horizontal" aria-hidden="true" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></span>
-                            <ul class="dropdown-menu dropdown-menu-right">
-                            	<li><a href="#">Edit</a></li>
-                                <li><a href="#">Delete</a></li>
-                            </ul>
-                        </div><!--dropdown -->
-                    </div><!--card-->             
-                        
-                    <p><a href="" class="btn btn-primary">Add stage</a></p>
-                    
-                </div><!--padding-box-->
+    <h3>Edit, add or delete stage</h3>
+    
+    <li ng-repeat="status in accOrgStgCtrl.organization.projectDefaultStatuses">
+        
+        <div class="card">
+            <h5><strong>{{status.label}}</strong></h5>
+                                        
+            <div class="progress margin-b-n">
+                <div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="{{status.value}}" aria-valuemin="0" aria-valuemax="100" style="width: {{status.value}}%;">
+                    {{status.value}}%
+                </div>
+            </div>
+
+            <div class="dropdown control">
+                <span class="glyphicon glyphicon-option-horizontal" aria-hidden="true" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></span>
+                <ul class="dropdown-menu dropdown-menu-right">
+                    <li><a href="" ng-click="accOrgStgCtrl.edit($index)">Edit</a></li>
+                    <li><a href="#">Delete</a></li>
+                </ul>
+            </div><!--dropdown -->
+        </div>
+
+    </li>          
+        
+    <p><a href="" ng-click="accOrgStgCtrl.edit(-1)" class="btn btn-primary">Add stage</a></p>
+    <p><a href="" ng-click="accOrgStgCtrl.saveChanges()" ng-disabled="accOrgStgCtrl.errors>0" class="btn btn-primary">Save changes</a></p>
+    
+</div><!--padding-box-->
 

@@ -39,6 +39,14 @@ namespace AccountService {
 			'accountOrganizationTeam': {
 				method: 'GET',
 				url: BACK_END_ROUTE + '/account-organization-member/_find_team'
+			},
+			'saveAccountOrganization': {
+				method: 'PUT',
+				url: BACK_END_ROUTE + '/account-organization/:id',
+				params: {
+					id: '@_id',
+					ido: '@_id'
+				}
 			}
 		});
 		return resources;
@@ -74,6 +82,11 @@ namespace AccountService {
 		accountOrganizationTeam = (orgId: string) => {
 			return this.$resourceHelper
 				.resourceRESTCall(this.$AccountRESTResource, 'accountOrganizationTeam', { organization: orgId, ido: orgId });
+		};
+		
+		saveAccountOrganization = (organization: any) => {
+			return this.$resourceHelper
+				.resourceRESTCall(this.$AccountRESTResource, 'saveAccountOrganization', organization, true);
 		};
 	}
 

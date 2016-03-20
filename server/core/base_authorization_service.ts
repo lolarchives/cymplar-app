@@ -103,7 +103,7 @@ export class BaseAuthorizationService<T extends BaseDto>{
 	
 	protected isAuthorizedInOrg(authorizationData: AuthorizationData, authorizedRoles: string[]): boolean {
 		const role: AccountMemberRole = ObjectUtil.getBaseDtoObject(authorizationData.organizationMember.role);
-		const roleCode: string = role.code;	
+		const roleCode: string = role.code;
 		return ObjectUtil.isPresent(roleCode) && authorizedRoles.indexOf(roleCode) >= 0;
 	}
 	

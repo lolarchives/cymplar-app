@@ -6,6 +6,7 @@ import {ObjectUtil} from '../../client/core/util';
 import {accountOrganizationMemberService} from '../account_organization_member/account_organization_member_service';
 import {accountMemberRoleService} from '../account_member_role/account_member_role_service';
 import {accountInvitationService} from '../account_invitation/account_invitation_service';
+import {salesLeadService} from '../sales_lead/sales_lead_service';
 
 export class AccountOrganizationService extends BaseService<AccountOrganization> {
 
@@ -55,6 +56,39 @@ export class AccountOrganizationService extends BaseService<AccountOrganization>
 			
 			reject(err);
 			});
+		});
+	}
+	
+	updateOne(data: AccountOrganization, newOptions: ModelOptions = {}): Promise<AccountOrganization> {
+		return new Promise<AccountOrganization>((resolve: Function, reject: Function) => {
+			const txModelOptions = this.obtainTransactionModelOptions(newOptions);			
+			this.preUpdateOne(data, txModelOptions)
+			.then((objectToUpdate: any) => {
+				const childrenUpdateStageTasks: Promise<any>[] = [];
+				childrenUpdateStageTasks.push(Promise.resolve(objectToUpdate));
+				childrenUpdateStageTasks.push(salesLeadService.updateChildrenStages(data));
+				return Promise.all(childrenUpdateStageTasks);					
+			})
+			.then((results: any) => {
+				const objectToUpdate = results[0];
+								
+				for (let prop in data) {
+					objectToUpdate[prop] = data[prop];
+				}
+				
+				objectToUpdate.save((err: Error, savedDoc: any) => {
+					if (err) {
+						return reject(err);
+					}
+					savedDoc.populate(txModelOptions.population, (err: Error, populatedObj: any) => {
+						if (err) {
+							return reject(err);
+						}
+						resolve(populatedObj.toObject());
+					});
+				});
+			})
+			.catch((err) => reject(err));
 		});
 	}
 	

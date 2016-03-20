@@ -1,0 +1,30 @@
+<div class="modal-content">
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close" ng-click="mStagesCtrl.cancel()"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel">Edit stage settings</h4>
+    </div>
+    <div class="modal-body">
+        <div class="form-horizontal">
+            <div class="form-group">
+                <div class="col-md-5 control-label">
+                    <label for="label" class="margin-b-n"><strong class="text-danger">*</strong> Name</label>
+                </div>
+                <div class="col-md-7">
+                    <input type="label" class="form-control" id="label" required ng-model="mStagesCtrl.currentStage.label">
+                </div>
+            </div>  
+            <div class="form-group">
+                <div class="col-md-5 control-label">
+                    <label for="value" class="margin-b-n"><strong class="text-danger">*</strong> Value</label>
+                </div>
+                <div class="col-md-7">
+                    <input type="value" class="form-control" id="value" required ng-model="mStagesCtrl.currentStage.value">
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal" ng-click="mStagesCtrl.cancel()">Close</button>
+        <button type="button" class="btn btn-primary" ng-click="mStagesCtrl.save()">Save changes</button>
+    </div>
+</div>

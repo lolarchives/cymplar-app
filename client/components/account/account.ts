@@ -1,4 +1,5 @@
 import {ObjectUtil} from '../../core/util';
+import {LeadStatus}  from '../../core/dto';
 import '../auth/auth.service';
 
 namespace accountSettings {
@@ -57,6 +58,16 @@ namespace accountSettings {
                     templateUrl: 'components/account/account-team.html',
                     controller: 'AccountOrganizationTeamController',
                     controllerAs: 'accOrgTeamCtrl'
+                }
+            }
+        })
+        .state('main-account.organization.stages', {
+            url: '/stages',
+            views: {
+                'account-org-setting': {
+                    templateUrl: 'components/account/account-settings.html',
+                    controller: 'AccountOrganizationSettingController',
+                    controllerAs: 'accOrgStgCtrl'
                 }
             }
         });
@@ -290,9 +301,107 @@ namespace accountSettings {
 			} else {
 				this.checkingEmail = false;
 			}
-		};
+		}
     }
 
+    export class AccountOrganizationSettingController {
+        
+        private modalStateInstance: any;
+        private errors: string[];
+        private previousOrganizationStages: any;
+        
+        /** @ngInject */
+        constructor(private $state: any, $stateParams: any, private toastr: any, private $scope: any, private $uibModal: any,
+            private user: any, private profile: any, private organization: any, private $AccountRESTService: any) {
+                this.previousOrganizationStages = ObjectUtil.clone(organization.projectDefaultStatuses);
+        }
+        
+        edit(stage: any) {
+            const theOrganization = this.organization;
+            this.modalStateInstance = this.$uibModal.open({
+                templateUrl: 'components/account/account-settings-modal.html',
+                controller: 'ModalStagesInstanceCtrl',
+                controllerAs: 'mStagesCtrl',
+                resolve: {
+                    stage: function () {
+                        return stage;
+                    },
+                    organization: function () {
+                        return theOrganization;
+                    }
+                }
+            });
+            
+           this.modalStateInstance.result.then((newStageArray: LeadStatus[]) => {
+                this.errors = [];
+                /*const statePercentageTotal = newStageArray.reduce((currentStatus, nextStatus) => {
+                    return currentStatus.value + nextStatus.value;
+                });
+                
+                if (statePercentageTotal !== 100) {
+                    this.toastr.error('There are some things you should check before save changes');
+                    this.errors.push('The sumatory of statuses should be 100%');
+                }*/
+            });
+        }
+        
+        saveChanges() {
+            let currentOrg = this.organization;
+            currentOrg['previousOrganizationStages'] = this.previousOrganizationStages; 
+            const toastrInstance = this.toastr;
+            this.$AccountRESTService.saveAccountOrganization(currentOrg).then((response: any) => {
+                if (response.success) {
+                    currentOrg = response.data;
+                } else {
+                    toastrInstance.error('The stages information could not be updated');    
+                }
+            });
+		}
+
+        isAuthorized(): boolean {
+            return this.profile.role.code === 'OWNER';
+        }
+    }
+    
+    export class ModalStagesInstanceCtrl {
+        
+        private newStage: any[];
+        private oldStage: any[];
+        private currentStage: any;
+		
+        /** @ngInject */
+        constructor(private $state: any, $stateParams: any, private toastr: any, private $scope: any, private $uibModalInstance: any,
+            private stage: number, private organization: any) {
+            this.newStage = organization.projectDefaultStatuses;
+            this.oldStage = ObjectUtil.clone(organization.projectDefaultStatuses);
+            
+           if (stage < 0) {
+                this.newStage.push({});
+                stage = this.newStage.length - 1;
+            } 
+            
+            this.currentStage = this.newStage[stage];
+            this.currentStage['id'] = stage;
+        }
+  
+        save() {
+            if (!this.currentStage['label'] || this.currentStage['label'].trim() === '' ) {
+                return this.toastr.error('A name is required');
+            }
+            
+            if (!this.currentStage['value'] || this.currentStage['value'].trim() === '' ) {
+                return this.toastr.error('A value is required');
+            }
+            
+            this.$uibModalInstance.close(this.newStage);           
+        }
+        
+        cancel() {
+            this.organization.projectDefaultStatuses = this.oldStage;
+            this.$uibModalInstance.dismiss(this.oldStage);          
+        }
+    }
+    
    	angular.module('app.account-settings', [
 		'ui.router'
 	])
@@ -302,5 +411,7 @@ namespace accountSettings {
     .controller('ModalProfileInstanceCtrl', ModalProfileInstanceCtrl)
     .controller('AccountOrganizationTeamController', AccountOrganizationTeamController)
     .controller('ModalTeamMemberInstanceCtrl', ModalTeamMemberInstanceCtrl)
-    .controller('ModalTeamInvitationInstanceCtrl', ModalTeamInvitationInstanceCtrl);
+    .controller('ModalTeamInvitationInstanceCtrl', ModalTeamInvitationInstanceCtrl)
+    .controller('AccountOrganizationSettingController', AccountOrganizationSettingController)
+    .controller('ModalStagesInstanceCtrl', ModalStagesInstanceCtrl);
 }

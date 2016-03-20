@@ -15,6 +15,10 @@
                         <a ui-sref="main-account.organization.team({orgId: accOrgMainCtrl.organization._id})">My Team</a>
                     </li>
                     
+                    <li ng-class="{current: $state.includes('main-account.organization.stages')}">
+                        <a ui-sref="main-account.organization.stages()">Settings</a>
+                    </li>
+                    
                 </ul><!--lead-nav-->
 
             </div><!--padding-box-->  

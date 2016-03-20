@@ -1,6 +1,6 @@
 import {Model, Document} from 'mongoose';
 
-import {BaseDto, ModelOptions, AuthorizationData} from '../../client/core/dto';
+import {BaseDto, ModelOptions, AuthorizationData, UpdateResults} from '../../client/core/dto';
 import {ObjectUtil} from '../../client/core/util';
 import {DatabaseObjectUtil} from './db_util';
 import {BaseAuthorizationService} from './base_authorization_service';
@@ -152,6 +152,17 @@ export abstract class BaseService<T extends BaseDto> extends BaseAuthorizationSe
 		});
 	}
 
+	updateSkippingHooks(conditions: T, update: any, options: any) : Promise<UpdateResults> {
+		return new Promise<T>((resolve: Function, reject: Function) => {
+			this.Model.update(conditions, update, options, (err: any, results: any) => {
+				if (err) {
+					return reject(err);	
+				}
+				resolve({affected: results});
+			});
+		});
+	}
+	
 	preRemoveOne(data: T, newOptions: ModelOptions = {}): Promise<T> {
 		return new Promise<T>((resolve: Function, reject: Function) => {	
 			const txModelOptions = this.obtainTransactionModelOptions(newOptions);
