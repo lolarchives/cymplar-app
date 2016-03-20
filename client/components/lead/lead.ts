@@ -320,10 +320,10 @@ namespace Lead {
            let stepsArray = this.$stateParams.lead.leadStatuses.map(function(currentValue: any) {
                return currentValue.label;
            });
-           if (this.$stateParams.lead.currentStatus === undefined) { 
+           if (this.$stateParams.lead.currentStatus === undefined || (this.$stateParams.lead.currentStatus >= this.$stateParams.lead.leadStatuses.length)) { 
                this.indexOfSelectedStatus = 0;
            } else {
-               this.indexOfSelectedStatus = stepsArray.indexOf(this.$stateParams.lead.currentStatus.label);
+               this.indexOfSelectedStatus = this.$stateParams.lead.currentStatus;
            }
                
   
@@ -372,7 +372,7 @@ namespace Lead {
             this.editingLead.contacts = this.editingLead.softContacts.map((currentValue: any, index: any, array: any) => {
                 return currentValue._id;
             });
-            this.editingLead.currentStatus = this.editingLead.leadStatuses[this.indexOfSelectedStatus];
+            this.editingLead.currentStatus = this.indexOfSelectedStatus;
             this.$LeadRESTService.updateLead(this.editingLead).then((response: any) => {
                 if (response.success) {
                     let index = this.ultiHelper.indexOfFromId( this.$LeadRESTService.allLeadsCached, this.$LeadRESTService.selectedLead );

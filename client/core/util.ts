@@ -84,5 +84,13 @@ export class ObjectUtil {
 			return data;
 		}
 	}
+	
+	static getObjectUnionProperty(data: any, property = '_id'): any {
+		if (ObjectUtil.isPresent(data[property])) {
+			return data[property];
+		} else {
+			return data;
+		}
+	}
 }
 

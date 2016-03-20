@@ -74,7 +74,13 @@ export class SalesLeadService extends BaseService<SalesLead> {
 				const updateSalesLeadPromises: Promise<any>[] = [];
 				updateSalesLeadPromises.push(Promise.resolve(objectToUpdate)); // Keeps the object tp be updated in results[0];
 				
-				if (ObjectUtil.isPresent(data['currentStatus']) && (objectToUpdate['currentStatus']['label'] !== data['currentStatus']['label'])) {
+				const currentStatusIndex = data['currentStatus'];
+				const previousStatusIndex = objectToUpdate['currentStatus'];
+				
+				if (ObjectUtil.isPresent(currentStatusIndex) && (currentStatusIndex !== previousStatusIndex)) {
+
+					const oldStage = data['leadStatuses'][previousStatusIndex];
+					const newStage = objectToUpdate['leadStatuses'][currentStatusIndex]; 
 					
 					const logItemModelOptions: ModelOptions = {
 						authorization: newOptions.authorization,
@@ -83,7 +89,7 @@ export class SalesLeadService extends BaseService<SalesLead> {
 				
 					const statusChange = {
 						content: `The status of the lead changed from 
-							${objectToUpdate['currentStatus']['label']} to ${data['currentStatus']['label']}`
+							${oldStage['label']} to ${newStage['label']}`
 					};
 					
 					updateSalesLeadPromises.push(logItemService.createStatusChangeLog(statusChange, logItemModelOptions));
@@ -93,6 +99,11 @@ export class SalesLeadService extends BaseService<SalesLead> {
 			})
 			.then((results: any) => {
 				const objectToUpdate = results[0];
+				
+				if (results.length > 1) {
+					data['generatedLog'] = 	results[1];
+				}
+				
 				for (let prop in data) {
 					objectToUpdate[prop] = data[prop];
 				}
@@ -104,6 +115,10 @@ export class SalesLeadService extends BaseService<SalesLead> {
 					savedDoc.populate(txModelOptions.population, (err: Error, populatedObj: any) => {
 						if (err) {
 							return reject(err);
+						}
+						
+						if (ObjectUtil.isPresent(data['generatedLog'])) {
+							populatedObj['generatedLog'] = 	data['generatedLog'];
 						}
 						resolve(populatedObj.toObject());
 					});
@@ -279,15 +294,6 @@ export class SalesLeadService extends BaseService<SalesLead> {
 					fieldsToDelete.push(i.toString());
 				}
 				
-				console.log(' ');
-				console.log(' to delete ' + JSON.stringify(fieldsToDelete));
-				console.log(' ');
-				console.log(' toUpdate ' + JSON.stringify(fieldsToUpdate));
-				console.log(' ');
-				console.log(' to add ' + JSON.stringify(stagesToAdd));
-				console.log(' ');
-		
-		
 				this.deleteStages(data, fieldsToDelete)
 				.then((deletedStagesResults: UpdateResults) => {
 						
@@ -317,9 +323,18 @@ export class SalesLeadService extends BaseService<SalesLead> {
 		switch (modelOptions.copyAuthorizationData) {
 			case 'orgMember':
 				modelOptions.additionalData['createdBy'] = modelOptions.authorization.organizationMember._id;
-				const stages = ObjectUtil.getStringUnionProperty(modelOptions.authorization.organizationMember.organization, 'projectDefaultStatuses');
-				console.log('stages' + JSON.stringify(stages));
+				const stages: LeadStatus[] = ObjectUtil.getObjectUnionProperty(modelOptions.authorization.organizationMember.organization, 'projectDefaultStatuses');
 				modelOptions.additionalData['leadStatuses'] = stages;
+				
+				let defaultStatus = 1;
+				for (let i = 0; i < stages.length; i++) {
+					if (stages[i].selected) {
+						defaultStatus = i;
+						break;	
+					}
+				}
+
+				modelOptions.additionalData['currentStatus'] = defaultStatus;
 				modelOptions.additionalData['statusTemplateOrganization'] = ObjectUtil.getStringUnionProperty(modelOptions.authorization.organizationMember.organization);
 				break;
 		}

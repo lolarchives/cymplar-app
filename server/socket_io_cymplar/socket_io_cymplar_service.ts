@@ -114,6 +114,7 @@ export class SocketIOCymplarService {
                         
                         socket.broadcast.to(room).emit('leadLogEdited', sendFormat);
                 });
+                
                 socket.on('leadLogDeleted', (notification: SocketNotification) => {
                         const room = ObjectUtil.getStringUnionProperty(notification.lead);
                         

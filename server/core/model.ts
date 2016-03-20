@@ -194,7 +194,7 @@ const schemas = {
     contract: { type: String },
     amount: { type: Number },
     leadStatuses: [subDocumentSchemas.leadStatus],
-    currentStatus: subDocumentSchemas.leadStatus,
+    currentStatus: { type: Number, required: true, default: 1 },
     statusTemplateOrganization: { type: ObjectId, ref: 'accountOrganization' },
     createdBy: { type: ObjectId, ref: 'accountUser' },
     createdAt: { type: Number },

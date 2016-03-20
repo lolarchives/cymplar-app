@@ -345,6 +345,10 @@ namespace accountSettings {
             });
         }
         
+        delete(index: any) {
+            this.organization.projectDefaultStatuses.splice(index, 1);
+        }
+        
         saveChanges() {
             let currentOrg = this.organization;
             currentOrg['previousOrganizationStages'] = this.previousOrganizationStages; 

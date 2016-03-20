@@ -16,16 +16,16 @@
             <div class="dropdown control">
                 <span class="glyphicon glyphicon-option-horizontal" aria-hidden="true" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></span>
                 <ul class="dropdown-menu dropdown-menu-right">
-                    <li><a href="" ng-click="accOrgStgCtrl.edit($index)">Edit</a></li>
-                    <li><a href="#">Delete</a></li>
+                    <li><a href="" ng-click="accOrgStgCtrl.edit($index)" ng-show="accOrgStgCtrl.isAuthorized()">Edit</a></li>
+                    <li><a href="" ng-click="accOrgStgCtrl.delete($index)" ng-show="accOrgStgCtrl.isAuthorized()">Delete</a></li>
                 </ul>
             </div><!--dropdown -->
         </div>
 
     </li>          
         
-    <p><a href="" ng-click="accOrgStgCtrl.edit(-1)" class="btn btn-primary">Add stage</a></p>
-    <p><a href="" ng-click="accOrgStgCtrl.saveChanges()" ng-disabled="accOrgStgCtrl.errors>0" class="btn btn-primary">Save changes</a></p>
+    <p><a href="" ng-click="accOrgStgCtrl.edit(-1)"  ng-show="accOrgStgCtrl.isAuthorized()" class="btn btn-primary">Add stage</a></p>
+    <p><a href="" ng-click="accOrgStgCtrl.saveChanges()" ng-show="accOrgStgCtrl.isAuthorized()"  ng-disabled="accOrgStgCtrl.errors>0" class="btn btn-primary">Save changes</a></p>
     
 </div><!--padding-box-->
 
