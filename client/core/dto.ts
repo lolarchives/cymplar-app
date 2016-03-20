@@ -286,3 +286,9 @@ export interface UpdateValues extends BaseDto {
 export interface UpdateResults extends BaseDto {
   affected?: number;
 }
+
+export interface LeadChatLog extends BaseDto {
+  lead?: string | SalesLead;
+  message?: string;
+  edited?: boolean;
+}

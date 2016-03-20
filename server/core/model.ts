@@ -239,6 +239,14 @@ const schemas = {
     createdBy: { type: ObjectId, ref: 'salesLeadOrganizationMember', required: true },
     createdAt: { type: Number },
     updatedAt: { type: Number }
+  }),
+  leadChatLog: new Schema({
+    lead: { type: ObjectId, ref: 'salesLead', required: true },
+    message: { type: String, required: true },
+    edited: { type: Boolean },
+    createdBy: { type: ObjectId, ref: 'salesLeadOrganizationMember', required: true },
+    createdAt: { type: Number },
+    updatedAt: { type: Number }
   })
 };
 
@@ -290,7 +298,8 @@ export const SalesLeadOrganizationMemberModel = db.model('salesLeadOrganizationM
 export const SalesLeadMemberRoleModel = db.model('salesLeadMemberRole', schemas.salesLeadMemberRole);
 export const LogItemTypeModel = db.model('logItemType', schemas.logItemType);
 export const LogItemModel = db.model('logItem', schemas.logItem);
-export const leadStatusModel = db.model('leadStatus', subDocumentSchemas.leadStatus);
+export const LeadStatusModel = db.model('leadStatus', subDocumentSchemas.leadStatus);
+export const LeadChatLogModel = db.model('leadChatLog', schemas.leadChatLog);
 
 
 schemas.addressBookGroup.post('remove', function() {
@@ -614,4 +623,12 @@ schemas.salesLead.pre('remove', function(next: Function) {
   });
 });
 
+schemas.logItem.pre('save', function (next: Function) {
+  const obj = this;
+  if (!obj.isNew) {
+    this.obj['edited'] = true;  
+  }
+ 
+  next();
+});
 
