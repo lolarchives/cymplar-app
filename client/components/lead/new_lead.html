@@ -55,7 +55,7 @@
 						<label for="input2" class="col-md-3 control-label"><strong class="text-danger">*</strong>Main contact</label>
 						<div class="col-md-9">
 							<select class="form-control" id="company" name="company" ng-options="contact._id as contact.name for contact in nlCtrl.newLead.group.contacts"
-							ng-model="nlCtrl.newLead.contact">
+							ng-model="nlCtrl.newLead.contact" required>
 								<option value=""></option>
 							</select>
 						</div>

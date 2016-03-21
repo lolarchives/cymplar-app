@@ -107,9 +107,9 @@ namespace Lead {
                         return $LogItemRESTService.preloadLogItem($stateParams.id);
                     }
                 },
-                onEnter: function($stateParams: any, $state: any, $LeadRESTService: any) {
+                onEnter: function($stateParams: any, $state: any, $LeadRESTService: any, $LogItemRESTService: any) {
                     //map company to id
-                
+                 
 					let availableLeadIds = $LeadRESTService.allLeadsCached.map(function(lead: any) {
                         return lead._id;
                     });
@@ -123,7 +123,13 @@ namespace Lead {
                             $LeadRESTService.selectedLead = $LeadRESTService.allLeadsCached[index];
                         }
                     }
+                },
+                onExit: function($LogItemRESTService: any) {
+                    console.log('leaving',$LogItemRESTService.loadingMore)
+                    $LogItemRESTService.loadingMore = false;
+                    console.log('leaving after',$LogItemRESTService.loadingMore);
                 }
+                
             });
     }
     
