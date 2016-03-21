@@ -272,6 +272,7 @@ for (let prop in schemas) {
       obj['createdAt'] = now;
     }
     obj['updatedAt'] = now;
+    obj['edited'] = true;
     next();
   });
 }
@@ -622,13 +623,3 @@ schemas.salesLead.pre('remove', function(next: Function) {
 		});	
   });
 });
-
-schemas.logItem.pre('save', function (next: Function) {
-  const obj = this;
-  if (!obj.isNew) {
-    this.obj['edited'] = true;  
-  }
- 
-  next();
-});
-
