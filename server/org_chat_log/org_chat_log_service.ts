@@ -94,7 +94,6 @@ export class OrgChatLogService extends BaseService<OrgChatLog> {
 	protected addAuthorizationDataInCreate(modelOptions: ModelOptions = {}) {
 		switch (modelOptions.copyAuthorizationData) {
 			case 'organization':
-				modelOptions.additionalData['organizaton'] = modelOptions.authorization.organizationMember.organization;
 				modelOptions.additionalData['createdBy'] = modelOptions.authorization.organizationMember._id;
 				break;
 		}
@@ -103,7 +102,6 @@ export class OrgChatLogService extends BaseService<OrgChatLog> {
 	protected addAuthorizationDataPreSearch(modelOptions: ModelOptions = {}) {
 		switch (modelOptions.copyAuthorizationData) {
 			case 'organization':
-				modelOptions.additionalData['organizaton'] = modelOptions.authorization.organizationMember.organization;
 				break;
 		}
 	}
@@ -143,9 +141,6 @@ export class OrgChatLogService extends BaseService<OrgChatLog> {
 	
 	protected validateAuthDataPostSearchRemove(modelOptions: ModelOptions = {}, 
 		data?: OrgChatLog): AuthorizationResponse {
-			
-		console.log(data);
-		console.log( modelOptions.authorization.leadMember);
 		const isOrgChatLogOwner =  modelOptions.authorization.organizationMember._id.toString() === 
 			ObjectUtil.getStringUnionProperty(data.createdBy).toString();
 		if (isOrgChatLogOwner) {
