@@ -32,6 +32,8 @@ import * as logItemRouter from './log_item/log_item_router';
 import * as logItemTypeRouter from './log_item_type/log_item_type_router';
 import {SocketIOCymplarService} from './socket_io_cymplar/socket_io_cymplar_service';
 import * as leadChatLogRouter from './lead_chat_log/lead_chat_log_router';
+import * as orgChatLogRouter from './org_chat_log/org_chat_log_router';
+import * as orgChannelRouter from './org_channel/org_channel_router';
 
 const INDEX_DEST_PATH = resolve(PATH.cwd, PATH.dest.app.base, 'index.html');
 
@@ -72,6 +74,8 @@ server.use('/api/sales-lead-status', salesLeadStatusRouter);
 server.use('/api/log-item', logItemRouter);
 server.use('/api/log-item-type', logItemTypeRouter);
 server.use('/api/lead-chat-log', leadChatLogRouter);
+server.use('/api/org-chat-log', orgChatLogRouter);
+server.use('/api/org-channel', orgChannelRouter);
 
 server.all(APP_BASE + '*', (req, res) =>
   res.sendFile(INDEX_DEST_PATH)

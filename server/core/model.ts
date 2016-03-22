@@ -247,6 +247,19 @@ const schemas = {
     createdBy: { type: ObjectId, ref: 'salesLeadOrganizationMember', required: true },
     createdAt: { type: Number },
     updatedAt: { type: Number }
+  }),
+  orgChannel: new Schema({
+    name: { type: String },
+    organization: { type: ObjectId, ref: 'accountOrganization', required: true },
+    limitedMembers: [{ type: ObjectId, ref: 'accountOrganizationMember'}] // if its empty or null, it's a general channel
+  }),
+  orgChatLog: new Schema({
+    room: { type: ObjectId, ref: 'orgChannel', required: true },
+    message: { type: String, required: true },
+    edited: { type: Boolean },
+    createdBy: { type: ObjectId, ref: 'accountOrganizationMember', required: true },
+    createdAt: { type: Number },
+    updatedAt: { type: Number }
   })
 };
 
@@ -272,7 +285,9 @@ for (let prop in schemas) {
       obj['createdAt'] = now;
     }
     obj['updatedAt'] = now;
-    obj['edited'] = true;
+    if (!obj.isNew) {
+      obj['edited'] = true;
+    }
     next();
   });
 }
@@ -301,6 +316,8 @@ export const LogItemTypeModel = db.model('logItemType', schemas.logItemType);
 export const LogItemModel = db.model('logItem', schemas.logItem);
 export const LeadStatusModel = db.model('leadStatus', subDocumentSchemas.leadStatus);
 export const LeadChatLogModel = db.model('leadChatLog', schemas.leadChatLog);
+export const OrgChatLogModel = db.model('orgChatLog', schemas.orgChatLog);
+export const OrgChannelModel = db.model('orgChannel', schemas.orgChannel);
 
 
 schemas.addressBookGroup.post('remove', function() {

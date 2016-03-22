@@ -96,6 +96,7 @@ export interface AccountOrganization extends BaseDto {
   pinterest?: string;
   members?: any;
   salesLeads?: any;
+  organizationChannels?: any[];
 }
 
 export interface SignUpDetails {
@@ -291,4 +292,18 @@ export interface LeadChatLog extends BaseDto {
   lead?: string | SalesLead;
   message?: string;
   edited?: boolean;
+}
+
+export interface OrgChatLog extends BaseDto {
+  room?: any;
+  organization?: string | AccountOrganization;
+  message?: string;
+  edited?: boolean;
+}
+
+export interface OrgChannel extends BaseDto {
+  name?: string;
+  limitedMembers?: AccountOrganizationMember[];
+  organization?: string | AccountOrganization;
+  findAdded?: string[];
 }

@@ -7,6 +7,7 @@ import {accountOrganizationMemberService} from '../account_organization_member/a
 import {accountMemberRoleService} from '../account_member_role/account_member_role_service';
 import {accountInvitationService} from '../account_invitation/account_invitation_service';
 import {salesLeadService} from '../sales_lead/sales_lead_service';
+import {orgChannelService} from '../org_channel/org_channel_service';
 
 export class AccountOrganizationService extends BaseService<AccountOrganization> {
 
@@ -46,12 +47,33 @@ export class AccountOrganizationService extends BaseService<AccountOrganization>
 		})
 		.then((accountMember: AccountOrganizationMember) => {
 			options.authorization.organizationMember = accountMember;
+			
+			const channelTasks: Promise<any>[] = [];
+			channelTasks.push(Promise.resolve(accountMember)); // Keeps the original organization
+			
+			const organizationChannelOptions = {
+				authorization: options.authorization,
+				copyAuthorizationData: '',
+				requireAuthorization: true
+			};
+				
+			const organizationChannel = {
+				name: 'General',
+				organization: ObjectUtil.getStringUnionProperty(accountMember.organization)
+			};
+			
+			// Add the general chat channel to the organization (by default)
+			channelTasks.push(orgChannelService.createOne(organizationChannel, organizationChannelOptions));
+			return Promise.all(channelTasks);
+		})
+		.then((results: any) => {	
 			fulfill(createdAccountOrganization); 
 		})
 		.catch((err) => {
 			if (ObjectUtil.isPresent(createdAccountOrganization._id)) {
 				this.removeSkipingHooks( { _id: createdAccountOrganization._id } );
 				accountOrganizationMemberService.removeSkipingHooks( { organization: createdAccountOrganization._id } );
+				orgChannelService.removeSkipingHooks( { organization: createdAccountOrganization._id } );
 			} 
 			
 			reject(err);

@@ -11,6 +11,8 @@ export class SocketIOCymplarService {
                         this.generateLeadLogConfiguration(socket);
                         
                         this.generateLeadChatConfiguration(socket);
+                        
+                        this.generateOrgChatConfiguration(socket);
                 });
 	}
         
@@ -56,8 +58,6 @@ export class SocketIOCymplarService {
                 socket.on('leadLogJoin', (notification: SocketNotification) => {
                         const room = ObjectUtil.getStringUnionProperty(notification.lead);
                         
-                        console.log('someone joined the room: ' + room);
- 
                         const sendFormat = {
                                 success: true,
                                 data: notification,
@@ -199,6 +199,80 @@ export class SocketIOCymplarService {
                         };
                         
                         socket.broadcast.to(room).emit('leadChatDeleted', sendFormat);
+                });
+	}
+        
+        generateOrgChatConfiguration(socket: SocketIO.Socket) {
+                socket.on('orgChatJoin', (notification: SocketNotification) => {
+                       const room = notification.data.room;
+                        
+                       const sendFormat = {
+                                success: true,
+                                data: notification,
+                                message: 'Someone joined to the room'
+                        };
+                                        
+                        socket.join(room, (err: Error) => {
+                                if (err) {
+                                    sendFormat.success = false;             
+                                }   
+                        });
+                        
+                        socket.broadcast.to(room).emit('joinedOrgChat', sendFormat);
+                });
+                
+                socket.on('orgChatLeave', (notification: SocketNotification) => {
+                        const room = notification.data.room;
+                        
+                        const sendFormat = {
+                                success: true,
+                                data: notification,
+                                message: 'Someone left the room'
+                        };
+                                        
+                        socket.leave(room, (err: Error) => {
+                                if (err) {
+                                    sendFormat.success = false;             
+                                }   
+                        });
+                        
+                        socket.broadcast.to(room).emit('leftOrgChat', sendFormat);
+                });
+                
+                socket.on('orgChatAdd', (notification: SocketNotification) => {
+                        const room = notification.data.room;
+                        
+                        const sendFormat = {
+                                success: true,
+                                data: notification,
+                                message: 'new log activity'
+                        };
+                        
+                        socket.broadcast.to(room).emit('orgChatAdded', sendFormat);
+                });
+                
+                socket.on('orgChatEdit', (notification: SocketNotification) => {
+                        const room = notification.data.room;
+                        
+                        const sendFormat = {
+                                success: true,
+                                data: notification,
+                                message: 'edited log'
+                        };
+                        
+                        socket.broadcast.to(room).emit('orgChatEdited', sendFormat);
+                });
+                
+                socket.on('orgChatDelete', (notification: SocketNotification) => {
+                        const room = notification.data.room;
+                        
+                        const sendFormat = {
+                                success: true,
+                                data: notification,
+                                message: 'deleted log'
+                        };
+                        
+                        socket.broadcast.to(room).emit('orgChatDeleted', sendFormat);
                 });
 	}
 }

@@ -52,6 +52,33 @@ export abstract class BaseService<T extends BaseDto> extends BaseAuthorizationSe
 		});		
 	}
 
+	createMultiple(data: T[], newOptions: ModelOptions = {}): Promise<T[]> {
+		return new Promise<T[]>((resolve: Function, reject: Function) => {
+			const txModelOptions = this.obtainTransactionModelOptions(newOptions);
+			const authorizationResponse = this.isCreateAuthorized(txModelOptions);
+			if (!authorizationResponse.isAuthorized) {
+				return reject(new Error(authorizationResponse.errorMessage));
+			}
+			this.addAuthorizationDataInCreate(txModelOptions); // Adds required authorization data in create
+			
+			for (let i = 0; i < data.length; i++) {
+				this.transactionModelOptionsAddData(data[i], txModelOptions);
+			}	
+			
+			this.Model.create(data, (err: Error, createdObjs: any) => {
+				if (err) {
+					return reject(err);
+				}
+			
+				if (ObjectUtil.isBlank(createdObjs)) {
+					return reject(new Error('Objects could not be created'));
+				}
+					
+				resolve(createdObjs);
+			});
+		});		
+	}
+	
 	preUpdateOne(data: T, newOptions: ModelOptions = {}): Promise<T> {	
 		return new Promise<T>((resolve: Function, reject: Function) => {
 			const authorizationResponse = this.isUpdateAuthorized(newOptions);
@@ -67,8 +94,6 @@ export abstract class BaseService<T extends BaseDto> extends BaseAuthorizationSe
 				if (ObjectUtil.isBlank(foundObj)) {
 					return reject(new Error('Object could not be found'));
 				}
-				
-				
 				if (newOptions.validatePostSearchAuthData) {
 					const authorizationResponse = this.validateAuthDataPostSearchUpdate(newOptions, foundObj);
 					if (!authorizationResponse.isAuthorized) {
@@ -152,7 +177,7 @@ export abstract class BaseService<T extends BaseDto> extends BaseAuthorizationSe
 		});
 	}
 
-	updateSkippingHooks(conditions: T, update: any, options: any) : Promise<UpdateResults> {
+	updateSkippingHooks(conditions: T, update: any, options: any): Promise<UpdateResults> {
 		return new Promise<T>((resolve: Function, reject: Function) => {
 			this.Model.update(conditions, update, options, (err: any, results: any) => {
 				if (err) {

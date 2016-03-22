@@ -60,6 +60,14 @@ router.get('/_find_membership', (req: express.Request, res: express.Response) =>
   accountOrganizationMemberService.returnCurrentOrganizationMember(modelOptions)
     .then((member: AccountOrganizationMember) => formatSend(res, member), (err: any) => sendError(res, err));
 });
+/*
+router.get('/_find_team_chat', (req: express.Request, res: express.Response) => {
+  const modelOptions: ModelOptions = {
+    authorization: getAuthorizationData(req)
+  };
+  accountOrganizationMemberService.findTeamChatList(req.query, modelOptions)
+    .then((members: AccountOrganizationMember[]) => formatSend(res, members), (err: any) => sendError(res, err));
+});*/
 
 router.get('/_exist', (req, res) => {
   const modelOptions: ModelOptions = {
