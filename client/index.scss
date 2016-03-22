@@ -37,3 +37,13 @@
 		color:#fff;
 	}	
 }
+.load-more-btn {
+	position: absolute;
+	opacity: 0.75;
+	bottom: 195px;
+}
+@media (max-width: 767px) {
+	.load-more-btn {
+		bottom: 60px;
+	}
+}

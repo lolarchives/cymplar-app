@@ -153,6 +153,7 @@ namespace LeadService {
 		private selectedLead: any;
 		private loadMore: boolean;
 		private allLogItemTypesCached: any[] = [];
+		private loadingMore: boolean = false;
 		constructor(private $LeadRESTResource: any, private $LogItemRESTResource: any,
 			private $resourceHelper: any, private AuthToken: any, private $LeadRESTService: any) {
 
@@ -208,15 +209,31 @@ namespace LeadService {
 					}
 				});
 		}
-		loadMoreLogItem(lastItem: any) {
-			return this.$resourceHelper.resourceRESTCall(this.$LogItemRESTResource, 'loadLogItem').then((response: any) => {
+		loadMoreLogItem() {
+			
+			let data = {_id: this.allLogItemsCached[this.allLogItemsCached.length-1]._id,
+				idl : this.$LeadRESTService.selectedLead._id,
+				ido : this.AuthToken.getIdO()
+			};
+			
+			
+			
+			console.log(data) 
+			this.loadingMore = true;
+			return this.$resourceHelper.resourceRESTCall(this.$LogItemRESTResource, 'loadLogItem',data).then((response: any) => {
+				this.loadingMore = false;
 				if (response.success) {
-					this.allLogItemsCached.push(response.data);
-					if (response.data.length < 20) {
-						this.loadMore = false;
-					} else {
-						this.loadMore = true;
-					}
+					console.log('response',response.data,data)
+					if (data.idl === this.$LeadRESTService.selectedLead._id) {
+						this.allLogItemsCached = this.allLogItemsCached.concat(response.data);
+						if (response.data.length < 20) {
+							this.loadMore = false;
+						} else {
+							this.loadMore = true;
+						}	
+					}  
+					
+					
 					return response.data;
 				}
 			});
