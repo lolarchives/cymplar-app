@@ -9,17 +9,13 @@ export class OrgChannelService extends BaseService<OrgChannel> {
 		const defaultModelOptions: ModelOptions = {
 			population: [
 				{
-					path: 'member',
+					path: 'limitedMembers',
 					select: 'user role -_id',
 					populate: [ 
 						{
 							path: 'user',
 							select: 'firstName lastName middleName -_id',
 							model: 'accountUser'	
-						},
-						{
-							path: 'role',
-							model: 'accountMemberRole'
 						}
 					]	
 				}
@@ -106,7 +102,7 @@ export class OrgChannelService extends BaseService<OrgChannel> {
 	protected addAuthorizationDataInCreate(modelOptions: ModelOptions = {}) {
 		switch (modelOptions.copyAuthorizationData) {
 			case 'organization':
-				modelOptions.additionalData['organizaton'] = modelOptions.authorization.organizationMember.organization;
+				modelOptions.additionalData['organization'] = modelOptions.authorization.organizationMember.organization;
 				modelOptions.additionalData['createdBy'] = modelOptions.authorization.organizationMember._id;
 				break;
 		}
@@ -115,32 +111,22 @@ export class OrgChannelService extends BaseService<OrgChannel> {
 	protected addAuthorizationDataPreSearch(modelOptions: ModelOptions = {}) {
 		switch (modelOptions.copyAuthorizationData) {
 			case 'organization':
-				modelOptions.additionalData['organizaton'] = modelOptions.authorization.organizationMember.organization;
+				modelOptions.additionalData['organization'] = 
+					ObjectUtil.getStringUnionProperty(modelOptions.authorization.organizationMember.organization);
 				modelOptions.additionalData['$or'] = [{ limitedMembers: { $size: 0 }}, 
 					{ limitedMembers: modelOptions.authorization.organizationMember._id }];
 				modelOptions.population = [
 					{
-						path: 'member',
+						path: 'limitedMembers',
 						select: 'user role -_id',
-						populate: [ 
+						match:  { _id: { $ne: modelOptions.authorization.organizationMember._id }},
+						populate: [
 							{
 								path: 'user',
 								select: 'firstName lastName middleName -_id',
-								model: 'accountUser'	
-							},
-							{
-								path: 'role',
-								model: 'accountMemberRole'
+								model: 'accountUser'
 							}
-						]	
-					},
-					{
-						path: 'limitedMembers',
-						match:  { _id: { $ne: modelOptions.authorization.organizationMember._id }},
-						populate: {
-							path: 'user',
-							select: '-password'
-						}
+						]
 					}
 				];
 				break;
