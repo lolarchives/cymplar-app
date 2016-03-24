@@ -41,6 +41,10 @@ namespace LeadService {
 			'roleInLead': {
 				method: 'GET',
 				url: BACK_END_ROUTE + '/sales-lead-organization-member/_find_membership'
+			},
+			'findFilteredStages': {
+				method: 'GET',
+				url: BACK_END_ROUTE + '/sales-lead/_find_latest_status'
 			}
 		});
 		return resources;
@@ -103,6 +107,13 @@ namespace LeadService {
 		deleteLead(leadId: any) {
 			return this.$resourceHelper.resourceRESTCall(this.$LeadRESTResource, 'deleteLead',
 				{ id: leadId, idl: leadId, ido: this.AuthToken.getIdO() }, true);
+		}
+		
+		findFilteredStages() {
+			return this.$resourceHelper.resourceRESTCall(this.$LeadRESTResource, 'findFilteredStages',
+			{ ido: this.AuthToken.getIdO() }, true).then((response: any) => {
+				return response;
+			});
 		}
 	}
 

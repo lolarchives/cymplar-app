@@ -147,6 +147,15 @@ namespace app {
                 }
               });
             }
+          },
+          filteredLeads: ($LeadRESTService: any) => {
+            return $LeadRESTService.findFilteredStages().then((response: any) => {
+              if (response.success) {
+                return response.data;
+              } else {
+                return {};
+              }
+            });
           }
         }
       })

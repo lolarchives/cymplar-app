@@ -9,7 +9,7 @@ export function mainNavbar(): angular.IDirective {
       organizationMember: '=',
       organization: '=',
       companies: '=',
-
+      filteredLeads: '='
     },
     templateUrl: 'components/navbar/navbar.html',
     controller: NavbarController,

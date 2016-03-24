@@ -157,7 +157,6 @@ export class SalesLeadService extends BaseService<SalesLead> {
 			};
 			salesLeadOrganizationMemberService.findLeadsPerOrganization(salesLeadOrgMembOptions)
 			.then((salesLeads: string[]) => {
-				
 				newOptions.additionalData = { _id: { $in: salesLeads }};
 				newOptions.requireAuthorization = false;
 				newOptions.limit = 5;

@@ -156,12 +156,12 @@ namespace Lead {
             }
         }
         createLead(newLead: any) {
-            if (this.$stateParams.status === 'opportunity') { 
+            /*if (this.$stateParams.status === 'opportunity') { 
                 newLead.status = this.$LeadRESTService.allLeadStatusesCached[this.opportunityStatusIndex]; 
             }
             if (this.$stateParams.status === 'lead') { 
                 newLead.status = this.$LeadRESTService.allLeadStatusesCached[this.coldStatusIndex]; 
-            }
+            }*/
             newLead.contacts = [newLead.contact];
             this.$LeadRESTService.newLead(newLead).then((response: any) => {
                 console.log('response');

@@ -49,30 +49,48 @@
         </ul>
       </div>
       <!--dropdown-->
-
       <div class="aside-block">
-
+        
         <h5 class="uppercase title">
-                    <span class="glyphicon glyphicon-star left-icon" aria-hidden="true"></span> 
-                    <a href="" ui-sref="main.allLeads"><strong>Sales</strong></a>
-                </h5>
+            <span class="glyphicon glyphicon-star left-icon" aria-hidden="true"></span> 
+            <a href="" ui-sref="main.allLeads"><strong>Sales</strong></a>
+            <a href="" class="create-btn" title="create new" ui-sref="main.newLead()">
+                <span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span>
+            </a>
+        </h5>
+        <li ng-repeat="leadGroup in navCtrl.filteredLeads">
+        
+            <h5 class="sub-title" data-toggle="collapse" data-target="#collapsel{{$index}}">
+                <span class="glyphicon glyphicon-chevron-down left-icon" aria-hidden="true"></span>
+                {{leadGroup.description}}
+            </h5>
+            <div class="collapse" id="collapsel{{$index}}">
+              <ul class="main-nav">
+                <li ng-repeat="lead in leadGroup.leads" ng-class="{'current': navCtrl.$state.params.id == lead._id && navCtrl.$state.current.name == 'main.selectedLead'}">
+                  <a href="" ng-click="navCtrl.$state.go('main.selectedLead',{id: lead._id, lead: lead}); navCtrl.$LeadRESTService.selectedLead = lead;navCtrl.console.log(navCtrl.$LeadRESTService.selectedLead)">{{lead.name}}</a>
+                </li>
+              </ul>
+            </div>
 
+        </li>
+        
+        <!--
         <h5 class="sub-title sub-title notification" data-toggle="collapse" data-target="#collapse1">
-                    <span class="glyphicon glyphicon-chevron-down left-icon" aria-hidden="true" ></span>
-                    My leads
-                    <a href="" class="create-btn" title="create new" ui-sref="main.newLead({status:'lead'})">
-                        <span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span>
-                    </a>
-                    <div class="dropdown" ng-hide="true">
-                        <span class="glyphicon glyphicon-option-horizontal" aria-hidden="true" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></span>
-                        <ul class="dropdown-menu dropdown-menu-right">
-                            <li class="current"><a href="#">All</a></li>
-                            <li><a href="#">Overdue</a></li>
-                            <li><a href="#">Upcoming</a></li>
-                            <li><a href="#">Unread Changes</a></li>
-                        </ul>
-                    </div>
-                </h5>
+          <span class="glyphicon glyphicon-chevron-down left-icon" aria-hidden="true" ></span>
+          My leads
+          <a href="" class="create-btn" title="create new" ui-sref="main.newLead()">
+              <span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span>
+          </a>
+          <div class="dropdown" ng-hide="true">
+              <span class="glyphicon glyphicon-option-horizontal" aria-hidden="true" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></span>
+              <ul class="dropdown-menu dropdown-menu-right">
+                  <li class="current"><a href="#">All</a></li>
+                  <li><a href="#">Overdue</a></li>
+                  <li><a href="#">Upcoming</a></li>
+                  <li><a href="#">Unread Changes</a></li>
+              </ul>
+          </div>
+      </h5>
         <div class="collapse" id="collapse1">
           <ul class="main-nav">
             <li ng-class="{'current': navCtrl.$state.params.id == lead._id && navCtrl.$state.current.name == 'main.selectedLead'}"
@@ -82,7 +100,7 @@
         </div>
         <!--collapse-->
 
-        <h5 class="sub-title" data-toggle="collapse" data-target="#collapse2">
+       <!-- <h5 class="sub-title" data-toggle="collapse" data-target="#collapse2">
                     <span class="glyphicon glyphicon-chevron-down left-icon" aria-hidden="true"></span>
                     My Opportunities
                     <a href="" class="create-btn" title="create new" ui-sref="main.newLead({status:'opportunity'})">
@@ -107,7 +125,7 @@
         </div>
         <!--collapse-->
 
-        <h5 class="sub-title" data-toggle="collapse" data-target="#collapse3">
+        <!--<h5 class="sub-title" data-toggle="collapse" data-target="#collapse3">
                     <span class="glyphicon glyphicon-chevron-down left-icon" aria-hidden="true"></span>
                     My won lead
                 </h5>
@@ -120,7 +138,7 @@
         </div>
         <!--collapse-->
 
-        <h5 class="sub-title" data-toggle="collapse" data-target="#collapse4">
+        <!--<h5 class="sub-title" data-toggle="collapse" data-target="#collapse4">
                     <span class="glyphicon glyphicon-chevron-down left-icon" aria-hidden="true"></span>
                     My Lost/Inactive
                 </h5>
