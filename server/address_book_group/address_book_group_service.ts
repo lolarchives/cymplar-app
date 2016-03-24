@@ -30,6 +30,28 @@ export class AddressBookGroupService extends BaseService<AddressBookGroup> {
 		super(AddressBookGroupModel, modelOptions);
 	}
 	
+	findLimitedGroupContacts(data: AddressBookGroup, options: ModelOptions = {}): Promise<AddressBookGroup[]> {
+		return new Promise<AddressBookGroup[]>((fulfill: Function, reject: Function) => {
+			this.findLimited(data, options)		
+			.then((groups: AddressBookGroup[]) => {
+				
+				const childrenModelOptions: ModelOptions = {
+					authorization: options.authorization,
+					copyAuthorizationData: 'createdBy',
+					limit: 5
+				};
+				const loadDataFromGroupPromises: Promise<AddressBookGroup>[] = [];
+				for (let i = 0; i < groups.length; i++) {
+					loadDataFromGroupPromises.push(this.loadGroup(groups[i], childrenModelOptions));
+				}
+				
+				return Promise.all(loadDataFromGroupPromises);	
+			})
+			.then((results: any) => fulfill(results))
+			.catch((err) => reject(err));
+		});
+	}
+	
 	findGroupContacts(data: AddressBookGroup, options: ModelOptions = {}): Promise<AddressBookGroup[]> {
 		return new Promise<AddressBookGroup[]>((fulfill: Function, reject: Function) => {
 			this.find(data, options)		

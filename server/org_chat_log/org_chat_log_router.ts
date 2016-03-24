@@ -39,7 +39,7 @@ router.get('/_find', (req: express.Request, res: express.Response) => {
     authorization: getAuthorizationData(req),
     copyAuthorizationData: 'organization'
   };
-  orgChatLogService.find(req.query, modelOptions)
+  orgChatLogService.findNextLimited(req.query, modelOptions)
     .then((orgChatLogTypes: OrgChatLog[]) => formatSend(res, orgChatLogTypes), (err: any) => sendError(res, err));
 });
 

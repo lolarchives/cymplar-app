@@ -22,7 +22,9 @@ export abstract class BaseService<T extends BaseDto> extends BaseAuthorizationSe
 			requireAuthorization: true,
 			copyAuthorizationData: 'user', // By default is going to try to copy the current user information
 			onlyValidateParentAuthorization: false, // Skip validations at immediate document level
-			validatePostSearchAuthData: true
+			validatePostSearchAuthData: true,
+			sortBy: '-createdAt',
+			limit: 20
 		};
 		ObjectUtil.merge(this.options, options);		
 	}
@@ -313,13 +315,64 @@ export abstract class BaseService<T extends BaseDto> extends BaseAuthorizationSe
 			this.transactionModelOptionsAddData(data, txModelOptions);	
 			const search = this.obtainSearchExpression(data, txModelOptions);
 			this.Model.find(search, txModelOptions.projection,
-			 { sort: '-createdAt', lean: true }).populate(txModelOptions.population)
+			 { sort: txModelOptions.sortBy, lean: true }).populate(txModelOptions.population)
 			.exec((err, foundObjs) => {
 				if (err) {
 					return reject(err);
 				}
 				resolve(foundObjs);
 			});
+		});
+	}
+	
+	findLimited(data: T, newOptions: ModelOptions = {}): Promise<T[]> {
+		return new Promise<T[]>((resolve: Function, reject: Function) => {
+			const txModelOptions = this.obtainTransactionModelOptions(newOptions);
+			const authorizationResponse = this.isSearchAuthorized(txModelOptions);
+			if (!authorizationResponse.isAuthorized) {
+				return reject(new Error(authorizationResponse.errorMessage));
+			}
+			this.addAuthorizationDataPreSearch(txModelOptions);	
+			this.transactionModelOptionsAddData(data, txModelOptions);	
+			const search = this.obtainSearchExpression(data, txModelOptions);
+			this.Model.find(search, txModelOptions.projection,
+			 { sort: txModelOptions.sortBy, limit: txModelOptions.limit, lean: true }).populate(txModelOptions.population)
+			.exec((err, foundObjs) => {
+				if (err) {
+					return reject(err);
+				}
+				resolve(foundObjs);
+			});
+		});
+	}
+	
+	findNextLimited(data: T, newOptions: ModelOptions = {}): Promise<T[]> {
+		return new Promise<T[]>((resolve: Function, reject: Function) => {
+			const txModelOptions = this.obtainTransactionModelOptions(newOptions);
+			this.findLimited(data, newOptions)
+			.then((foundObjects: T[]) => {
+				if (ObjectUtil.isPresent(data._id) && (foundObjects.length === 1)) {
+					const object = foundObjects[0];
+					const isDescendent = txModelOptions.sortBy.charAt(0) === '-' ? 1 : 0;
+					const sortField = txModelOptions.sortBy.substring(isDescendent, txModelOptions.sortBy.length);
+
+					if (ObjectUtil.isPresent(object[sortField])) {
+						if (isDescendent) {
+							txModelOptions.additionalData[sortField] = { $lt: object[sortField] };
+						} else {
+							txModelOptions.additionalData[sortField] = { $gt: object[sortField] };
+						}	
+					}
+					delete data._id;
+					return this.findLimited(data, txModelOptions);
+				}  
+	
+				return Promise.resolve(foundObjects);						
+			})
+			.then((foundObjects: T[]) => {
+				resolve(foundObjects);			
+			})
+			.catch((err) => reject(err));
 		});
 	}
 	
@@ -358,7 +411,7 @@ export abstract class BaseService<T extends BaseDto> extends BaseAuthorizationSe
 			if (Object.keys(data).length < 1) {
 				reject(new Error('At least one filter value should be specified'));
 			}
-			this.Model.findOne(ObjectUtil.createFilter(data, false), null, { sort: '-createdAt', lean: true })
+			this.Model.findOne(ObjectUtil.createFilter(data, false), null, { sort: txModelOptions.sortBy, lean: true })
 			.exec((err, foundObj) => {
 				if (err) {
 					return reject(err);
@@ -384,7 +437,7 @@ export abstract class BaseService<T extends BaseDto> extends BaseAuthorizationSe
 			}
 			
 			this.Model.findOne(search, txModelOptions.projection,
-			 { sort: '-createdAt', lean: true }).populate(txModelOptions.population)
+			 { sort: txModelOptions.sortBy, lean: true }).populate(txModelOptions.population)
 			.exec((err: Error, foundObj: T) => {
 				if (err) {
 					return reject(err);

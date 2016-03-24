@@ -2,17 +2,17 @@ import * as express from 'express';
 
 import {sendError, formatSend, getAuthorizationData} from '../core/web_util';
 import {salesLeadService} from './sales_lead_service';
-import {SalesLead, ModelOptions} from '../../client/core/dto';
+import {SalesLead, ModelOptions, LeftPanelStatus} from '../../client/core/dto';
 
 const router = express.Router();
 
 router.post('/', (req, res) => {
   const modelOptions: ModelOptions = {
     authorization: getAuthorizationData(req),
-    copyAuthorizationData: 'orgMember'
+    copyAuthorizationData: 'orglead'
   };
   salesLeadService.createOne(req.body, modelOptions)
-    .then((member: SalesLead) => formatSend(res, member), (err) => sendError(res, err));
+    .then((lead: SalesLead) => formatSend(res, lead), (err) => sendError(res, err));
 });
 
 router.put('/:id', (req, res) => {
@@ -22,7 +22,7 @@ router.put('/:id', (req, res) => {
   };
   req.body._id = req.params.id;
   salesLeadService.updateOneContacts(req.body, modelOptions)
-    .then((member: SalesLead) => formatSend(res, member), (err) => sendError(res, err));
+    .then((lead: SalesLead) => formatSend(res, lead), (err) => sendError(res, err));
 });
 
 router.delete('/:id', (req, res) => {
@@ -31,7 +31,7 @@ router.delete('/:id', (req, res) => {
     copyAuthorizationData: 'lead'
   };
   salesLeadService.removeOneById(req.params.id, modelOptions)
-    .then((member: SalesLead) => formatSend(res, member), (err) => sendError(res, err));
+    .then((lead: SalesLead) => formatSend(res, lead), (err) => sendError(res, err));
 });
 
 // Returns all the leads per organization
@@ -40,7 +40,25 @@ router.get('/_find', (req: express.Request, res: express.Response) => {
     authorization: getAuthorizationData(req)
   };
   salesLeadService.findPerOrganization(req.query, modelOptions)
-    .then((members: SalesLead[]) => formatSend(res, members), (err: any) => sendError(res, err));
+    .then((leads: SalesLead[]) => formatSend(res, leads), (err: any) => sendError(res, err));
+});
+
+// Returns all the latest 5 leads per organization per status
+router.get('/_find_latest_status', (req: express.Request, res: express.Response) => {
+  const modelOptions: ModelOptions = {
+    authorization: getAuthorizationData(req)
+  };
+  salesLeadService.findPerOrganizationLatestOnes(req.query, modelOptions)
+    .then((leads: LeftPanelStatus[]) => formatSend(res, leads), (err: any) => sendError(res, err));
+});
+
+router.get('/_find_limited', (req: express.Request, res: express.Response) => {
+  const modelOptions: ModelOptions = {
+    authorization: getAuthorizationData(req),
+    sortBy: '-updatedAt'
+  };
+  salesLeadService.findPerOrganizationNextLimited(req.query, modelOptions)
+    .then((leads: SalesLead[]) => formatSend(res, leads), (err: any) => sendError(res, err));
 });
 
 router.get('/_exist', (req, res) => {
@@ -57,7 +75,7 @@ router.get('/:id', (req: express.Request, res: express.Response) => {
     copyAuthorizationData: 'lead'
   };
   salesLeadService.findOneById(req.params.id, modelOptions)
-    .then((member: SalesLead) => formatSend(res, member), (err: any) => sendError(res, err));
+    .then((lead: SalesLead) => formatSend(res, lead), (err: any) => sendError(res, err));
 });
 
 

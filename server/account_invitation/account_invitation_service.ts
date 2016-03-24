@@ -105,7 +105,7 @@ export class AccountInvitationService extends BaseService<AccountInvitation> {
 					</tbody>
 				</table>
 				
-				<table style="max-width:600px; width:100%; background:#fff; padding:30px 30px 15px;" align="center">
+				 <table style="max-width:600px; width:100%; background:#fff; padding:30px 30px 15px;" align="center">
 					<tbody>
 						<tr>
 							<td style="color:#333; font-size:18px; font-weight:600; padding:0 0 15px;">
@@ -114,9 +114,15 @@ export class AccountInvitationService extends BaseService<AccountInvitation> {
 						</tr>
 						<tr>
 							<td style="color:#333; padding-bottom:15px; ">
-								Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer libero tellus,
-								 aliquet maximus nisi vel, vestibulum efficitur nibh. Aenean sit amet augue eu 
-								 sapien auctor viverra convallis nec velit. Integer in ante lobortis, facilisis tortor sed, venenatis sapien.
+							Hey ..... A few pointer to get you started.  </br>
+							
+								<ul>
+								<li>Create Yours: It doesn't have to be a registered business it can be your little dream </li>
+								<li>Join others: You can join as many organisations as you want and choose and pick the best 
+								organisation to collaborate with your lead</li>
+								<li>Collaborate: Once you join other organisations you can invite members of all of them to 
+								help you with your leads, or introduce them to a third more to build a network of support</li>
+								</ul>
 							</td>
 						</tr>
 						<tr>
@@ -126,8 +132,9 @@ export class AccountInvitationService extends BaseService<AccountInvitation> {
 						</tr>
 						<tr>
 							<td style="color:#333; padding:0 0 15px;">
-								Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer libero tellus, aliquet maximus nisi vel. 
-								Aenean sit amet augue eu sapien auctor viverra convallis nec velit. Integer in ante lobortis.
+						Cymplar it's a lead network and collaboration tool, thanks for using our services, 
+						if you feel we have done a good job please send us and email it helps us keep going itseasy@cymplar.com
+							</td>
 							</td>
 						</tr>
 					</tbody>

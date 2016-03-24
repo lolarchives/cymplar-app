@@ -58,6 +58,20 @@ export class AddressBookContactService extends BaseService<AddressBookContact> {
 		});
 	}
 	
+	findAllLimited(data: AddressBookContact, newOptions: ModelOptions = {}): Promise<AddressBookContact[]> {
+		return new Promise<AddressBookContact[]>((resolve: Function, reject: Function) => {
+			this.getUsersGroups(data, newOptions)
+			.then((idGroups: string[]) => {
+				newOptions.additionalData = { group: { $in: idGroups }};
+				return super.findNextLimited(data, newOptions);
+			})
+			.then((contacts: AddressBookContact[]) => {
+				resolve(contacts);
+			})
+			.catch((err) => reject(err));
+		});
+	}
+	
 	getLeadStatusPerContact(data: AddressBookContact, newOptions: ModelOptions = {}): Promise<string[]> {
 		return new Promise<string[]>((resolve: Function, reject: Function) => {
 			salesLeadService.getStatusAggregationPerContact([data._id])

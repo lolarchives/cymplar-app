@@ -63,49 +63,6 @@ export class LogItemService extends BaseService<LogItem> {
 		});	
 	}
 	
-	findLimited(data: LogItem, newOptions: ModelOptions = {}): Promise<LogItem[]> {
-		return new Promise<LogItem[]>((resolve: Function, reject: Function) => {
-			const txModelOptions = this.obtainTransactionModelOptions(newOptions);
-			const authorizationResponse = this.isSearchAuthorized(txModelOptions);
-			if (!authorizationResponse.isAuthorized) {
-				return reject(new Error(authorizationResponse.errorMessage));
-			}
-			this.addAuthorizationDataPreSearch(txModelOptions);	
-			this.transactionModelOptionsAddData(data, txModelOptions);	
-			const search = this.obtainSearchExpression(data, txModelOptions);
-			this.Model.find(search, txModelOptions.projection,
-			{ sort: '-createdAt', limit: 20, lean: true }).populate(txModelOptions.population)
-			.exec((err, foundObjs) => {
-				if (err) {
-					return reject(err);
-				}
-				resolve(foundObjs);
-			});
-		});
-	}
-	
-	find(data: LogItem, newOptions: ModelOptions = {}): Promise<LogItem[]> {
-		return new Promise<LogItem[]>((resolve: Function, reject: Function) => {
-			this.findLimited(data, newOptions)
-			.then((logItems: LogItem[]) => {
-				if (logItems.length === 1) {
-					if (ObjectUtil.isPresent(logItems[0].createdAt)) {
-						newOptions.additionalData = {
-							createdAt: { $lt: logItems[0].createdAt }	
-						};
-					}
-					return this.findLimited({}, newOptions);
-				}  
-				resolve(logItems);		
-					
-			})
-			.then((logItems: LogItem[]) => {
-				resolve(logItems);			
-			})
-			.catch((err) => reject(err));
-		});
-	}
-	
 	protected isCreateAuthorized(modelOptions: ModelOptions): AuthorizationResponse {
 		const authorizedRoles = ['OWNER', 'CONTRIBUTOR'];
 		return this.authorizationEntity(modelOptions, authorizedRoles);
@@ -176,8 +133,6 @@ export class LogItemService extends BaseService<LogItem> {
 	protected validateAuthDataPostSearchRemove(modelOptions: ModelOptions = {}, 
 		data?: LogItem): AuthorizationResponse {
 			
-		console.log(data);
-		console.log( modelOptions.authorization.leadMember);
 		const isLogItemOwner =  modelOptions.authorization.leadMember._id.toString() === 
 			ObjectUtil.getStringUnionProperty(data.createdBy).toString();
 		if (isLogItemOwner) {

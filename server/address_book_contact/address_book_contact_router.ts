@@ -41,6 +41,15 @@ router.get('/_find', (req: express.Request, res: express.Response) => {
     .then((contacts: AddressBookContact[]) => formatSend(res, contacts), (err: any) => sendError(res, err));
 });
 
+router.get('/_find_limited', (req: express.Request, res: express.Response) => {
+  const modelOptions: ModelOptions = {
+    authorization: getAuthorizationData(req),
+    copyAuthorizationData: 'createdBy'
+  };
+  addressBookContactService.findAllLimited(req.query, modelOptions)
+    .then((contacts: AddressBookContact[]) => formatSend(res, contacts), (err: any) => sendError(res, err));
+});
+
 router.get('/_find_lead_status', (req: express.Request, res: express.Response) => {
   const modelOptions: ModelOptions = {
     authorization: getAuthorizationData(req)

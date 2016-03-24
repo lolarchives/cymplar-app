@@ -43,49 +43,6 @@ export class LeadChatLogService extends BaseService<LeadChatLog> {
 		super(LeadChatLogModel, defaultModelOptions);
 	}
 	
-	findLimited(data: LeadChatLog, newOptions: ModelOptions = {}): Promise<LeadChatLog[]> {
-		return new Promise<LeadChatLog[]>((resolve: Function, reject: Function) => {
-			const txModelOptions = this.obtainTransactionModelOptions(newOptions);
-			const authorizationResponse = this.isSearchAuthorized(txModelOptions);
-			if (!authorizationResponse.isAuthorized) {
-				return reject(new Error(authorizationResponse.errorMessage));
-			}
-			this.addAuthorizationDataPreSearch(txModelOptions);	
-			this.transactionModelOptionsAddData(data, txModelOptions);	
-			const search = this.obtainSearchExpression(data, txModelOptions);
-			this.Model.find(search, txModelOptions.projection,
-			{ sort: '-createdAt', limit: 20, lean: true }).populate(txModelOptions.population)
-			.exec((err, foundObjs) => {
-				if (err) {
-					return reject(err);
-				}
-				resolve(foundObjs);
-			});
-		});
-	}
-	
-	find(data: LeadChatLog, newOptions: ModelOptions = {}): Promise<LeadChatLog[]> {
-		return new Promise<LeadChatLog[]>((resolve: Function, reject: Function) => {
-			this.findLimited(data, newOptions)
-			.then((leadChatLogs: LeadChatLog[]) => {
-				if (leadChatLogs.length === 1) {
-					if (ObjectUtil.isPresent(leadChatLogs[0].createdAt)) {
-						newOptions.additionalData = {
-							createdAt: { $lt: leadChatLogs[0].createdAt }	
-						};
-					}
-					return this.findLimited({}, newOptions);
-				}  
-				resolve(leadChatLogs);		
-					
-			})
-			.then((leadChatLogs: LeadChatLog[]) => {
-				resolve(leadChatLogs);			
-			})
-			.catch((err) => reject(err));
-		});
-	}
-	
 	protected isCreateAuthorized(modelOptions: ModelOptions): AuthorizationResponse {
 		const authorizedRoles = ['OWNER', 'CONTRIBUTOR'];
 		return this.authorizationEntity(modelOptions, authorizedRoles);
