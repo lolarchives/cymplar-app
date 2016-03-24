@@ -7,7 +7,7 @@
       <span></span>
     </div>
 
-    <a ui-sref="main.dashboard" class="logo">
+    <a ui-sref="main.allLeads" class="logo">
       <img src="img/logo-white.png">
     </a>
 
@@ -76,21 +76,22 @@
         
         <!--
         <h5 class="sub-title sub-title notification" data-toggle="collapse" data-target="#collapse1">
-          <span class="glyphicon glyphicon-chevron-down left-icon" aria-hidden="true" ></span>
-          My leads
-          <a href="" class="create-btn" title="create new" ui-sref="main.newLead()">
-              <span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span>
-          </a>
-          <div class="dropdown" ng-hide="true">
-              <span class="glyphicon glyphicon-option-horizontal" aria-hidden="true" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></span>
-              <ul class="dropdown-menu dropdown-menu-right">
-                  <li class="current"><a href="#">All</a></li>
-                  <li><a href="#">Overdue</a></li>
-                  <li><a href="#">Upcoming</a></li>
-                  <li><a href="#">Unread Changes</a></li>
-              </ul>
-          </div>
-      </h5>
+                    <span class="glyphicon glyphicon-chevron-down left-icon" aria-hidden="true" ></span>
+                    My leads
+                    <a href="" ng-hide="true" class="create-btn" title="create new" ui-sref="main.newLead({status:'lead'})">
+                        <span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span>
+                    </a>
+                    <div class="dropdown" ng-hide="true">
+                        <span class="glyphicon glyphicon-option-horizontal" aria-hidden="true" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></span>
+                        <ul class="dropdown-menu dropdown-menu-right">
+                            <li class="current"><a href="#">All</a></li>
+                            <li><a href="#">Overdue</a></li>
+                            <li><a href="#">Upcoming</a></li>
+                            <li><a href="#">Unread Changes</a></li>
+                        </ul>
+                    </div>
+                </h5>
+
         <div class="collapse" id="collapse1">
           <ul class="main-nav">
             <li ng-class="{'current': navCtrl.$state.params.id == lead._id && navCtrl.$state.current.name == 'main.selectedLead'}"

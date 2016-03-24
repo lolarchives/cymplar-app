@@ -48,7 +48,7 @@ namespace app {
         if (AuthToken.isLoggedIn()) { // prevent double log in
           event.preventDefault();
           const urlParam = AuthToken.getInvitationUrlParam();
-          $state.go('main.dashboard', urlParam, { reload: true });
+          $state.go('main.allLeads', urlParam, { reload: true });
         }
       }
 

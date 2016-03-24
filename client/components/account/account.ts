@@ -88,7 +88,7 @@ namespace accountSettings {
         
         goToOrganization() {
             this.AuthToken.setIdO(this.organization._id);
-            this.$state.go('main.dashboard');    
+            this.$state.go('main.allLeads');    
         }
     }
     

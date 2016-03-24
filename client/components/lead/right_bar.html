@@ -53,12 +53,12 @@
 	<h5 ng-hide="slrbCtrl.editing">{{slrbCtrl.$stateParams.lead.contract || 'No description'}}</h5>
 	<input class="form-control input-sm margin-b-l" type="text" placeholder="Enter description" ng-show="slrbCtrl.editing" ng-model="slrbCtrl.editingLead.contract">
 
-	<strong>Status</strong>
+	<!--<strong>Status</strong>
 	<h5 ng-hide="slrbCtrl.editing">{{slrbCtrl.$stateParams.lead.status.name}}</h5>
 	<select class="form-control input-sm margin-b-l" ng-show="slrbCtrl.editing" ng-options="status as status.name for status in slrbCtrl.$LeadRESTService.allLeadStatusesCached"
 	ng-model="slrbCtrl.editingLead.status" required>
 		<option value=""></option>
-	</select>
+	</select>-->
 	
 	
 
