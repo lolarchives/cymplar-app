@@ -191,6 +191,8 @@ export interface ModelOptions {
   copyAuthorizationData?: string;
   onlyValidateParentAuthorization?: boolean;
   validatePostSearchAuthData?: boolean;
+  sortBy?: string;
+  limit?: number;
 }
 
 export interface AuthorizationResponse {
@@ -306,4 +308,9 @@ export interface OrgChannel extends BaseDto {
   limitedMembers?: AccountOrganizationMember[];
   organization?: string | AccountOrganization;
   findAdded?: string[];
+}
+
+export interface LeftPanelStatus {
+  description?: string;
+  leads?: SalesLead[];
 }

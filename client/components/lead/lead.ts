@@ -125,9 +125,9 @@ namespace Lead {
                     }
                 },
                 onExit: function($LogItemRESTService: any) {
-                    console.log('leaving',$LogItemRESTService.loadingMore)
+                    console.log('leaving', $LogItemRESTService.loadingMore);
                     $LogItemRESTService.loadingMore = false;
-                    console.log('leaving after',$LogItemRESTService.loadingMore);
+                    console.log('leaving after', $LogItemRESTService.loadingMore);
                 }
                 
             });
@@ -144,7 +144,7 @@ namespace Lead {
                     private $state: any, private toastr: any, private ultiHelper: any) {
 
             this.newLead = {};
-            if ($stateParams.group_id !== undefined && $stateParams.group_id.trim() !== "") {
+            if ($stateParams.group_id !== undefined && $stateParams.group_id.trim() !== '') {
                let index = this.ultiHelper.indexOfFromId(this.$AddressBookRESTService.allCompaniesCached, 
                {_id: this.$stateParams.group_id});
               
@@ -162,7 +162,7 @@ namespace Lead {
             if (this.$stateParams.status === 'lead') { 
                 newLead.status = this.$LeadRESTService.allLeadStatusesCached[this.coldStatusIndex]; 
             }
-            newLead.contacts = [newLead.contact]
+            newLead.contacts = [newLead.contact];
             this.$LeadRESTService.newLead(newLead).then((response: any) => {
                 console.log('response');
                 if (response.success) {
@@ -195,7 +195,7 @@ namespace Lead {
         private newLogItem: any;
         private datePicker: any;
         private pleasePickADate: boolean;
-        private smallFormOpen :boolean;
+        private smallFormOpen: boolean;
         private optionFilters: any;
         constructor(private $stateParams: any, private $AddressBookRESTService: any, 
             private $LeadRESTService: any, private $state: any, 
@@ -224,12 +224,12 @@ namespace Lead {
             this.queryTypeIndex = -1;
             
             this.optionFilters = [
-                {value:-1,label:'All'},
-                {value:this.commIndex, label:'Communication'},
-                {value:this.noteIndex, label:'Note'},
-                {value:this.fwupIndex, label:'Follow ups'},
-                {value:this.meetIndex, label:'Meeting'},
-            ] 
+                {value: -1, label: 'All'},
+                {value: this.commIndex, label: 'Communication'},
+                {value: this.noteIndex, label: 'Note'},
+                {value: this.fwupIndex, label: 'Follow ups'},
+                {value: this.meetIndex, label: 'Meeting'},
+            ]; 
             
             const joinNotification = {
                 lead: this.$LeadRESTService.selectedLead._id,
@@ -241,7 +241,7 @@ namespace Lead {
             this.socket.on('leadLogAdded', (data: any) => {
                 let index = this.ultiHelper.indexOfFromId( this.$LogItemRESTService.allLogItemsCached, 
                         data.data.data );
-                if (index == -1) {
+                if (index === -1) {
                     this.$LogItemRESTService.allLogItemsCached.unshift(data.data.data);
                     this.$scope.$apply();
                    
@@ -255,17 +255,21 @@ namespace Lead {
                 
                 let index = this.ultiHelper.indexOfFromId(this.$LogItemRESTService.allLogItemsCached, data.data.data);
                
-                if (index != -1)
+                if (index !== -1) {
                     this.$LogItemRESTService.allLogItemsCached.splice(index, 1);
+                }
+                
                 this.$scope.$apply();    
 
             });
             this.socket.on('leadLogEdited', (data: any) => {
-                console.log('edited',data);
+                console.log('edited', data);
                 let index = this.ultiHelper.indexOfFromId(this.$LogItemRESTService.allLogItemsCached, data.data.data);
                
-                if (index != -1)
+                if (index !== -1) {  
                     this.$LogItemRESTService.allLogItemsCached[index] = data.data.data;
+                }
+                
                 this.$scope.$apply();    
 
             });
@@ -318,21 +322,22 @@ namespace Lead {
             $LeadRESTService: any, private $state: any, private roleInLead: any, private toastr: any, private contacts: any, 
             private unaddedContacts: any, private $timeout: any,
             private $filter: any, private ultiHelper: any,
-            private $scope: any) {
+            private $scope: any, private $LogItemRESTService: any,
+            private socket: any) {
            $stateParams.lead.contacts = contacts;
            this.$LeadRESTService = $LeadRESTService; 
            this.editing = false;
         
            let stepsArray = this.$stateParams.lead.leadStatuses.map(function(currentValue: any) {
+               currentValue.selected = false;
                return currentValue.label;
            });
-           if (this.$stateParams.lead.currentStatus === undefined || (this.$stateParams.lead.currentStatus >= this.$stateParams.lead.leadStatuses.length)) { 
+           if (this.$stateParams.lead.currentStatus === undefined || 
+                (this.$stateParams.lead.currentStatus >= this.$stateParams.lead.leadStatuses.length)) {      
                this.indexOfSelectedStatus = 0;
            } else {
                this.indexOfSelectedStatus = this.$stateParams.lead.currentStatus;
            }
-               
-  
             
            this.showingSliderOptions = {
                stepsArray: stepsArray,
@@ -379,6 +384,18 @@ namespace Lead {
                 return currentValue._id;
             });
             this.editingLead.currentStatus = this.indexOfSelectedStatus;
+            
+            const idStatus = this.editingLead.currentStatus;
+            this.editingLead.leadStatuses.forEach(function(currentValue: any) {
+                if (currentValue.id === idStatus) {
+                    currentValue.selected = true;
+                } else {
+                    currentValue.selected = false;
+                }
+            });
+            
+            const logItemService = this.$LogItemRESTService;
+            const socketService =  this.socket;
             this.$LeadRESTService.updateLead(this.editingLead).then((response: any) => {
                 if (response.success) {
                     let index = this.ultiHelper.indexOfFromId( this.$LeadRESTService.allLeadsCached, this.$LeadRESTService.selectedLead );
@@ -390,7 +407,20 @@ namespace Lead {
                      this.toastr.success('Update lead success');
                      this.editing = false;
                      this.showingSliderOptions.readOnly = true;
-                  
+                     
+                     console.log('generated log' + response.data.generatedLog);
+                     if (response.data.generatedLog) {
+                        logItemService.allLogItemsCached.unshift(response.data.generatedLog);
+                        
+                        const notification = {
+                            lead: response.data.generatedLog['lead'],
+                            message: 'this is optional',
+                            data:  response.data.generatedLog
+                        };
+                        
+                        socketService('leadLogAdd', notification);
+                    }
+                    
                 } else {
                     this.toastr.error('Some error occur, cannot update lead');
                 }

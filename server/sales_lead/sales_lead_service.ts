@@ -1,6 +1,6 @@
 ﻿import {SalesLead, SalesLeadContact, SalesLeadOrganizationMember, AccountOrganizationMember, ModelOptions,
 	AuthorizationResponse, AddressBookContact, AccountOrganization, UpdateResults, LeadStatus, UpdateValues, 
-	ChangeValuesSchema} from '../../client/core/dto';
+	ChangeValuesSchema, LeftPanelStatus} from '../../client/core/dto';
 import {SalesLeadModel} from '../core/model';
 import {BaseService} from '../core/base_service';
 import {salesLeadContactService} from '../sales_lead_contact/sales_lead_contact_service';
@@ -117,10 +117,11 @@ export class SalesLeadService extends BaseService<SalesLead> {
 							return reject(err);
 						}
 						
+						const resolveObject = populatedObj.toObject();
 						if (ObjectUtil.isPresent(data['generatedLog'])) {
-							populatedObj['generatedLog'] = 	data['generatedLog'];
+							resolveObject['generatedLog'] = data['generatedLog'];
 						}
-						resolve(populatedObj.toObject());
+						resolve(resolveObject);
 					});
 				});
 			})
@@ -149,6 +150,97 @@ export class SalesLeadService extends BaseService<SalesLead> {
 		});
 	}
 	
+	findPerOrganizationLatestOnes(data: SalesLead, newOptions: ModelOptions = {}): Promise<LeftPanelStatus[]> {
+		return new Promise<LeftPanelStatus[]>((fulfill: Function, reject: Function) => {
+			const salesLeadOrgMembOptions: ModelOptions = {
+				authorization: newOptions.authorization
+			};
+			salesLeadOrganizationMemberService.findLeadsPerOrganization(salesLeadOrgMembOptions)
+			.then((salesLeads: string[]) => {
+				
+				newOptions.additionalData = { _id: { $in: salesLeads }};
+				newOptions.requireAuthorization = false;
+				newOptions.limit = 5;
+				newOptions.copyAuthorizationData = '';
+				newOptions.sortBy = '-updatedAt';
+				
+				const leftPanelLeads: Promise<SalesLead[]>[] = [];
+				
+				const lostModelOptions = ObjectUtil.clone(newOptions);
+				lostModelOptions.additionalData['leadStatuses'] = { $elemMatch: { value: { $lt : 1 }, selected: true } };
+				leftPanelLeads.push(this.findLimited(data, lostModelOptions));
+				
+				const oppModelOptions = ObjectUtil.clone(newOptions);
+				oppModelOptions.additionalData['leadStatuses'] = { $elemMatch: { '$and': [ {value: { $gt : 1 }}, {value: { $lte : 10 }}], 
+					selected: true } };
+				leftPanelLeads.push(this.findLimited(data, oppModelOptions));
+				
+				const discoveryModelOptions = ObjectUtil.clone(newOptions);
+				discoveryModelOptions.additionalData['leadStatuses'] = { $elemMatch: { '$and': [ {value: { $gt : 10 }}, {value: { $lte : 30 }}],
+					selected: true }};
+				leftPanelLeads.push(this.findLimited(data, discoveryModelOptions));
+				
+				const engagingModelOptions = ObjectUtil.clone(newOptions);
+				engagingModelOptions.additionalData['leadStatuses'] = { $elemMatch: { '$and': [ {value: { $gt : 30 }}, {value: { $lte : 60 }}],
+					selected: true }};
+				leftPanelLeads.push(this.findLimited(data, engagingModelOptions));
+				
+				const proposingModelOptions = ObjectUtil.clone(newOptions);
+				proposingModelOptions.additionalData['leadStatuses'] = { $elemMatch: { '$and': [ {value: { $gt : 60 }}, {value: { $lte : 90 }}],
+					selected: true }};
+				leftPanelLeads.push(this.findLimited(data, proposingModelOptions));
+				
+				const soCloseModelOptions = ObjectUtil.clone(newOptions);
+				soCloseModelOptions.additionalData['leadStatuses'] = { $elemMatch: { '$and': [ {value: { $gt : 90 }}, {value: { $lte : 99 }}],
+					selected: true }};
+				leftPanelLeads.push(this.findLimited(data, soCloseModelOptions));
+				
+				const wonModelOptions = ObjectUtil.clone(newOptions);
+				wonModelOptions.additionalData['leadStatuses'] = { $elemMatch: { '$and': [ {value: { $gt : 99 }}, {value: { $lte : 100 }}],
+					selected: true } };
+				leftPanelLeads.push(this.findLimited(data, wonModelOptions));
+				
+				return Promise.all(leftPanelLeads);
+			})
+			.then((leadsPerStatus: any[]) => {
+				
+				const leftPanelStatuses: LeftPanelStatus[] = [
+					{
+						description: 'Lost (0%)',
+						leads: 	leadsPerStatus[0]
+					},
+					{
+						description: 'Opportunity (1% - 10%)',
+						leads: 	leadsPerStatus[1]
+					},
+					{
+						description: 'Discovery (11% - 30%)',
+						leads: 	leadsPerStatus[2]
+					},
+					{
+						description: 'Engaging (31% - 60%)',
+						leads: 	leadsPerStatus[3]
+					},
+					{
+						description: 'Proposing (61% - 90%)',
+						leads: 	leadsPerStatus[4]
+					},
+					{
+						description: 'So close (91% - 99%)',
+						leads: 	leadsPerStatus[5]
+					},
+					{
+						description: 'Won (100%)',
+						leads: 	leadsPerStatus[6]
+					}	
+				];
+				 
+				fulfill(leftPanelStatuses);
+			})
+			.catch((err: Error) => reject(err));
+		});
+	}
+	
 	findPerOrganization(data: SalesLead, newOptions: ModelOptions = {}): Promise<SalesLead[]> {
 		return new Promise<SalesLead>((fulfill: Function, reject: Function) => {
 			const salesLeadOrgMembOptions: ModelOptions = {
@@ -159,6 +251,22 @@ export class SalesLeadService extends BaseService<SalesLead> {
 				newOptions.additionalData = { _id: { $in: salesLeads }};
 				newOptions.requireAuthorization = false;
 				return super.find(data, newOptions); 
+			})
+			.then((leads: SalesLead[]) => fulfill(leads))
+			.catch((err: Error) => reject(err));
+		});
+	}
+	
+	findPerOrganizationNextLimited(data: SalesLead, newOptions: ModelOptions = {}): Promise<SalesLead[]> {
+		return new Promise<SalesLead>((fulfill: Function, reject: Function) => {
+			const salesLeadOrgMembOptions: ModelOptions = {
+				authorization: newOptions.authorization
+			};
+			salesLeadOrganizationMemberService.findLeadsPerOrganization(salesLeadOrgMembOptions)
+			.then((salesLeads: string[]) => {
+				newOptions.additionalData = { _id: { $in: salesLeads }};
+				newOptions.requireAuthorization = false;
+				return super.findNextLimited(data, newOptions); 
 			})
 			.then((leads: SalesLead[]) => fulfill(leads))
 			.catch((err: Error) => reject(err));
@@ -321,7 +429,7 @@ export class SalesLeadService extends BaseService<SalesLead> {
 	/* tslint:disable */ // In this switches the default is not needed
 	protected addAuthorizationDataInCreate(modelOptions: ModelOptions = {}) {
 		switch (modelOptions.copyAuthorizationData) {
-			case 'orgMember':
+			case 'orglead':
 				modelOptions.additionalData['createdBy'] = modelOptions.authorization.organizationMember._id;
 				const stages: LeadStatus[] = ObjectUtil.getObjectUnionProperty(modelOptions.authorization.organizationMember.organization, 'projectDefaultStatuses');
 				modelOptions.additionalData['leadStatuses'] = stages;

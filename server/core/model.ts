@@ -17,7 +17,7 @@ const subDocumentSchemas = {
   leadStatus: new Schema({
     id: { type: Number, required: true },
     label: { type: String, required: true },
-    value: { type: String, required: true },
+    value: { type: Number, required: true },
     selected: { type: Boolean, default: false }
   }, { _id: false })
 };
@@ -410,12 +410,12 @@ schemas.accountOrganization.pre('save', function (next: Function) {
   const obj = this;
   if (obj.isNew) {
       obj['projectDefaultStatuses'] = [];
-      obj['projectDefaultStatuses'].push({ 'id': 0, 'label': 'Lost/Inactive', 'value': '0', 'selected': false}); 
-      obj['projectDefaultStatuses'].push({ 'id': 1, 'label': 'Opportunity', 'value': '20', 'selected': true}); 
-      obj['projectDefaultStatuses'].push({ 'id': 2, 'label': 'Cold', 'value': '40', 'selected': false}); 
-      obj['projectDefaultStatuses'].push({ 'id': 3, 'label': 'Warm', 'value': '60', 'selected': false}); 
-      obj['projectDefaultStatuses'].push({ 'id': 4, 'label': 'Hot', 'value': '80', 'selected': false});
-      obj['projectDefaultStatuses'].push({ 'id': 5, 'label': 'Won', 'value': '100', 'selected': false});
+      obj['projectDefaultStatuses'].push({ 'id': 0, 'label': 'Lost/Inactive', 'value': 0, 'selected': false}); 
+      obj['projectDefaultStatuses'].push({ 'id': 1, 'label': 'Opportunity', 'value': 10, 'selected': true}); 
+      obj['projectDefaultStatuses'].push({ 'id': 2, 'label': 'Cold', 'value': 30, 'selected': false}); 
+      obj['projectDefaultStatuses'].push({ 'id': 3, 'label': 'Warm', 'value': 60, 'selected': false}); 
+      obj['projectDefaultStatuses'].push({ 'id': 4, 'label': 'Hot', 'value': 80, 'selected': false});
+      obj['projectDefaultStatuses'].push({ 'id': 5, 'label': 'Won', 'value': 100, 'selected': false});
   }
   next();  
 });
@@ -639,4 +639,44 @@ schemas.salesLead.pre('remove', function(next: Function) {
 		  next(err);
 		});	
   });
+});
+
+schemas.logItem.post('save', function() {
+  const obj: Document = this;
+  
+  const conditions = { _id: obj['lead'] };
+  const update = { updatedAt: Date.now() };
+  const options = { multi: true };
+
+  SalesLeadModel.update(conditions, update, options);
+});
+
+schemas.logItem.post('remove', function() {
+  const obj: Document = this;
+  
+  const conditions = { _id: obj['lead'] };
+  const update = { updatedAt: Date.now() };
+  const options = { multi: true };
+
+  SalesLeadModel.update(conditions, update, options);
+});
+
+schemas.leadChatLog.post('save', function() {
+  const obj: Document = this;
+  
+  const conditions = { _id: obj['lead'] };
+  const update = { updatedAt: Date.now() };
+  const options = { multi: true };
+
+  SalesLeadModel.update(conditions, update, options);
+});
+
+schemas.leadChatLog.post('remove', function() {
+  const obj: Document = this;
+  
+  const conditions = { _id: obj['lead'] };
+  const update = { updatedAt: Date.now() };
+  const options = { multi: true };
+
+  SalesLeadModel.update(conditions, update, options);
 });

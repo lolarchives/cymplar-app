@@ -39,7 +39,7 @@ router.get('/_find', (req: express.Request, res: express.Response) => {
     authorization: getAuthorizationData(req),
     copyAuthorizationData: 'lead'
   };
-  leadChatLogService.find(req.query, modelOptions)
+  leadChatLogService.findNextLimited(req.query, modelOptions)
     .then((leadChatLogTypes: LeadChatLog[]) => formatSend(res, leadChatLogTypes), (err: any) => sendError(res, err));
 });
 

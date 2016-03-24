@@ -51,6 +51,24 @@ router.get('/_find_contacts', (req: express.Request, res: express.Response) => {
     .then((groups: AddressBookGroup[]) => formatSend(res, groups), (err: any) => sendError(res, err));
 });
 
+router.get('/_find_limited', (req: express.Request, res: express.Response) => {
+  const modelOptions: ModelOptions = {
+    authorization: getAuthorizationData(req),
+    copyAuthorizationData: 'createdBy'
+  };
+  addressBookGroupService.findNextLimited(req.query, modelOptions)
+    .then((groups: AddressBookGroup[]) => formatSend(res, groups), (err: any) => sendError(res, err));
+});
+
+router.get('/_find_contacts_limited', (req: express.Request, res: express.Response) => {
+  const modelOptions: ModelOptions = {
+    authorization: getAuthorizationData(req),
+    copyAuthorizationData: 'createdBy'
+  };
+  addressBookGroupService.findLimitedGroupContacts(req.query, modelOptions)
+    .then((groups: AddressBookGroup[]) => formatSend(res, groups), (err: any) => sendError(res, err));
+});
+
 router.get('/:id', (req: express.Request, res: express.Response) => {
   const modelOptions: ModelOptions = {
     authorization: getAuthorizationData(req)

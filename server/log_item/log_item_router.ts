@@ -39,7 +39,7 @@ router.get('/_find', (req: express.Request, res: express.Response) => {
     authorization: getAuthorizationData(req),
     copyAuthorizationData: 'lead'
   };
-  logItemService.find(req.query, modelOptions)
+  logItemService.findNextLimited(req.query, modelOptions)
     .then((logItemTypes: LogItem[]) => formatSend(res, logItemTypes), (err: any) => sendError(res, err));
 });
 

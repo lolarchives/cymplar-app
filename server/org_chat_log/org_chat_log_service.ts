@@ -32,49 +32,6 @@ export class OrgChatLogService extends BaseService<OrgChatLog> {
 		super(OrgChatLogModel, defaultModelOptions);
 	}
 	
-	findLimited(data: OrgChatLog, newOptions: ModelOptions = {}): Promise<OrgChatLog[]> {
-		return new Promise<OrgChatLog[]>((resolve: Function, reject: Function) => {
-			const txModelOptions = this.obtainTransactionModelOptions(newOptions);
-			const authorizationResponse = this.isSearchAuthorized(txModelOptions);
-			if (!authorizationResponse.isAuthorized) {
-				return reject(new Error(authorizationResponse.errorMessage));
-			}
-			this.addAuthorizationDataPreSearch(txModelOptions);	
-			this.transactionModelOptionsAddData(data, txModelOptions);	
-			const search = this.obtainSearchExpression(data, txModelOptions);
-			this.Model.find(search, txModelOptions.projection,
-			{ sort: '-createdAt', limit: 20, lean: true }).populate(txModelOptions.population)
-			.exec((err, foundObjs) => {
-				if (err) {
-					return reject(err);
-				}
-				resolve(foundObjs);
-			});
-		});
-	}
-	
-	find(data: OrgChatLog, newOptions: ModelOptions = {}): Promise<OrgChatLog[]> {
-		return new Promise<OrgChatLog[]>((resolve: Function, reject: Function) => {
-			this.findLimited(data, newOptions)
-			.then((orgChatLogs: OrgChatLog[]) => {
-				if (orgChatLogs.length === 1) {
-					if (ObjectUtil.isPresent(orgChatLogs[0].createdAt)) {
-						newOptions.additionalData = {
-							createdAt: { $lt: orgChatLogs[0].createdAt }	
-						};
-					}
-					return this.findLimited({}, newOptions);
-				}  
-				resolve(orgChatLogs);		
-					
-			})
-			.then((orgChatLogs: OrgChatLog[]) => {
-				resolve(orgChatLogs);			
-			})
-			.catch((err) => reject(err));
-		});
-	}
-	
 	protected isCreateAuthorized(modelOptions: ModelOptions): AuthorizationResponse {
 		const authorizedRoles = ['OWNER', 'DIRECTOR', 'MANAGER', 'CONSULTANT'];
 		return this.authorizationEntity(modelOptions, authorizedRoles);
