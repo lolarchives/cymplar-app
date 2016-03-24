@@ -1,1 +1,78 @@
-Place holder for all leads
+<div class="grid-block vertical">
+	<div class="grid-content center-panel">
+		<div class="page-head">
+			<div class="padding-box">
+				<h3 class="uppercase title">All Leads</h3>
+			</div>
+			<!--padding-box-->
+		</div>
+		<!--page-head-->
+
+		<div class="padding-box">
+
+			<div class="row">
+				<div class="col-lg-9 col-sm-8">
+					<input type="text" class="form-control margin-b" placeholder="Find lead by name">
+				</div>
+				<!--col-xs-8
+				<div class="col-lg-2 col-sm-3 col-xs-12">
+					<a href="" class="btn btn-default btn-block margin-b"><i class="glyphicon glyphicon-search"></i> Find Leads</a>
+				</div>-->
+				<!--col-xs-2-->
+				<div class="col-lg-3 col-sm-4 col-xs-6">
+					<a ui-sref="main.newLead({status:'opportunity'})"" class="btn btn-primary btn-block margin-b-l">+ Add New Lead</a>
+				</div>
+				<!--col-xs-2
+				<div class="col-lg-1 col-sm-2 col-xs-6">
+					<div class="dropdown margin-b-l">
+						<a id="dLabel" class="btn btn-default btn-block" data-target="#" href="http://example.com" data-toggle="dropdown" role="button"
+						aria-haspopup="true" aria-expanded="false">
+							<i class="glyphicon glyphicon-cog"></i>
+							<span class="caret"></span>
+						</a>
+						<ul class="dropdown-menu dropdown-menu-right" aria-labelledby="dLabel">
+							<li><a href="#">Action</a></li>
+							<li><a href="#">Action</a></li>
+						</ul>
+					</div>
+					
+				</div>-->
+				<!--col-xs-1-->
+			</div>
+			<!--row-->
+
+			<table class="table mobile-table">
+				<thead>
+					<tr>
+						<th>
+							<input type="checkbox">
+						</th>
+						<th>Lead Name</th>
+						<th>Main Contact <span class="caret"></span></th>
+						<th>Next Schedule task</th>
+						<th>Status<span class="caret"></span></th>
+						<th>Date Created<span class="caret"></span></th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<!--data-title is required for mobile table-->
+						<td data-title="Choose">
+							<input type="checkbox">
+						</td>
+						<td data-title="Lead name"> Ford Contract</td>
+						<td data-title="Main contact">Jonny Bravo </td>
+						<td data-title="Next Schedule task">12/12/2015</td>
+						<td data-title="Next Schedule task">Opportunity</td>
+						<td data-title="Date Created">12/12/2015</td>
+					</tr>
+
+				</tbody>
+			</table>
+
+		</div>
+		<!--padding-box-->
+	</div>
+	<!--grid-content-->
+</div>
+<!--center panel-->

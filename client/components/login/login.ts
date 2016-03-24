@@ -49,7 +49,7 @@ namespace Login {
 					this.AuthToken.setToken(response.data.token);
 					this.AuthToken.setIdO(organization);
 					const urlInvParam = this.AuthToken.getInvitationUrlParam();
-					this.$state.transitionTo('main.dashboard', urlInvParam);
+					this.$state.transitionTo('main.allLeads', urlInvParam);
 				}
 			});
 		}

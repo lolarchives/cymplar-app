@@ -84,7 +84,7 @@ namespace AddressBook {
                     // if the company does not exist
                     let index = availableCompanyId.indexOf($stateParams.id);
                     if (availableCompanyId.indexOf($stateParams.id) === -1) {
-                        $state.go('main.dashboard');
+                        $state.go('main.allCompanies');
                     } else {
                         if ($stateParams.company === '@') { // first load page
                             $stateParams.company = $AddressBookRESTService.allCompaniesCached[index];
@@ -191,7 +191,7 @@ namespace AddressBook {
                         this.$AddressBookRESTService.allCompaniesCached.splice(index, 1);
                         this.$AddressBookRESTService.selectedCompany = undefined;
                         this.toastr.success('Delete group success');
-                        this.$state.go('main.dashboard');
+                        this.$state.go('main.allCompanies');
                     } else {
                         this.toastr.error(response.msg);
                     }

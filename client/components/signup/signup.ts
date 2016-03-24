@@ -202,7 +202,7 @@ namespace SignUp {
 					this.AuthToken.setToken(response.data.token);
 					this.AuthToken.setIdO(response.data.init);
 					const urlInvParam = this.AuthToken.getInvitationUrlParam();
-					this.$state.go('main.dashboard', urlInvParam);
+					this.$state.go('main.allLeads', urlInvParam);
 				}
 
 

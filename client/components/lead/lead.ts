@@ -28,7 +28,16 @@ namespace Lead {
                 views: {
                     'main': {
                       templateUrl: 'components/lead/all_leads.html',
+                      controller: 'AllLeadsController',
+                      controllerAs: 'alCtrl'
+                      
                     }
+                },
+                resolve: {
+                    allLeads: function($http: angular.IHttpService, $LeadRESTService: any) {
+                        return $LeadRESTService.allLeads();
+                    },
+                    
                 }
             })
             .state('main.selectedLead', {
@@ -80,7 +89,7 @@ namespace Lead {
                                     return response.data;
                                 }
                             } else {
-                                $state.go('main.dashboard');
+                                $state.go('main.allLeads');
                             } 
                                 
                         });
@@ -116,7 +125,7 @@ namespace Lead {
                     // if the company does not exist
                     let index = availableLeadIds.indexOf($stateParams.id);
                     if (index === -1) {
-                        $state.go('main.dashboard');
+                        $state.go('main.allLeads');
                     } else {                        
                         if ($stateParams.lead === '@') { // first load page
                             $stateParams.lead = $LeadRESTService.allLeadsCached[index];
@@ -149,7 +158,7 @@ namespace Lead {
                {_id: this.$stateParams.group_id});
               
                 if (index === -1) {
-                    this.$state.go('main.dashboard');
+                    this.$state.go('main.allLeads');
                 } else {
                     this.newLead.group = this.$AddressBookRESTService.allCompaniesCached[index];
                 }
@@ -352,7 +361,7 @@ namespace Lead {
                         this.$LeadRESTService.allLeadsCached.splice(index, 1);
                         this.$LeadRESTService.selectedLead = undefined;
                         this.toastr.success('Delete lead success');
-                        this.$state.go('main.dashboard');
+                        this.$state.go('main.allLeads');
                     } else {
                         this.toastr.error(response.msg);
                     }
@@ -420,6 +429,20 @@ namespace Lead {
         }
     }
     
+    export class AllLeadsController {
+        private newLead: any;
+        private coldStatusIndex: number;
+        private opportunityStatusIndex: number;
+
+
+        constructor(private $stateParams: any, private $AddressBookRESTService: any, private $LeadRESTService: any, 
+                    private $state: any, private toastr: any, private ultiHelper: any,private allLeads: any) {
+            console.log('allLeads',allLeads)
+          
+        }
+       
+    }
+    
     angular
         .module('app.lead', [
             'ui.router',
@@ -430,5 +453,6 @@ namespace Lead {
        
         .controller('NewLeadController', NewLeadController)
         .controller('SelectedLeadController', SelectedLeadController)
+        .controller('AllLeadsController', AllLeadsController)
         .controller('SelectedLeadRightBarController', SelectedLeadRightBarController);
 }

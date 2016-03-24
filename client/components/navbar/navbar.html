@@ -7,7 +7,7 @@
       <span></span>
     </div>
 
-    <a ui-sref="main.dashboard" class="logo">
+    <a ui-sref="main.allLeads" class="logo">
       <img src="img/logo-white.png">
     </a>
 
@@ -60,7 +60,7 @@
         <h5 class="sub-title sub-title notification" data-toggle="collapse" data-target="#collapse1">
                     <span class="glyphicon glyphicon-chevron-down left-icon" aria-hidden="true" ></span>
                     My leads
-                    <a href="" class="create-btn" title="create new" ui-sref="main.newLead({status:'lead'})">
+                    <a href="" ng-hide="true" class="create-btn" title="create new" ui-sref="main.newLead({status:'lead'})">
                         <span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span>
                     </a>
                     <div class="dropdown" ng-hide="true">

@@ -83,8 +83,8 @@
 	
 </div>
 <!--grid-content-->
-<button ng-disabled="slCtrl.$LogItemRESTService.loadingMore" ng-show="slCtrl.$LogItemRESTService.loadMore" class="btn load-more-btn btn-info btn-block" style="height:35px;" ng-click="slCtrl.$LogItemRESTService.loadMoreLogItem()" >Load more <i class="fa fa-spinner" ng-class="{'fa-spin':slCtrl.$LogItemRESTService.loadingMore}" ng-show="slCtrl.$LogItemRESTService.loadingMore"></i> </button>
-<button disabled="true" ng-hide="slCtrl.$LogItemRESTService.loadMore" class="btn load-more-btn btn-block" style="height:35px;"  >There is no more item to be loaded  </button>
+<button ng-disabled="slCtrl.$LogItemRESTService.loadingMore" ng-show="slCtrl.$LogItemRESTService.loadMore && slCtrl.showLog" class="btn load-more-btn btn-info btn-block" style="height:35px;" ng-click="slCtrl.$LogItemRESTService.loadMoreLogItem()" >Load more <i class="fa fa-spinner" ng-class="{'fa-spin':slCtrl.$LogItemRESTService.loadingMore}" ng-show="slCtrl.$LogItemRESTService.loadingMore"></i> </button>
+<button disabled="true" ng-hide="slCtrl.$LogItemRESTService.loadMore || !slCtrl.showLog" class="btn load-more-btn btn-block" style="height:35px;"  >There is no more item to be loaded  </button>
 <div class="form-box-wrap grid-content shrink">
 	<div class="form-btn" ng-class="{'active':slCtrl.smallFormOpen}" ng-click="slCtrl.smallFormOpen = !slCtrl.smallFormOpen;"></div>
 	<div class="form-box" ng-class="{'visible':slCtrl.smallFormOpen}">
