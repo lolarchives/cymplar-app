@@ -26,6 +26,10 @@ namespace InvitationService {
 			'acceptInvitation': {
 				method: 'GET',
 				url: BACK_END_ROUTE + '/account-organization/_accept_invitation'
+			},
+			'deleteInvitation': {
+				method: 'DELETE',
+				url: BACK_END_ROUTE + '/account-invitation/:id'
 			}
 		});
 		return resources;
@@ -51,6 +55,13 @@ namespace InvitationService {
 		};
 		acceptInvitation = (invitation: string) => {
 			return this.$resourceHelper.resourceRESTCall(this.$InvitationRESTResource, 'acceptInvitation', { _id: invitation});
+		};
+		deleteInvitation = (invitationId: string, organization: string = this.AuthToken.getIdO()) => {
+			const invitation = {
+				id: invitationId,
+				ido: organization
+			};
+			return this.$resourceHelper.resourceRESTCall(this.$InvitationRESTResource, 'deleteInvitation', invitation, true);
 		};
 	}
 

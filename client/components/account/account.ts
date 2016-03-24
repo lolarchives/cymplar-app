@@ -38,7 +38,14 @@ namespace accountSettings {
                             return response.data;
                         }
                     });
-                }    
+                },
+                invitations: function($http: angular.IHttpService, $InvitationRESTService: any, $stateParams: any) {
+                    return $InvitationRESTService.getInvitations($stateParams.orgId).then(function(response: any) {
+                        if (response.success) {
+                            return response.data;
+                        }
+                    });
+                }   
             }
         })
         .state('main-account.organization.profile', {
@@ -138,11 +145,13 @@ namespace accountSettings {
         save() {
             const modalInstance = this.$uibModalInstance;
             const theProfileToSave = this.newProfile;
+            const toastr = this.toastr;
             this.$AccountRESTService.saveAccountOrganizationMember(theProfileToSave).then(function(response: any) {
                 if (response.success) {
+                    toastr.info('Your profile has been updated');
                     modalInstance.close(response.data);
                 } else {
-                    this.toastr.error(response.msg);
+                    toastr.error(response.msg);
                 }
             });           
         }
@@ -155,7 +164,11 @@ namespace accountSettings {
 			this.checkingEmail = true;
 			this.availableEmail = undefined;
 			if (this.newProfile.email !== undefined && this.newProfile.email.trim() !== '' && this.newProfile.email.trim() !== this.profile.email) {
-				this.$SignUpRESTService.isAccountOrganizatioMemberExisted(this.newProfile.email).then((response: any) => {
+                const member = {
+                   email: this.newProfile.email,
+                   organization: this.newProfile.organization._id  
+                };
+				this.$AccountRESTService.accountOrganizationMemberExist(member).then((response: any) => {
 					this.checkingEmail = false;
 					this.availableEmail = !response.data.exist;
 				});
@@ -177,7 +190,8 @@ namespace accountSettings {
         
         /** @ngInject */
         constructor(private $state: any, $stateParams: any, private toastr: any, private $scope: any, private $uibModal: any,
-            private user: any, private profile: any, private organization: any, private team: any) {
+            private user: any, private profile: any, private organization: any, private team: any, private invitations: any,
+            private $InvitationRESTService: any) {
         }
         
         editProfile(member: any) {
@@ -206,6 +220,8 @@ namespace accountSettings {
         
         sendInvitation() {
             const currentOrganization = this.organization;
+            const invitations = this.invitations;
+            
             this.modalTeamInvitationInstance = this.$uibModal.open({
                 templateUrl: 'components/account/account-team-invitation-modal.html',
                 controller: 'ModalTeamInvitationInstanceCtrl',
@@ -220,14 +236,33 @@ namespace accountSettings {
                                 return response.data;
                             }
                         });
+                    },
+                    invitations: function () {
+                        return invitations;
                     }
                 }
             });
             
             this.modalTeamInvitationInstance.result.then((selectedItem: any) => {
-                console.log('sent ' + selectedItem);
+               invitations.push(selectedItem);
             });
         }
+        
+        uninvite(invitation: any) {
+            const currentOrganization = this.organization;
+            const indexOfInvitation = this.invitations.indexOf(invitation);
+            const invitations = this.invitations;
+            const toastr = this.toastr;
+            this.$InvitationRESTService.deleteInvitation(invitation._id, this.organization._id).then(function(response: any) {
+                if (response.success) {
+                    toastr.info('The invitation is no longer active');
+                    invitations.splice(indexOfInvitation, 1);
+                } else {
+                    toastr.error(response.msg);
+                }
+            });
+        }
+ 
         
         isAuthorized(): boolean {
             return this.profile.role.code === 'OWNER';
@@ -249,11 +284,13 @@ namespace accountSettings {
         save() {
             const modalInstance = this.$uibModalInstance;
             const theProfileToSave = this.newProfile;
+            const toastr = this.toastr;
             this.$AccountRESTService.saveAccountOrganizationMember(theProfileToSave).then(function(response: any) {
                 if (response.success) {
+                    toastr.info('The team has been updated');
                     modalInstance.close(response.data);
                 } else {
-                    this.toastr.error(response.msg);
+                    toastr.error(response.msg);
                 }
             });           
         }
@@ -271,17 +308,20 @@ namespace accountSettings {
 		
         /** @ngInject */
         constructor(private $state: any, $stateParams: any, private toastr: any, private $scope: any, private $uibModalInstance: any,
-             private organization: any, private roles: any, private $SignUpRESTService: any, private $InvitationRESTService: any) {
+             private organization: any, private roles: any, private $SignUpRESTService: any, private $InvitationRESTService: any,
+             private $AccountRESTService: any, private invitations: any) {
             
         }
   
         save(invitation: any) {
             const modalInstance = this.$uibModalInstance;
+            const toastr = this.toastr;
             this.$InvitationRESTService.sendInvitation(invitation, this.organization._id).then(function(response: any) {
                 if (response.success) {
+                    toastr.info('The invitation has been sent');
                     modalInstance.close(response.data);
                 } else {
-                    this.toastr.error(response.msg);
+                    toastr.error(response.msg);
                 }
             });           
         }
@@ -294,7 +334,27 @@ namespace accountSettings {
 			this.checkingEmail = true;
 			this.availableEmail = undefined;
 			if (this.invitation.email !== undefined && this.invitation.email.trim() !== '') {
-				this.$SignUpRESTService.isAccountOrganizatioMemberExisted(this.invitation.email).then((response: any) => {
+                
+                let alreadyInvited = false;
+                for (let i = 0; i < this.invitations.length; i++) {
+                    if (this.invitations[i].email === this.invitation.email) {
+                        alreadyInvited = true; 
+                        break;
+                    }
+                }
+                
+                if (alreadyInvited) {
+                    this.checkingEmail = false;
+					this.availableEmail = false;
+                    return;         
+                }
+                
+                const member = {
+                   email: this.invitation.email,
+                   organization: this.organization._id  
+                };
+                
+				this.$AccountRESTService.accountOrganizationMemberExist(member).then((response: any) => {
 					this.checkingEmail = false;
 					this.availableEmail = !response.data.exist;
 				});
@@ -355,6 +415,7 @@ namespace accountSettings {
             const toastrInstance = this.toastr;
             this.$AccountRESTService.saveAccountOrganization(currentOrg).then((response: any) => {
                 if (response.success) {
+                    toastrInstance.info('The stages have been updated');
                     currentOrg = response.data;
                 } else {
                     toastrInstance.error('The stages information could not be updated');    

@@ -18,6 +18,7 @@ router.post('/', (req, res) => {
 router.put('/:id', (req, res) => {
    const modelOptions: ModelOptions = {
     authorization: getAuthorizationData(req),
+    copyAuthorizationData: 'organizationMember'
   };
   req.body._id = req.params.id;
   accountInvitationService.updateOne(req.body, modelOptions)
@@ -26,7 +27,8 @@ router.put('/:id', (req, res) => {
 
 router.delete('/:id', (req, res) => {
   const modelOptions: ModelOptions = {
-    authorization: getAuthorizationData(req)
+    authorization: getAuthorizationData(req),
+    copyAuthorizationData: 'organizationMember'
   };
   accountInvitationService.removeOneById(req.params.id, modelOptions)
     .then((accountInvitation: AccountInvitation) => formatSend(res, accountInvitation), (err) => sendError(res, err));
@@ -42,7 +44,8 @@ router.get('/_find', (req: express.Request, res: express.Response) => {
 
 router.get('/:id', (req: express.Request, res: express.Response) => {
   const modelOptions: ModelOptions = {
-    authorization: getAuthorizationData(req)
+    authorization: getAuthorizationData(req),
+    copyAuthorizationData: 'organizationMember'
   };
   accountInvitationService.findOneById(req.params.id, modelOptions)
     .then((accountInvitation: AccountInvitation) => formatSend(res, accountInvitation), (err: any) => sendError(res, err));

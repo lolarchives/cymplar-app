@@ -4,64 +4,56 @@
             <li>
                 <div class="row">
                     <div class="col-sm-4">
-                        <strong>{{accOrgProfCtrl.profile.role.code}}</strong>	
+                        <strong>Username</strong>	
                     </div><!--col-sm-4-->
                     <div class="col-sm-4">
-                        Free	
+                        {{accUsrProfCtrl.user.username}}	
                     </div><!--col-sm-4-->
                 </div><!--row-->
             </li>
             <li>
                 <div class="row">
                     <div class="col-sm-4">
-                        <strong>Contact email</strong>
+                        <strong>First Name</strong>	
                     </div><!--col-sm-4-->
                     <div class="col-sm-4">
-                        {{accOrgProfCtrl.profile.email}}
-                    </div><!--col-sm-4-->
-                </div><!--row-->
-            </li>
-            
-            <li>
-                <div class="row">
-                    <div class="col-sm-4">
-                        <strong>Position</strong>
-                    </div><!--col-sm-4-->
-                    <div class="col-sm-4">
-                        {{accOrgProfCtrl.profile.position}}
-                    </div><!--col-sm-4-->
-                </div><!--row-->
-            </li>
-            
-            <li>
-                <div class="row">
-                    <div class="col-sm-4">
-                        <strong>Contact number</strong>
-                    </div><!--col-sm-4-->
-                    <div class="col-sm-4">
-                        {{accOrgProfCtrl.profile.contactNumber}}
-                    </div><!--col-sm-4-->
-                </div><!--row-->
-            </li>
-            
-            <li>
-                <div class="row">
-                    <div class="col-sm-4">
-                        <strong>Alternative contact number</strong>
-                    </div><!--col-sm-4-->
-                    <div class="col-sm-4">
-                        {{accOrgProfCtrl.profile.altContactNumber}}
+                        {{accUsrProfCtrl.user.firstName}}	
                     </div><!--col-sm-4-->
                 </div><!--row-->
             </li>
             <li>
                 <div class="row">
-                    <div class="col-sm-8">
+                    <div class="col-sm-4">
+                        <strong>Middle Name</strong>	
                     </div><!--col-sm-4-->
+                    <div class="col-sm-4">
+                        {{accUsrProfCtrl.user.middleName}}	
+                    </div><!--col-sm-4-->
+                </div><!--row-->
+            </li>
+             <li>
+                <div class="row">
+                    <div class="col-sm-4">
+                        <strong>Last Name</strong>	
+                    </div><!--col-sm-4-->
+                    <div class="col-sm-4">
+                        {{accUsrProfCtrl.user.lastName}}	
+                    </div><!--col-sm-4-->
+                </div><!--row-->
+            </li>
+            <li>
+                <div class="row">
+                    <!--<div class="col-sm-4">
+                        <strong>Picture</strong>	
+                    </div>
+                    <div class="col-sm-4">
+                        {{accUsrProfCtrl.user.picture}}	
+                    </div>-->
                     <div class="col-sm-4" align="right">
-                        <a href="" ng-click="accOrgProfCtrl.editProfile(accOrgProfCtrl.profile)">Edit</a>
+                        <a href="" ng-click="accUsrProfCtrl.editProfile(accUsrProfCtrl.user)">Edit</a>
                     </div><!--col-sm-4-->
-                </div><!--row-->
+                </div>
+                
             </li>
         </ul>
 

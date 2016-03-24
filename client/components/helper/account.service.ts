@@ -47,6 +47,10 @@ namespace AccountService {
 					id: '@_id',
 					ido: '@_id'
 				}
+			},
+			'accountOrganizationMemberExist': {
+				method: 'GET',
+				url: BACK_END_ROUTE + '/account-organization-member/_exist'
 			}
 		});
 		return resources;
@@ -87,6 +91,11 @@ namespace AccountService {
 		saveAccountOrganization = (organization: any) => {
 			return this.$resourceHelper
 				.resourceRESTCall(this.$AccountRESTResource, 'saveAccountOrganization', organization, true);
+		};
+		
+		accountOrganizationMemberExist = (organizationMember: any) => {
+			return this.$resourceHelper
+				.resourceRESTCall(this.$AccountRESTResource, 'accountOrganizationMemberExist', organizationMember, true);
 		};
 	}
 

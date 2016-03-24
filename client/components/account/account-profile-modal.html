@@ -28,6 +28,35 @@
             <div class="form-group" ng-show="mProfCtrl.availableEmail == false">
                 <p class="pull-right text-danger">Email has already been registered in this organization</p>
             </div>
+            
+            <div class="form-group">
+                <div class="col-md-5 control-label">
+                    <label for="position" class="margin-b-n">Position</label>
+                </div>
+                <div class="col-md-7">
+                    <input type="text" class="form-control" id="position" name="position" ng-model="mProfCtrl.newProfile.position">
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <div class="col-md-5 control-label">
+                    <label for="contactNumber" class="margin-b-n"><strong class="text-danger">*</strong>Contact number</label>
+                </div>
+                <div class="col-md-7">
+                    <input type="text" class="form-control" id="contactNumber" name="contactNumber" ng-model="mProfCtrl.newProfile.contactNumber"
+                    required>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <div class="col-md-5 control-label">
+                    <label for="altContactNumber" class="margin-b-n">Alternative Contact Number</label>
+                </div>
+                <div class="col-md-7">
+                    <input type="text" class="form-control" id="altContactNumber" name="altContactNumber" ng-model="mProfCtrl.newProfile.altContactNumber">
+                </div>
+            </div>
+            
         </div>
     </div>
     <div class="modal-footer">

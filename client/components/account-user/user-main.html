@@ -1,0 +1,27 @@
+<div class="grid-block vertical">
+    <div class="grid-content center-panel">
+        <div class="page-head">
+            <div class="padding-box">
+                
+                <h3 class="uppercase title">My profile</h3>
+                
+                <ul class="lead-nav">
+                    
+                    <li ng-class="{current: $state.includes('main-account.user')}">
+                        <a ui-sref="main-account.user.profile">Details</a>
+                    </li>
+                    
+                </ul><!--lead-nav-->
+
+            </div><!--padding-box-->  
+        </div><!--page-head-->
+        
+        <div class="padding-box">
+            <div class="limit-width">
+               <div ui-view="account-usr-setting" class="span9 slide"></div>
+            </div><!--limit-width-->
+            <br>
+            <br>
+        </div><!--padding-box-->
+    </div><!--grid-content-->
+</div><!--center panel-->

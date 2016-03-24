@@ -8,7 +8,7 @@
                 <ul class="lead-nav">
                     
                     <li ng-class="{current: $state.includes('main-account.organization.profile')}">
-                        <a ui-sref="main-account.organization.profile({orgId: accOrgMainCtrl.organization._id})">My account details</a>
+                        <a ui-sref="main-account.organization.profile({orgId: accOrgMainCtrl.organization._id})">My profile in this organization</a>
                     </li>
                     
                     <li ng-class="{current: $state.includes('main-account.organization.team')}">
@@ -16,7 +16,7 @@
                     </li>
                     
                     <li ng-class="{current: $state.includes('main-account.organization.stages')}">
-                        <a ui-sref="main-account.organization.stages()">Settings</a>
+                        <a ui-sref="main-account.organization.stages()">Organization Stages</a>
                     </li>
                     
                 </ul><!--lead-nav-->

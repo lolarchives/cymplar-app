@@ -19,6 +19,7 @@ import { MainAccountController } from './components/main-account/main-account';
 import { mainAccountNavbar } from './components/navbar-account/navbar-account.directive';
 import './components/account/account';
 import './components/invitation/invitation.service';
+import './components/account-user/account-user';
 
 import {ObjectUtil} from './core/util';
 
@@ -213,6 +214,7 @@ namespace app {
     'rzModule',
     'app.socket-io-cymplar',
     'app.account-settings',
+    'app.account-user-settings',
     'app.invitation'
   ])
     .config(config)

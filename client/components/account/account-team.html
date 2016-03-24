@@ -1,22 +1,46 @@
 <div class="padding-box">
     <div class="limit-width">
-        <p><a href="" class="btn btn-primary" ng-if="accOrgTeamCtrl.isAuthorized()" ng-click="accOrgTeamCtrl.sendInvitation()">Send invitation</a></p>
+        
+        <div class="card">
+            <h5><strong>Current Members</strong></h5>
+            <br>
+            <ul class="list-line">           
+                <li ng-repeat="member in accOrgTeamCtrl.team">
+                    <div class="row">
+                        <div class="col-sm-4">
+                            <strong>{{member.user.firstName}}</strong>	
+                        </div><!--col-sm-4-->
+                        <div class="col-sm-4">
+                            {{member.role.name}}
+                        </div><!--col-sm-4-->
+                        <div class="col-sm-4" align="right" ng-if="accOrgTeamCtrl.isAuthorized()">
+                            <a href=""  ng-click="accOrgTeamCtrl.editProfile(member)">Edit</a>
+                        </div><!--col-sm-4-->
+                    </div>
+                </li>
+            </ul>
+        </div>
         <br>
-        <ul class="list-line">           
-            <li ng-repeat="member in accOrgTeamCtrl.team">
-                <div class="row">
-                    <div class="col-sm-4">
-                        <strong>{{member.user.firstName}}</strong>	
-                    </div><!--col-sm-4-->
-                    <div class="col-sm-4">
-                        {{member.role.name}}
-                    </div><!--col-sm-4-->
-                    <div class="col-sm-4" align="right" ng-if="accOrgTeamCtrl.isAuthorized()">
-                        <a href=""  ng-click="accOrgTeamCtrl.editProfile(member)">Edit</a>
-                    </div><!--col-sm-4-->
-                </div>
-            </li>
-        </ul>
+        <br>
+        <div class="card">
+            <p><a href="" class="btn btn-primary" ng-if="accOrgTeamCtrl.isAuthorized()" ng-click="accOrgTeamCtrl.sendInvitation()">Send invitation</a></p>
+            <br>
+            
+            <h5><strong>Pending invitations</strong></h5>
+            <br>                      
+            <ul class="list-line">           
+                <li ng-repeat="invitation in accOrgTeamCtrl.invitations">
+                    <div class="row">
+                        <div class="col-sm-8">
+                            {{invitation.email}}	
+                        </div><!--col-sm-4-->
+                        <div class="col-sm-4" align="right" ng-if="accOrgTeamCtrl.isAuthorized()">
+                            <a href=""  ng-click="accOrgTeamCtrl.uninvite(invitation)">Uninvite</a>
+                        </div><!--col-sm-4-->
+                    </div>
+                </li>
+            </ul>
+        </div>    
     </div><!--limit-width-->
 </div><!--padding-box-->
         

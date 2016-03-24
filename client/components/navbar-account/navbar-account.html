@@ -37,8 +37,7 @@
                 <span class="caret"></span>
                 </div>
                 <ul class="dropdown-menu full-width" aria-labelledby="dLabel">
-                   <li><a href="">Settings</a></li>
-                    <li><a href="">Help</a></li>
+                    <!--<li><a href="">Help</a></li>-->
                     <li class="divider"></li>
                     <li><a ng-click="navAccCtrl.logout()">Logout</a></li>
                 </ul>
@@ -53,7 +52,7 @@
                 <div class="collapse" id="collapse1">
                     <ul class="main-nav">
                         <li ng-class="{current: $state.includes('main-account.settings.user')}">
-                            <a ui-sref="main-account.user({id: navAccCtrl.user._id})">{{navAccCtrl.user.firstName + " " +navAccCtrl.user.lastName}}</a>
+                            <a ui-sref="main-account.user.profile">{{navAccCtrl.user.firstName + " " + navAccCtrl.user.lastName}}</a>
                         </li>
                     </ul>
                 </div>
