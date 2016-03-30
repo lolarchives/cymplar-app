@@ -151,12 +151,15 @@ export class SalesLeadService extends BaseService<SalesLead> {
 	}
 	
 	findPerOrganizationLatestOnes(data: SalesLead, newOptions: ModelOptions = {}): Promise<LeftPanelStatus[]> {
-		return new Promise<LeftPanelStatus[]>((fulfill: Function, reject: Function) => {
+		return new Promise<LeftPanelStatus[]>((fulfill: Function, reject: Function) => {	
+			const defaultProjectStatuses = ObjectUtil.getObjectUnionProperty(newOptions.authorization.organizationMember.organization, 
+				'projectDefaultStatuses');
 			const salesLeadOrgMembOptions: ModelOptions = {
 				authorization: newOptions.authorization
 			};
 			salesLeadOrganizationMemberService.findLeadsPerOrganization(salesLeadOrgMembOptions)
 			.then((salesLeads: string[]) => {
+				
 				newOptions.additionalData = { _id: { $in: salesLeads }};
 				newOptions.requireAuthorization = false;
 				newOptions.limit = 5;
@@ -165,74 +168,24 @@ export class SalesLeadService extends BaseService<SalesLead> {
 				
 				const leftPanelLeads: Promise<SalesLead[]>[] = [];
 				
-				const lostModelOptions = ObjectUtil.clone(newOptions);
-				lostModelOptions.additionalData['leadStatuses'] = { $elemMatch: { value: { $lt : 1 }, selected: true } };
-				leftPanelLeads.push(this.findLimited(data, lostModelOptions));
-				
-				const oppModelOptions = ObjectUtil.clone(newOptions);
-				oppModelOptions.additionalData['leadStatuses'] = { $elemMatch: { '$and': [ {value: { $gt : 1 }}, {value: { $lte : 10 }}], 
-					selected: true } };
-				leftPanelLeads.push(this.findLimited(data, oppModelOptions));
-				
-				const discoveryModelOptions = ObjectUtil.clone(newOptions);
-				discoveryModelOptions.additionalData['leadStatuses'] = { $elemMatch: { '$and': [ {value: { $gt : 10 }}, {value: { $lte : 30 }}],
-					selected: true }};
-				leftPanelLeads.push(this.findLimited(data, discoveryModelOptions));
-				
-				const engagingModelOptions = ObjectUtil.clone(newOptions);
-				engagingModelOptions.additionalData['leadStatuses'] = { $elemMatch: { '$and': [ {value: { $gt : 30 }}, {value: { $lte : 60 }}],
-					selected: true }};
-				leftPanelLeads.push(this.findLimited(data, engagingModelOptions));
-				
-				const proposingModelOptions = ObjectUtil.clone(newOptions);
-				proposingModelOptions.additionalData['leadStatuses'] = { $elemMatch: { '$and': [ {value: { $gt : 60 }}, {value: { $lte : 90 }}],
-					selected: true }};
-				leftPanelLeads.push(this.findLimited(data, proposingModelOptions));
-				
-				const soCloseModelOptions = ObjectUtil.clone(newOptions);
-				soCloseModelOptions.additionalData['leadStatuses'] = { $elemMatch: { '$and': [ {value: { $gt : 90 }}, {value: { $lte : 99 }}],
-					selected: true }};
-				leftPanelLeads.push(this.findLimited(data, soCloseModelOptions));
-				
-				const wonModelOptions = ObjectUtil.clone(newOptions);
-				wonModelOptions.additionalData['leadStatuses'] = { $elemMatch: { '$and': [ {value: { $gt : 99 }}, {value: { $lte : 100 }}],
-					selected: true } };
-				leftPanelLeads.push(this.findLimited(data, wonModelOptions));
-				
+				for (let i = 0; i < defaultProjectStatuses.length; i++) {
+					const thisModelOptions = ObjectUtil.clone(newOptions);
+					thisModelOptions.additionalData['leadStatuses'] = { $elemMatch: { value: defaultProjectStatuses[i].value, selected: true } };
+					leftPanelLeads.push(this.findLimited(data, thisModelOptions));		
+				}
 				return Promise.all(leftPanelLeads);
 			})
 			.then((leadsPerStatus: any[]) => {
 				
-				const leftPanelStatuses: LeftPanelStatus[] = [
-					{
-						description: 'Lost (0%)',
-						leads: 	leadsPerStatus[0]
-					},
-					{
-						description: 'Opportunity (1% - 10%)',
-						leads: 	leadsPerStatus[1]
-					},
-					{
-						description: 'Discovery (11% - 30%)',
-						leads: 	leadsPerStatus[2]
-					},
-					{
-						description: 'Engaging (31% - 60%)',
-						leads: 	leadsPerStatus[3]
-					},
-					{
-						description: 'Proposing (61% - 90%)',
-						leads: 	leadsPerStatus[4]
-					},
-					{
-						description: 'So close (91% - 99%)',
-						leads: 	leadsPerStatus[5]
-					},
-					{
-						description: 'Won (100%)',
-						leads: 	leadsPerStatus[6]
-					}	
-				];
+				const leftPanelStatuses: LeftPanelStatus[] = [];
+				
+				for (let i = 0; i < defaultProjectStatuses.length; i++) {
+					const leftPanelStatus = {
+						description:  defaultProjectStatuses[i].label,
+						leads: 	leadsPerStatus[i]
+					};
+					leftPanelStatuses.push(leftPanelStatus);		
+				}
 				 
 				fulfill(leftPanelStatuses);
 			})
