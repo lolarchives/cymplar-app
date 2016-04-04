@@ -1,5 +1,5 @@
 <div class="grid-frame vertical">
-  <div class="top-panel">
+  <div class="top-panel" style="height:130px">
 
     <div class="nav-btn left-panel-btn" ng-class="{'active':navCtrl.leftPanelOpen}" ng-click="navCtrl.leftPanelOpen = !navCtrl.leftPanelOpen">
       <span></span>
@@ -16,7 +16,7 @@
   </div>
   <!--top-bar-->
 
-  <div class="grid-block">
+  <div class="grid-block" >
     <div class="side-panel left-panel" ng-class="{'visible':navCtrl.leftPanelOpen}">
       <div class="search-bar-wrap" ng-if="navCtrl.displaySearchBar">
         <form class="search-bar" name="searchBarForm" ng-submit="navCtrl.submitQuery()">

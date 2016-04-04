@@ -20,7 +20,7 @@
 				</div>-->
 				<!--col-xs-2-->
 				<div class="col-lg-3 col-sm-4 col-xs-6">
-					<a ui-sref="main.newLead({status:'opportunity'})"" class="btn btn-primary btn-block margin-b-l">+ Add New Lead</a>
+					<a ui-sref="main.newLead({status:'opportunity'})" class="btn btn-primary btn-block margin-b-l">+ Add New Lead</a>
 				</div>
 				<!--col-xs-2
 				<div class="col-lg-1 col-sm-2 col-xs-6">
@@ -40,7 +40,7 @@
 				<!--col-xs-1-->
 			</div>
 			<!--row-->
-
+			<pre>{{alCtrl.beautifiedLeads}}</pre>
 			<table class="table mobile-table">
 				<thead>
 					<tr>
@@ -55,16 +55,16 @@
 					</tr>
 				</thead>
 				<tbody>
-					<tr>
+					<tr ng-repeat="lead in alCtrl.allLeads">
 						<!--data-title is required for mobile table-->
 						<td data-title="Choose">
 							<input type="checkbox">
 						</td>
-						<td data-title="Lead name"> Ford Contract</td>
+						<td data-title="Lead name"> <a >{{lead.name}}</a></td>
 						<td data-title="Main contact">Jonny Bravo </td>
 						<td data-title="Next Schedule task">12/12/2015</td>
-						<td data-title="Next Schedule task">Opportunity</td>
-						<td data-title="Date Created">12/12/2015</td>
+						<td data-title="Status">{{lead.leadStatuses[lead.currentStatus].label}}</td>
+						<td data-title="Date Created">{{lead.createdAt | date: 'dd/MM/yyyy' }}</td>
 					</tr>
 
 				</tbody>
@@ -73,6 +73,7 @@
 		</div>
 		<!--padding-box-->
 	</div>
+	
 	<!--grid-content-->
 </div>
 <!--center panel-->

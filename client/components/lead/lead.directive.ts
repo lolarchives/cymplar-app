@@ -18,6 +18,21 @@ namespace LeadDirective {
     };
 
   }
+  export function leadChatItem(): angular.IDirective {
+
+    return {
+      restrict: 'E',
+      scope: {
+        item: '=',
+        user:'='
+      },
+      templateUrl: 'components/lead/lead_chat_item.html',
+      controller: LeadChatItemController,
+      controllerAs: 'lciCtrl',
+      bindToController: true
+    };
+
+  }
 
   /** @ngInject */
   export class LogItemController {
@@ -44,11 +59,17 @@ namespace LeadDirective {
           this.meetType = $LogItemRESTService.allLogItemTypesCached[i];
         }
       }
-      this.reactiveFromNow = moment(this.item.createdAt).fromNow();
-
-      $interval(() => {
+      if (this.item !== undefined){
         this.reactiveFromNow = moment(this.item.createdAt).fromNow();
+        
+      }
+      $interval(() => {
+        if (this.item !== undefined)
+          this.reactiveFromNow = moment(this.item.createdAt).fromNow();
       }, 45000)
+        
+
+      
     }
     deleteItem() {
       let result: boolean = confirm('This action is irreseversible. Do you want to proceed?');
@@ -112,11 +133,108 @@ namespace LeadDirective {
         };
 
         this.socket.emit('leadLogEdit', notification);
-       
+
         this.toastr.success('Edited item success');
       })
     }
   }
+  
+  /** @ngInject */
+  export class LeadChatItemController {
+    
+    private item: any;
+    private reactiveFromNow: any;
+    constructor(private toastr: any, private $LeadChatItemRESTService: any,
+      private moment: any, private ultiHelper: any, private $scope: any
+      , private socket: any, private $LeadRESTService: any, private $interval: any, private $uibModal: any) {
+     
+      
+      this.reactiveFromNow = moment(this.item.createdAt).fromNow();
+
+      $interval(() => {
+        if (this.item !== undefined)
+          this.reactiveFromNow = moment(this.item.createdAt).fromNow();
+      }, 45000)
+    }
+    
+    retryingChat() {
+          this.item.status = "Sending";    
+          this.$LeadChatItemRESTService.newLeadChatItem(this.item).then((response: any) => {
+            console.log('response', this.item);
+            if (response.success) {
+              const chatItem = {
+                lead: this.$LeadRESTService.selectedLead._id,
+                message: 'optional',
+                data: response.data
+              };
+              let index = this.ultiHelper.indexOfFromId(this.$LeadChatItemRESTService.allLeadChatItems,
+                this.item);
+              this.$LeadChatItemRESTService.allLeadChatItems.splice(index, 1);
+              this.$LeadChatItemRESTService.allLeadChatItems.unshift(response.data);
+              this.socket.emit('leadChatAdd', chatItem);
+            } else {
+              console.log('in failed')
+              this.item.status = 'Failed'
+            }
+          }
+    }
+    
+    deleteItem() {
+      let result: boolean = confirm('This action is irreseversible. Do you want to proceed?');
+      if (result) {
+        this.$LeadChatItemRESTService.deleteLeadChatItem(this.item).then((response: any) => {
+
+          if (response.success) {
+            let index = this.ultiHelper.indexOfFromId(this.$LeadChatItemRESTService.allLeadChatItems, this.item);
+            this.$LeadChatItemRESTService.allLeadChatItems.splice(index, 1);
+
+            const notification = {
+              lead: response.data['lead'],
+              message: 'this is optional',
+              data: this.item
+            };
+
+            this.socket.emit('leadChatDelete', notification);
+            this.item = undefined;
+            this.toastr.success('Delete item success');
+
+          } else {
+            this.toastr.error(response.msg);
+          }
+        });
+      };
+    }
+
+
+
+    startEditingItem() {
+      let modalInstance = this.$uibModal.open({
+        animation: true,
+        templateUrl: 'components/lead/edit_item.html',
+        controller: 'EditItemModalController',
+        controllerAs: 'eimCtrl',
+        size: 'lg',
+        backdrop: 'static',
+        resolve: {
+          item: () => {
+            return angular.copy(this.item);
+          },
+        }
+      });
+      modalInstance.result.then((updatedItem: any) => {
+        const notification = {
+          lead: updatedItem['lead'],
+          message: 'this is optional',
+          data: updatedItem
+        };
+
+        this.socket.emit('leadLogEdit', notification);
+
+        this.toastr.success('Edited item success');
+      })
+    }
+  }
+
   export function EditItemModalController($uibModalInstance: any,
     item: any, noteType: any, commType: any, fwupType: any,
     meetType: any, $LogItemRESTService: any) {
@@ -163,5 +281,6 @@ namespace LeadDirective {
   angular
     .module('app.lead')
     .controller('EditItemModalController', EditItemModalController)
-    .directive('logItem', logItem);
+    .directive('logItem', logItem)
+    .directive('leadChatItem', leadChatItem);
 }

@@ -12,7 +12,7 @@ namespace Lead {
                         controllerAs: 'nlCtrl'
                     }
                 },
-                
+
                 params: {
                     status: '@',
                 },
@@ -27,26 +27,26 @@ namespace Lead {
                 url: '/lead/all_leads',
                 views: {
                     'main': {
-                      templateUrl: 'components/lead/all_leads.html',
-                      controller: 'AllLeadsController',
-                      controllerAs: 'alCtrl'
-                      
+                        templateUrl: 'components/lead/all_leads.html',
+                        controller: 'AllLeadsController',
+                        controllerAs: 'alCtrl'
+
                     }
                 },
                 resolve: {
                     allLeads: function($http: angular.IHttpService, $LeadRESTService: any) {
                         return $LeadRESTService.allLeads();
                     },
-                    
+
                 }
             })
             .state('main.selectedLead', {
                 url: '/lead/:id',
-                 views: {
+                views: {
                     'main': {
-                      templateUrl: 'components/lead/selected_lead.html',
-                      controller: 'SelectedLeadController',
-                      controllerAs: 'slCtrl',
+                        templateUrl: 'components/lead/selected_lead.html',
+                        controller: 'SelectedLeadController',
+                        controllerAs: 'slCtrl',
                     },
                     'right-bar': {
                         templateUrl: 'components/lead/right_bar.html',
@@ -54,7 +54,7 @@ namespace Lead {
                         controllerAs: 'slrbCtrl',
                     }
                 },
-               
+
                 params: {
                     lead: '@'
                 },
@@ -70,12 +70,12 @@ namespace Lead {
                                             return lead._id;
                                         });
                                         let index = availableLeadIds.indexOf($stateParams.id);
-                                 
+
                                         $stateParams.lead = $LeadRESTService.allLeadsCached[index];
                                         $LeadRESTService.selectedLead = $stateParams.lead;
                                         return response.data;
                                     });
-                                   
+
                                 } else {
                                     if ($stateParams.lead === '@') { // first load page
                                         let availableLeadIds = $LeadRESTService.allLeadsCached.map(function(lead: any) {
@@ -90,11 +90,11 @@ namespace Lead {
                                 }
                             } else {
                                 $state.go('main.allLeads');
-                            } 
-                                
+                            }
+
                         });
-                       
-                    }, 
+
+                    },
                     unaddedContacts: function($LeadRESTService: any, $stateParams: any) {
                         return $LeadRESTService.findContactsNotInLead($stateParams.id).then((response: any) => {
                             if (response.success) {
@@ -114,19 +114,23 @@ namespace Lead {
                     },
                     logItems: function($LogItemRESTService: any, $stateParams: any) {
                         return $LogItemRESTService.preloadLogItem($stateParams.id);
+                    },
+                    leadChatItems: function($LeadChatItemRESTService: any, $stateParams: any) {
+                        console.log('in here',$LeadChatItemRESTService);
+                        return $LeadChatItemRESTService.preloadLeadChatItem($stateParams.id);
                     }
                 },
                 onEnter: function($stateParams: any, $state: any, $LeadRESTService: any, $LogItemRESTService: any) {
                     //map company to id
                  
-					let availableLeadIds = $LeadRESTService.allLeadsCached.map(function(lead: any) {
+                    let availableLeadIds = $LeadRESTService.allLeadsCached.map(function(lead: any) {
                         return lead._id;
                     });
                     // if the company does not exist
                     let index = availableLeadIds.indexOf($stateParams.id);
                     if (index === -1) {
                         $state.go('main.allLeads');
-                    } else {                        
+                    } else {
                         if ($stateParams.lead === '@') { // first load page
                             $stateParams.lead = $LeadRESTService.allLeadsCached[index];
                             $LeadRESTService.selectedLead = $LeadRESTService.allLeadsCached[index];
@@ -138,10 +142,10 @@ namespace Lead {
                     $LogItemRESTService.loadingMore = false;
                     console.log('leaving after', $LogItemRESTService.loadingMore);
                 }
-                
+
             });
     }
-    
+
 
     export class NewLeadController {
         private newLead: any;
@@ -149,14 +153,14 @@ namespace Lead {
         private opportunityStatusIndex: number;
 
 
-        constructor(private $stateParams: any, private $AddressBookRESTService: any, private $LeadRESTService: any, 
-                    private $state: any, private toastr: any, private ultiHelper: any) {
+        constructor(private $stateParams: any, private $AddressBookRESTService: any, private $LeadRESTService: any,
+            private $state: any, private toastr: any, private ultiHelper: any) {
 
             this.newLead = {};
             if ($stateParams.group_id !== undefined && $stateParams.group_id.trim() !== '') {
-               let index = this.ultiHelper.indexOfFromId(this.$AddressBookRESTService.allCompaniesCached, 
-               {_id: this.$stateParams.group_id});
-              
+                let index = this.ultiHelper.indexOfFromId(this.$AddressBookRESTService.allCompaniesCached,
+                    { _id: this.$stateParams.group_id });
+
                 if (index === -1) {
                     this.$state.go('main.allLeads');
                 } else {
@@ -175,17 +179,17 @@ namespace Lead {
             this.$LeadRESTService.newLead(newLead).then((response: any) => {
                 console.log('response');
                 if (response.success) {
-                    this.$state.go('main.selectedLead', {id: response.data._id, lead: response.data});
-                    this.$LeadRESTService.selectedLead = response.data;           
+                    this.$state.go('main.selectedLead', { id: response.data._id, lead: response.data });
+                    this.$LeadRESTService.selectedLead = response.data;
                 } else {
                     this.toastr.error('Cannot create a sale, please check for a sale with the same name');
                 }
             });
         }
     }
-    
+
     export class SelectedLeadController {
-        
+
         logItemFilter = (value: any, index: any, array: any[]) => {
             if (this.queryTypeIndex === -1) {
                 return true;
@@ -193,25 +197,29 @@ namespace Lead {
                 return value.type._id === this.logItemTypes[this.queryTypeIndex]._id;
             }
         }
-        
-        private commIndex: number; 
+
+        private commIndex: number;
         private fwupIndex: number;
         private noteIndex: number;
         private meetIndex: number;
         private itemTypeIndex: number;
-        private showLog: boolean; 
+        private showLog: boolean;
         private queryTypeIndex: number;
         private newLogItem: any;
         private datePicker: any;
         private pleasePickADate: boolean;
         private smallFormOpen: boolean;
         private optionFilters: any;
-        constructor(private $stateParams: any, private $AddressBookRESTService: any, 
-            private $LeadRESTService: any, private $state: any, 
+        private newChatContent: string;
+        private softChatItems: any[];
+        constructor(private $stateParams: any, private $AddressBookRESTService: any,
+            private $LeadRESTService: any, private $state: any,
             private roleInLead: any, private contacts: any, private unaddedContacts: any,
-            private socket: any, private logItemTypes: any, private $LogItemRESTService: any, 
-            private ultiHelper: any, private moment: any, private $scope: any) {
-            
+            private socket: any, private logItemTypes: any,
+            private $LogItemRESTService: any, private $LeadChatItemRESTService: any,
+            private ultiHelper: any, private moment: any, private $scope: any,
+            private user: any, private leadChatItems: any) {
+            console.log('user',user);
             for (let i = 0; i < logItemTypes.length; i++) {
                 if (logItemTypes[i].code === 'COMM') {
                     this.commIndex = i;
@@ -225,101 +233,165 @@ namespace Lead {
                 if (logItemTypes[i].code === 'MEET') {
                     this.meetIndex = i;
                 }
-                
+
             }
             this.pleasePickADate = false;
             this.itemTypeIndex = this.fwupIndex;
             this.showLog = true;
             this.queryTypeIndex = -1;
-            
+            this.softChatItems = [];
+
+
             this.optionFilters = [
-                {value: -1, label: 'All'},
-                {value: this.commIndex, label: 'Communication'},
-                {value: this.noteIndex, label: 'Note'},
-                {value: this.fwupIndex, label: 'Follow ups'},
-                {value: this.meetIndex, label: 'Meeting'},
-            ]; 
-            
+                { value: -1, label: 'All' },
+                { value: this.commIndex, label: 'Communication' },
+                { value: this.noteIndex, label: 'Note' },
+                { value: this.fwupIndex, label: 'Follow ups' },
+                { value: this.meetIndex, label: 'Meeting' },
+            ];
+
             const joinNotification = {
                 lead: this.$LeadRESTService.selectedLead._id,
                 message: 'this is optional'
             };
 
             this.socket.emit('leadLogJoin', joinNotification);
+
+            const logJoinNotification = {
+                lead: this.$LeadRESTService.selectedLead._id,
+                message: 'this is optional'
+            };
+            this.socket.emit('leadChatJoin', logJoinNotification);
+
+            this.socket.on('leadChatAdded', (data: any) => {
+                console.log('added chat',data)
+                let index = this.ultiHelper.indexOfFromId(this.$LeadChatItemRESTService.allLeadChatItems,
+                    data.data.data);
+                if (index === -1) {
+                    this.$LeadChatItemRESTService.allLeadChatItems.unshift(data.data.data);
+                    this.$scope.$apply();
+
+                }
+
+
+
+            });
             
             this.socket.on('leadLogAdded', (data: any) => {
-                let index = this.ultiHelper.indexOfFromId( this.$LogItemRESTService.allLogItemsCached, 
-                        data.data.data );
+                let index = this.ultiHelper.indexOfFromId(this.$LeadChatItemRESTService.allLead,
+                    data.data.data);
                 if (index === -1) {
                     this.$LogItemRESTService.allLogItemsCached.unshift(data.data.data);
                     this.$scope.$apply();
-                   
+
                 }
-                    
-                
-                
+
+
+
             });
-            
+
             this.socket.on('leadLogDeleted', (data: any) => {
-                
+
                 let index = this.ultiHelper.indexOfFromId(this.$LogItemRESTService.allLogItemsCached, data.data.data);
-               
+
                 if (index !== -1) {
                     this.$LogItemRESTService.allLogItemsCached.splice(index, 1);
                 }
-                
-                this.$scope.$apply();    
 
-            });
-            this.socket.on('leadLogEdited', (data: any) => {
-                console.log('edited', data);
-                let index = this.ultiHelper.indexOfFromId(this.$LogItemRESTService.allLogItemsCached, data.data.data);
-               
-                if (index !== -1) {  
-                    this.$LogItemRESTService.allLogItemsCached[index] = data.data.data;
-                }
-                
-                this.$scope.$apply();    
+                this.$scope.$apply();
 
             });
             
+            
+            this.socket.on('leadChatDeleted', (data: any) => {
+
+                let index = this.ultiHelper.indexOfFromId(this.$LeadChatItemRESTService.allLeadChatItems, data.data.data);
+
+                if (index !== -1) {
+                    this.$LeadChatItemRESTService.allLeadChatItems.splice(index, 1);
+                }
+
+                this.$scope.$apply();
+
+            });
+            
+            this.socket.on('leadLogEdited', (data: any) => {
+                console.log('edited', data);
+                let index = this.ultiHelper.indexOfFromId(this.$LogItemRESTService.allLogItemsCached, data.data.data);
+
+                if (index !== -1) {
+                    this.$LogItemRESTService.allLogItemsCached[index] = data.data.data;
+                }
+
+                this.$scope.$apply();
+
+            });
+
             this.smallFormOpen = false;
-           
+
         }
+        submitChat() {
+            console.log('chat element', this.newChatContent);
+            let localItem = { _id: Date.now().valueOf(), status: 'Sending', message: angular.copy(this.newChatContent),local: true} 
+            this.$LeadChatItemRESTService.allLeadChatItems.unshift(localItem);
+            let sendingItem = { message: angular.copy(this.newChatContent) };
+            this.$LeadChatItemRESTService.newLeadChatItem(sendingItem).then((response: any) => {
+                console.log('response', localItem);
+                if (response.success) {
+                    const chatItem = {
+                        lead: this.$LeadRESTService.selectedLead._id,
+                        message: 'optional',
+                        data: response.data
+                    };
+                    let index = this.ultiHelper.indexOfFromId(this.$LeadChatItemRESTService.allLeadChatItems,
+                            localItem);
+                    this.$LeadChatItemRESTService.allLeadChatItems.splice(index,1); 
+                    this.$LeadChatItemRESTService.allLeadChatItems.unshift(response.data);
+                    this.socket.emit('leadChatAdd', chatItem);
+                } else {
+                    console.log('in here')
+                    localItem.status = 'Failed'
+                }
+            })
+
+
+            this.newChatContent = undefined;
+        }
+        
         addLogItem() {
             this.newLogItem.type = this.logItemTypes[this.itemTypeIndex];
             this.pleasePickADate = false;
-            if (this.itemTypeIndex === this.fwupIndex || this.itemTypeIndex === this.meetIndex ) {
+            if (this.itemTypeIndex === this.fwupIndex || this.itemTypeIndex === this.meetIndex) {
                 if (this.datePicker !== undefined) {
-                   this.newLogItem.dateTime = this.datePicker.valueOf();
+                    this.newLogItem.dateTime = this.datePicker.valueOf();
                 } else {
-                   this.pleasePickADate = true;
+                    this.pleasePickADate = true;
                 }
-            } 
-                
+            }
+
             if (!this.pleasePickADate) {
                 this.$LogItemRESTService.newLogItem(this.newLogItem).then((response: any) => {
                     if (response.success) {
                         this.$LogItemRESTService.allLogItemsCached.unshift(response.data);
-                        
+
                         const notification = {
                             lead: response.data['lead'],
                             message: 'this is optional',
-                            data:  response.data
+                            data: response.data
                         };
-                        
+
                         this.socket.emit('leadLogAdd', notification);
                         this.newLogItem = {};
                         this.datePicker = undefined;
                     }
-                }); 
-            }    
-            
+                });
+            }
+
         }
-       
+
     }
     export class SelectedLeadRightBarController {
-  
+
         private editing: boolean = false;
         private editingLead: any;
         private $LeadRESTService: any;
@@ -327,42 +399,42 @@ namespace Lead {
         private editingSliderOptions: any;
         private indexOfSelectedStatus: number;
         private indexOfSelectedStatusBackup: number;
-        constructor(private $stateParams: any, private $AddressBookRESTService: any, 
-            $LeadRESTService: any, private $state: any, private roleInLead: any, private toastr: any, private contacts: any, 
+        constructor(private $stateParams: any, private $AddressBookRESTService: any,
+            $LeadRESTService: any, private $state: any, private roleInLead: any, private toastr: any, private contacts: any,
             private unaddedContacts: any, private $timeout: any,
             private $filter: any, private ultiHelper: any,
             private $scope: any, private $LogItemRESTService: any,
             private socket: any) {
-           $stateParams.lead.contacts = contacts;
-           this.$LeadRESTService = $LeadRESTService; 
-           this.editing = false;
-        
-           let stepsArray = this.$stateParams.lead.leadStatuses.map(function(currentValue: any) {
-               currentValue.selected = false;
-               return currentValue.label;
-           });
-           if (this.$stateParams.lead.currentStatus === undefined || 
-                (this.$stateParams.lead.currentStatus >= this.$stateParams.lead.leadStatuses.length)) {      
-               this.indexOfSelectedStatus = 0;
-           } else {
-               this.indexOfSelectedStatus = this.$stateParams.lead.currentStatus;
-           }
-            
-           this.showingSliderOptions = {
-               stepsArray: stepsArray,
-               readOnly : true,
-               showTicks: true
-           };
-     
+            $stateParams.lead.contacts = contacts;
+            this.$LeadRESTService = $LeadRESTService;
+            this.editing = false;
+
+            let stepsArray = this.$stateParams.lead.leadStatuses.map(function(currentValue: any) {
+                currentValue.selected = false;
+                return currentValue.label;
+            });
+            if (this.$stateParams.lead.currentStatus === undefined ||
+                (this.$stateParams.lead.currentStatus >= this.$stateParams.lead.leadStatuses.length)) {
+                this.indexOfSelectedStatus = 0;
+            } else {
+                this.indexOfSelectedStatus = this.$stateParams.lead.currentStatus;
+            }
+
+            this.showingSliderOptions = {
+                stepsArray: stepsArray,
+                readOnly: true,
+                showTicks: true
+            };
+
         }
         deleteLead() {
             let result: boolean = confirm('Are you sure. Once delete all the lead data cannot be recovered');
             if (result) {
                 this.$LeadRESTService.deleteLead(this.$LeadRESTService.selectedLead._id).then((response: any) => {
-                    
+
                     if (response.success) {
-                        let index = this.ultiHelper.indexOfFromId( this.$LeadRESTService.allLeadsCached, 
-                        this.$LeadRESTService.selectedLead );
+                        let index = this.ultiHelper.indexOfFromId(this.$LeadRESTService.allLeadsCached,
+                            this.$LeadRESTService.selectedLead);
                         this.$LeadRESTService.allLeadsCached.splice(index, 1);
                         this.$LeadRESTService.selectedLead = undefined;
                         this.toastr.success('Delete lead success');
@@ -376,24 +448,24 @@ namespace Lead {
         startEditing() {
             this.editing = true;
             this.showingSliderOptions.readOnly = false;
-            this.indexOfSelectedStatusBackup = angular.copy(this.indexOfSelectedStatus); 
+            this.indexOfSelectedStatusBackup = angular.copy(this.indexOfSelectedStatus);
             this.editingLead = angular.copy(this.$LeadRESTService.selectedLead);
             this.editingLead.softContacts = this.editingLead.contacts;
             this.showingSliderOptions.readOnly = false;
             for (let i = 0; i < this.$LeadRESTService.allLeadStatusesCached.length; i++) {
                 if (this.editingLead.status.code === this.$LeadRESTService.allLeadStatusesCached[i].code) {
-                    this.editingLead.status = this.$LeadRESTService.allLeadStatusesCached[i];  
+                    this.editingLead.status = this.$LeadRESTService.allLeadStatusesCached[i];
                     break;
                 }
-            }  
+            }
         }
-        
+
         submitEditing() {
             this.editingLead.contacts = this.editingLead.softContacts.map((currentValue: any, index: any, array: any) => {
                 return currentValue._id;
             });
             this.editingLead.currentStatus = this.indexOfSelectedStatus;
-            
+
             const idStatus = this.editingLead.currentStatus;
             this.editingLead.leadStatuses.forEach(function(currentValue: any) {
                 if (currentValue.id === idStatus) {
@@ -402,55 +474,55 @@ namespace Lead {
                     currentValue.selected = false;
                 }
             });
-            
+
             const logItemService = this.$LogItemRESTService;
-            const socketService =  this.socket;
+            const socketService = this.socket;
             this.$LeadRESTService.updateLead(this.editingLead).then((response: any) => {
                 if (response.success) {
-                    let index = this.ultiHelper.indexOfFromId( this.$LeadRESTService.allLeadsCached, this.$LeadRESTService.selectedLead );
-                     
-                     this.$LeadRESTService.allLeadsCached[index] = response.data;
-                     this.$LeadRESTService.selectedLead = this.$LeadRESTService.allLeadsCached[index];
-                     this.$stateParams.lead = this.$LeadRESTService.allLeadsCached[index];
-                                       
-                     this.toastr.success('Update lead success');
-                     this.editing = false;
-                     this.showingSliderOptions.readOnly = true;
-                     
-                     console.log('generated log' + response.data.generatedLog);
-                     if (response.data.generatedLog) {
+                    let index = this.ultiHelper.indexOfFromId(this.$LeadRESTService.allLeadsCached, this.$LeadRESTService.selectedLead);
+
+                    this.$LeadRESTService.allLeadsCached[index] = response.data;
+                    this.$LeadRESTService.selectedLead = this.$LeadRESTService.allLeadsCached[index];
+                    this.$stateParams.lead = this.$LeadRESTService.allLeadsCached[index];
+
+                    this.toastr.success('Update lead success');
+                    this.editing = false;
+                    this.showingSliderOptions.readOnly = true;
+
+                    console.log('generated log' + response.data.generatedLog);
+                    if (response.data.generatedLog) {
                         logItemService.allLogItemsCached.unshift(response.data.generatedLog);
-                        
+
                         const notification = {
                             lead: response.data.generatedLog['lead'],
                             message: 'this is optional',
-                            data:  response.data.generatedLog
+                            data: response.data.generatedLog
                         };
-                        
+
                         socketService('leadLogAdd', notification);
                     }
-                    
+
                 } else {
                     this.toastr.error('Some error occur, cannot update lead');
                 }
             });
-            
-        } 
-        
+
+        }
+
         loadContacts($query: any) {
             console.log($query);
-            
-            return this.$filter('filter')(this.unaddedContacts, {name: $query});
+
+            return this.$filter('filter')(this.unaddedContacts, { name: $query });
         }
         contactAdded($tag: any) {
             console.log('added', $tag);
         }
         contactRemoved($tag: any) {
             console.log('removed', $tag);
-             let index = this.ultiHelper.indexOfFromId( this.unaddedContacts, $tag );
+            let index = this.ultiHelper.indexOfFromId(this.unaddedContacts, $tag);
             if (index === -1) {
                 this.unaddedContacts.push($tag);
-            } 
+            }
         }
         cancelEdit() {
             this.editing = false;
@@ -458,21 +530,21 @@ namespace Lead {
             this.indexOfSelectedStatus = this.indexOfSelectedStatusBackup;
         }
     }
-    
+
     export class AllLeadsController {
         private newLead: any;
         private coldStatusIndex: number;
         private opportunityStatusIndex: number;
+        private beautifiedLeads: string;
 
-
-        constructor(private $stateParams: any, private $AddressBookRESTService: any, private $LeadRESTService: any, 
-                    private $state: any, private toastr: any, private ultiHelper: any,private allLeads: any) {
-            console.log('allLeads',allLeads)
-          
+        constructor(private $stateParams: any, private $AddressBookRESTService: any, private $LeadRESTService: any,
+            private $state: any, private toastr: any, private ultiHelper: any, private allLeads: any) {
+            console.log('allLeads', allLeads);
+            this.beautifiedLeads = JSON.stringify(allLeads, null, 4)
         }
-       
+
     }
-    
+
     angular
         .module('app.lead', [
             'ui.router',
@@ -480,7 +552,7 @@ namespace Lead {
             'app.addressBook'
         ])
         .config(config)
-       
+
         .controller('NewLeadController', NewLeadController)
         .controller('SelectedLeadController', SelectedLeadController)
         .controller('AllLeadsController', AllLeadsController)

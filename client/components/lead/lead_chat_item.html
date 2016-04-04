@@ -1,0 +1,21 @@
+<div class="card message col-sm-12" ng-class="{'my-message': lciCtrl.item.createdBy._id == lciCtrl.user._id, local: lciCtrl.item.local, failed: lciCtrl.item.status == 'Failed' }" >
+	{{lciCtrl.user._id}}
+	<h5 ng-hide="lciCtrl.item.local"><strong>By {{lciCtrl.item.createdBy.member.user.firstName + ' '+ lciCtrl.item.createdBy.member.user.lastName+ ' ' + lciCtrl.item.createdBy._id}}</strong></h5>
+	<h5 ng-show="lciCtrl.item.local">Me<h5>
+	<p class="time" ng-hide="lciCtrl.item.local"><small> {{lciCtrl.reactiveFromNow}} </small></p>
+	<p class="time" ng-class="{'text-danger': lciCtrl.item.status == 'Failed'}" ng-show="lciCtrl.item.local">{{lciCtrl.item.status}} <a ng-show="lciCtrl.item.status == 'Failed'" ng-click="lciCtrl.retryingChat()">Retry</a> <p> 
+	<br>
+	<div class="limit-width">
+		<p>{{lciCtrl.item.message}}</p>
+		<a ng-hide="true">file.doc</a>
+	</div>
+	<div class="dropdown control" ng-hide="lciCtrl.item.local">
+		<span class="glyphicon glyphicon-option-horizontal" aria-hidden="true" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></span>
+		<ul class="dropdown-menu dropdown-menu-right">
+			<li><a href="">Edit</a></li>
+			<li><a ng-click="lciCtrl.deleteItem()">Delete</a></li>
+		</ul>
+	</div>
+	<!--dropdown -->
+</div>
+<!--card-->

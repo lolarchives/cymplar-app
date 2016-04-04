@@ -160,10 +160,10 @@ namespace app {
         }
       })
       .state('main.dashboard', {
-        url: '/dashboard',
+        url: '/page-not-found',
         views: {
           'main': {
-            template: '{{mainCtrl.user}}<br>{{navCtrl.user}}',
+            template: '<h1>The page you looking for cannot be found <h1>',
             controller: 'MainController',
             controllerAs: 'mainCtrl',
           }
@@ -192,7 +192,7 @@ namespace app {
         }
       });
 
-    $urlRouterProvider.otherwise('/dashboard');
+    $urlRouterProvider.otherwise('/page-not-found');
 
 
   }

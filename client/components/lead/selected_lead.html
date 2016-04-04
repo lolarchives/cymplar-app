@@ -51,7 +51,7 @@
 					</a>-->
 				</li>
 			</ul>
-			<select class="tinynav" ng-options="option.value as option.label for option in slCtrl.optionFilters" ng-model="slCtrl.queryTypeIndex"></select>
+			<select ng-show="slCtrl.showLog" class="tinynav" ng-options="option.value as option.label for option in slCtrl.optionFilters" ng-model="slCtrl.queryTypeIndex"></select>
 			<!--filter-->
 			<div class="tags-wrap margin-b-n" ng-hide="slCtrl.showLog">
 				<div class="tag">

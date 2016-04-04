@@ -1,36 +1,3 @@
-<div class="card message">
-	<h5><strong>By John V.</strong></h5>
-	<p class="time"><small> Today at 8:45pm</small></p>
-	<br>
-	<div class="limit-width">
-		<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc vulputate id tellus eget dapibus. Fusce tempor pharetra commodo.</p>
-		<a href="">file.doc</a>
-	</div>
-	<div class="dropdown control">
-		<span class="glyphicon glyphicon-option-horizontal" aria-hidden="true" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></span>
-		<ul class="dropdown-menu dropdown-menu-right">
-			<li><a href="#">Edit</a></li>
-			<li><a href="#">Delete</a></li>
-		</ul>
-	</div>
-	<!--dropdown -->
-</div>
-<!--card-->
 
-<div class="card message">
-	<h5><strong>Oscar</strong></h5>
-	<p class="time"><small> Today at 8:42pm</small></p>
-	<br>
-	<div class="limit-width">
-		<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc vulputate id tellus eget dapibus. Fusce tempor pharetra commodo.</p>
-	</div>
-	<div class="dropdown control">
-		<span class="glyphicon glyphicon-option-horizontal" aria-hidden="true" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></span>
-		<ul class="dropdown-menu dropdown-menu-right">
-			<li><a href="#">Edit</a></li>
-			<li><a href="#">Delete</a></li>
-		</ul>
-	</div>
-	<!--dropdown -->
-</div>
 <!--card-->
+<lead-chat-item user="slCtrl.user" item="item" ng-repeat="item in slCtrl.$LeadChatItemRESTService.allLeadChatItems"></lead-chat-item>

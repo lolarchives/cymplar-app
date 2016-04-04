@@ -743,12 +743,10 @@ p:focus, a:focus {
 
 .feed .message {
 	max-width:70%;
-	float:right;
-	}
-
-.feed .message:nth-child(odd) {
 	float:left;
 	}
+
+
 
 hr {
 	margin:15px 0;
