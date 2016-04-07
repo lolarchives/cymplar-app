@@ -220,10 +220,25 @@ export class SalesLeadService extends BaseService<SalesLead> {
 				newOptions.requireAuthorization = false;
 				return super.findNextLimited(data, newOptions); 
 			})
+			.then((leads: SalesLead[]) => {
+				const childrenModelOptions: ModelOptions = {
+					authorization: newOptions.authorization, 
+					copyAuthorizationData: ''
+				};
+				const loadDataFromSalesLeadPromises: Promise<SalesLead>[] = [];
+				for (let i = 0; i < leads.length; i++) {
+					loadDataFromSalesLeadPromises.push(this.loadMainContactAndUpcomingFollowUp(leads[i], childrenModelOptions));
+				}
+				
+				return Promise.all(loadDataFromSalesLeadPromises);
+				
+			})
 			.then((leads: SalesLead[]) => fulfill(leads))
 			.catch((err: Error) => reject(err));
 		});
 	}
+	
+	
 	
 	findPerUser(data: SalesLead, newOptions: ModelOptions = {}): Promise<SalesLead[]> {
 		return new Promise<SalesLead>((fulfill: Function, reject: Function) => {
@@ -518,7 +533,7 @@ export class SalesLeadService extends BaseService<SalesLead> {
 				const toDelete: AddressBookContact[] = [];
 				const existent: AddressBookContact[] = [];
 				
-				for (let i = 0; i < salesLead.contacts.length; i++){
+				for (let i = 0; i < salesLead.contacts.length; i++) {
 					const currentContact: AddressBookContact = salesLead.contacts[i];
 					const positionInContacts = contacts.indexOf(currentContact._id.toString());
 					
@@ -651,6 +666,24 @@ export class SalesLeadService extends BaseService<SalesLead> {
 			this.updateSkippingHooks(condition, update, options)
 			.then((results: any) => {
 				resolve(results);
+			})
+			.catch((err) => reject(err));
+		});
+	}
+	
+	private loadMainContactAndUpcomingFollowUp(data: SalesLead,  childrenModelOptions: ModelOptions = {}): Promise<SalesLead> {
+		const leadToSend: SalesLead = data;
+		return new Promise<SalesLead>((fulfill: Function, reject: Function) => {
+			const toLoad: any = [salesLeadContactService.findOne({ lead: leadToSend._id }, childrenModelOptions)];
+			
+			const logItemServiceOptions = ObjectUtil.clone(childrenModelOptions);
+			
+			toLoad.push(logItemService.findUpcomingFollowUp({ lead: data._id }, logItemServiceOptions));
+			Promise.all(toLoad)
+			.then((results: any) => {
+				leadToSend.contacts = results[0];
+				leadToSend.nextFollowUp = results[1];
+				fulfill(leadToSend);
 			})
 			.catch((err) => reject(err));
 		});

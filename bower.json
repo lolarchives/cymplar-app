@@ -30,6 +30,6 @@
   "resolutions": {
     "angular-bootstrap": "~1.0.3",
     "jquery": "~2.2.0",
-    "angular": "1.4.9"
+    "angular": "1.5.3"
   }
 }

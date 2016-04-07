@@ -55,7 +55,7 @@ router.get('/_find_latest_status', (req: express.Request, res: express.Response)
 router.get('/_find_limited', (req: express.Request, res: express.Response) => {
   const modelOptions: ModelOptions = {
     authorization: getAuthorizationData(req),
-    sortBy: '-updatedAt'
+    sortBy: 'name'
   };
   salesLeadService.findPerOrganizationNextLimited(req.query, modelOptions)
     .then((leads: SalesLead[]) => formatSend(res, leads), (err: any) => sendError(res, err));

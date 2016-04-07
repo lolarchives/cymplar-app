@@ -18,12 +18,12 @@ export class LogItemService extends BaseService<LogItem> {
 					populate: [
 						{
 							path: 'member',
-							select: 'user role -_id',
+							select: 'user role',
 							model: 'accountOrganizationMember',
 							populate: [ 
 								{
 									path: 'user',
-									select: 'firstName lastName middleName -_id',
+									select: 'firstName lastName middleName',
 									model: 'accountUser'	
 								},
 								{
@@ -55,6 +55,30 @@ export class LogItemService extends BaseService<LogItem> {
 			.then((logItemType: LogItemType) => {
 				data.type = logItemType;
 				return this.createOne(data, modelOptions);
+			})
+			.then((logItem: LogItem) => {
+				resolve(logItem);
+			})
+			.catch((err) => reject(err));
+		});	
+	}
+	
+	findUpcomingFollowUp(data: LogItem, modelOptions: ModelOptions): Promise<LogItem> {
+		return new Promise<LogItem>((resolve: Function, reject: Function) => {
+			const typeModelOptions: ModelOptions = {
+				authorization: modelOptions.authorization,
+				requireAuthorization: false,
+				copyAuthorizationData: ''
+			};
+			logItemTypeService.findOne({ code: 'FWUP'}, typeModelOptions)
+			.then((logItemType: LogItemType) => {
+				data.type = logItemType;
+				modelOptions.sortBy = 'dateTime';
+				modelOptions.limit = 1;
+				modelOptions.requireAuthorization = false;
+				modelOptions.additionalData = { dateTime: { gte: Date.now() }};
+				modelOptions.population = 'dateTime content';
+				return this.find(data, modelOptions);
 			})
 			.then((logItem: LogItem) => {
 				resolve(logItem);

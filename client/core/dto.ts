@@ -207,6 +207,7 @@ export interface SalesLead extends BaseDto {
   amount?: number;
   contacts?: any[];
   members?: any;
+  nextFollowUp?: LogItem;
 }
 
 export interface SalesLeadStatus extends BaseDto {
