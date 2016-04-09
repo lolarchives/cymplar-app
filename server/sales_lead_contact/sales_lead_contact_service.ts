@@ -68,7 +68,7 @@ export class SalesLeadContactService extends BaseService<SalesLeadContact> {
 		return new Promise<AddressBookContact[]>((resolve: Function, reject: Function) => {
 			this.findContactsPerLead(newOptions)
 			.then((leadContacts: string[]) => {		
-				newOptions.additionalData = {
+				newOptions.complexSearch = {
 					_id: { $in: leadContacts }
 				};
 				newOptions.copyAuthorizationData = '';
@@ -106,14 +106,14 @@ export class SalesLeadContactService extends BaseService<SalesLeadContact> {
 						}
 					}
 					
-					newOptions.additionalData = {};
+					newOptions.complexSearch = {};
 					
 					if (contacts.length > 0) {
-						newOptions.additionalData['_id']  = { $nin: contacts };
+						newOptions.complexSearch['_id']  = { $nin: contacts };
 					}
 					
 					if (groups.length > 0) {
-						newOptions.additionalData['group']  = { $in: groups };
+						newOptions.complexSearch['group']  = { $in: groups };
 					}
 				}
 				
@@ -140,7 +140,7 @@ export class SalesLeadContactService extends BaseService<SalesLeadContact> {
 	protected addAuthorizationDataPreSearch(modelOptions: ModelOptions = {}) {
 		switch (modelOptions.copyAuthorizationData) {
 			case 'lead':
-				modelOptions.additionalData['lead'] = modelOptions.authorization.leadMember.lead;
+				modelOptions.complexSearch['lead'] = modelOptions.authorization.leadMember.lead;
 				break;
 		}
 	}

@@ -160,7 +160,7 @@ export class SalesLeadService extends BaseService<SalesLead> {
 			salesLeadOrganizationMemberService.findLeadsPerOrganization(salesLeadOrgMembOptions)
 			.then((salesLeads: string[]) => {
 				
-				newOptions.additionalData = { _id: { $in: salesLeads }};
+				newOptions.complexSearch = { _id: { $in: salesLeads }};
 				newOptions.requireAuthorization = false;
 				newOptions.limit = 5;
 				newOptions.copyAuthorizationData = '';
@@ -170,7 +170,7 @@ export class SalesLeadService extends BaseService<SalesLead> {
 				
 				for (let i = 0; i < defaultProjectStatuses.length; i++) {
 					const thisModelOptions = ObjectUtil.clone(newOptions);
-					thisModelOptions.additionalData['leadStatuses'] = { $elemMatch: { value: defaultProjectStatuses[i].value, selected: true } };
+					thisModelOptions.complexSearch['leadStatuses'] = { $elemMatch: { value: defaultProjectStatuses[i].value, selected: true } };
 					leftPanelLeads.push(this.findLimited(data, thisModelOptions));		
 				}
 				return Promise.all(leftPanelLeads);
@@ -200,7 +200,7 @@ export class SalesLeadService extends BaseService<SalesLead> {
 			};
 			salesLeadOrganizationMemberService.findLeadsPerOrganization(salesLeadOrgMembOptions)
 			.then((salesLeads: string[]) => {
-				newOptions.additionalData = { _id: { $in: salesLeads }};
+				newOptions.complexSearch = { _id: { $in: salesLeads }};
 				newOptions.requireAuthorization = false;
 				return super.find(data, newOptions); 
 			})
@@ -216,7 +216,7 @@ export class SalesLeadService extends BaseService<SalesLead> {
 			};
 			salesLeadOrganizationMemberService.findLeadsPerOrganization(salesLeadOrgMembOptions)
 			.then((salesLeads: string[]) => {
-				newOptions.additionalData = { _id: { $in: salesLeads }};
+				newOptions.complexSearch = { _id: { $in: salesLeads }};
 				newOptions.requireAuthorization = false;
 				return super.findNextLimited(data, newOptions); 
 			})
@@ -247,7 +247,7 @@ export class SalesLeadService extends BaseService<SalesLead> {
 			};
 			salesLeadOrganizationMemberService.findLeadsPerOrganization(salesLeadOrgMembOptions)
 			.then((salesLeads: string[]) => {
-				newOptions.additionalData = { _id: { $in: salesLeads }};
+				newOptions.complexSearch = { _id: { $in: salesLeads }};
 				newOptions.requireAuthorization = false;
 				return super.find(data, newOptions); 
 			})
@@ -263,7 +263,7 @@ export class SalesLeadService extends BaseService<SalesLead> {
 				copyAuthorizationData: '',
 				validatePostSearchAuthData: false,
 				distinct: 'lead',
-				additionalData: { contact: { $in: contactId } }
+				complexSearch: { contact: { $in: contactId } }
 			};
 			
 			salesLeadContactService.findDistinct({}, salesContactModelOptions)
@@ -294,7 +294,7 @@ export class SalesLeadService extends BaseService<SalesLead> {
 				copyAuthorizationData: '',
 				validatePostSearchAuthData: false,
 				distinct: 'lead',
-				additionalData: { contact: { $in: contactId } }
+				complexSearch: { contact: { $in: contactId } }
 			};
 			salesLeadContactService.findDistinct({}, salesContactModelOptions)
 			.then((leads: string[]) => {				
@@ -418,7 +418,7 @@ export class SalesLeadService extends BaseService<SalesLead> {
 	protected addAuthorizationDataPreSearch(modelOptions: ModelOptions = {}) {
 		switch (modelOptions.copyAuthorizationData) {
 			case 'lead':
-				modelOptions.additionalData['_id'] = modelOptions.authorization.leadMember.lead;
+				modelOptions.complexSearch['_id'] = modelOptions.authorization.leadMember.lead;
 				break;
 		}
 	}
@@ -447,7 +447,7 @@ export class SalesLeadService extends BaseService<SalesLead> {
 			
 			const roleModelOptions: ModelOptions = {
 				authorization: options.authorization,
-				additionalData: { code: 'OWNER' },
+				complexSearch: { code: 'OWNER' },
 				distinct: '_id'
 			};
 
@@ -458,7 +458,7 @@ export class SalesLeadService extends BaseService<SalesLead> {
 				const organization: AccountOrganization = ObjectUtil.getBaseDtoObject(options.authorization.organizationMember.organization);
 				const accountMemberModelOptions: ModelOptions = {
 					authorization: options.authorization,
-					additionalData: {
+					complexSearch: {
 						_id: { $ne: options.authorization.organizationMember._id },
 						role: { $in: roles },
 						organization: organization._id
@@ -472,7 +472,7 @@ export class SalesLeadService extends BaseService<SalesLead> {
 				const leadRoleModelOptions: ModelOptions = {
 					authorization: options.authorization,
 					distinct: '_id',
-					additionalData: { code: 'OWNER' }
+					complexSearch: { code: 'OWNER' }
 				};
 				nextStagePromises.push(salesLeadMemberRoleService.findDistinct({}, leadRoleModelOptions));
 				
@@ -584,7 +584,7 @@ export class SalesLeadService extends BaseService<SalesLead> {
 			const deleteContactsPromises: Promise<AddressBookContact>[] = [];
 			const leadContactModelOptions: ModelOptions = {
 				authorization: options.authorization,
-				additionalData: {
+				complexSearch: {
 					lead: data._id
 				},
 				requireAuthorization: true,
@@ -678,7 +678,7 @@ export class SalesLeadService extends BaseService<SalesLead> {
 			
 			const logItemServiceOptions = ObjectUtil.clone(childrenModelOptions);
 			
-			toLoad.push(logItemService.findUpcomingFollowUp({ lead: data._id }, logItemServiceOptions));
+			toLoad.push(logItemService.findUpcomingFollowUp({ lead: leadToSend._id }, logItemServiceOptions));
 			Promise.all(toLoad)
 			.then((results: any) => {
 				leadToSend.contacts = results[0];

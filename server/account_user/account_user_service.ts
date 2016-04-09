@@ -13,7 +13,7 @@ export class AccountUserService extends BaseService<AccountUser> {
 	protected addAuthorizationDataPreSearch(modelOptions: ModelOptions = {}) {
 		switch (modelOptions.copyAuthorizationData) {
 			case 'user':
-				modelOptions.additionalData['_id'] = modelOptions.authorization.user._id;
+				modelOptions.complexSearch['_id'] = modelOptions.authorization.user._id;
 				break;
 		}
 	}

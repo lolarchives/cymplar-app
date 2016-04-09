@@ -78,7 +78,7 @@ export class SalesLeadOrganizationMemberService extends BaseService<SalesLeadOrg
 		return new Promise<AccountOrganizationMember[]>((resolve: Function, reject: Function) => {
 			this.findMembersPerLead(newOptions)
 			.then((leadMembers: string[]) => {		
-				newOptions.additionalData = {
+				newOptions.complexSearch = {
 					_id: { $in: leadMembers }
 				};
 				newOptions.copyAuthorizationData = '';
@@ -151,7 +151,7 @@ export class SalesLeadOrganizationMemberService extends BaseService<SalesLeadOrg
 					}
 				}
 			
-				newOptions.additionalData = {
+				newOptions.complexSearch = {
 					_id: { $nin: members },
 					organization: { $in: organizations } 
 				};
@@ -218,7 +218,7 @@ export class SalesLeadOrganizationMemberService extends BaseService<SalesLeadOrg
 			if (data.role.code === 'OWNER') {
 				const otherLeadMembersModelOptions: ModelOptions = {
 					authorization: newOptions.authorization,
-					additionalData: { 
+					complexSearch: { 
 						lead: data.lead,
 						_id: { $ne: data._id }
 					},
@@ -257,7 +257,7 @@ export class SalesLeadOrganizationMemberService extends BaseService<SalesLeadOrg
 			if (data.member.role.code === 'OWNER') {
 				const otherOrgMembersModelOptions: ModelOptions = {
 					authorization: newOptions.authorization,
-					additionalData: { 
+					complexSearch: { 
 						organization: data.member.organization,
 						_id: { $ne: data.member._id }
 					},
@@ -345,10 +345,10 @@ export class SalesLeadOrganizationMemberService extends BaseService<SalesLeadOrg
 	protected addAuthorizationDataPreSearch(modelOptions: ModelOptions = {}) {
 		switch (modelOptions.copyAuthorizationData) {
 			case 'orgMember':
-				modelOptions.additionalData['member'] = modelOptions.authorization.organizationMember._id;
+				modelOptions.complexSearch['member'] = modelOptions.authorization.organizationMember._id;
 				break;
 			case 'lead':
-					modelOptions.additionalData['lead'] = modelOptions.authorization.leadMember.lead;
+					modelOptions.complexSearch['lead'] = modelOptions.authorization.leadMember.lead;
 				break;
 		}
 	}

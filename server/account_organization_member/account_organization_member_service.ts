@@ -54,7 +54,7 @@ export class AccountOrganizationMemberService extends BaseService<AccountOrganiz
 				authorization: newOptions.authorization,
 				copyAuthorizationData: '',
 				requireAuthorization: false,
-				additionalData: {
+				complexSearch: {
 					organization: ObjectUtil.getStringUnionProperty(member.organization),
 					_id: { $ne: ObjectUtil.getStringUnionProperty(member) }
 				},
@@ -125,7 +125,7 @@ export class AccountOrganizationMemberService extends BaseService<AccountOrganiz
 				authorization: newOptions.authorization,
 				copyAuthorizationData: '',
 				requireAuthorization: false,
-				additionalData: {
+				complexSearch: {
 					$and: [{ limitedMembers: { $size: 2 }}, { limitedMembers: data._id }]
 				},
 				distinct : '_id'
@@ -191,7 +191,7 @@ export class AccountOrganizationMemberService extends BaseService<AccountOrganiz
 		
 			const rolesModelOptions: ModelOptions = {
 				authorization: newOptions.authorization,
-				additionalData: { 
+				complexSearch: { 
 					code: 'OWNER'
 				},
 				copyAuthorizationData: '',
@@ -202,7 +202,7 @@ export class AccountOrganizationMemberService extends BaseService<AccountOrganiz
 			.then((roles: string[]) => {
 				const leadMemberModelOptions: ModelOptions = {
 					authorization: newOptions.authorization,
-					additionalData: { 
+					complexSearch: { 
 						role: { $in: roles }, 
 						member: data._id
 					},
@@ -244,16 +244,16 @@ export class AccountOrganizationMemberService extends BaseService<AccountOrganiz
 		
 		switch (modelOptions.copyAuthorizationData) {
 			case 'user':
-				modelOptions.additionalData['user'] = modelOptions.authorization.user._id;
+				modelOptions.complexSearch['user'] = modelOptions.authorization.user._id;
 				break;
 			case 'organization':
-				modelOptions.additionalData['organization'] = 
+				modelOptions.complexSearch['organization'] = 
 					ObjectUtil.getStringUnionProperty(modelOptions.authorization.organizationMember.organization);
 				break;
 			case 'team':
-				modelOptions.additionalData['organization'] = 
+				modelOptions.complexSearch['organization'] = 
 					ObjectUtil.getStringUnionProperty(modelOptions.authorization.organizationMember.organization);
-				modelOptions.additionalData['_id'] = 
+				modelOptions.complexSearch['_id'] = 
 					{ $ne: ObjectUtil.getStringUnionProperty(modelOptions.authorization.organizationMember) };
 				break;
 		}

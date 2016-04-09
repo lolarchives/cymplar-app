@@ -72,12 +72,11 @@ export class LogItemService extends BaseService<LogItem> {
 			};
 			logItemTypeService.findOne({ code: 'FWUP'}, typeModelOptions)
 			.then((logItemType: LogItemType) => {
-				data.type = logItemType;
 				modelOptions.sortBy = 'dateTime';
 				modelOptions.limit = 1;
 				modelOptions.requireAuthorization = false;
-				modelOptions.additionalData = { dateTime: { gte: Date.now() }};
-				modelOptions.population = 'dateTime content';
+				modelOptions.complexSearch = { dateTime: { $gte: Date.now() }, type: logItemType._id};
+				modelOptions.projection = 'dateTime content';
 				return this.find(data, modelOptions);
 			})
 			.then((logItem: LogItem) => {
@@ -115,7 +114,7 @@ export class LogItemService extends BaseService<LogItem> {
 	protected addAuthorizationDataPreSearch(modelOptions: ModelOptions = {}) {
 		switch (modelOptions.copyAuthorizationData) {
 			case 'lead':
-				modelOptions.additionalData['lead'] = modelOptions.authorization.leadMember.lead;
+				modelOptions.complexSearch['lead'] = modelOptions.authorization.leadMember.lead;
 				break;
 		}
 	}

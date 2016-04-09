@@ -52,7 +52,7 @@ export class OrgChannelService extends BaseService<OrgChannel> {
 			.then((orgChannels: OrgChannel[]) => {
 				if (orgChannels.length === 1) {
 					if (ObjectUtil.isPresent(orgChannels[0].createdAt)) {
-						newOptions.additionalData = {
+						newOptions.complexSearch = {
 							createdAt: { $lt: orgChannels[0].createdAt }	
 						};
 					}
@@ -111,9 +111,9 @@ export class OrgChannelService extends BaseService<OrgChannel> {
 	protected addAuthorizationDataPreSearch(modelOptions: ModelOptions = {}) {
 		switch (modelOptions.copyAuthorizationData) {
 			case 'organization':
-				modelOptions.additionalData['organization'] = 
+				modelOptions.complexSearch['organization'] = 
 					ObjectUtil.getStringUnionProperty(modelOptions.authorization.organizationMember.organization);
-				modelOptions.additionalData['$or'] = [{ limitedMembers: { $size: 0 }}, 
+				modelOptions.complexSearch['$or'] = [{ limitedMembers: { $size: 0 }}, 
 					{ limitedMembers: modelOptions.authorization.organizationMember._id }];
 				modelOptions.population = [
 					{

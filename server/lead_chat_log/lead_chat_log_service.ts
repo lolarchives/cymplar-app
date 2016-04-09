@@ -71,7 +71,7 @@ export class LeadChatLogService extends BaseService<LeadChatLog> {
 	protected addAuthorizationDataPreSearch(modelOptions: ModelOptions = {}) {
 		switch (modelOptions.copyAuthorizationData) {
 			case 'lead':
-				modelOptions.additionalData['lead'] = modelOptions.authorization.leadMember.lead;
+				modelOptions.complexSearch['lead'] = modelOptions.authorization.leadMember.lead;
 				break;
 		}
 	}

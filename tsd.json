@@ -6,7 +6,7 @@
   "bundle": "tools/typings/tsd/tsd.d.ts",
   "installed": {
     "node/node.d.ts": {
-      "commit": "dade4414712ce84e3c63393f1aae407e9e7e6af7"
+      "commit": "ec9eb4b28c74665a602c22db3457f0a76fa0fa23"
     },
     "gulp/gulp.d.ts": {
       "commit": "5c3e47967affa3c4128a3875d1664ba206ae1b0f"
@@ -15,10 +15,10 @@
       "commit": "5c3e47967affa3c4128a3875d1664ba206ae1b0f"
     },
     "express/express.d.ts": {
-      "commit": "5c3e47967affa3c4128a3875d1664ba206ae1b0f"
+      "commit": "ec9eb4b28c74665a602c22db3457f0a76fa0fa23"
     },
     "serve-static/serve-static.d.ts": {
-      "commit": "5c3e47967affa3c4128a3875d1664ba206ae1b0f"
+      "commit": "ec9eb4b28c74665a602c22db3457f0a76fa0fa23"
     },
     "async/async.d.ts": {
       "commit": "5c3e47967affa3c4128a3875d1664ba206ae1b0f"
@@ -96,7 +96,7 @@
       "commit": "5c3e47967affa3c4128a3875d1664ba206ae1b0f"
     },
     "mime/mime.d.ts": {
-      "commit": "5c3e47967affa3c4128a3875d1664ba206ae1b0f"
+      "commit": "ec9eb4b28c74665a602c22db3457f0a76fa0fa23"
     },
     "angularjs/angular-resource.d.ts": {
       "commit": "40c60850ad6c8175a62d5ab48c4e016ea5b3dffe"
@@ -124,6 +124,9 @@
     },
     "socket.io-client/socket.io-client.d.ts": {
       "commit": "dade4414712ce84e3c63393f1aae407e9e7e6af7"
+    },
+    "express-serve-static-core/express-serve-static-core.d.ts": {
+      "commit": "ec9eb4b28c74665a602c22db3457f0a76fa0fa23"
     }
   }
 }

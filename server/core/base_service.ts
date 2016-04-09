@@ -38,8 +38,8 @@ export abstract class BaseService<T extends BaseDto> extends BaseAuthorizationSe
 				return reject(new Error(authorizationResponse.errorMessage));
 			}
 			this.addAuthorizationDataInCreate(txModelOptions); // Adds required authorization data in create	
-			const dataTx = this.transactionModelOptionsAddData(data, txModelOptions);
-			const newDocument = new this.Model(dataTx);
+			this.transactionModelOptionsAddData(data, txModelOptions);
+			const newDocument = new this.Model(data);
 			newDocument.save((err: Error, savedDoc: any) => {
 				if (err) {
 					return reject(err);
@@ -64,7 +64,7 @@ export abstract class BaseService<T extends BaseDto> extends BaseAuthorizationSe
 			this.addAuthorizationDataInCreate(txModelOptions); // Adds required authorization data in create
 			
 			for (let i = 0; i < data.length; i++) {
-				this.transactionModelOptionsAddDataKeepObject(data[i], txModelOptions);
+				this.transactionModelOptionsAddData(data[i], txModelOptions);
 			}	
 			
 			this.Model.create(data, (err: Error, createdObjs: any) => {
@@ -198,8 +198,8 @@ export abstract class BaseService<T extends BaseDto> extends BaseAuthorizationSe
 				return reject(new Error(authorizationResponse.errorMessage));
 			}
 			this.addAuthorizationDataPreSearch(txModelOptions);	
-			const dataTx = this.transactionModelOptionsAddData(data, txModelOptions);	
-			const search = this.obtainSearchExpression(dataTx, txModelOptions);
+			this.transactionModelOptionsAddData(data, txModelOptions);	
+			const search = this.obtainSearchExpression(data, txModelOptions);
 			this.Model.findOne(search).populate(txModelOptions.population).exec((err: Error, foundDoc: any) => {
 				if (err) {
 					return reject(err);
@@ -285,8 +285,8 @@ export abstract class BaseService<T extends BaseDto> extends BaseAuthorizationSe
 				return reject(new Error(authorizationResponse.errorMessage));
 			}
 			this.addAuthorizationDataPreSearch(txModelOptions);	
-			const dataTx = this.transactionModelOptionsAddData(data, txModelOptions);
-			this.Model.find(ObjectUtil.createFilter(dataTx)).populate(txModelOptions.population)
+			this.transactionModelOptionsAddData(data, txModelOptions);
+			this.Model.find(ObjectUtil.createFilter(data)).populate(txModelOptions.population)
 			.exec((err, foundObjs) => {
 				if (err) {
 					return reject(err);
@@ -332,9 +332,9 @@ export abstract class BaseService<T extends BaseDto> extends BaseAuthorizationSe
 			if (!authorizationResponse.isAuthorized) {
 				return reject(new Error(authorizationResponse.errorMessage));
 			}
-			this.addAuthorizationDataPreSearch(txModelOptions);
-			const dataTx = this.transactionModelOptionsAddData(data, txModelOptions);
-			const search = this.obtainSearchExpression(dataTx, txModelOptions);
+			this.addAuthorizationDataPreSearch(txModelOptions);	
+			this.transactionModelOptionsAddData(data, txModelOptions);	
+			const search = this.obtainSearchExpression(data, txModelOptions);
 			this.Model.find(search, txModelOptions.projection,
 			 { sort: txModelOptions.sortBy, limit: txModelOptions.limit, lean: true }).populate(txModelOptions.population)
 			.exec((err, foundObjs) => {
@@ -355,12 +355,11 @@ export abstract class BaseService<T extends BaseDto> extends BaseAuthorizationSe
 					const object = foundObjects[0];
 					const isDescendent = txModelOptions.sortBy.charAt(0) === '-' ? 1 : 0;
 					const sortField = txModelOptions.sortBy.substring(isDescendent, txModelOptions.sortBy.length);
-
 					if (ObjectUtil.isPresent(object[sortField])) {
 						if (isDescendent) {
-							txModelOptions.additionalData[sortField] = { $lt: object[sortField] };
+							txModelOptions.complexSearch[sortField] = { $lt: object[sortField] };
 						} else {
-							txModelOptions.additionalData[sortField] = { $gt: object[sortField] };
+							txModelOptions.complexSearch[sortField] = { $gt: object[sortField] };
 						}	
 					}
 					delete data._id;
@@ -407,11 +406,11 @@ export abstract class BaseService<T extends BaseDto> extends BaseAuthorizationSe
 	exist(data: T, newOptions: ModelOptions = {}): Promise<boolean> {
 		return new Promise<boolean>((resolve: Function, reject: Function) => {
 			const txModelOptions = this.obtainTransactionModelOptions(newOptions);
-			const dataTx = this.transactionModelOptionsAddData(data, txModelOptions);	
+			this.transactionModelOptionsAddData(data, txModelOptions);	
 			if (Object.keys(data).length < 1) {
 				reject(new Error('At least one filter value should be specified'));
 			}
-			this.Model.findOne(ObjectUtil.createFilter(dataTx, false), null, { sort: txModelOptions.sortBy, lean: true })
+			this.Model.findOne(ObjectUtil.createFilter(data, false), null, { sort: txModelOptions.sortBy, lean: true })
 			.exec((err, foundObj) => {
 				if (err) {
 					return reject(err);
@@ -430,8 +429,8 @@ export abstract class BaseService<T extends BaseDto> extends BaseAuthorizationSe
 			}
 			
 			this.addAuthorizationDataPreSearch(txModelOptions);	
-			const dataTx = this.transactionModelOptionsAddData(data, txModelOptions);	
-			const search = this.obtainSearchExpression(dataTx, txModelOptions);
+			this.transactionModelOptionsAddData(data, txModelOptions);	
+			const search = this.obtainSearchExpression(data, txModelOptions);
 			if (Object.keys(search).length < 1) {
 				return reject(new Error('At least one filter value should be specified'));
 			}
@@ -466,8 +465,8 @@ export abstract class BaseService<T extends BaseDto> extends BaseAuthorizationSe
 				return reject(new Error(authorizationResponse.errorMessage));
 			}
 			this.addAuthorizationDataPreSearch(txModelOptions);	
-			const dataTx = this.transactionModelOptionsAddData(data, txModelOptions);	
-			const search = this.obtainSearchExpression(dataTx, txModelOptions);
+			this.transactionModelOptionsAddData(data, txModelOptions);	
+			const search = this.obtainSearchExpression(data, txModelOptions);
 			this.Model.find(search).distinct(txModelOptions.distinct)
 			.exec((err, foundObjs) => {
 				if (err) {
@@ -484,13 +483,7 @@ export abstract class BaseService<T extends BaseDto> extends BaseAuthorizationSe
 		return transactionOptions;
 	}
 	
-	protected transactionModelOptionsAddData(data: T, transactionOptions: ModelOptions = {}): T {	
-		const dataTx = ObjectUtil.clone(data);
-		ObjectUtil.merge(dataTx, transactionOptions.additionalData); // Adds additionalData if specified
-		return dataTx;
-	}
-	
-	protected transactionModelOptionsAddDataKeepObject(data: T, transactionOptions: ModelOptions = {}) {	
+	protected transactionModelOptionsAddData(data: T, transactionOptions: ModelOptions = {}) {	
 		ObjectUtil.merge(data, transactionOptions.additionalData); // Adds additionalData if specified
 	}
 	

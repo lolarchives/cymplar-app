@@ -52,8 +52,8 @@ export class AccountInvitationService extends BaseService<AccountInvitation> {
 	protected addAuthorizationDataPreSearch(modelOptions: ModelOptions = {}) {
 		switch (modelOptions.copyAuthorizationData) {
 			case 'organizationMember':
-				modelOptions.additionalData['createdBy'] = modelOptions.authorization.organizationMember._id;
-				modelOptions.additionalData['organization'] = 
+				modelOptions.complexSearch['createdBy'] = modelOptions.authorization.organizationMember._id;
+				modelOptions.complexSearch['organization'] = 
 					ObjectUtil.getStringUnionProperty(modelOptions.authorization.organizationMember.organization);
 				break;
 		}

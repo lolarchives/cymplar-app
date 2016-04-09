@@ -80,10 +80,10 @@ export class BaseAuthorizationService<T extends BaseDto>{
 	protected addAuthorizationDataPreSearch(modelOptions: ModelOptions = {}, data?: T) {
 		switch (modelOptions.copyAuthorizationData) {
 			case 'user':
-				modelOptions.additionalData['user'] = modelOptions.authorization.user._id;
+				modelOptions.complexSearch['user'] = modelOptions.authorization.user._id;
 				break;
 			case 'createdBy':
-				modelOptions.additionalData['createdBy'] = modelOptions.authorization.user._id;
+				modelOptions.complexSearch['createdBy'] = modelOptions.authorization.user._id;
 				break;
 		}
 	}

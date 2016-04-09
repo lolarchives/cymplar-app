@@ -28,7 +28,7 @@ router.put('/:id', (req, res) => {
 router.delete('/:id', (req, res) => {
   const modelOptions: ModelOptions = {
     authorization: getAuthorizationData(req),
-    additionalData: {contact: req.params.id},
+    complexSearch: {contact: req.params.id},
     copyAuthorizationData: 'lead'
   };
   salesLeadContactService.removeOne({}, modelOptions)
@@ -63,7 +63,7 @@ router.get('/_exist', (req, res) => {
 router.get('/:id', (req: express.Request, res: express.Response) => {
   const modelOptions: ModelOptions = {
     authorization: getAuthorizationData(req),
-    additionalData: { contact: req.params.id },
+    complexSearch: { contact: req.params.id },
     copyAuthorizationData: 'lead'
   };
   salesLeadContactService.findOne({}, modelOptions)

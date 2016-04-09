@@ -128,7 +128,7 @@ export class AccountOrganizationService extends BaseService<AccountOrganization>
 			accountOrganizationMemberService.findDistinct({}, memberModelOptions)
 			.then((accountOrganizationsId: string[]) => {
 				
-				newOptions.additionalData = { _id: { $in: accountOrganizationsId }};
+				newOptions.complexSearch = { _id: { $in: accountOrganizationsId }};
 				newOptions.copyAuthorizationData = '';
 				newOptions.onlyValidateParentAuthorization = true ;
 				newOptions.copyAuthorizationData = '';
@@ -222,7 +222,7 @@ export class AccountOrganizationService extends BaseService<AccountOrganization>
 		
 			const rolesModelOptions: ModelOptions = {
 				authorization: newOptions.authorization,
-				additionalData: { 
+				complexSearch: { 
 					code: 'OWNER'
 				},
 				copyAuthorizationData: '',
@@ -233,7 +233,7 @@ export class AccountOrganizationService extends BaseService<AccountOrganization>
 			.then((roles: string[]) => {
 				const orgMemberModelOptions: ModelOptions = {
 					authorization: newOptions.authorization,
-					additionalData: { 
+					complexSearch: { 
 						role: { $in: roles }, 
 						organization: data._id
 					},

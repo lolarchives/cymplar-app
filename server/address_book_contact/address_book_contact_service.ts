@@ -25,7 +25,7 @@ export class AddressBookContactService extends BaseService<AddressBookContact> {
 			const groupModelOptions: ModelOptions = {
 				authorization: newOptions.authorization,
 				population: '',
-				additionalData: { _id: data.group },
+				complexSearch: { _id: data.group },
 				validatePostSearchAuthData: false,
 				copyAuthorizationData: 'createdBy'
 			};
@@ -48,7 +48,7 @@ export class AddressBookContactService extends BaseService<AddressBookContact> {
 		return new Promise<AddressBookContact[]>((resolve: Function, reject: Function) => {
 			this.getUsersGroups(data, newOptions)
 			.then((idGroups: string[]) => {
-				newOptions.additionalData = { group: { $in: idGroups }};
+				newOptions.complexSearch = { group: { $in: idGroups }};
 				return super.find(data, newOptions);
 			})
 			.then((contacts: AddressBookContact[]) => {
@@ -62,7 +62,7 @@ export class AddressBookContactService extends BaseService<AddressBookContact> {
 		return new Promise<AddressBookContact[]>((resolve: Function, reject: Function) => {
 			this.getUsersGroups(data, newOptions)
 			.then((idGroups: string[]) => {
-				newOptions.additionalData = { group: { $in: idGroups }};
+				newOptions.complexSearch = { group: { $in: idGroups }};
 				return super.findNextLimited(data, newOptions);
 			})
 			.then((contacts: AddressBookContact[]) => {
@@ -86,7 +86,7 @@ export class AddressBookContactService extends BaseService<AddressBookContact> {
 		return new Promise<string[]>((resolve: Function, reject: Function) => {
 			this.getUsersGroups(data, newOptions)
 			.then((idGroups: string[]) => {
-				newOptions.additionalData = { group: { $in: idGroups }};
+				newOptions.complexSearch = { group: { $in: idGroups }};
 				newOptions.distinct = '_id';
 				newOptions.copyAuthorizationData = '';
 				return this.findDistinct(data, newOptions);
@@ -107,7 +107,7 @@ export class AddressBookContactService extends BaseService<AddressBookContact> {
 		return new Promise<string[]>((resolve: Function, reject: Function) => {
 			this.getUsersGroups(data, newOptions)
 			.then((idGroups: string[]) => {
-				newOptions.additionalData = { group: { $in: idGroups }};
+				newOptions.complexSearch = { group: { $in: idGroups }};
 				newOptions.distinct = '_id';
 				newOptions.copyAuthorizationData = '';
 				return this.findDistinct(data, newOptions);
