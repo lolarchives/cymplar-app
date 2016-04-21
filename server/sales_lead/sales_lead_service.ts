@@ -674,6 +674,7 @@ export class SalesLeadService extends BaseService<SalesLead> {
 	private loadMainContactAndUpcomingFollowUp(data: SalesLead,  childrenModelOptions: ModelOptions = {}): Promise<SalesLead> {
 		const leadToSend: SalesLead = data;
 		return new Promise<SalesLead>((fulfill: Function, reject: Function) => {
+			childrenModelOptions.sortBy = 'createdAt';
 			const toLoad: any = [salesLeadContactService.findOne({ lead: leadToSend._id }, childrenModelOptions)];
 			
 			const logItemServiceOptions = ObjectUtil.clone(childrenModelOptions);
