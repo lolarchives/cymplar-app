@@ -40,29 +40,34 @@
 				<!--col-xs-1-->
 			</div>
 			<!--row-->
-			<pre>{{alCtrl.beautifiedLeads}}</pre>
+			<pre ng-hide="true">{{alCtrl.beautifiedLeads}}</pre>
 			<table class="table mobile-table">
 				<thead>
 					<tr>
-						<th>
+						<th ng-hide="true">
 							<input type="checkbox">
 						</th>
-						<th>Lead Name</th>
-						<th>Main Contact <span class="caret"></span></th>
+						<th>Lead Name <a ng-click="alCtrl.orderBy('name')"><i class="fa fa-caret-down"></i></span></a></th>
+						<th>Main Contact </th>
 						<th>Next Schedule task</th>
-						<th>Status<span class="caret"></span></th>
-						<th>Date Created<span class="caret"></span></th>
+						<th>Status <a ng-hide="true" ng-click="alCtrl.orderBy('status')"><i class="fa fa-caret-down"></i></span></a></th>
+						<th>Date Created<a ng-click="alCtrl.orderBy('createdAt')"><i class="fa fa-caret-down"></i></span></a></th>
 					</tr>
 				</thead>
 				<tbody>
 					<tr ng-repeat="lead in alCtrl.allLeads">
 						<!--data-title is required for mobile table-->
-						<td data-title="Choose">
+						<td  ng-hide="true" data-title="Choose">
 							<input type="checkbox">
 						</td>
-						<td data-title="Lead name"> <a >{{lead.name}}</a></td>
-						<td data-title="Main contact">Jonny Bravo </td>
-						<td data-title="Next Schedule task">12/12/2015</td>
+						<td data-title="Lead name"> <a ng-click="alCtrl.$state.go('main.selectedLead',{id: lead._id, lead: lead}); alCtrl.$LeadRESTService.selectedLead = lead;">{{lead.name}}</a></td>
+						<td data-title="Main contact">
+							{{lead.contacts.contact.name}}
+						</td>
+						<td data-title="Next Schedule task">
+							<span ng-if="lead.nextFollowUp.length==0">Not scheduled</span>
+							<span ng-if="lead.nextFollowUp.length>0">{{lead.nextFollowUp[0].dateTime | date:'dd/MM/yyyy'}}</span>
+						</td>
 						<td data-title="Status">{{lead.leadStatuses[lead.currentStatus].label}}</td>
 						<td data-title="Date Created">{{lead.createdAt | date: 'dd/MM/yyyy' }}</td>
 					</tr>

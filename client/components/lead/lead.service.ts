@@ -38,6 +38,10 @@ namespace LeadService {
 					idl: '@_id',
 				}
 			},
+			'allLeadsLimited': {
+				method: 'GET',
+				url: BACK_END_ROUTE + '/sales-lead/_find_limited'	
+			},
 			'roleInLead': {
 				method: 'GET',
 				url: BACK_END_ROUTE + '/sales-lead-organization-member/_find_membership'
@@ -67,6 +71,15 @@ namespace LeadService {
 						return this.allLeadsCached;
 					}
 				});
+		}
+		allLeadsLimited() {
+			return this.$resourceHelper.resourceRESTCall(this.$LeadRESTResource, 'allLeadsLimited', { ido: this.AuthToken.getIdO() })
+			.then((response: any) => {
+					if (response.success) {
+						
+						return response.data;
+					}
+			});	
 		}
 		allLeadStatuses() {
 			return this.$resourceHelper.resourceRESTCall(this.$LeadRESTResource, 'allLeadStatuses').then((response: any) => {

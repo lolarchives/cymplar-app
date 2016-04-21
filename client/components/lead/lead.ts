@@ -35,7 +35,7 @@ namespace Lead {
                 },
                 resolve: {
                     allLeads: function($http: angular.IHttpService, $LeadRESTService: any) {
-                        return $LeadRESTService.allLeads();
+                        return $LeadRESTService.allLeadsLimited();
                     },
 
                 }
@@ -536,11 +536,23 @@ namespace Lead {
         private coldStatusIndex: number;
         private opportunityStatusIndex: number;
         private beautifiedLeads: string;
-
+        private orderPredicate: any;
+        private reverse: boolean;
+        private order: any;
         constructor(private $stateParams: any, private $AddressBookRESTService: any, private $LeadRESTService: any,
-            private $state: any, private toastr: any, private ultiHelper: any, private allLeads: any) {
+            private $state: any, private toastr: any, 
+            private ultiHelper: any, private allLeads: any
+            private $filter:any) {
             console.log('allLeads', allLeads);
             this.beautifiedLeads = JSON.stringify(allLeads, null, 4)
+            this.order = $filter('orderBy');
+        }
+        orderBy(predicate){
+            this.orderPredicate = predicate;
+            this.reverse = (this.orderPredicate === predicate) ? !this.reverse : false;
+            
+            this.allLeads = this.order(this.allLeads,predicate,this.reverse)
+            
         }
 
     }

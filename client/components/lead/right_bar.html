@@ -14,6 +14,7 @@
 		placeholder="Add/remove contact"
 		replace-spaces-with-dashes="false"
 		on-tag-removed="slrbCtrl.contactRemoved($tag)"
+		key-property = "_id"
 		ng-model="slrbCtrl.editingLead.softContacts" display-property="name">
 		<auto-complete source="slrbCtrl.loadContacts($query)" 
                      min-length="0" 
