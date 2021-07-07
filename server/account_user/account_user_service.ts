@@ -9,15 +9,15 @@ export class AccountUserService extends BaseService<AccountUser> {
 		super(AccountUserModel,  { projection: '-password' });
 	}
 
+	/* tslint:disable */ // In this switches the default is not needed
 	protected addAuthorizationDataPreSearch(modelOptions: ModelOptions = {}) {
 		switch (modelOptions.copyAuthorizationData) {
 			case 'user':
 				modelOptions.additionalData['_id'] = modelOptions.authorization.user._id;
 				break;
-			default:
-				break;
 		}
 	}
+	/* tslint:enable */
 	
 	protected validateAuthDataPostSearchUpdate(modelOptions: ModelOptions = {}, data?: AccountUser): AuthorizationResponse {
 		if (data._id.toString() !== modelOptions.authorization.user._id.toString()) {

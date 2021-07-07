@@ -72,7 +72,7 @@ export class Authentication {
 				if (ObjectUtil.isPresent(user._id) && ObjectUtil.isPresent(idSessionParams.ido)) {
 					const orgMemberModelOptions: ModelOptions = {
 						projection: 'role organization',
-						population: 'role',
+						population: 'role organization',
 						requireAuthorization: false,
 						validatePostSearchAuthData: false,
 						copyAuthorizationData: '',

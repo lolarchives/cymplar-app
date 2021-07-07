@@ -86,6 +86,7 @@
     "moment": "^2.10.6",
     "mongoose": "^4.3.0",
     "requirejs": "^2.1.22",
+    "sendgrid": "^2.0.0",
     "serve-static": "^1.10.0",
     "systemjs": "^0.19.6"
   },

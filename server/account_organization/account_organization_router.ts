@@ -71,6 +71,14 @@ router.get('/_login', (req, res) => {
     .then((organization: AccountOrganization) => formatSend(res, organization), (err) => sendError(res, err));
 });
 
+router.get('/_accept_invitation', (req: express.Request, res: express.Response) => {
+  const modelOptions: ModelOptions = {
+    authorization: getAuthorizationData(req)
+  };
+  accountOrganizationService.addInvitedOrganizationMember(req.query, modelOptions)
+    .then((organization: AccountOrganization) => formatSend(res, organization), (err: any) => sendError(res, err));
+});
+
 router.get('/:id', (req: express.Request, res: express.Response) => {
   const modelOptions: ModelOptions = {
     authorization: getAuthorizationData(req)

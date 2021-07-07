@@ -42,10 +42,7 @@ export class AddressBookContactService extends BaseService<AddressBookContact> {
 			.then((contacts: AddressBookContact[]) => {
 				resolve(contacts);
 			})
-			.catch((err) => { 
-				reject(err);
-				return;
-			});
+			.catch((err) => reject(err));
 		});
 	}
 	
@@ -59,10 +56,7 @@ export class AddressBookContactService extends BaseService<AddressBookContact> {
 			.then((contacts: AddressBookContact[]) => {
 				resolve(contacts);
 			})
-			.catch((err) => { 
-				reject(err);
-				return;
-			});
+			.catch((err) => reject(err));
 		});
 	}
 	
@@ -72,10 +66,7 @@ export class AddressBookContactService extends BaseService<AddressBookContact> {
 			.then((contacts: any[]) => {
 				resolve(contacts);
 			})
-			.catch((err) => { 
-				reject(err);
-				return;
-			});
+			.catch((err) => reject(err));
 		});
 	}
 	
@@ -93,15 +84,9 @@ export class AddressBookContactService extends BaseService<AddressBookContact> {
 				.then((aggregation: any[]) => {
 					resolve(aggregation);
 				})
-				.catch((err) => { 
-					reject(err);
-					return;
-				});
+				.catch((err) => reject(err));
 			})
-			.catch((err) => { 
-				reject(err);
-				return;
-			});
+			.catch((err) => reject(err));
 		});
 	}
 	
@@ -142,10 +127,7 @@ export class AddressBookContactService extends BaseService<AddressBookContact> {
 				.then((idGroups: string[]) => {
 					resolve(idGroups);
 				})
-				.catch((err) => { 
-					reject(err);
-					return;
-				});	
+				.catch((err) => reject(err));	
 			}
 		});
 	}

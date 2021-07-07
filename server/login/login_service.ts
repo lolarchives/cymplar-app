@@ -7,7 +7,7 @@ import {ObjectUtil} from '../../client/core/util';
 import {AccountUserModel} from '../core/model';
 import {LogIn, AuthenticationResponse, AccountUser, AccountOrganizationMember, ModelOptions} from '../../client/core/dto';
 import {accountOrganizationMemberService} from '../account_organization_member/account_organization_member_service';
-
+import {accountOrganizationService} from '../account_organization/account_organization_service';
 
 export class LoginService {
 
@@ -25,12 +25,29 @@ export class LoginService {
     	}
 
 		return new Promise<string>((resolve: Function, reject: Function) => {
+			
 			this.validateAccountUser(data)
 			.then((accountUser: AccountUser) => {
 				const authenticationResp: AuthenticationResponse = {};
 				authenticationResp.token = this.getToken(accountUser);
-				resolve(authenticationResp);
-		}, (err: any) => reject(err));
+				
+				const loginPromises: Promise<any>[] = [];
+				loginPromises.push(Promise.resolve(authenticationResp));
+				
+				if (ObjectUtil.isPresent(options.authorization.invitation)) {
+					const memberModelOptions: ModelOptions = {
+						authorization: { user: accountUser },
+						onlyValidateParentAuthorization: true
+					};
+					loginPromises.push(accountOrganizationService.addInvitedOrganizationMember({ _id: options.authorization.invitation}, memberModelOptions));
+				}
+				
+				return Promise.all(loginPromises);
+			})
+			.then((results: any) => {
+				resolve(results[0]); // Sends the authentication response
+			})
+			.catch((err) => reject(err));
 		});
 	}
 
@@ -64,7 +81,7 @@ export class LoginService {
 					reject(new Error('The user does not exist within this organization'));
 					return;
 				}
-				if (!bcrypt.compareSync(data.password, accountOrganizationMember.user.password)) {
+				if (!bcrypt.compareSync(data.password, ObjectUtil.getStringUnionProperty(accountOrganizationMember.user, 'password'))) {
 					reject(new Error('Invalid password'));
 					return;
 				}
